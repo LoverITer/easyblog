@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>博客管理 - EasyBlog博客</title>
+    <title>文章管理 - EasyBlog博客</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
-    <link rel="stylesheet" href="../css/me.css">
+    <link rel="stylesheet" href="../../css/me.css">
 </head>
 <body>
 
@@ -61,149 +61,49 @@
 
             <!--菜单栏-->
             <div class="ui segments " >
-                <div class="ui segment border-bt-none m-a-bg-hover">
-                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced" style="font-size: 14px !important;padding-left: 20% !important;"><i class="pencil alternate icon"></i>MarkDown编辑器</a>
+                <div id="side-bnt1" class="ui segment border-bt-none m-a-bg-hover">
+                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left: 20% !important;"><i class="pencil alternate icon"></i>MarkDown编辑器</a>
                 </div>
-                <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;" ></div>
+                <div   class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;" ></div>
 
-                <div class="ui segment border-bt-none m-a-bg-hover">
-                    <a href="personal-center.html" target="_blank" class="m-black m-text-thin m-text-spaced" style="font-size: 14px !important;padding-left: 20% !important;"><i class="home icon"></i>查看主页</a>
+                <div id="side-bnt2"  class="ui segment border-bt-none m-a-bg-hover">
+                    <a href="../personalInfo/personal-center.html" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left: 20% !important;"><i class="home icon"></i>查看主页</a>
                 </div>
                 <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;" ></div>
-                <div class="ui segment border-bt-none m-a-bg-hover">
-                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced" style="font-size: 14px !important;padding-left: 20% !important;"><i class="folder open outline icon"></i>文章管理</a>
+                <div id="side-bnt3"  class="ui segment border-bt-none m-a-bg-hover">
+                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left: 20% !important;"><i class="folder open outline icon"></i>文章管理</a>
                 </div>
                 <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;" ></div>
-                <div class="ui segment border-bt-none m-a-bg-hover">
-                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced" style="font-size: 14px !important;padding-left: 20% !important;"><i class="talk icon"></i>评论管理</a>
+                <div  id="side-bnt4" class="ui segment border-bt-none m-a-bg-hover">
+                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left: 20% !important;"><i class="talk icon"></i>评论管理</a>
                 </div>
                 <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;" ></div>
-                <div class="ui segment border-bt-none m-a-bg-hover">
-                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced" style="font-size: 14px !important;padding-left:20% !important;"><i class="mini idea icon"></i>分类专栏</a>
+                <div  id="side-bnt5"  class="ui segment border-bt-none m-a-bg-hover">
+                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left:20% !important;"><i class="mini idea icon"></i>分类专栏</a>
                 </div>
             </div>
-
 
             <!--二维码-->
             <h4 class="ui horizontal divider header m-margin-top-large" >扫码关注我</h4>
             <div class="ui centered card" style="width: 11em">
-                <img src="../images/wechat.jpg" alt="" class="ui rounded image">
+                <img src="../../images/wechat.jpg" alt="" class="ui rounded image">
             </div>
         </div>
         <!--博客内容-->
         <div class="thirteen wide column">
+            <!--header-->
             <div class="ui top attached segment stackable">
                 <div class="ui grid">
-                    <div class="row">
-                        <div class="two wide column"><a href="#" class="m-black">全部(1)</a></div>
-                        <div class="two wide column"><a href="#" class="m-black">公开(0)</a></div>
-                        <div class="two wide column"><a href="#" class="m-black">私有(1)</a></div>
-                        <div class="two wide column"><a href="#" class="m-black">草稿箱(1)</a></div>
-                        <div class="two wide column"><a href="#" class="m-black"><i
-                                class="trash alternate outline icon"></i>垃圾站(1)</a></div>
+                    <div class="row" style="padding-top: 2em !important;padding-bottom: 1.5em !important;">
+                        <div class="two wide column" style="padding-right: 0 !important;"><a href="#" class="m-black">全部(1)</a></div>
+                        <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a href="#" class="m-black">公开(0)</a></div>
+                        <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a href="#" class="m-black">私有(1)</a></div>
+                        <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a href="#" class="m-black" style="color:#349EDF !important; ">草稿箱(1)</a></div>
+                        <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a href="#" class="m-black"><i
+                                class="trash alternate outline icon"></i>回收站(1)</a></div>
                     </div>
                 </div>
             </div>
-            <!--条件查询表单-->
-            <form action="#" method="post" class="ui attached segment form" style="background-color: #f2f5f7">
-                <div class="inline fields stackable">
-                    <span class="m-black m-inline-block m-mobile-hide">筛选：</span>
-                    <!--年-->
-                    <div class="field">
-                        <div class="ui selection dropdown compact m-mobile-wide-selectBar-calender">
-                            <input type="hidden" name="type">
-                            <i class="dropdown icon"></i>
-                            <div class="default text">年</div>
-                            <div class="menu compact">
-                                <div class="text item" data-value="0">不限</div>
-                                <div class="item" data-value="1">2019</div>
-                                <div class="item" data-value="2">2018</div>
-                                <div class="item" data-value="3">2017</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--月-->
-                    <div class="field">
-                        <div class="ui selection dropdown compact m-mobile-wide-selectBar-calender">
-                            <input type="hidden" name="type">
-                            <i class="dropdown icon"></i>
-                            <div class="default text">月</div>
-                            <div class="menu compact">
-                                <div class="text item" data-value="0">不限</div>
-                                <div class="item" data-value="1">9</div>
-                                <div class="item" data-value="2">8</div>
-                                <div class="item" data-value="3">7</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--文章类型-->
-                    <div class="field">
-                        <div class="ui selection dropdown m-mobile-wide-selectBar" style="max-width: 30px !important;">
-                            <input type="hidden" name="type">
-                            <i class="dropdown icon"></i>
-                            <div class="default text">文章类型</div>
-                            <div class="menu">
-                                <div class="item" data-value="0">不限</div>
-                                <div class="item" data-value="1">原创</div>
-                                <div class="item" data-value="2">转载</div>
-                                <div class="item" data-value="3">翻译</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--分类-->
-                    <div class="field">
-                        <div class="ui selection dropdown m-mobile-wide-selectBar" style="max-width: 30px !important;">
-                            <input type="hidden" name="type">
-                            <i class="dropdown icon"></i>
-                            <div class="default text">分类专栏</div>
-                            <div class="menu">
-                                <div class="item" data-value="0">不限</div>
-                                <div class="item" data-value="1">SpringBoot</div>
-                                <div class="item" data-value="2">Java</div>
-                                <div class="item" data-value="3">MySQL</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--文章标题-->
-                    <div class="field">
-                        <input class="m-mobile-wide-selectBar" type="text" name="title" placeholder="标题">
-                    </div>
-                    <div id="searchBar" class="field m-mobile-wide-selectBar">
-                        <button class="ui tiny red  button"><i class="search icon"></i>搜索</button>
-                    </div>
-                </div>
-                <!--点击搜索按钮后弹出来的选择框-->
-                <div id="reloadSearchBar" class="inline fields m-margin-top-large"
-                     style="margin-bottom: 5px !important;display: none !important;">
-                    <div class="inline fields">
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input type="radio" name="frequency" checked="checked">
-                                <label>全部</label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input type="radio" name="frequency">
-                                <label>只显示已发布文章</label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input type="radio" name="frequency">
-                                <label>只显示私密文章</label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input type="radio" name="frequency">
-                                <label>只显示草稿</label>
-                            </div>
-                        </div>
-                        <a href="blog-manage.html" style="margin-left: 25em !important;">重置搜索</a>
-                    </div>
-                </div>
-            </form>
 
             <!--content-->
             <div class="ui attached segment border-bt-none">
@@ -533,7 +433,7 @@
             <div class="three wide column">
                 <div class="ui inverted link list">
                     <div class="item">
-                        <img src="../images/wechat.jpg" class="ui rounded image" alt=""
+                        <img src="../../images/wechat.jpg" class="ui rounded image" alt=""
                              style="width: 125px">
                     </div>
                 </div>
@@ -578,7 +478,7 @@
 
     $('#searchBar').click(function () {
         $('#reloadSearchBar').css("display", "block");  //显示div
-    })
+    });
 
 </script>
 </body>

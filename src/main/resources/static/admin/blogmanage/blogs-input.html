@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>博客发布 - EasyBlog博客</title>
+    <title>写文章 - EasyBlog博客</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
-    <link rel="stylesheet" href="../css/me.css">
-    <link rel="stylesheet" href="../lib/css/editormd.min.css">
+    <link rel="stylesheet" href="../../css/me.css">
+    <link rel="stylesheet" href="../../lib/css/editormd.min.css">
 </head>
 <body>
 
@@ -14,35 +14,25 @@
 <!--编辑器-->
 <div style="margin-top: 5px !important;">
     <form method="post" class="ui form">
-        <div class="ui two column centered grid">
-            <div class="two wide centered column">
-                <div style="margin-left: 3em !important;margin-top: 0.75em !important;">
+        <div class="ui row fluid container stackable centered grid">
+            <div class="right float  right aligned  three wide centered column">
+                <div class="ui segment" style="padding: auto 0 0 0 !important;background: none !important;border: none !important;box-shadow: none !important;">
                     <a href="#" class="ui right floated" style="color: #8da6ce !important;font-size: 18px !important;">
                         <i class="chevron left icon"></i>
                         文章管理
                     </a>
                 </div>
             </div>
-            <div class="eleven wide centered column">
+            <div class="ten wide centered column">
                 <div class="field" style="margin-bottom: 0.5em !important;">
                     <div class="ui left large  input">
-                        <!--<div class="ui selection compact teal basic dropdown label">
-                            <input type="hidden" value="原创">
-                            <i class="dropdown icon"></i>
-                            <div class="text">原创</div>
-                            <div class="menu">
-                                <div class="item" data-value="原创">原创</div>
-                                <div class="item" data-value="转载">转载</div>
-                                <div class="item" data-value="翻译">翻译</div>
-                            </div>
-                        </div>-->
                         <input type="text" name="title" placeholder="标题">
                     </div>
                 </div>
             </div>
-            <div class="three wide centered column">
+            <div class="two wide centered column">
                 <a id="go" rel="leanModal" name="signup" href="#signup">
-                    <button type="submit" class="ui large left floated red button" style="color:#ffffff !important;">
+                    <button type="submit" class="ui large right floated red button" style="color:#ffffff !important;">
                         发布文章
                     </button>
                 </a>
@@ -466,7 +456,7 @@ Andrew->>China: I am good thanks!
                         </div>
                         <div class="ui fluid icon input">
                             <input id="tag-input" type="text" placeholder="添加标签..." style="display: none !important;">
-                            <div class="ui field" style="padding-top: 5px !important;padding-left: 3px !important;">
+                            <div class="ui field" style="margin-top: 5px !important;padding-left: 3px !important;">
                                 <div id="add-tag-btn" class="ui tiny primary submit button">
                                     <i class="add icon"></i>
                                     增加标签
@@ -484,7 +474,7 @@ Andrew->>China: I am good thanks!
                     </div>
                     <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
                         <div class="ui field">
-                            <select id="types" name="maxCount" multiple="" class="ui dropdown">
+                            <select id="types" name="maxCount" multiple="" class="ui dropdown type">
                                 <option value="" selected="">请选择</option>
                                 <option value="1">Java</option>
                                 <option value="2">MySQL</option>
@@ -523,6 +513,31 @@ Andrew->>China: I am good thanks!
                     </div>
                 </div>
 
+                <!--发布形式-->
+                <div class="row">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        发布形式
+                    </div>
+                    <div class="thirteen wide column" style="padding-left: 0 !important;">
+                        <div class="ui form">
+                            <div class="inline fields">
+                                <div class="field">
+                                    <div class="ui radio checkbox">
+                                        <input type="radio" name="frequency" checked="checked">
+                                        <label>公开</label>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="ui radio checkbox">
+                                        <input type="radio" name="frequency">
+                                        <label>私有</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row" style="padding-top: 0 !important;padding-bottom: 0 !important;">
                     <div class="right aligned sixteen wide column" style="padding-top: 0.5em !important;">
                         <span style="color: rgb(202, 12, 22)">温馨提示：请勿发布涉及政治、广告、营销、翻墙、违反国家法律法规等内容</span>
@@ -531,6 +546,7 @@ Andrew->>China: I am good thanks!
                 <div class="right aligned row" style="padding-bottom: 5px !important;">
                     <div class="right aligned sixteen wide column" style="padding-top: 0.5em !important;">
                         <button class="ui  floated button basic">取消</button>
+                        <button class="ui  floated button basic blue ">保存为草稿</button>
                         <button class="ui  floated button basic red ">发布文章</button>
                     </div>
                 </div>
@@ -543,8 +559,8 @@ Andrew->>China: I am good thanks!
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script src="../lib/editormd.min.js"></script>
-<script src="../lib/editormd.amd.min.js"></script>
+<script src="../../lib/editormd.min.js"></script>
+<script src="../../lib/editormd.amd.min.js"></script>
 <script>
     //初始化Markdown编辑器
     var contentEditor;
@@ -553,7 +569,7 @@ Andrew->>China: I am good thanks!
             width: "100%",
             height: 640,
             syncScrolling: "single",
-            path: "../lib/lib/"
+            path: "../../lib/lib/"
         });
     });
     $('.menu.toggle').click(function () {
@@ -647,7 +663,7 @@ Andrew->>China: I am good thanks!
 </script>
 
 <script type="text/javascript">
-
+     //控制分类栏
     $("#add-type-btn").click(function () {
         $("#add-input").show();
     });
@@ -660,11 +676,13 @@ Andrew->>China: I am good thanks!
             select.append(option);
             option.text = str;
             option.value = value;
-            $('.tags').append("<a class=\"ui label transition visible\" data-value="+value+" style=\"display: inline-block !important;\">"+str+"<i class=\"delete icon\"></i></a>");
+            $('.type').append("<a class=\"ui label transition visible\" data-value="+value+" style=\"display: inline-block !important;\">"+str+"<i class=\"delete icon\"></i></a>");
             $("#types").val(value);
         }
         $("#add-input").hide();
     });
+
+    //控制标签栏
     $("#add-tag-btn").click(function () {
         $("#tag-input").show();
     });
