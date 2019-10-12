@@ -35,6 +35,8 @@
 
 
 #### 有关技术文档
-[SpringBoot 2.x 官方文档](https://docs.spring.io/spring-boot/docs/2.1.8.RELEASE/reference/html/)<br/>
-[SpringBoot 2.x 中文文档](https://docshome.gitbooks.io/springboot/content/pages/using-spring-boot.html#using-boot-starter)
-
+* [SpringBoot 2.x 官方文档](https://docs.spring.io/spring-boot/docs/2.1.8.RELEASE/reference/html/)<br/>
+* [SpringBoot 2.x 中文文档](https://docshome.gitbooks.io/springboot/content/pages/using-spring-boot.html#using-boot-starter)
+* [开源在线的Markdown编辑器插件](https://pandao.github.io/editor.md/)
+* [代码高亮插件](https://github.com/PrismJS/prism)
+* [中文网页重设与排版插件](https://github.com/sofish/typo.css)
