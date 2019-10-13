@@ -16,7 +16,7 @@ public class DefaultInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("请求来源："+request.getRequestURI());
+        log.info("Request from：{}",request.getRequestURL());
         return true;
     }
 
