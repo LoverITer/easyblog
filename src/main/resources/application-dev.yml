@@ -55,5 +55,6 @@ spring:
 
 logging:
   level:
-    top.easyblog: debug
-  file: /logs/easyblog-dev.log
+    root: info
+    org.easyblog: debug
+  file: easyblogDev.log

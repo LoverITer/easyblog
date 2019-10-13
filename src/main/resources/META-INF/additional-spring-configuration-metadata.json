@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "spring.profiles",
+      "type": "java.lang.String",
+      "description": "Description for spring.profiles."
+  }
+] }
