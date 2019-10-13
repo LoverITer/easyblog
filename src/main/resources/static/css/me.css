@@ -366,6 +366,7 @@ body {
 
 
 /*-----color-----*/
+
 .m-black {
     color: #333 !important;
 }
@@ -390,9 +391,10 @@ span.count {
 }
 
 .m-a-bg-hover:hover {
-    color: white !important;
+    color: #ffffff !important;
     background-color: #C92027 !important;
 }
+
 
 .border-bt-none {
     border-bottom: none !important;

@@ -1,0 +1,20 @@
+#公用环境
+spring:
+  profiles:
+    active: dev
+  thymeleaf:
+   enabled: true
+   #默认是classpath:/templates/
+   prefix: classpath:/templates/
+   suffix: .html
+   mode: LEGACYHTML5
+   encoding: UTF-8
+   servlet:
+     content-type: text/html
+  application:
+    name: EasyBlog
+logging:
+  config: classpath:logback-spring.xml
+mybatis:
+  config-location: classpath:/MyBatis-Configs/mybatis-config.xml
+  mapper-locations: classpath:/MyBatis-Configs/mapper/*.xml

@@ -1,6 +1,6 @@
 package org.easyblog.config;
 
-import org.easyblog.config.interceptor.DefaultInterceptor;
+import org.easyblog.handler.interceptor.DefaultInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 

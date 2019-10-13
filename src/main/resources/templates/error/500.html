@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>500</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+<link rel="stylesheet" href="..//css/me.css" th:href="@{/static/css/me.css}">
+</head>
+<body>
+
+<!--导航-->
+<div th:replace="~{nav :: navbar}"></div>
+
+<br>
+<br>
+<br>
+
+<div class="m-container-small m-padded-tb-massive">
+    <div class="ui error message m-padded-tb-huge">
+        <div class="ui contianer">
+            <h2>500</h2>
+            <p>对不起，服务异常，请联系管理员</p>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+
+<!--footer-->
+<div th:replace="~{footer :: footbar}"></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script type="text/javascript">
+  $('.ui.dropdown').dropdown({
+    on: 'hover'
+  });
+</script>
+</body>
+</html>
