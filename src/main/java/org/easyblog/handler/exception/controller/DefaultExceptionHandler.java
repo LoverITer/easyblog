@@ -26,7 +26,6 @@ public class DefaultExceptionHandler {
     public ModelAndView exceptionHandler(HttpServletRequest request, Exception e) throws Exception {
         log.error("Request URL : {} ,Exception info : {}",request.getRequestURL(),e);
 
-        System.out.println(e==null);
         if(null != AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class)){
             throw e;
         }

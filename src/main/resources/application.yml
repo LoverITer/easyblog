@@ -13,8 +13,8 @@ spring:
      content-type: text/html
   application:
     name: EasyBlog
-logging:
-  config: classpath:logback-spring.xml
 mybatis:
   config-location: classpath:/MyBatis-Configs/mybatis-config.xml
   mapper-locations: classpath:/MyBatis-Configs/mapper/*.xml
+logging:
+  config: classpath:logback-spring.xml
