@@ -1,4 +1,4 @@
-package top.easyblog;
+package org.easyblog;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
