@@ -48,6 +48,6 @@ spring:
     cache: true
 logging:
   level:
-    root: info
-    org.easyblog: warn
+    root: WARN
+    org.easyblog: WARN
   file: easyblogPro.log

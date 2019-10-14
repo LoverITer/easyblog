@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人资料 - EasyBlog博客</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
-    <link rel="stylesheet" href="../../css/me.css">
+    <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
 </head>
 <body>
 
@@ -74,12 +75,12 @@
                        style="font-size: 14px !important;padding-left: 20% !important;"><i
                             class="users icon"></i>我的粉丝</a>
                 </div>
-               <!-- <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
-                <div class="ui segment border-bt-none m-a-bg-hover">
-                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced"
-                       style="font-size: 14px !important;padding-left: 20% !important;"><i
-                            class="tags icon"></i>我的标签</a>
-                </div>-->
+                <!-- <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
+                 <div class="ui segment border-bt-none m-a-bg-hover">
+                     <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced"
+                        style="font-size: 14px !important;padding-left: 20% !important;"><i
+                             class="tags icon"></i>我的标签</a>
+                 </div>-->
                 <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
                 <div class="ui segment border-bt-none m-a-bg-hover">
                     <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover"
@@ -89,106 +90,349 @@
         </div>
         <!--博客内容-->
         <div class="twelve wide column">
-            <div class="ui top attached segment stackable">
-                <h3 class="m-margin-top m-margin-bottom m-margin-left" style="font-size: 20px !important;color: #3d3d3d !important;">
-                    个人资料</h3>
-                <div class="ui divider"></div>
-                <div class="m-margin-left m-inline-block m-position-top">
-                        <div class="item">
-                            <img class="ui medium circular image image-122x122" style="max-height: none !important;"
-                                 src="http://hbimg.b0.upaiyun.com/1f20743f57decb129f4563314eafca4f83f7a18d105ac-xpHDBI_fw658">
-                            <a href="#" style="color: #3399ea !important;font-size: 14px !important;display: block !important;margin-left: 2.4em !important;" class="m-margin-top">修改头像</a>
-                        </div>
+            <div class="ui top grid stackable attached segment stackable">
+                <div class="row"
+                     style="border-bottom: 1px solid rgba(128,128,128,.2) !important;padding-bottom: 0 !important;">
+                    <h3 class="m-margin-top m-margin-bottom m-margin-left"
+                        style="font-size: 20px !important;color: #3d3d3d !important;">
+                        个人资料</h3>
                 </div>
-                <div class="m-margin-left m-inline-block border-none" style="width: 83% !important;">
-                    <div class="ui attached segment stackable border-none m-padded-no m-line-height">
+                <div class="three wide column">
+                    <img class="ui medium circular image image-122x122"
+                         src="http://hbimg.b0.upaiyun.com/1f20743f57decb129f4563314eafca4f83f7a18d105ac-xpHDBI_fw658">
+                    <a href="#"
+                       style="color: #3399ea !important;font-size: 14px !important;display: block !important;margin-left: 2.4em !important;"
+                       class="m-margin-top">修改头像</a>
+                </div>
+                <div class="thirteen wide column" style="padding-left: 0 !important;">
+                    <div class="row m-padded-no m-line-height">
                         ID：<span>qq_41684392</span>
                     </div>
-                    <div class="ui attached segment stackable border-none m-padded-no m-line-height">
-                        <label>关注&nbsp;&nbsp;</label><span >200</span>
-                        <label class="m-margin-left">粉丝&nbsp;&nbsp;</label ><span>0</span>
+
+                    <div class="row m-padded-no m-line-height"
+                         style="border-bottom: 1px solid rgba(128,128,128,.2) !important;">
+                        <label>关注&nbsp;&nbsp;</label><span>200</span>
+                        <label class="m-margin-left">粉丝&nbsp;&nbsp;</label><span>0</span>
                     </div>
-                    <div class="ui divider"></div>
-                    <div class="ui attached segment stackable border-none m-padded-no m-line-height">
-                        <label>昵称：</label><span class="m-margin-left">LoveIT</span>
+                    <div class="row m-padded-no m-line-height">
+
+                        <div class="ui grid">
+                            <div class="left floated five wide column">
+                                <label>昵称：</label><span class="m-margin-left">LoveIT</span>
+                            </div>
+                            <div class="right floated right aligned five wide column">
+                                <a id="go" rel="leanModal" name="signup" href="#signup">修改资料</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="ui attached segment stackable border-none m-padded-no m-line-height">
+                    <div class="row m-padded-no m-line-height">
                         <label>实名：</label><span class="m-margin-left"></span>
                     </div>
-                    <div class="ui attached segment stackable border-none m-padded-no m-line-height">
+                    <div class="row m-padded-no m-line-height">
                         <label>性别：</label><span class="m-margin-left">男</span>
                     </div>
-                    <div class="ui attached segment stackable border-none m-padded-no m-line-height">
+                    <div class="row m-padded-no m-line-height">
                         <label>生日：</label><span class="m-margin-left">1970-01-01</span>
                     </div>
-                    <div class="ui attached segment stackable border-none m-padded-no m-line-height">
+                    <div class="row m-padded-no m-line-height">
                         <label>地区：</label><span class="m-margin-left">中国-西安</span>
                     </div>
-                    <div class="ui attached segment stackable border-none m-padded-no m-line-height">
+                    <div class="row m-padded-no m-line-height">
                         <label>行业：</label><span class="m-margin-left">互联网，计算机</span>
                     </div>
-                    <div class="ui attached segment stackable border-none m-padded-no m-line-height">
+                    <div class="row m-padded-no m-line-height">
                         <label>职位：</label><span class="m-margin-left"></span>
                     </div>
-                    <div class="ui attached segment stackable border-none m-padded-no m-line-height">
+                    <div class="row m-padded-no m-line-height">
                         <label>简介：</label><span class="m-margin-left"></span>
                     </div>
-                   <br/>
                     <br/>
                     <br/>
                     <br/>
                     <br/>
                     <br/>
-
                 </div>
             </div>
         </div>
     </div>
+</div>
 
+<!--弹出框-->
+<div id="signup">
+    <div id="signup-ct">
+        <div id="signup-header">
+            <h2>修改资料</h2>
+            <a class="modal_close" href="#"></a>
+        </div>
+        <form action="" method="post">
+            <div class="ui doubling stackable grid container">
+                <!--昵称-->
+                <div class="row " style="margin-top: 15px !important;padding-bottom: 0 !important;">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        昵称
+                    </div>
+                    <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
+                        <div class="ui field">
+                            <div class="ui input">
+                                <input type="text" placeholder="LoveITer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--实名-->
+                <div class="row" style="padding-bottom: 0 !important;padding-top: 0 !important;">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        实名
+                    </div>
+                    <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
+                        <div class="ui field">
+                            <div class="thirteen wide column"
+                                 style="margin-top: 5px !important;padding-left: 0 !important;">
+                                <div class="ui field">
+                                    <div class="ui input">
+                                        <input type="text" placeholder="LoveITer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--职位-->
+                <div class="row" style="padding-bottom: 0 !important;padding-top: 0 !important;">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        职位
+                    </div>
+                    <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
+                        <div class="ui field">
+                            <div class="thirteen wide column"
+                                 style="margin-top: 5px !important;padding-left: 0 !important;">
+                                <div class="ui field">
+                                    <div class="ui input">
+                                        <input type="text" placeholder="LoveITer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--性别-->
+                <div class="row" style="padding-bottom: 0 !important;padding-top: 8px !important;">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        性别
+                    </div>
+                    <div class="thirteen wide column" style="padding-left: 0 !important;">
+                        <div class="field">
+                            <select name="minCount" class="ui dropdown">
+                                <option value="1">男</option>
+                                <option value="2">女</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!--生日-->
+                <div class="row" style="padding-bottom: 0 !important;padding-top: 0 !important;">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        生日
+                    </div>
+                    <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
+                        <div class="ui field">
+                            <div class="thirteen wide column"
+                                 style="margin-top: 5px !important;padding-left: 0 !important;">
+                                <div class="ui field">
+                                    <div class="ui input">
+                                        <input type="date" placeholder="LoveITer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--行业-->
+                <div class="row" style="padding-bottom: 0 !important;padding-top: 8px !important;">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        行业
+                    </div>
+                    <div class="thirteen wide column" style="padding-left: 0 !important;">
+                        <div class="field">
+                            <select class="ui dropdown">
+                                <option value="">请选择</option>
+                                <option value="1">电子·微电子</option>
+                                <option value="2">通信(设备·运营·增值服务)</option>
+                                <option value="2">批发·零售</option>
+                                <option value="2">贸易·进出口</option>
+                                <option value="2">广告·会展·公关</option>
+                                <option value="2">专业服务(咨询·财会·法律等)</option>
+                                <option value="2">房地产开发·建筑与工程</option>
+                                <option value="2">娱乐·运动·休闲</option>
+                                <option value="2">快速消费品(食品·饮料·日化·烟酒等)</option>
+                                <option value="2">家电业</option>
+                                <option value="2">家居·室内设计·装潢</option>
+                                <option value="2">旅游·酒店·餐饮服务</option>
+                                <option value="2">交通·运输·物流</option>
+                                <option value="2">办公设备·用品</option>
+                                <option value="2">医疗设备·器械</option>
+                                <option value="2">汽车·摩托车(制造·维护·配件·销售·服务)</option>
+                                <option value="2">制药·生物工程</option>
+                                <option value="2">环保</option>
+                                <option value="2">印刷·包装·造纸</option>
+                                <option value="2">中介服务(人才·商标专利)</option>
+                                <option value="2">教育·培训·科研·院校</option>
+                                <option value="2">医疗·保健·美容·卫生服务</option>
+                                <option value="2">互联网·电子商务</option>
+                                <option value="2">仪器·仪表·工业自动化·电气</option>
+                                <option value="2">计算机软件</option>
+                                <option value="2">计算机硬件·网络设备</option>
+                                <option value="2">IT服务·系统集成</option>
+                                <option value="2">银行</option>
+                                <option value="2">保险</option>
+                                <option value="2">基金·证券·期货·投资</option>
+                                <option value="2">耐用消费品(服饰·纺织·家具）</option>
+                                <option value="2">机械制造·机电·重工</option>
+                                <option value="2">原材料及加工（金属·木材·橡胶·塑料·玻璃·陶瓷·建材）</option>
+                                <option value="2">政府·非营利机构</option>
+                                <option value="2">房地产服务(中介·物业管理·监理、设计院)</option>
+                                <option value="2">媒体·出版·文化传播</option>
+                                <option value="2">化工</option>
+                                <option value="2">采掘·冶炼</option>
+                                <option value="2">能源（电力·石油）·水利</option>
+                                <option value="2">软件外包</option>
+                                <option value="2">网络游戏</option>
+                                <option value="2">嵌入式</option>
+                                <option value="2">国防/军队</option>
+                                <option value="2">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!--地区-->
+                <div class="row" style="padding-bottom: 0 !important;padding-top: 0 !important;">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        地区
+                    </div>
+                    <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
+                        <div class="ui field">
+                            <div class="thirteen wide column"
+                                 style="margin-top: 5px !important;padding-left: 0 !important;">
+                                <div class="ui field" style="min-width: 0 !important;">
+                                    <select class="ui compact dropdown" style="min-width: 0 !important;">
+                                        <option value="">请选择</option>
+                                        <option value="1" checked="">中国</option>
+                                    </select>
+                                    <select class="ui compact dropdown" style="min-width: 0px !important;">
+                                        <option value="">请选择</option>
+                                        <option value="1" checked="">北京市</option>
+                                        <option value="1" checked="">陕西省</option>
+                                    </select>
+                                    <select class="ui  dropdown" style="min-width: 0px !important;">
+                                        <option value="">请选择</option>
+                                        <option value="1" checked="">西安市</option>
+                                        <option value="1" checked="">汉中市</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--简介-->
+                <div class="row" style="padding-bottom: 0 !important;padding-top: 0 !important;">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        简介
+                    </div>
+                    <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
+                        <div class="ui field">
+                            <div class="thirteen wide column"
+                                 style="margin-top: 5px !important;padding-left: 0 !important;">
+                                <div class="ui form">
+                                    <div class="comment">
+                                        <textarea name="maxLength" rows="2"
+                                                  placeholder="300字以内"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right aligned row" style="padding-bottom: 5px !important;">
+                    <div class="right aligned sixteen wide column" style="padding-top: 0.5em !important;">
+                        <button class="ui  floated button ">取消</button>
+                        <button class="ui  floated submit button  red ">确定</button>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-bottom: 10px !important;"></div>
+            </div>
+        </form>
+    </div>
 </div>
 
 
-<div style="height: 25px"></div>
+<div style="height: 10em"></div>
 <!--底部footer-->
-<footer class="ui inverted vertical segment m-padded-tb-massive">
-    <div class="ui center aligned container">
-        <div class="ui inverted divided stackable grid">
-            <div class="three wide column">
-                <div class="ui inverted link list">
-                    <div class="item">
-                        <img src="../../images/wechat.jpg" class="ui rounded image" alt=""
-                             style="width: 125px">
-                    </div>
-                </div>
-            </div>
-            <div class="four wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced ">最新博客</h4>
-                <div class="ui inverted link list">
-                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
-                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
-                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
-                </div>
-            </div>
-            <div class="four wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
-                <div class="ui inverted link list">
-                    <a href="#" class="item m-text-thin m-txt-align-left">Email：2489868503hx@gmail.com</a>
-                    <a href="#" class="item m-text-thin m-txt-align-left">QQ：2489868503</a>
-                </div>
-            </div>
-            <div class="five wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
-                <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
-            </div>
-        </div>
-        <div class="ui inverted section divider"></div>
-        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2016 - 2017 EasyBlog Designed by HuangXin</p>
-    </div>
-
-</footer>
+<div th:replace="~{footer :: footbar}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('a[rel*=leanModal]').leanModal({top: 200, closeButton: ".modal_close"});
+    });
+</script>
+<!--弹出框js-->
+<script type="text/javascript">
+    (function ($) {
+        $.fn.extend({
+            leanModal: function (options) {
+                var defaults = {
+                    top: 100,
+                    overlay: 0.5,
+                    closeButton: null
+                };
+                var overlay = $("<div id='lean_overlay'></div>");
+                $("body").append(overlay);
+                options = $.extend(defaults, options);
+                return this.each(function () {
+                    var o = options;
+                    $(this).click(function (e) {
+                        var modal_id = $(this).attr("href");
+                        $("#lean_overlay").click(function () {
+                            close_modal(modal_id)
+                        });
+                        $(o.closeButton).click(function () {
+                            close_modal(modal_id)
+                        });
+                        var modal_height = $(modal_id).outerHeight();
+                        var modal_width = $(modal_id).outerWidth();
+                        $("#lean_overlay").css({
+                            "display": "block",
+                            opacity: 0
+                        });
+                        $("#lean_overlay").fadeTo(200, o.overlay);
+                        $(modal_id).css({
+                            "display": "block",
+                            "position": "fixed",
+                            "opacity": 0,
+                            "z-index": 11000,
+                            "left": 50 + "%",
+                            "margin-left": -(modal_width / 2) + "px",
+                            "top": o.top - 140 + "px"
+                        });
+                        $(modal_id).fadeTo(200, 1);
+                        e.preventDefault()
+                    })
+                });
+
+                function close_modal(modal_id) {
+                    $("#lean_overlay").fadeOut(200);
+                    $(modal_id).css({
+                        "display": "none"
+                    })
+                }
+            }
+        })
+    })(jQuery);
+</script>
+
 
 <script>
     $('.menu.toggle').click(function () {
@@ -202,7 +446,24 @@
     $('#searchBar').click(function () {
         $('#reloadSearchBar').css("display", "block");  //显示div
     })
-
 </script>
+<script type="text/javascript">
+    $('.length.example form')
+        .form({
+            fields: {
+                on: 'blur',
+                maxLength: {
+                    identifier: 'maxLength',
+                    rules: [
+                        {
+                            type: 'maxLength[300]',
+                            prompt: '300字以内'
+                        }
+                    ]
+                }
+            }
+        });
+</script>
+
 </body>
 </html>
