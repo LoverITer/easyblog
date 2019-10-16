@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.easyblog.mapper.UserMapper">
+
+    <!--添加一条记录-->
+    <insert id="save" useGeneratedKeys="true" keyColumn="user_id">
+        insert into user (user_nickname, user_password, user_name, user_gender, user_birthday, user_qq, user_phone,
+                          user_mail, user_address, user_score, user_rank, user_headerImg_url,
+                          user_description, user_register_time, user_register_ip, user_last_login_ip,
+                          user_last_update_time, user_lock, user_freeze, user_power)
+        values (#{userNickname}, #{userPassword}, #{userName}, #{userGender}, #{userBirthday}, #{userQQ}, #{userPhone},
+                #{userMail}, #{userAddress}, #{userScore}, #{userRank}, #{userHeaderImgUrl}, #{userDescription},
+                now(), #{userRegisterIp}, #{userLastLoginIp}, #{userLastUpdateTime}, #{userLock},
+                #{userFreeze}, #{userPower})
+    </insert>
+
+    <!--批量插入数据-->
+    <insert id="saveBatch" parameterType="list">
+        insert into user (user_nickname, user_password, user_name, user_gender, user_birthday, user_qq, user_phone,
+        user_mail, user_address, user_score, user_rank, user_headerImg_url,
+        user_description, user_register_time, user_register_ip, user_last_login_ip,
+        user_last_update_time, user_lock, user_freeze, user_power)
+        values
+        <foreach collection="list" item="list" index="index" separator=",">
+            (#{list.userNickname}, #{list.userPassword},
+            #{list.userName}, #{list.userGender},
+            #{list.userBirthday}, #{list.userQQ},
+            #{list.userPhone}, #{list.userMail},
+            #{list.userAddress}, #{list.userScore},
+            #{list.userRank}, #{list.userHeaderImgUrl},
+            #{list.userDescription}, now(),
+            #{list.userRegisterIp}, #{list.userLastLoginIp},
+            #{list.userLastUpdateTime}, #{list.userLock},
+            #{list.userFreeze}, #{list.userPower})
+        </foreach>
+    </insert>
+
+    <update id="updateByPrimaryKey">
+        update user
+        <set>
+            <if test="userNickname!=null">
+                user_nickname=#{userNickname},
+            </if>
+            <if test="userPassword != null">
+                user_password=#{userPassword},
+            </if>
+            <if test="userGender!=null">
+                user_gender=#{userGender},
+            </if>
+            <if test="userQQ!=null">
+                user_qq=#{userQQ},
+            </if>
+            <if test="userPhone!=null">
+                user_phone=#{userPhone},
+            </if>
+            <if test="userMail!=null">
+                user_mail=#{userMail},
+            </if>
+            <if test="userAddress">
+                user_address=#{userAddress},
+            </if>
+            <if test="userScore!=null">
+                user_score=#{userScore},
+            </if>
+            <if test="userRank!=null">
+                user_rank=#{userRank},
+            </if>
+            <if test="userHeaderImgUrl!=null">
+                user_headerImg_url=#{userHeaderImgUrl},
+            </if>
+            <if test="userDescription!=null">
+                user_description=#{userDescription},
+            </if>
+            <if test="userLastLoginIp">
+                user_last_login_ip=#{userLastLoginIp},
+            </if>
+            <if test="userLastUpdateTime!=null">
+                user_last_update_time=#{userLastUpdateTime},
+            </if>
+            <if test="userFreeze!=null">
+                user_lock=#{userLock},
+            </if>
+            <if test="userFreeze!=null">
+                user_freeze=#{userFreeze},
+            </if>
+            <if test="userPower!=null">
+                user_power=#{userPower}
+            </if>
+        </set>
+        where user_id=#{userId}
+    </update>
+
+    <select id="getByPrimaryKey" parameterType="long" resultType="org.easyblog.bean.User">
+        select * from user where user_id = #{id}
+    </select>
+
+    <select id="getAll" resultType="org.easyblog.bean.User">
+        select * from user
+    </select>
+
+    <!--根据条件计数-->
+    <select id="count" resultType="integer">
+        select count(*) from user
+    </select>
+
+    <!--根据主键删除-->
+    <delete id="deleteByPrimaryKey">
+        delete
+        from user
+        where user_id = #{userId}
+    </delete>
+
+    <!--有选择性的删除-->
+    <delete id="deleteSelective">
+        delete from user
+        <where>
+            <choose>
+                <when test="userNickname!=null">user_nickname=#{userNickname}</when>
+                <when test="userPhone!=null">user_phone=#{userPhone}</when>
+                <when test="1==1">1=1</when>
+            </choose>
+        </where>
+    </delete>
+
+
+</mapper>

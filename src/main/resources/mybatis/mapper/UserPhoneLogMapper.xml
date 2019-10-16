@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.easyblog.mapper.UserPhoneLogMapper">
+  <resultMap id="BaseResultMap" type="org.easyblog.bean.UserPhoneLog">
+    <id column="log_id" jdbcType="BIGINT" property="logId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.easyblog.bean.UserPhoneLog">
+    <result column="context" jdbcType="LONGVARCHAR" property="context" />
+  </resultMap>
+
+  <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select *
+    from user_phone_log
+    where log_id = #{id}
+  </select>
+
+  <select id="getAll" resultType="list">
+    select * from user_phone_log
+  </select>
+
+  <select id="count" resultType="integer">
+    select count(*) from user_phone_log
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user_phone_log
+    where log_id = #{logId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="save" parameterType="org.easyblog.bean.UserPhoneLog">
+    insert into user_phone_log (log_id, user_id, log_time, 
+      context)
+    values (#{logId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{logTime,jdbcType=TIMESTAMP}, 
+      #{context,jdbcType=LONGVARCHAR})
+  </insert>
+
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserPhoneLog">
+    insert into user_phone_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="logId != null">
+        log_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="logTime != null">
+        log_time,
+      </if>
+      <if test="context != null">
+        context,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="logId != null">
+        #{logId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="logTime != null">
+        #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="context != null">
+        #{context,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserPhoneLog">
+    update user_phone_log
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="logTime != null">
+        log_time = #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="context != null">
+        context = #{context,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where log_id = #{logId,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.UserPhoneLog">
+    update user_phone_log
+    set user_id = #{userId,jdbcType=INTEGER},
+      log_time = #{logTime,jdbcType=TIMESTAMP},
+      context = #{context,jdbcType=LONGVARCHAR}
+    where log_id = #{logId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserPhoneLog">
+    update user_phone_log
+    set user_id = #{userId,jdbcType=INTEGER},
+      log_time = #{logTime,jdbcType=TIMESTAMP}
+    where log_id = #{logId,jdbcType=BIGINT}
+  </update>
+</mapper>

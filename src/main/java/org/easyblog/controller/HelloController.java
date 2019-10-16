@@ -11,12 +11,25 @@ public class HelloController {
 
     @RequestMapping(value = "/index")
     public String hello(){
+        //int i=9/0;
         return "user_home";
     }
 
     @GetMapping(value = "/blog/{id}")
     public String blog(Model model,@PathVariable(value = "id",required = true) Integer id){
         return "blog";
+    }
+
+
+    @GetMapping(value = "/center")
+    public String center(){
+        return "admin/personalInfo/personal-center";
+    }
+
+
+    @GetMapping(value = "/write")
+    public String write(){
+        return "admin/blogmanage/blogs-input";
     }
 
 }

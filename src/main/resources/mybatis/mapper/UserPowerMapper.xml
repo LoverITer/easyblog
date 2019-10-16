@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.easyblog.mapper.UserPowerMapper">
+  <resultMap id="BaseResultMap" type="org.easyblog.bean.UserPower">
+    <id column="power_id" jdbcType="TINYINT" property="powerId" />
+    <result column="power_name" jdbcType="VARCHAR" property="powerName" />
+  </resultMap>
+
+  <select id="getByPrimaryKey" parameterType="java.lang.Byte" resultMap="BaseResultMap">
+    select *
+    from user_power
+    where power_id = #{id}
+  </select>
+
+  <select id="getAll" resultType="list">
+    select * from user_power
+  </select>
+
+  <select id="count" resultType="integer">
+    select count(*) from user_power
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Byte">
+    delete from user_power
+    where power_id = #{powerId,jdbcType=TINYINT}
+  </delete>
+
+  <insert id="save" parameterType="org.easyblog.bean.UserPower">
+    insert into user_power (power_id, power_name)
+    values
+    (#{powerId,jdbcType=TINYINT}, #{powerName,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserPower">
+    insert into user_power
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="powerId != null">
+        power_id,
+      </if>
+      <if test="powerName != null">
+        power_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="powerId != null">
+        #{powerId,jdbcType=TINYINT},
+      </if>
+      <if test="powerName != null">
+        #{powerName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserPower">
+    update user_power
+    <set>
+      <if test="powerName != null">
+        power_name = #{powerName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where power_id = #{powerId,jdbcType=TINYINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserPower">
+    update user_power
+    set power_name = #{powerName,jdbcType=VARCHAR}
+    where power_id = #{powerId,jdbcType=TINYINT}
+  </update>
+</mapper>

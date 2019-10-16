@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.easyblog.mapper.UserAttentionMapper">
+  <resultMap id="BaseResultMap" type="org.easyblog.bean.UserAttention">
+    <id column="id" jdbcType="SMALLINT" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="attention_id" jdbcType="INTEGER" property="attentionId" />
+    <result column="attention_time" jdbcType="TIMESTAMP" property="attentionTime" />
+  </resultMap>
+
+  <insert id="save" parameterType="org.easyblog.bean.UserAttention">
+    insert into user_attention (id, user_id, attention_id,
+                                attention_time)
+    values (#{id,jdbcType=SMALLINT}, #{userId,jdbcType=INTEGER}, #{attentionId,jdbcType=INTEGER},
+            #{attentionTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserAttention">
+    insert into user_attention
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="attentionId != null">
+        attention_id,
+      </if>
+      <if test="attentionTime != null">
+        attention_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=SMALLINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="attentionId != null">
+        #{attentionId,jdbcType=INTEGER},
+      </if>
+      <if test="attentionTime != null">
+        #{attentionTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getByPrimaryKey"  resultType="org.easyblog.bean.UserAttention">
+    select *
+    from user_attention
+    where id = #{id,jdbcType=SMALLINT}
+  </select>
+
+  <select id="getAll" resultType="list">
+    select * from secret_message
+  </select>
+
+  <select id="count" resultType="integer">
+    select count(*) from secret_message
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="long">
+    delete from user_attention
+    where id = #{id,jdbcType=SMALLINT}
+  </delete>
+
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserAttention">
+    update user_attention
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="attentionId != null">
+        attention_id = #{attentionId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserAttention">
+    update user_attention
+    set user_id = #{userId,jdbcType=INTEGER},
+      attention_id = #{attentionId,jdbcType=INTEGER},
+      attention_time = #{attentionTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+</mapper>
