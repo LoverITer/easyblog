@@ -14,6 +14,14 @@ public class UserPhoneLog implements Serializable {
 
     private String context;
 
+    public UserPhoneLog() {
+    }
+
+    public UserPhoneLog( Date logTime, String context) {
+        this.logTime = logTime;
+        this.context = context;
+    }
+
     public Long getLogId() {
         return logId;
     }

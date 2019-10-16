@@ -1,19 +1,16 @@
 package org.easyblog.mapper;
 
 import org.easyblog.bean.UserComment;
+import org.easyblog.mapper.core.BaseMapper;
+import org.springframework.stereotype.Repository;
 
-public interface UserCommentMapper {
-    int deleteByPrimaryKey(Integer commentId);
 
-    int insert(UserComment record);
+@Repository
+public interface UserCommentMapper extends BaseMapper<UserComment> {
 
-    int insertSelective(UserComment record);
-
-    UserComment selectByPrimaryKey(Integer commentId);
+    int saveSelective(UserComment record);
 
     int updateByPrimaryKeySelective(UserComment record);
 
-    int updateByPrimaryKeyWithBLOBs(UserComment record);
-
-    int updateByPrimaryKey(UserComment record);
+    int updateByPrimaryKeyWithContent(UserComment record);
 }

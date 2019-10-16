@@ -9,31 +9,35 @@
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.easyblog.bean.UserPhoneLog">
     <result column="context" jdbcType="LONGVARCHAR" property="context" />
   </resultMap>
-  <sql id="Base_Column_List">
-    log_id, user_id, log_time
-  </sql>
-  <sql id="Blob_Column_List">
-    context
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
+
+  <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select *
     from user_phone_log
-    where log_id = #{logId,jdbcType=BIGINT}
+    where log_id = #{id}
   </select>
+
+  <select id="getAll" resultType="list">
+    select * from user_phone_log
+  </select>
+
+  <select id="count" resultType="integer">
+    select count(*) from user_phone_log
+  </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from user_phone_log
     where log_id = #{logId,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="org.easyblog.bean.UserPhoneLog">
+
+  <insert id="save" parameterType="org.easyblog.bean.UserPhoneLog">
     insert into user_phone_log (log_id, user_id, log_time, 
       context)
     values (#{logId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{logTime,jdbcType=TIMESTAMP}, 
       #{context,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="org.easyblog.bean.UserPhoneLog">
+
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserPhoneLog">
     insert into user_phone_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="logId != null">
@@ -64,6 +68,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserPhoneLog">
     update user_phone_log
     <set>
@@ -79,7 +84,8 @@
     </set>
     where log_id = #{logId,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.easyblog.bean.UserPhoneLog">
+
+  <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.UserPhoneLog">
     update user_phone_log
     set user_id = #{userId,jdbcType=INTEGER},
       log_time = #{logTime,jdbcType=TIMESTAMP},

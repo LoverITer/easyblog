@@ -1,19 +1,16 @@
 package org.easyblog.mapper;
 
 import org.easyblog.bean.UserMailLog;
+import org.easyblog.mapper.core.BaseMapper;
+import org.springframework.stereotype.Repository;
 
-public interface UserMailLogMapper {
-    int deleteByPrimaryKey(Long logId);
+@Repository
+public interface UserMailLogMapper extends BaseMapper<UserMailLog> {
 
-    int insert(UserMailLog record);
-
-    int insertSelective(UserMailLog record);
-
-    UserMailLog selectByPrimaryKey(Long logId);
+    int saveSelective(UserMailLog record);
 
     int updateByPrimaryKeySelective(UserMailLog record);
 
-    int updateByPrimaryKeyWithBLOBs(UserMailLog record);
+    int updateByPrimaryKeyWithContent(UserMailLog record);
 
-    int updateByPrimaryKey(UserMailLog record);
 }

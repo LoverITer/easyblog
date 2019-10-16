@@ -1,17 +1,14 @@
 package org.easyblog.mapper;
 
 import org.easyblog.bean.UserAttention;
+import org.easyblog.mapper.core.BaseMapper;
+import org.springframework.stereotype.Repository;
 
-public interface UserAttentionMapper {
-    int deleteByPrimaryKey(Short id);
+@Repository
+public interface UserAttentionMapper extends BaseMapper<UserAttention> {
 
-    int insert(UserAttention record);
-
-    int insertSelective(UserAttention record);
-
-    UserAttention selectByPrimaryKey(Short id);
+    int saveSelective(UserAttention record);
 
     int updateByPrimaryKeySelective(UserAttention record);
 
-    int updateByPrimaryKey(UserAttention record);
 }

@@ -1,189 +1,210 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.easyblog.mapper.ArticleMapper">
-  <resultMap id="BaseResultMap" type="org.easyblog.bean.Article">
-    <id column="article_id" jdbcType="BIGINT" property="articleId" />
-    <result column="article_user" jdbcType="INTEGER" property="articleUser" />
-    <result column="article_topic" jdbcType="VARCHAR" property="articleTopic" />
-    <result column="article_publish_time" jdbcType="TIMESTAMP" property="articlePublishTime" />
-    <result column="article_click" jdbcType="INTEGER" property="articleClick" />
-    <result column="article_category" jdbcType="VARCHAR" property="articleCategory" />
-    <result column="article_status" jdbcType="CHAR" property="articleStatus" />
-    <result column="article_top" jdbcType="BIT" property="articleTop" />
-    <result column="article_type" jdbcType="CHAR" property="articleType" />
-    <result column="article_tags" jdbcType="VARCHAR" property="articleTags" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.easyblog.bean.Article">
-    <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="org.easyblog.bean.Article">
+        <id column="article_id" jdbcType="BIGINT" property="articleId"/>
+        <result column="article_user" jdbcType="INTEGER" property="articleUser"/>
+        <result column="article_topic" jdbcType="VARCHAR" property="articleTopic"/>
+        <result column="article_publish_time" jdbcType="TIMESTAMP" property="articlePublishTime"/>
+        <result column="article_click" jdbcType="INTEGER" property="articleClick"/>
+        <result column="article_category" jdbcType="VARCHAR" property="articleCategory"/>
+        <result column="article_status" jdbcType="CHAR" property="articleStatus"/>
+        <result column="article_top" jdbcType="BIT" property="articleTop"/>
+        <result column="article_type" jdbcType="CHAR" property="articleType"/>
+        <result column="article_tags" jdbcType="VARCHAR" property="articleTags"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.easyblog.bean.Article">
+        <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent"/>
+    </resultMap>
 
-  <insert id="save" parameterType="org.easyblog.bean.Article">
-    insert into article (article_id, article_user, article_topic,
-                         article_publish_time, article_click, article_category,
-                         article_status, article_top, article_type,
-                         article_tags, article_content)
-    values (#{articleId,jdbcType=BIGINT}, #{articleUser,jdbcType=INTEGER}, #{articleTopic,jdbcType=VARCHAR},
-            #{articlePublishTime,jdbcType=TIMESTAMP}, #{articleClick,jdbcType=INTEGER}, #{articleCategory,jdbcType=VARCHAR},
-            #{articleStatus,jdbcType=CHAR}, #{articleTop,jdbcType=BIT}, #{articleType,jdbcType=CHAR},
-            #{articleTags,jdbcType=VARCHAR}, #{articleContent,jdbcType=LONGVARCHAR})
-  </insert>
+    <insert id="save" parameterType="org.easyblog.bean.Article">
+        insert into article (article_user, article_topic,
+                             article_publish_time, article_click, article_category,
+                             article_status, article_top, article_type,
+                             article_tags, article_content)
+        values (#{articleUser,jdbcType=INTEGER}, #{articleTopic,jdbcType=VARCHAR},
+                now(), #{articleClick,jdbcType=INTEGER},
+                #{articleCategory,jdbcType=VARCHAR},
+                #{articleStatus,jdbcType=CHAR}, #{articleTop,jdbcType=BIT}, #{articleType,jdbcType=CHAR},
+                #{articleTags,jdbcType=VARCHAR}, #{articleContent,jdbcType=LONGVARCHAR})
+    </insert>
 
-  <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-    select *
-    from article
-    where article_id = #{articleId,jdbcType=BIGINT}
-  </select>
 
-  <select id="getAll" resultType="list">
-    select * from article
-  </select>
+     <!--批量插入数据-->
+    <insert id="saveBatch" parameterType="list">
+        insert into article (article_user, article_topic,
+        article_publish_time, article_click, article_category,
+        article_status, article_top, article_type,
+        article_tags, article_content)
+        values
+        <foreach collection="list" item="list" index="index" separator=",">
+            (#{list.articleUser,jdbcType=INTEGER}, #{list.articleTopic,jdbcType=VARCHAR},
+            now(), #{list.articleClick,jdbcType=INTEGER},
+            #{list.articleCategory,jdbcType=VARCHAR}, #{list.articleStatus,jdbcType=CHAR},
+            #{list.articleTop,jdbcType=BIT}, #{list.articleType,jdbcType=CHAR},
+            #{list.articleTags,jdbcType=VARCHAR}, #{list.articleContent,jdbcType=LONGVARCHAR})
+        </foreach>
+    </insert>
 
-  <select id="count" resultType="integer">
-     select count(*) from article
-  </select>
+    <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+        select *
+        from article
+        where article_id = #{articleId,jdbcType=BIGINT}
+    </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from article
-    where article_id = #{articleId,jdbcType=BIGINT}
-  </delete>
+    <select id="getAll" resultType="list">
+        select *
+        from article
+    </select>
 
-  <insert id="insertSelective" parameterType="org.easyblog.bean.Article">
-    insert into article
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="articleId != null">
-        article_id,
-      </if>
-      <if test="articleUser != null">
-        article_user,
-      </if>
-      <if test="articleTopic != null">
-        article_topic,
-      </if>
-      <if test="articlePublishTime != null">
-        article_publish_time,
-      </if>
-      <if test="articleClick != null">
-        article_click,
-      </if>
-      <if test="articleCategory != null">
-        article_category,
-      </if>
-      <if test="articleStatus != null">
-        article_status,
-      </if>
-      <if test="articleTop != null">
-        article_top,
-      </if>
-      <if test="articleType != null">
-        article_type,
-      </if>
-      <if test="articleTags != null">
-        article_tags,
-      </if>
-      <if test="articleContent != null">
-        article_content,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="articleId != null">
-        #{articleId,jdbcType=BIGINT},
-      </if>
-      <if test="articleUser != null">
-        #{articleUser,jdbcType=INTEGER},
-      </if>
-      <if test="articleTopic != null">
-        #{articleTopic,jdbcType=VARCHAR},
-      </if>
-      <if test="articlePublishTime != null">
-        #{articlePublishTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="articleClick != null">
-        #{articleClick,jdbcType=INTEGER},
-      </if>
-      <if test="articleCategory != null">
-        #{articleCategory,jdbcType=VARCHAR},
-      </if>
-      <if test="articleStatus != null">
-        #{articleStatus,jdbcType=CHAR},
-      </if>
-      <if test="articleTop != null">
-        #{articleTop,jdbcType=BIT},
-      </if>
-      <if test="articleType != null">
-        #{articleType,jdbcType=CHAR},
-      </if>
-      <if test="articleTags != null">
-        #{articleTags,jdbcType=VARCHAR},
-      </if>
-      <if test="articleContent != null">
-        #{articleContent,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
+    <select id="count" resultType="integer">
+        select count(*)
+        from article
+    </select>
 
-  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Article">
-    update article
-    <set>
-      <if test="articleUser != null">
-        article_user = #{articleUser,jdbcType=INTEGER},
-      </if>
-      <if test="articleTopic != null">
-        article_topic = #{articleTopic,jdbcType=VARCHAR},
-      </if>
-      <if test="articlePublishTime != null">
-        article_publish_time = #{articlePublishTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="articleClick != null">
-        article_click = #{articleClick,jdbcType=INTEGER},
-      </if>
-      <if test="articleCategory != null">
-        article_category = #{articleCategory,jdbcType=VARCHAR},
-      </if>
-      <if test="articleStatus != null">
-        article_status = #{articleStatus,jdbcType=CHAR},
-      </if>
-      <if test="articleTop != null">
-        article_top = #{articleTop,jdbcType=BIT},
-      </if>
-      <if test="articleType != null">
-        article_type = #{articleType,jdbcType=CHAR},
-      </if>
-      <if test="articleTags != null">
-        article_tags = #{articleTags,jdbcType=VARCHAR},
-      </if>
-      <if test="articleContent != null">
-        article_content = #{articleContent,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where article_id = #{articleId,jdbcType=BIGINT}
-  </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from article
+        where article_id = #{articleId,jdbcType=BIGINT}
+    </delete>
 
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.easyblog.bean.Article">
-    update article
-    set article_user = #{articleUser,jdbcType=INTEGER},
-      article_topic = #{articleTopic,jdbcType=VARCHAR},
-      article_publish_time = #{articlePublishTime,jdbcType=TIMESTAMP},
-      article_click = #{articleClick,jdbcType=INTEGER},
-      article_category = #{articleCategory,jdbcType=VARCHAR},
-      article_status = #{articleStatus,jdbcType=CHAR},
-      article_top = #{articleTop,jdbcType=BIT},
-      article_type = #{articleType,jdbcType=CHAR},
-      article_tags = #{articleTags,jdbcType=VARCHAR},
-      article_content = #{articleContent,jdbcType=LONGVARCHAR}
-    where article_id = #{articleId,jdbcType=BIGINT}
-  </update>
+    <insert id="saveSelective" parameterType="org.easyblog.bean.Article">
+        insert into article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="articleId != null">
+                article_id,
+            </if>
+            <if test="articleUser != null">
+                article_user,
+            </if>
+            <if test="articleTopic != null">
+                article_topic,
+            </if>
+            <if test="articlePublishTime != null">
+                article_publish_time,
+            </if>
+            <if test="articleClick != null">
+                article_click,
+            </if>
+            <if test="articleCategory != null">
+                article_category,
+            </if>
+            <if test="articleStatus != null">
+                article_status,
+            </if>
+            <if test="articleTop != null">
+                article_top,
+            </if>
+            <if test="articleType != null">
+                article_type,
+            </if>
+            <if test="articleTags != null">
+                article_tags,
+            </if>
+            <if test="articleContent != null">
+                article_content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="articleId != null">
+                #{articleId,jdbcType=BIGINT},
+            </if>
+            <if test="articleUser != null">
+                #{articleUser,jdbcType=INTEGER},
+            </if>
+            <if test="articleTopic != null">
+                #{articleTopic,jdbcType=VARCHAR},
+            </if>
+            <if test="articlePublishTime != null">
+                #{articlePublishTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="articleClick != null">
+                #{articleClick,jdbcType=INTEGER},
+            </if>
+            <if test="articleCategory != null">
+                #{articleCategory,jdbcType=VARCHAR},
+            </if>
+            <if test="articleStatus != null">
+                #{articleStatus,jdbcType=CHAR},
+            </if>
+            <if test="articleTop != null">
+                #{articleTop,jdbcType=BIT},
+            </if>
+            <if test="articleType != null">
+                #{articleType,jdbcType=CHAR},
+            </if>
+            <if test="articleTags != null">
+                #{articleTags,jdbcType=VARCHAR},
+            </if>
+            <if test="articleContent != null">
+                #{articleContent,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
 
-  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Article">
-    update article
-    set article_user = #{articleUser,jdbcType=INTEGER},
-      article_topic = #{articleTopic,jdbcType=VARCHAR},
-      article_publish_time = #{articlePublishTime,jdbcType=TIMESTAMP},
-      article_click = #{articleClick,jdbcType=INTEGER},
-      article_category = #{articleCategory,jdbcType=VARCHAR},
-      article_status = #{articleStatus,jdbcType=CHAR},
-      article_top = #{articleTop,jdbcType=BIT},
-      article_type = #{articleType,jdbcType=CHAR},
-      article_tags = #{articleTags,jdbcType=VARCHAR}
-    where article_id = #{articleId,jdbcType=BIGINT}
-  </update>
+    <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Article">
+        update article
+        <set>
+            <if test="articleUser != null">
+                article_user = #{articleUser,jdbcType=INTEGER},
+            </if>
+            <if test="articleTopic != null">
+                article_topic = #{articleTopic,jdbcType=VARCHAR},
+            </if>
+            <if test="articlePublishTime != null">
+                article_publish_time = #{articlePublishTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="articleClick != null">
+                article_click = #{articleClick,jdbcType=INTEGER},
+            </if>
+            <if test="articleCategory != null">
+                article_category = #{articleCategory,jdbcType=VARCHAR},
+            </if>
+            <if test="articleStatus != null">
+                article_status = #{articleStatus,jdbcType=CHAR},
+            </if>
+            <if test="articleTop != null">
+                article_top = #{articleTop,jdbcType=BIT},
+            </if>
+            <if test="articleType != null">
+                article_type = #{articleType,jdbcType=CHAR},
+            </if>
+            <if test="articleTags != null">
+                article_tags = #{articleTags,jdbcType=VARCHAR},
+            </if>
+            <if test="articleContent != null">
+                article_content = #{articleContent,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where article_id = #{articleId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.Article">
+        update article
+        set article_user         = #{articleUser,jdbcType=INTEGER},
+            article_topic        = #{articleTopic,jdbcType=VARCHAR},
+            article_publish_time = #{articlePublishTime,jdbcType=TIMESTAMP},
+            article_click        = #{articleClick,jdbcType=INTEGER},
+            article_category     = #{articleCategory,jdbcType=VARCHAR},
+            article_status       = #{articleStatus,jdbcType=CHAR},
+            article_top          = #{articleTop,jdbcType=BIT},
+            article_type         = #{articleType,jdbcType=CHAR},
+            article_tags         = #{articleTags,jdbcType=VARCHAR},
+            article_content      = #{articleContent,jdbcType=LONGVARCHAR}
+        where article_id = #{articleId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Article">
+        update article
+        set article_user         = #{articleUser,jdbcType=INTEGER},
+            article_topic        = #{articleTopic,jdbcType=VARCHAR},
+            article_publish_time = #{articlePublishTime,jdbcType=TIMESTAMP},
+            article_click        = #{articleClick,jdbcType=INTEGER},
+            article_category     = #{articleCategory,jdbcType=VARCHAR},
+            article_status       = #{articleStatus,jdbcType=CHAR},
+            article_top          = #{articleTop,jdbcType=BIT},
+            article_type         = #{articleType,jdbcType=CHAR},
+            article_tags         = #{articleTags,jdbcType=VARCHAR}
+        where article_id = #{articleId,jdbcType=BIGINT}
+    </update>
 </mapper>

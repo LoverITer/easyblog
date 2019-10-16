@@ -3,7 +3,9 @@ package org.easyblog.bean;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UserSignInLog implements Serializable {
+public class UserSigninLog implements Serializable {
+
+    private static final long serialVersionUID = 8995845661621294868L;
     private Long logId;
 
     private Integer userId;
@@ -13,6 +15,16 @@ public class UserSignInLog implements Serializable {
     private String loginLocation;
 
     private Date loginTime;
+
+    public UserSigninLog() {
+    }
+
+    public UserSigninLog( Integer userId, String loginIp, String loginLocation, Date loginTime) {
+        this.userId = userId;
+        this.loginIp = loginIp;
+        this.loginLocation = loginLocation;
+        this.loginTime = loginTime;
+    }
 
     public Long getLogId() {
         return logId;

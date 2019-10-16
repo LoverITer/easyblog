@@ -14,6 +14,14 @@ public class UserMailLog implements Serializable {
 
     private String context;
 
+    public UserMailLog() {
+    }
+
+    public UserMailLog( Date logTime, String context) {
+        this.logTime = logTime;
+        this.context = context;
+    }
+
     public Long getLogId() {
         return logId;
     }

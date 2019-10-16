@@ -5,24 +5,32 @@
     <id column="power_id" jdbcType="TINYINT" property="powerId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
-  <sql id="Base_Column_List">
-    power_id, name
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Byte" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
+
+  <select id="getByPrimaryKey" parameterType="java.lang.Byte" resultMap="BaseResultMap">
+    select *
     from power
-    where power_id = #{powerId,jdbcType=TINYINT}
+    where power_id = #{id}
   </select>
+
+  <select id="getAll" resultType="list">
+    select * from power
+  </select>
+
+  <select id="count" resultType="integer">
+    select count(*) from power
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Byte">
     delete from power
     where power_id = #{powerId,jdbcType=TINYINT}
   </delete>
-  <insert id="insert" parameterType="org.easyblog.bean.Power">
+
+  <insert id="save" parameterType="org.easyblog.bean.Power" useGeneratedKeys="true" keyColumn="power_id">
     insert into power (power_id, name)
     values (#{powerId,jdbcType=TINYINT}, #{name,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="org.easyblog.bean.Power">
+
+  <insert id="saveSelective" parameterType="org.easyblog.bean.Power" useGeneratedKeys="true" keyColumn="power_id">
     insert into power
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="powerId != null">
@@ -41,6 +49,13 @@
       </if>
     </trim>
   </insert>
+
+  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Power">
+    update power
+    set name = #{name,jdbcType=VARCHAR}
+    where power_id = #{powerId,jdbcType=TINYINT}
+  </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Power">
     update power
     <set>
@@ -50,9 +65,5 @@
     </set>
     where power_id = #{powerId,jdbcType=TINYINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Power">
-    update power
-    set name = #{name,jdbcType=VARCHAR}
-    where power_id = #{powerId,jdbcType=TINYINT}
-  </update>
+
 </mapper>

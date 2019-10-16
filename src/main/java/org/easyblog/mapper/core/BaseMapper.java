@@ -1,15 +1,19 @@
 package org.easyblog.mapper.core;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface BaseMapper<T> {
 
     /**
      * 添加一条记录
-     * @param record  插入对记录
+     * @param t  插入对记录
      * @return    当前最新插入记录的id
      */
-    int save(T record) ;
+    int save(T t) ;
+
+    void saveBatch(List<T> list);
 
     /**
      * 通过主键删除
@@ -35,10 +39,10 @@ public interface BaseMapper<T> {
 
     /**
      * 根据主键的得到一个
-     * @param key  主键
+     * @param id  主键
      * @return 返回一条记录
      */
-    T getByPrimaryKey(Long key);
+    T getByPrimaryKey(@Param("id") Long id);
 
 
     /**

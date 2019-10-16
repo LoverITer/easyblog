@@ -5,15 +5,23 @@ import java.io.Serializable;
 public class Power implements Serializable {
 
     private static final long serialVersionUID = 6025381966973267562L;
-    private Byte powerId;
+
+    private Integer powerId;
 
     private String name;
 
-    public Byte getPowerId() {
+    public Power() {
+    }
+
+    public Power( String name) {
+        this.name = name;
+    }
+
+    public Integer getPowerId() {
         return powerId;
     }
 
-    public void setPowerId(Byte powerId) {
+    public void setPowerId(Integer powerId) {
         this.powerId = powerId;
     }
 

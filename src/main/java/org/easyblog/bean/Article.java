@@ -6,6 +6,7 @@ import java.util.Date;
 public class Article implements Serializable {
 
     private static final long serialVersionUID = -1882730239589668817L;
+
     private Long articleId;
 
     private Integer articleUser;
@@ -27,6 +28,22 @@ public class Article implements Serializable {
     private String articleTags;
 
     private String articleContent;
+
+    public Article() {
+    }
+
+    public Article(Integer articleUser, String articleTopic, Date articlePublishTime, Integer articleClick, String articleCategory, String articleStatus, Boolean articleTop, String articleType, String articleTags, String articleContent) {
+        this.articleUser = articleUser;
+        this.articleTopic = articleTopic;
+        this.articlePublishTime = articlePublishTime;
+        this.articleClick = articleClick;
+        this.articleCategory = articleCategory;
+        this.articleStatus = articleStatus;
+        this.articleTop = articleTop;
+        this.articleType = articleType;
+        this.articleTags = articleTags;
+        this.articleContent = articleContent;
+    }
 
     public Long getArticleId() {
         return articleId;

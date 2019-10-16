@@ -1,19 +1,15 @@
 package org.easyblog.mapper;
 
 import org.easyblog.bean.UserPhoneLog;
+import org.easyblog.mapper.core.BaseMapper;
+import org.springframework.stereotype.Repository;
 
-public interface UserPhoneLogMapper {
-    int deleteByPrimaryKey(Long logId);
+@Repository
+public interface UserPhoneLogMapper extends BaseMapper<UserPhoneLog> {
 
-    int insert(UserPhoneLog record);
-
-    int insertSelective(UserPhoneLog record);
-
-    UserPhoneLog selectByPrimaryKey(Long logId);
+    int saveSelective(UserPhoneLog record);
 
     int updateByPrimaryKeySelective(UserPhoneLog record);
 
-    int updateByPrimaryKeyWithBLOBs(UserPhoneLog record);
-
-    int updateByPrimaryKey(UserPhoneLog record);
+    int updateByPrimaryKeyWithContent(UserPhoneLog record);
 }

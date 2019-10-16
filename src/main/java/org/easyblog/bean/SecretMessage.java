@@ -6,6 +6,7 @@ import java.util.Date;
 public class SecretMessage implements Serializable {
 
     private static final long serialVersionUID = 4752651054600038840L;
+
     private String messageTopic;
 
     private String messageContext;
@@ -16,6 +17,16 @@ public class SecretMessage implements Serializable {
 
     private Date messageTime;
 
+    public SecretMessage() {
+    }
+
+    public SecretMessage(String messageTopic, String messageContext, Integer sendId, Integer receiveId, Date messageTime) {
+        this.messageTopic = messageTopic;
+        this.messageContext = messageContext;
+        this.sendId = sendId;
+        this.receiveId = receiveId;
+        this.messageTime = messageTime;
+    }
 
     public String getMessageTopic() {
         return messageTopic;

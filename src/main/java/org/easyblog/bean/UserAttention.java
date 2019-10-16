@@ -6,6 +6,7 @@ import java.util.Date;
 public class UserAttention implements Serializable {
 
     private static final long serialVersionUID = -3911799858589965008L;
+
     private Integer id;
 
     private Integer userId;
@@ -13,6 +14,15 @@ public class UserAttention implements Serializable {
     private Integer attentionId;
 
     private Date attentionTime;
+
+    public UserAttention() {
+    }
+
+    public UserAttention( Integer userId, Integer attentionId, Date attentionTime) {
+        this.userId = userId;
+        this.attentionId = attentionId;
+        this.attentionTime = attentionTime;
+    }
 
     public Integer getId() {
         return id;

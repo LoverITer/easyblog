@@ -7,7 +7,7 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 9108908247105270923L;
     private Integer  userId;
-    private String userNickName;
+    private String userNickname;
     private String userPassword;
     private String userName;
     private String userGender;
@@ -15,19 +15,43 @@ public class User implements Serializable {
     private String userQQ;
     private String userPhone;
     private String userMail;
-    private Address userAddress;
-    private int userScore;
-    private int userRank;
+    private String userAddress;
+    private Integer userScore;
+    private Integer userRank;
     private String userHeaderImgUrl;
     private String userDescription;
     private Date userRegisterTime;
     private String userRegisterIp;
     private String userLastLoginIp;
     private String userLastUpdateTime;
-    private int userLock;
-    private int userFreeze;
-    private int userPower;
+    private Integer userLock;
+    private Integer userFreeze;
+    private Integer userPower;
 
+    public User() {
+    }
+
+    public User(String userNickname, String userPassword, String userName, String userGender, Date userBirthday, String userQQ, String userPhone, String userMail, String userAddress, int userScore, int userRank, String userHeaderImgUrl, String userDescription,  String userRegisterIp, String userLastLoginIp, String userLastUpdateTime, Integer userLock, Integer userFreeze, Integer userPower) {
+        this.userNickname = userNickname;
+        this.userPassword = userPassword;
+        this.userName = userName;
+        this.userGender = userGender;
+        this.userBirthday = userBirthday;
+        this.userQQ = userQQ;
+        this.userPhone = userPhone;
+        this.userMail = userMail;
+        this.userAddress = userAddress;
+        this.userScore = userScore;
+        this.userRank = userRank;
+        this.userHeaderImgUrl = userHeaderImgUrl;
+        this.userDescription = userDescription;
+        this.userRegisterIp = userRegisterIp;
+        this.userLastLoginIp = userLastLoginIp;
+        this.userLastUpdateTime = userLastUpdateTime;
+        this.userLock = userLock;
+        this.userFreeze = userFreeze;
+        this.userPower = userPower;
+    }
 
     public int getUserId() {
         return userId;
@@ -37,12 +61,12 @@ public class User implements Serializable {
         this.userId = userId;
     }
 
-    public String getUserNickName() {
-        return userNickName;
+    public String getUserNickname() {
+        return userNickname;
     }
 
-    public void setUserNickName(String uerNickName) {
-        this.userNickName = userNickName;
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
     }
 
     public String getUserPassword() {
@@ -101,11 +125,11 @@ public class User implements Serializable {
         this.userMail = userMail;
     }
 
-    public Address getUserAddress() {
+    public String getUserAddress() {
         return userAddress;
     }
 
-    public void setUserAddress(Address userAddress) {
+    public void setUserAddress(String userAddress) {
         this.userAddress = userAddress;
     }
 
@@ -201,7 +225,7 @@ public class User implements Serializable {
     public String toString() {
         return "User{" +
                 "userId=" + userId +
-                ", uerNickName='" + userNickName + '\'' +
+                ", userNickname='" + userNickname + '\'' +
                 ", userPassword='" + userPassword + '\'' +
                 ", userName='" + userName + '\'' +
                 ", userGender='" + userGender + '\'' +

@@ -7,25 +7,15 @@
     <result column="attention_id" jdbcType="INTEGER" property="attentionId" />
     <result column="attention_time" jdbcType="TIMESTAMP" property="attentionTime" />
   </resultMap>
-  <sql id="Base_Column_List">
-    id, user_id, attention_id, attention_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
-    select *
-    from user_attention
-    where id = #{id,jdbcType=SMALLINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
-    delete from user_attention
-    where id = #{id,jdbcType=SMALLINT}
-  </delete>
-  <insert id="insert" parameterType="org.easyblog.bean.UserAttention">
-    insert into user_attention (id, user_id, attention_id, 
-      attention_time)
-    values (#{id,jdbcType=SMALLINT}, #{userId,jdbcType=INTEGER}, #{attentionId,jdbcType=INTEGER}, 
-      #{attentionTime,jdbcType=TIMESTAMP})
+
+  <insert id="save" parameterType="org.easyblog.bean.UserAttention">
+    insert into user_attention (id, user_id, attention_id,
+                                attention_time)
+    values (#{id,jdbcType=SMALLINT}, #{userId,jdbcType=INTEGER}, #{attentionId,jdbcType=INTEGER},
+            #{attentionTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="org.easyblog.bean.UserAttention">
+
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserAttention">
     insert into user_attention
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -56,6 +46,26 @@
       </if>
     </trim>
   </insert>
+
+  <select id="getByPrimaryKey"  resultType="org.easyblog.bean.UserAttention">
+    select *
+    from user_attention
+    where id = #{id,jdbcType=SMALLINT}
+  </select>
+
+  <select id="getAll" resultType="list">
+    select * from secret_message
+  </select>
+
+  <select id="count" resultType="integer">
+    select count(*) from secret_message
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="long">
+    delete from user_attention
+    where id = #{id,jdbcType=SMALLINT}
+  </delete>
+
   <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserAttention">
     update user_attention
     <set>
@@ -68,6 +78,7 @@
     </set>
     where id = #{id,jdbcType=SMALLINT}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserAttention">
     update user_attention
     set user_id = #{userId,jdbcType=INTEGER},

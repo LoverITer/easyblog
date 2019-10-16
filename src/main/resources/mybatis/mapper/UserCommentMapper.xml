@@ -14,36 +14,38 @@
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.easyblog.bean.UserComment">
     <result column="comment_content" jdbcType="LONGVARCHAR" property="commentContent" />
   </resultMap>
-  <sql id="Base_Column_List">
-    comment_id, comment_send, comment_received, article_id, comment_time, like_num, pid, 
-    level
-  </sql>
-  <sql id="Blob_Column_List">
-    comment_content
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
+
+
+  <select id="getByPrimaryKey" parameterType="long" resultMap="ResultMapWithBLOBs">
+    select *
     from user_comment
-    where comment_id = #{commentId,jdbcType=INTEGER}
+    where comment_id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+
+  <select id="getAll" resultType="list">
+    select * from user_comment
+  </select>
+
+  <select id="count" resultType="int">
+    select count(*) from user_comment
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="long">
     delete from user_comment
     where comment_id = #{commentId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="org.easyblog.bean.UserComment">
+
+  <insert id="save" parameterType="org.easyblog.bean.UserComment">
     insert into user_comment (comment_id, comment_send, comment_received, 
       article_id, comment_time, like_num, 
-      pid, level, comment_content
-      )
+      pid, level, comment_content)
     values (#{commentId,jdbcType=INTEGER}, #{commentSend,jdbcType=INTEGER}, #{commentReceived,jdbcType=INTEGER}, 
       #{articleId,jdbcType=BIGINT}, #{commentTime,jdbcType=TIMESTAMP}, #{likeNum,jdbcType=INTEGER}, 
       #{pid,jdbcType=INTEGER}, #{level,jdbcType=INTEGER}, #{commentContent,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="org.easyblog.bean.UserComment">
+
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserComment">
     insert into user_comment
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="commentId != null">
@@ -104,6 +106,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserComment">
     update user_comment
     <set>
@@ -134,7 +137,8 @@
     </set>
     where comment_id = #{commentId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.easyblog.bean.UserComment">
+
+  <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.UserComment">
     update user_comment
     set comment_send = #{commentSend,jdbcType=INTEGER},
       comment_received = #{commentReceived,jdbcType=INTEGER},
@@ -146,6 +150,7 @@
       comment_content = #{commentContent,jdbcType=LONGVARCHAR}
     where comment_id = #{commentId,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserComment">
     update user_comment
     set comment_send = #{commentSend,jdbcType=INTEGER},

@@ -5,24 +5,33 @@
     <id column="power_id" jdbcType="TINYINT" property="powerId" />
     <result column="power_name" jdbcType="VARCHAR" property="powerName" />
   </resultMap>
-  <sql id="Base_Column_List">
-    power_id, power_name
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Byte" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
+
+  <select id="getByPrimaryKey" parameterType="java.lang.Byte" resultMap="BaseResultMap">
+    select *
     from user_power
-    where power_id = #{powerId,jdbcType=TINYINT}
+    where power_id = #{id}
   </select>
+
+  <select id="getAll" resultType="list">
+    select * from user_power
+  </select>
+
+  <select id="count" resultType="integer">
+    select count(*) from user_power
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Byte">
     delete from user_power
     where power_id = #{powerId,jdbcType=TINYINT}
   </delete>
-  <insert id="insert" parameterType="org.easyblog.bean.UserPower">
+
+  <insert id="save" parameterType="org.easyblog.bean.UserPower">
     insert into user_power (power_id, power_name)
-    values (#{powerId,jdbcType=TINYINT}, #{powerName,jdbcType=VARCHAR})
+    values
+    (#{powerId,jdbcType=TINYINT}, #{powerName,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="org.easyblog.bean.UserPower">
+
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserPower">
     insert into user_power
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="powerId != null">
@@ -41,6 +50,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserPower">
     update user_power
     <set>
@@ -50,6 +60,7 @@
     </set>
     where power_id = #{powerId,jdbcType=TINYINT}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserPower">
     update user_power
     set power_name = #{powerName,jdbcType=VARCHAR}

@@ -10,18 +10,39 @@
                           user_last_update_time, user_lock, user_freeze, user_power)
         values (#{userNickname}, #{userPassword}, #{userName}, #{userGender}, #{userBirthday}, #{userQQ}, #{userPhone},
                 #{userMail}, #{userAddress}, #{userScore}, #{userRank}, #{userHeaderImgUrl}, #{userDescription},
-                #{userRegisterTime}, #{userRegisterIp}, #{userLastLoginIp}, #{userLastUpdateTime}, #{userLock},
+                now(), #{userRegisterIp}, #{userLastLoginIp}, #{userLastUpdateTime}, #{userLock},
                 #{userFreeze}, #{userPower})
+    </insert>
+
+    <!--批量插入数据-->
+    <insert id="saveBatch" parameterType="list">
+        insert into user (user_nickname, user_password, user_name, user_gender, user_birthday, user_qq, user_phone,
+        user_mail, user_address, user_score, user_rank, user_headerImg_url,
+        user_description, user_register_time, user_register_ip, user_last_login_ip,
+        user_last_update_time, user_lock, user_freeze, user_power)
+        values
+        <foreach collection="list" item="list" index="index" separator=",">
+            (#{list.userNickname}, #{list.userPassword},
+            #{list.userName}, #{list.userGender},
+            #{list.userBirthday}, #{list.userQQ},
+            #{list.userPhone}, #{list.userMail},
+            #{list.userAddress}, #{list.userScore},
+            #{list.userRank}, #{list.userHeaderImgUrl},
+            #{list.userDescription}, now(),
+            #{list.userRegisterIp}, #{list.userLastLoginIp},
+            #{list.userLastUpdateTime}, #{list.userLock},
+            #{list.userFreeze}, #{list.userPower})
+        </foreach>
     </insert>
 
     <update id="updateByPrimaryKey">
         update user
         <set>
             <if test="userNickname!=null">
-                user_nickname=#{userNickName},
+                user_nickname=#{userNickname},
             </if>
-            <if test="password!=null">
-                user_password=#{userPassowrd},
+            <if test="userPassword != null">
+                user_password=#{userPassword},
             </if>
             <if test="userGender!=null">
                 user_gender=#{userGender},
@@ -38,8 +59,8 @@
             <if test="userAddress">
                 user_address=#{userAddress},
             </if>
-            <if test="uerScore!=null">
-                user_score=#{uerScore},
+            <if test="userScore!=null">
+                user_score=#{userScore},
             </if>
             <if test="userRank!=null">
                 user_rank=#{userRank},
@@ -70,10 +91,10 @@
     </update>
 
     <select id="getByPrimaryKey" parameterType="long" resultType="org.easyblog.bean.User">
-        select * from user where user_id=#{userId}
+        select * from user where user_id = #{id}
     </select>
 
-    <select id="getAll" resultType="list">
+    <select id="getAll" resultType="org.easyblog.bean.User">
         select * from user
     </select>
 
@@ -94,13 +115,12 @@
         delete from user
         <where>
             <choose>
-                <when test="userNickName!=null">user_nickname=#{userNickName}</when>
+                <when test="userNickname!=null">user_nickname=#{userNickname}</when>
                 <when test="userPhone!=null">user_phone=#{userPhone}</when>
                 <when test="1==1">1=1</when>
             </choose>
         </where>
     </delete>
-
 
 
 </mapper>

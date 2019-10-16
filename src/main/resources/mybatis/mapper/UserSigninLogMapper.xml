@@ -8,26 +8,36 @@
     <result column="login_location" jdbcType="VARCHAR" property="loginLocation" />
     <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
   </resultMap>
-  <sql id="Base_Column_List">
-    log_id, user_id, login_ip, login_location, login_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
+
+  <select id="getByPrimaryKey" parameterType="java.lang.Long" resultType="org.easyblog.bean.UserSigninLog">
+    select *
     from user_signIn_log
-    where log_id = #{logId,jdbcType=BIGINT}
+    where log_id = #{id}
   </select>
+
+  <select id="getAll" resultType="list">
+    select * from user_signIn_log
+  </select>
+
+  <select id="count" resultType="integer">
+    select count(*) from user_signIn_log
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from user_signIn_log
     where log_id = #{logId,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="org.easyblog.bean.UserSigninLog">
+
+  <insert id="save" parameterType="org.easyblog.bean.UserSigninLog">
     insert into user_signIn_log (log_id, user_id, login_ip, 
       login_location, login_time)
-    values (#{logId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{loginIp,jdbcType=VARCHAR}, 
-      #{loginLocation,jdbcType=VARCHAR}, #{loginTime,jdbcType=TIMESTAMP})
+    values
+    (#{logId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER},
+    #{loginIp,jdbcType=VARCHAR}, #{loginLocation,jdbcType=VARCHAR},
+    #{loginTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="org.easyblog.bean.UserSigninLog">
+
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserSigninLog">
     insert into user_signIn_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="logId != null">
@@ -64,6 +74,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserSigninLog">
     update user_signIn_log
     <set>
@@ -82,6 +93,7 @@
     </set>
     where log_id = #{logId,jdbcType=BIGINT}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserSigninLog">
     update user_signIn_log
     set user_id = #{userId,jdbcType=INTEGER},

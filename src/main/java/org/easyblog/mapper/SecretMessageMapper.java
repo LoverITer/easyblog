@@ -1,19 +1,17 @@
 package org.easyblog.mapper;
 
 import org.easyblog.bean.SecretMessage;
+import org.easyblog.mapper.core.BaseMapper;
+import org.springframework.stereotype.Repository;
 
-public interface SecretMessageMapper {
-    int deleteByPrimaryKey(SecretMessage key);
+@Repository
+public interface SecretMessageMapper extends BaseMapper<SecretMessage> {
 
-    int insert(SecretMessage record);
+    SecretMessage getByPrimaryKey(SecretMessage secretMessage);
 
-    int insertSelective(SecretMessage record);
-
-    SecretMessage selectByPrimaryKey(SecretMessage key);
+    int saveSelective(SecretMessage record);
 
     int updateByPrimaryKeySelective(SecretMessage record);
 
-    int updateByPrimaryKeyWithBLOBs(SecretMessage record);
-
-    int updateByPrimaryKey(SecretMessage record);
+    int updateByPrimaryKeyWithContent(SecretMessage record);
 }

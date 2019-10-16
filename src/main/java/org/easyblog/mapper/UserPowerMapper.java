@@ -1,17 +1,14 @@
 package org.easyblog.mapper;
 
 import org.easyblog.bean.UserPower;
+import org.easyblog.mapper.core.BaseMapper;
+import org.springframework.stereotype.Repository;
 
-public interface UserPowerMapper {
-    int deleteByPrimaryKey(Byte powerId);
+@Repository
+public interface UserPowerMapper extends BaseMapper<UserPower> {
 
-    int insert(UserPower record);
-
-    int insertSelective(UserPower record);
-
-    UserPower selectByPrimaryKey(Byte powerId);
+    int saveSelective(UserPower record);
 
     int updateByPrimaryKeySelective(UserPower record);
 
-    int updateByPrimaryKey(UserPower record);
 }
