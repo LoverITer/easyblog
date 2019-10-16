@@ -1,0 +1,35 @@
+package org.easyblog.bean;
+
+import java.io.Serializable;
+
+public class Power implements Serializable {
+
+    private static final long serialVersionUID = 6025381966973267562L;
+    private Byte powerId;
+
+    private String name;
+
+    public Byte getPowerId() {
+        return powerId;
+    }
+
+    public void setPowerId(Byte powerId) {
+        this.powerId = powerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "Power{" +
+                "powerId=" + powerId +
+                ", name='" + name + '\'' +
+                '}';
+    }
+}

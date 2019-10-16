@@ -14,7 +14,7 @@ spring:
   application:
     name: EasyBlog
 mybatis:
-  config-location: classpath:/MyBatis-Configs/mybatis-config.xml
-  mapper-locations: classpath:/MyBatis-Configs/mapper/*.xml
+  config-location: classpath:/mybatis/mybatis-config.xml
+  mapper-locations: classpath:/mybatis/mapper/*.xml
 logging:
   config: classpath:logback-spring.xml

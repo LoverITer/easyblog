@@ -14,7 +14,7 @@
             </encoder>
             <file>${LOG_FILE}</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i</fileNamePattern>
+                <fileNamePattern>%d{yyyy-MM-dd}.%i.${LOG_FILE}</fileNamePattern>
                 <!--保留历史日志时间-->
                 <maxHistory>3</maxHistory>
                 <!--
@@ -41,7 +41,7 @@
             </encoder>
             <file>${LOG_FILE}</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i</fileNamePattern>
+                <fileNamePattern>%d{yyyy-MM-dd}.%i.${LOG_FILE}</fileNamePattern>
                 <!--保留历史日志一个月的时间-->
                 <maxHistory>30</maxHistory>
                 <!--

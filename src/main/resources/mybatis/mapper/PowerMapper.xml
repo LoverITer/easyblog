@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.easyblog.mapper.PowerMapper">
+  <resultMap id="BaseResultMap" type="org.easyblog.bean.Power">
+    <id column="power_id" jdbcType="TINYINT" property="powerId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    power_id, name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Byte" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from power
+    where power_id = #{powerId,jdbcType=TINYINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Byte">
+    delete from power
+    where power_id = #{powerId,jdbcType=TINYINT}
+  </delete>
+  <insert id="insert" parameterType="org.easyblog.bean.Power">
+    insert into power (power_id, name)
+    values (#{powerId,jdbcType=TINYINT}, #{name,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.easyblog.bean.Power">
+    insert into power
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="powerId != null">
+        power_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="powerId != null">
+        #{powerId,jdbcType=TINYINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Power">
+    update power
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where power_id = #{powerId,jdbcType=TINYINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Power">
+    update power
+    set name = #{name,jdbcType=VARCHAR}
+    where power_id = #{powerId,jdbcType=TINYINT}
+  </update>
+</mapper>
