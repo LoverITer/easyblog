@@ -9,8 +9,12 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 非法访问拦截器
+ */
+
 @Component
-public class DefaultInterceptor extends HandlerInterceptorAdapter {
+public class LoginInterceptor extends HandlerInterceptorAdapter {
 
    private final Logger log= LoggerFactory.getLogger(this.getClass());
 

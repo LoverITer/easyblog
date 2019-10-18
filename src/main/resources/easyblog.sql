@@ -14,8 +14,8 @@ create table user
     user_phone            varchar(12)    default '' comment '用户手机',
     user_mail             varchar(256)   default '' comment '用户email',
     user_address          varchar(256)   default '' comment '用户地址',
-    user_score            tinyint        default 0 comment '用户积分',
-    user_rank             tinyint        default 0 comment '用户排名',
+    user_score            int        default 0 comment '用户积分',
+    user_rank             int        default 0 comment '用户排名',
     user_headerImg_url    varchar(1024)  default '' comment '用户头像',
     user_description      varchar(300)   default '' comment '用户自我描述',
     user_register_time    datetime     not null comment '用户注册时间',
@@ -24,7 +24,7 @@ create table user
     user_last_update_time datetime     not null comment '用户上次更改信息时间',
     user_lock             boolean      not null comment '是否锁定账户',
     user_freeze           boolean      not null comment '是否冻结账户',
-    user_power            tinyint      not null comment '用户权限',
+    user_power            int      not null comment '用户权限',
     foreign key (user_power) references user_power (power_id)
 ) ENGINE = INNODB
   default charset = UTF8MB4;
@@ -32,7 +32,7 @@ create table user
 
 create table user_power
 (
-    power_id   tinyint not null auto_increment comment '用户权限id',
+    power_id   int not null auto_increment comment '用户权限id',
     power_name varchar(256) comment '用户权限',
     primary key (power_id)
 ) ENGINE = INNODB
@@ -41,7 +41,7 @@ create table user_power
 
 create table power
 (
-    power_id tinyint     not null auto_increment comment '权限ID',
+    power_id int     not null auto_increment comment '权限ID',
     name     varchar(30) not null comment '权限名',
     primary key (power_id)
 ) ENGINE = INNODB
@@ -66,7 +66,7 @@ create table user_mail_log
  */
 create table user_phone_log
 (
-    log_id   bigint   not null auto_increment comment '日志记录主键',
+    log_id   int   not null auto_increment comment '日志记录主键',
     user_id  int      not null comment '用户id',
     context  text comment '日志内容',
     log_time datetime not null comment '记录日志时间',

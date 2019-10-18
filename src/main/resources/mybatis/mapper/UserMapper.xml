@@ -98,6 +98,21 @@
         select * from user
     </select>
 
+    <!--通过QQ和用户密码查询一个用户-->
+    <select id="getUserByUserQQAndPassword" resultType="org.easyblog.bean.User">
+        select * from user where user_password=#{password} AND  user_qq=#{user_qq}
+    </select>
+
+    <!--通过手机号和用户密码查询一个用户-->
+    <select id="getUserByUserPhoneAndPassword" resultType="org.easyblog.bean.User">
+        select * from user where user_password=#{password} AND  user_qq=#{userPhone}
+    </select>
+
+    <!--通过QQ和用户密码查询一个用户-->
+    <select id="getUserByUserEmailAndPassword" resultType="org.easyblog.bean.User">
+        select * from user where user_password=#{password} AND  user_qq=#{userEmail}
+    </select>
+
     <!--根据条件计数-->
     <select id="count" resultType="integer">
         select count(*) from user

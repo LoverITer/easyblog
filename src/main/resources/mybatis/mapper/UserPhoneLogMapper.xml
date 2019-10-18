@@ -11,9 +11,7 @@
   </resultMap>
 
   <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-    select *
-    from user_phone_log
-    where log_id = #{id}
+    select * from user_phone_log where log_id = #{id}
   </select>
 
   <select id="getAll" resultType="list">
@@ -24,17 +22,15 @@
     select count(*) from user_phone_log
   </select>
 
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from user_phone_log
     where log_id = #{logId,jdbcType=BIGINT}
   </delete>
 
+  <!--记录一条日志-->
   <insert id="save" parameterType="org.easyblog.bean.UserPhoneLog">
-    insert into user_phone_log (log_id, user_id, log_time, 
-      context)
-    values (#{logId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{logTime,jdbcType=TIMESTAMP}, 
-      #{context,jdbcType=LONGVARCHAR})
+    insert into user_phone_log ( phone, log_time, context)
+    values (#{userId,jdbcType=INTEGER}, now(), #{context,jdbcType=LONGVARCHAR})
   </insert>
 
   <insert id="saveSelective" parameterType="org.easyblog.bean.UserPhoneLog">
@@ -44,7 +40,7 @@
         log_id,
       </if>
       <if test="userId != null">
-        user_id,
+        phone,
       </if>
       <if test="logTime != null">
         log_time,
@@ -73,7 +69,7 @@
     update user_phone_log
     <set>
       <if test="userId != null">
-        user_id = #{userId,jdbcType=INTEGER},
+        phone = #{userId,jdbcType=INTEGER},
       </if>
       <if test="logTime != null">
         log_time = #{logTime,jdbcType=TIMESTAMP},
@@ -87,14 +83,14 @@
 
   <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.UserPhoneLog">
     update user_phone_log
-    set user_id = #{userId,jdbcType=INTEGER},
+    set phone = #{userId,jdbcType=INTEGER},
       log_time = #{logTime,jdbcType=TIMESTAMP},
       context = #{context,jdbcType=LONGVARCHAR}
     where log_id = #{logId,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserPhoneLog">
     update user_phone_log
-    set user_id = #{userId,jdbcType=INTEGER},
+    set phone = #{userId,jdbcType=INTEGER},
       log_time = #{logTime,jdbcType=TIMESTAMP}
     where log_id = #{logId,jdbcType=BIGINT}
   </update>

@@ -8,7 +8,7 @@ public class UserMailLog implements Serializable {
     private static final long serialVersionUID = -8994188567591744802L;
     private Long logId;
 
-    private Integer userId;
+    private String email;
 
     private Date logTime;
 
@@ -17,8 +17,8 @@ public class UserMailLog implements Serializable {
     public UserMailLog() {
     }
 
-    public UserMailLog( Date logTime, String context) {
-        this.logTime = logTime;
+    public UserMailLog(String email,  String context) {
+        this.email=email;
         this.context = context;
     }
 
@@ -30,12 +30,12 @@ public class UserMailLog implements Serializable {
         this.logId = logId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public String getUserId() {
+        return email;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUserId(String email) {
+        this.email = email;
     }
 
     public Date getLogTime() {
@@ -58,7 +58,7 @@ public class UserMailLog implements Serializable {
     public String toString() {
         return "UserMailLog{" +
                 "logId=" + logId +
-                ", userId=" + userId +
+                ", email=" + email +
                 ", logTime=" + logTime +
                 ", context='" + context + '\'' +
                 '}';

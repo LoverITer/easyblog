@@ -29,6 +29,8 @@ public class HelloController {
 
     @GetMapping(value = "/write")
     public String write(){
+        int[] a=new int[10];
+
         return "admin/blogmanage/blogs-input";
     }
 
