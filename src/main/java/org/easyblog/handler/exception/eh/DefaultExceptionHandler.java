@@ -1,4 +1,4 @@
-package org.easyblog.handler.exception.controller;
+package org.easyblog.handler.exception.eh;
 
 
 import org.slf4j.Logger;

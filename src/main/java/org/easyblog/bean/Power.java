@@ -33,6 +33,7 @@ public class Power implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
+
     @Override
     public String toString() {
         return "Power{" +

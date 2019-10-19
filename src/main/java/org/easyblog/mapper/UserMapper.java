@@ -13,4 +13,10 @@ public interface UserMapper extends BaseMapper<User> {
     User getUserByUserPhoneAndPassword(@Param("userPhone") String userPhone,@Param("password")String password);
 
     User getUserByUserEmailAndPassword(@Param("userEmail") String userEmail,@Param("password")String password);
+
+    User getUserByNickname(@Param("nickname") String nickname);
+
+    User getUserByPhone(@Param("phone") String phone);
+
+    User getUserByEmail(@Param("email") String phone);
 }
