@@ -8,7 +8,7 @@ public class UserPhoneLog implements Serializable {
     private static final long serialVersionUID = 7393331110726779645L;
     private Long logId;
 
-    private Integer userId;
+    private String phone;
 
     private Date logTime;
 
@@ -17,8 +17,8 @@ public class UserPhoneLog implements Serializable {
     public UserPhoneLog() {
     }
 
-    public UserPhoneLog( Date logTime, String context) {
-        this.logTime = logTime;
+    public UserPhoneLog(String phone, String context) {
+        this.phone = phone;
         this.context = context;
     }
 
@@ -30,12 +30,12 @@ public class UserPhoneLog implements Serializable {
         this.logId = logId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public String getUserId() {
+        return phone;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUserId(String userId) {
+        this.phone = phone;
     }
 
     public Date getLogTime() {
@@ -58,7 +58,7 @@ public class UserPhoneLog implements Serializable {
     public String toString() {
         return "UserPhoneLog{" +
                 "logId=" + logId +
-                ", userId=" + userId +
+                ", phone=" + phone +
                 ", logTime=" + logTime +
                 ", context='" + context + '\'' +
                 '}';

@@ -49,7 +49,7 @@
     <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
         select *
         from article
-        where article_id = #{articleId,jdbcType=BIGINT}
+        where article_id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="getAll" resultType="list">

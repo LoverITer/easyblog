@@ -418,6 +418,10 @@ span.count {
     border-right: none !important;
 }
 
+.m-font-size{
+    font-size: 12px !important;
+}
+
 @media screen and (max-width: 991px) {
     .m-mobile-margin-left {
         margin-left: 72% !important;
@@ -425,6 +429,10 @@ span.count {
 }
 
 @media screen and (max-width: 768px) {
+    .m-font-size{
+        font-size: 5px !important;
+    }
+
     .m-mobile-hide {
         display: none !important;
     }

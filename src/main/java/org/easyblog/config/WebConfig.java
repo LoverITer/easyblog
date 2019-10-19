@@ -1,6 +1,6 @@
 package org.easyblog.config;
 
-import org.easyblog.handler.interceptor.DefaultInterceptor;
+import org.easyblog.handler.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 
@@ -11,8 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        DefaultInterceptor defaultInterceptor=new DefaultInterceptor();
-        final InterceptorRegistration registration = registry.addInterceptor(new DefaultInterceptor());
+        final InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
         registration.addPathPatterns("/**");
         //不拦截静态资源：自定义拦截器，排除拦截classpath:/static下的所有静态资源
         registration.excludePathPatterns("/static/**");

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>注册成功 - EasyBlog博客</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+<link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
+</head>
+<body>
+
+<!--导航-->
+<div th:replace="~{nav :: navbar}"></div>
+
+<br>
+<br>
+<br>
+
+<div class="m-container-small m-padded-tb-massive">
+    <div class="ui success message m-padded-tb-huge">
+        <div class="ui contianer">
+            <h2>注册成功</h2>
+            <p>恭喜您注册成功，页面将于<em id="time"></em>秒后跳转到登录页面.<a href="" th:href="@{/toLoginPage}">立即登录</a></p>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+
+<!--footer-->
+<div th:replace="~{footer :: footbar}"></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script type="text/javascript">
+  $('.ui.dropdown').dropdown({
+    on: 'hover'
+  });
+
+  var t=5;
+  setInterval(timer,1000);
+  function timer() {
+      if(t>0){
+          $('#time').css("color","#d0393f").text(t);
+          t--;
+      }else{
+          //跳转到登录页面
+        window.location.href="/toLoginPage";
+      }
+
+  }
+  
+</script>
+</body>
+</html>
