@@ -97,31 +97,35 @@
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
         </dependency>
+
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.4</version>
         </dependency>
+
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.0.1</version>
         </dependency>
 
+        <!--jackson用于支持ajax-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.3</version>
+            <version>[2.9.10,)</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.9.3</version>
+            <version>[2.9.10,)</version>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.9.3</version>
+            <version>[2.9.10,)</version>
         </dependency>
 
         <!--邮件服务-->
