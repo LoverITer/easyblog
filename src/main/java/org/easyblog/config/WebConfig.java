@@ -13,10 +13,15 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         final InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
         registration.addPathPatterns("/**");
-        //不拦截静态资源：自定义拦截器，排除拦截classpath:/static下的所有静态资源
+        /**排除拦截classpath:/static下的所有静态资源**/
         registration.excludePathPatterns("/static/**");
         registration.excludePathPatterns("/error");
+        registration.excludePathPatterns("/**.*.html");
         registration.excludePathPatterns("/");
+        /*****排除拦截器对登录、注销、去登录页请求的拦截*****/
+        registration.excludePathPatterns("/login");
+        registration.excludePathPatterns("/logout");
+        registration.excludePathPatterns("/user/**");
     }
 
     @Override

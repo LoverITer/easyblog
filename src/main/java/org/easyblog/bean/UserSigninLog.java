@@ -16,14 +16,16 @@ public class UserSigninLog implements Serializable {
 
     private Date loginTime;
 
+    private String loginResult;
+
     public UserSigninLog() {
     }
 
-    public UserSigninLog( Integer userId, String loginIp, String loginLocation, Date loginTime) {
+    public UserSigninLog(Integer userId, String loginIp, String loginLocation, String loginResult) {
         this.userId = userId;
         this.loginIp = loginIp;
         this.loginLocation = loginLocation;
-        this.loginTime = loginTime;
+        this.loginResult = loginResult;
     }
 
     public Long getLogId() {
@@ -66,6 +68,13 @@ public class UserSigninLog implements Serializable {
         this.loginTime = loginTime;
     }
 
+    public String getLoginResult() {
+        return loginResult;
+    }
+
+    public void setLoginResult(String loginResult) {
+        this.loginResult = loginResult;
+    }
 
     @Override
     public String toString() {

@@ -1,4 +1,4 @@
-package org.easyblog.service;
+package org.easyblog.service.base;
 
 import org.easyblog.bean.User;
 
@@ -22,6 +22,14 @@ public interface IUserService {
 
 
     /**
+     * 根据id获得用户
+     * @param uid
+     * @return
+     */
+    User getUser(long  uid);
+
+
+    /**
      * 新增一条用户信息
      * @param nickname 昵称
      * @param password  密码
@@ -32,5 +40,6 @@ public interface IUserService {
     boolean register(String nickname, String password, String account, String ipInfo);
 
 
+    boolean updateUserInfo(String account,String newPassword);
 
 }

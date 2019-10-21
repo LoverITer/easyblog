@@ -104,7 +104,7 @@ public final class NetWorkUtil {
         log.info(USERAGENT);
         try {
             //从ip138网站获得所需查询ip的物理地址
-            Document doc = Jsoup.connect(IP138 + ip + "&action=2").timeout(40000).userAgent(USERAGENT).get();
+            Document doc = Jsoup.connect(IP138 + ip + "&action=2").timeout(80000).userAgent(USERAGENT).get();
             if (Objects.nonNull(doc)) {
                 //JSoup支持使用类选择器来选择
                 Element ul = doc.selectFirst(".ul1");

@@ -2,6 +2,7 @@ package org.easyblog.service;
 
 import org.easyblog.bean.UserMailLog;
 import org.easyblog.mapper.UserMailLogMapper;
+import org.easyblog.service.base.IUserEmailLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
