@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EasyBlog - Blog for stronger</title>
+    <title>EasyBlog - Make blog easy</title>
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
     <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/static/css/styles.css}">
     <link rel="stylesheet" href="../static/css/jigsaw.css" th:href="@{/static/css/jigsaw.css}">
@@ -17,7 +17,7 @@
             <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">登录</label>
             <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">注册</label>
             <div class="login-form">
-                <form action="#" th:action="@{/login}" method="post">
+                <form action="#" th:action="@{/user/login}" method="post">
                     <div class="sign-in-htm">
                         <div class="group">
                             <label class="label">手机号/邮箱</label>
@@ -26,17 +26,18 @@
                         <div class="group">
                             <label for="pass" class="label">密码</label>
                             <input id="password" name="password" type="password" class="input" data-type="password">
+                            <span th:unless="${#strings.isEmpty(msg)}" th:text="${msg}" style="font-size: 12px;margin-top: 5px;color:#d0393f"></span>
                         </div>
                         <div class="group">
-                            <input id="check1" name="remeber-me" type="checkbox" class="check" checked>
+                            <input id="check1" name="remember" type="checkbox" class="check" checked>
                             <label for="check1" style="font-size: 14px"> <span class="icon"></span> 保持登录</label>
                         </div>
                         <div class="group">
-                            <input type="button" class="button" value="登录" onclick="sub()">
+                            <input id="login-btn" type="submit" onclick="storage()" class="button" value="登录">
                         </div>
 
                         <div class="foot-lnk">
-                            <a href="#forgot">忘记密码?</a>
+                            <a href="#forgot" th:href="@{/user/change_password}">忘记密码?</a>
                         </div>
                     </div>
                 </form>
@@ -89,6 +90,8 @@
     </div>
 </div>
 
+</body>
+
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="../static/js/jigsaw.js" th:href="@{/static/js/jigsaw.js}"></script>
 
@@ -99,7 +102,7 @@
     $('#user-nickname').keyup(function () {
         var nickname = $('#user-nickname').val();
         $.ajax({
-            url: BASE_PATH + "/checkNickname",
+            url: BASE_PATH + "/user/checkNickname",
             type: "GET",
             async: true,
             data: {nickname: nickname},
@@ -133,7 +136,7 @@
     $('#pass').keyup(function () {
         var value = $('#pass').val();
         $.ajax({
-            url: BASE_PATH + "/checkPassword",
+            url: BASE_PATH + "/user/checkPassword",
             type: "GET",
             async: true,
             data: {password: value},
@@ -159,7 +162,7 @@
 
             },
             error: function () {
-                $('#password-msg').show().css("color", "#d0393f").text("服务异常，请重新输入一个昵称");
+                $('#password-msg').show().css("color", "#d0393f").text("服务异常，请重新输入密码");
             }
         })
     });
@@ -169,7 +172,7 @@
         var phone_reg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(199))+\d{8})$/;
         if (mail_reg.test(str)) {
             $.ajax({
-                url: BASE_PATH + "/checkEmail",
+                url: BASE_PATH + "/user/checkEmail",
                 type: "GET",
                 async: true,
                 data: {email: str},
@@ -201,7 +204,7 @@
             })
         } else if (phone_reg.test(str)) {
             $.ajax({
-                url: BASE_PATH + "/checkPhone",
+                url: BASE_PATH + "/user/checkPhone",
                 type: "GET",
                 async: true,
                 data: {phone: str},
@@ -245,10 +248,10 @@
         if (phone_reg.test(str)) {
             //判断是手机，就通过ajax异步请求给用户的这个手机发送验证码
             $.ajax({
-                url: "/captcha-code2phone",
+                url: "/user/captcha-code2phone",
                 type: "GET",
                 async: true,
-                data: {phone: str},
+                data: {phone: str,option:"register"},
                 dataType: "text",
                 success: function () {
                     $('#captcha-msg').show().css("color", "#00ec3f").text("验证码已发送，请注意查收！");
@@ -260,10 +263,10 @@
         } else if (mail_reg.test(str)) {
             //判断是邮箱，就通过ajax异步请求给用户的这个邮箱发送验证码
             $.ajax({
-                url: "/captcha-code2mail",
+                url: "/user/captcha-code2mail",
                 type: "GET",
                 async: true,
-                data: {email: str},
+                data: {email: str,option:"register"},
                 dataType: "text",
                 success: function () {
                     $('#captcha-msg').show().css("color", "#00ec3f").text("验证码已发送，请注意查收！");
@@ -307,19 +310,28 @@
         var account = $('#phone-mail').val();
         var code = $('#captcha').val();
         $.ajax({
-            url: "/register",
+            url: "/user/register",
             method: "GET",
             sync: true,
             data: {nickname: nickname, pwd: password, account: account, code: code},
             dataType: "text",
             success: function () {
-                window.location.href = "/register-success";
+                window.location.href = "/user/register-success";
             },
             error: function (result) {
                 alert(result.msg);
             }
         })
     })
+
+    function storage() {
+        //用户登录后保存信息
+        sessionStorage.setItem("user",$('#account').val());
+    }
+
+
 </script>
-</body>
+
+
 </html>
+

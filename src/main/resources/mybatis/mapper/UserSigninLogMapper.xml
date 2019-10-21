@@ -10,9 +10,7 @@
   </resultMap>
 
   <select id="getByPrimaryKey" parameterType="java.lang.Long" resultType="org.easyblog.bean.UserSigninLog">
-    select *
-    from user_signIn_log
-    where log_id = #{id}
+    select * from user_signIn_log where log_id = #{id}
   </select>
 
   <select id="getAll" resultType="list">
@@ -29,20 +27,13 @@
   </delete>
 
   <insert id="save" parameterType="org.easyblog.bean.UserSigninLog">
-    insert into user_signIn_log (log_id, user_id, login_ip, 
-      login_location, login_time)
-    values
-    (#{logId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER},
-    #{loginIp,jdbcType=VARCHAR}, #{loginLocation,jdbcType=VARCHAR},
-    #{loginTime,jdbcType=TIMESTAMP})
+    insert into user_signIn_log (user_id, login_ip,login_location, login_time,login_result)
+    values (#{userId}, #{loginIp}, #{loginLocation},now(),#{loginResult})
   </insert>
 
   <insert id="saveSelective" parameterType="org.easyblog.bean.UserSigninLog">
     insert into user_signIn_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="logId != null">
-        log_id,
-      </if>
       <if test="userId != null">
         user_id,
       </if>
@@ -52,14 +43,9 @@
       <if test="loginLocation != null">
         login_location,
       </if>
-      <if test="loginTime != null">
         login_time,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="logId != null">
-        #{logId,jdbcType=BIGINT},
-      </if>
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
       </if>
@@ -69,9 +55,7 @@
       <if test="loginLocation != null">
         #{loginLocation,jdbcType=VARCHAR},
       </if>
-      <if test="loginTime != null">
-        #{loginTime,jdbcType=TIMESTAMP},
-      </if>
+      now()
     </trim>
   </insert>
 

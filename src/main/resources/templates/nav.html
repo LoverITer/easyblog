@@ -18,7 +18,8 @@
                 </div>
             </div>
             <!--我的头像-->
-            <div class="right m-item m-mobile-hide menu " style="margin-left: 1em !important;">
+            <div id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu "
+                 style="margin-left: 1em !important;">
                 <div class="ui dropdown  item ">
                     <div class="text">
                         <img class="ui medium circular image image-42x42" style="max-height: none !important;"
@@ -26,7 +27,7 @@
                     </div>
                     <div class="menu">
                         <a href="#" class="item"><i class="bookmark icon"></i>我的关注</a>
-                        <!-- <a href="#" class="item"><i class="star icon"></i>我的收藏</a>-->
+                        &lt;!&ndash; <a href="#" class="item"><i class="star icon"></i>我的收藏</a>&ndash;&gt;
                         <a href="#" class="item"><i class="user icon"></i>个人中心</a>
                         <a href="#" class="item"><i class="cogs icon"></i>账号设置</a>
                         <div class="divider"></div>
@@ -34,16 +35,50 @@
                         <a href="#" class="item"><i class="edit icon"></i>管理博客</a>
                         <div class="divider"></div>
                         <a href="#" class="item"><i class="basic question  circle icon"></i>帮助</a>
-                        <a href="#" class="item"><i class="power offs icon"></i>注销</a>
+                        <a id="logout" class="item"><i class="power offs icon"></i>退出</a>
                     </div>
                 </div>
             </div>
+
+            <div id="login-btn"  class="right m-item m-mobile-hide menu "
+                 style="margin-left: 1em !important;">
+                <a href="#" th:href="@{/user/loginPage}" class="m-item item m-mobile-hide"><i class="mini  icon"></i>登录/注册</a>
+            </div>
+
         </div>
     </div>
     <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
         <i class="sidebar icon"></i>
     </a>
 </nav>
+
+<script type="text/javascript" th:fragment="javascript ">
+
+    $.ready(function () {
+        $('#header-images').hide();
+    })
+
+    <!--退出异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "text",
+            success: function (result) {
+                if (result == "OK") {
+                    $("#login-btn").show();
+                    $('#header-images').hide();
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    })
+</script>
+
 
 </body>
 </html>

@@ -288,4 +288,9 @@ public class EncryptUtil {
         return new String(Base64.decode(res));
     }
 
+
+    public static void main(String[] args) {
+        System.out.println(EncryptUtil.getInstance().DESDecode("B89A790263DFA68B","user"));
+    }
+
 }

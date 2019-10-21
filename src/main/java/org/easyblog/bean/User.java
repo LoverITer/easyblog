@@ -14,6 +14,7 @@ public class User implements Serializable {
     private Date userBirthday;
     private String userQQ;
     private String userPhone;
+    private String userWechart;
     private String userMail;
     private String userAddress;
     private Integer userScore;
@@ -54,11 +55,11 @@ public class User implements Serializable {
         this.userPower = userPower;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -118,6 +119,14 @@ public class User implements Serializable {
         this.userPhone = userPhone;
     }
 
+    public String getUserWechart() {
+        return userWechart;
+    }
+
+    public void setUserWechart(String userWechart) {
+        this.userWechart = userWechart;
+    }
+
     public String getUserMail() {
         return userMail;
     }
@@ -134,19 +143,19 @@ public class User implements Serializable {
         this.userAddress = userAddress;
     }
 
-    public int getUserScore() {
+    public Integer getUserScore() {
         return userScore;
     }
 
-    public void setUserScore(int userScore) {
+    public void setUserScore(Integer userScore) {
         this.userScore = userScore;
     }
 
-    public int getUserRank() {
+    public Integer getUserRank() {
         return userRank;
     }
 
-    public void setUserRank(int userRank) {
+    public void setUserRank(Integer userRank) {
         this.userRank = userRank;
     }
 
@@ -198,54 +207,27 @@ public class User implements Serializable {
         this.userLastUpdateTime = userLastUpdateTime;
     }
 
-    public int getUserLock() {
+    public Integer getUserLock() {
         return userLock;
     }
 
-    public void setUserLock(int userLock) {
+    public void setUserLock(Integer userLock) {
         this.userLock = userLock;
     }
 
-    public int getUserFreeze() {
+    public Integer getUserFreeze() {
         return userFreeze;
     }
 
-    public void setUserFreeze(int userFreeze) {
+    public void setUserFreeze(Integer userFreeze) {
         this.userFreeze = userFreeze;
     }
 
-    public int getUserPower() {
+    public Integer getUserPower() {
         return userPower;
     }
 
-    public void setUserPower(int userPower) {
+    public void setUserPower(Integer userPower) {
         this.userPower = userPower;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", userNickname='" + userNickname + '\'' +
-                ", userPassword='" + userPassword + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userGender='" + userGender + '\'' +
-                ", uerBirthday=" + userBirthday +
-                ", userQQ='" + userQQ + '\'' +
-                ", userPhone='" + userPhone + '\'' +
-                ", userMail='" + userMail + '\'' +
-                ", userAddress=" + userAddress +
-                ", userScore=" + userScore +
-                ", userRank=" + userRank +
-                ", userHeaderImgUrl='" + userHeaderImgUrl + '\'' +
-                ", userDescription='" + userDescription + '\'' +
-                ", userRegisterTime=" + userRegisterTime +
-                ", userRegisterIp='" + userRegisterIp + '\'' +
-                ", userLastLoginIp='" + userLastLoginIp + '\'' +
-                ", userLastUpdateTime='" + userLastUpdateTime + '\'' +
-                ", userLock=" + userLock +
-                ", userFreeze=" + userFreeze +
-                ", userPower=" + userPower +
-                '}';
     }
 }

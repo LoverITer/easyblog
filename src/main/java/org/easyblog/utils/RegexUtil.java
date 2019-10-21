@@ -370,6 +370,16 @@ public class RegexUtil {
         return Regular(str, STR_NUM);
     }
 
+
+    /**
+     * 判断一个字符串是否是QQ号
+     * @param str
+     * @return
+     */
+    public static boolean isQQ(String str){
+        return Regular(str,"/^[1-9][0-9]{4,9}$/gim");
+    }
+
     /**
      * 匹配是否符合正则表达式pattern 匹配返回true
      *

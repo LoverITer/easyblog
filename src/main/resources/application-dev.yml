@@ -52,6 +52,19 @@ spring:
       enabled: true
     restart:
       additional-paths: src/main/java
+  redis:
+    host: 192.168.92.128
+    port: 6379
+    database: 0
+    #springBoot 2.x应该配置lettuce作为Redis客户端  Spring1.x配置jedis
+    lettuce:
+      pool:
+        max-active: 8
+        min-idle: 0
+        max-idle: 8
+        max-wait: 5000ms
+      shutdown-timeout: 100ms
+
 
 logging:
   level:

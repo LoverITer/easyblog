@@ -3,14 +3,12 @@ package org.easyblog.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.easyblog.utils.NetWorkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 @Aspect
@@ -23,16 +21,12 @@ public class ServiceLogAspect {
     public void log() {
     }
 
-
     @Before(value = "log()")
     public void doBefore(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;
-        HttpServletRequest request = attributes.getRequest();
-        String ip = NetWorkUtil.getUserIp(request);
-        String url = request.getRequestURL().toString();
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.info(new ServiceLog(url, ip+" "+NetWorkUtil.getLocation(request,ip), classMethod, joinPoint.getArgs()).toString());
+        log.info(new ServiceLog(classMethod, joinPoint.getArgs()).toString());
     }
 
     @AfterReturning(pointcut = "log()", returning = "result")
@@ -48,14 +42,10 @@ public class ServiceLogAspect {
     }
 
     private static class ServiceLog {
-        private String url;
-        private String ipInfo;
         private String classMethod;
         private Object[] args;
 
-        public ServiceLog(String url, String ipInfo, String classMethod, Object[] args) {
-            this.url = url;
-            this.ipInfo = ipInfo;
+        public ServiceLog( String classMethod, Object[] args) {
             this.classMethod = classMethod;
             this.args = args;
         }
@@ -63,8 +53,6 @@ public class ServiceLogAspect {
         @Override
         public String toString() {
             return "请求日志：" +
-                    "url='" + url + '\'' +
-                    ", ipInfo='" + ipInfo + '\'' +
                     ", classMethod='" + classMethod + '\'' +
                     ", args=" + Arrays.toString(args);
         }
