@@ -45,6 +45,8 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
     public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofSeconds(60*5)) // 5分钟缓存失效
+                //不缓存null值
+                .disableCachingNullValues()
                 // 设置key的序列化方式
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(keySerializer()))
                 // 设置value的序列化方式

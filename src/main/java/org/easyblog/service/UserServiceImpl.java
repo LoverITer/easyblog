@@ -27,7 +27,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "checkUser")
+    @Cacheable(cacheNames = "checkUser",unless = "#result==null")
     @Override
     public User checkUser(String username, String password) {
         User user = null;
@@ -43,7 +43,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "getUser")
+    @Cacheable(cacheNames = "getUser",condition = "#result!=null")
     @Override
     public User getUser(String queryStr) {
         User user = null;
@@ -58,14 +58,16 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "getUser", unless = "#result!=null")
+    @Cacheable(cacheNames = "getUser", condition = "#result!=null")
     @Override
     public User getUser(long uid) {
         return userMapper.getByPrimaryKey(uid);
     }
 
+
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @CachePut(cacheNames = "register")
+    @CachePut(cacheNames = "register",condition = "#result==true")
     @Override
     public boolean register(String nickname, String password, String account, String ipInfo) {
 
@@ -89,7 +91,7 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-
+    @CachePut(cacheNames = "updateUserInfo")
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public boolean updateUserInfo(String account,String newPassword) {
