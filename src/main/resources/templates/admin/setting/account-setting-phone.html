@@ -11,44 +11,7 @@
 <body>
 
 <!--导航-->
-<nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
-    <div class="ui container">
-        <div class="ui inverted secondary stackable menu">
-            <h2 class="ui teal header item">EasyBlog</h2>
-            <a href="#" class="active m-item item m-mobile-hide"><i class="mini home icon"></i>博客</a>
-            <div class="right m-item item m-mobile-hide">
-                <div class="ui icon inverted search input m-margin-tb-tiny">
-                    <input class="prompt" type="text" placeholder="Search....">
-                    <i class="search link icon"></i>
-                </div>
-            </div>
-            <!--我的头像-->
-            <div class="right m-item m-mobile-hide menu " style="margin-left: 1em !important;">
-                <div class="ui dropdown  item ">
-                    <div class="text">
-                        <img class="ui medium circular image image-42x42" style="max-height: none !important;"
-                             src="http://hbimg.b0.upaiyun.com/1f20743f57decb129f4563314eafca4f83f7a18d105ac-xpHDBI_fw658">
-                    </div>
-                    <div class="menu">
-                        <a href="#" class="item"><i class="bookmark icon"></i>我的关注</a>
-                        <!--<a href="#" class="item"><i class="star icon"></i>我的收藏</a>-->
-                        <a href="#" class="item"><i class="user icon"></i>个人中心</a>
-                        <a href="#" class="item"><i class="cogs icon"></i>账号设置</a>
-                        <div class="divider"></div>
-                        <a href="#" class="item"><i class="archive icon"></i>我的博客</a>
-                        <a href="#" class="item"><i class="edit icon"></i>管理博客</a>
-                        <div class="divider"></div>
-                        <a href="#" class="item"><i class="basic question  circle icon"></i>帮助</a>
-                        <a href="#" class="item"><i class="power offs icon"></i>注销</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
-        <i class="sidebar icon"></i>
-    </a>
-</nav>
+<div th:replace="~{nav :: navbar}"></div>
 
 
 <!--中间内容-->
@@ -130,9 +93,67 @@
 <div style="height: 10em"></div>
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>
+</body>
+<script type="text/javascript">
 
+    $(document).ready(function () {
+        toggleStatus();
+    });
+
+    function toggleStatus() {
+        var user = sessionStorage.getItem("user");
+        if(user!=null){
+            $('#header-images').show();
+            $('#login-btn').hide();
+        }else{
+            $('#header-images').hide();
+            $('#login-btn').show();
+        }
+        setTimeout(toggleStatus,100);
+    }
+
+    <!--退出操作异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "text",
+            success: function (result) {
+                if (result == "OK") {
+                    sessionStorage.removeItem("user");
+                    $("#login-btn").show();
+                    $('#header-images').hide();
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    });
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<!--控制头像的显示-->
+<script>
+    $(document).ready(function () {
+        toggleStatus();
+    });
+
+    function toggleStatus() {
+        var user = sessionStorage.getItem("user");
+        if(user!=null){
+            $('#header-images').show();
+            $('#login-btn').hide();
+        }else{
+            $('#header-images').hide();
+            $('#login-btn').show();
+        }
+        setTimeout(toggleStatus,100);
+    }
+</script>
 <!--控制按钮的禁用和可用状态-->
 <script type="text/javascript">
     $(function () {
@@ -167,5 +188,4 @@
     })
 
 </script>
-</body>
 </html>

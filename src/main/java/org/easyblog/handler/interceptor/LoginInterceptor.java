@@ -24,7 +24,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         log.info("Request from：{}",request.getRequestURL());
         User user = (User) request.getSession().getAttribute("LOGIN-USER");
         if(Objects.isNull(user)){
-            response.sendRedirect(request.getContextPath()+"/toLoginPage");
+
+            response.sendRedirect(request.getContextPath()+"/user/loginPage");
             return false;
         }
         return true;

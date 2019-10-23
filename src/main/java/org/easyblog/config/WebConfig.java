@@ -18,10 +18,11 @@ public class WebConfig implements WebMvcConfigurer {
         registration.excludePathPatterns("/error");
         registration.excludePathPatterns("/**.*.html");
         registration.excludePathPatterns("/");
-        /*****排除拦截器对登录、注销、去登录页请求的拦截*****/
+        /*****排除拦截器对登录、注销、去登录页、查看文章请求的拦截*****/
         registration.excludePathPatterns("/login");
         registration.excludePathPatterns("/logout");
         registration.excludePathPatterns("/user/**");
+        registration.excludePathPatterns("/article/**");
     }
 
     @Override
