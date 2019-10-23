@@ -231,6 +231,7 @@ public class UserController {
                         RedirectAttributes redirectAttributes,
                         HttpServletRequest request,
                         HttpServletResponse response) {
+
         User user = userService.checkUser(username, EncryptUtil.getInstance().DESEncode(password, "user"));
         String ip = NetWorkUtil.getUserIp(request);
         String location = NetWorkUtil.getLocation(request, ip);

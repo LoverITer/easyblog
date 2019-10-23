@@ -15,12 +15,11 @@
 <!--编辑器-->
 <div style="margin-top: 5px !important;">
     <form method="post" class="ui form">
-        <div class="ui row fluid container stackable centered grid">
-            <div class="right float  right aligned  three wide centered column">
-                <div class="ui segment" style="padding: auto 0 0 0 !important;background: none !important;border: none !important;box-shadow: none !important;">
-                    <a href="#" class="ui right floated" style="color: #8da6ce !important;font-size: 18px !important;">
-                        <i class="chevron left icon"></i>
-                        文章管理
+        <div class="ui row fluid  stackable centered grid" style="margin-left: 0.5rem !important;margin-right: 0.5em !important;">
+            <div class="left float  right aligned  two wide centered column">
+                <div class="ui segment" style="background: none !important;border: none !important;box-shadow: none !important;padding-left: 0 !important;padding-right: 0 !important;">
+                    <a href="#" th:href="@{/manage/blog/}" class="ui right floated" style="color: #8da6ce !important;font-size: 1.3rem !important;">
+                        <i class="chevron left icon"></i>文章管理
                     </a>
                 </div>
             </div>
@@ -31,10 +30,17 @@
                     </div>
                 </div>
             </div>
-            <div class="two wide centered column">
+            <div class="two wide centered column" style="padding-left: 0 !important;">
                 <a id="go" rel="leanModal" name="signup" href="#signup">
-                    <button type="submit" class="ui large right floated red button" style="color:#ffffff !important;">
+                    <button type="submit" class="ui large right floated red button" style="color:#ffffff !important;margin-left: 0 !important;">
                         发布文章
+                    </button>
+                </a>
+            </div>
+            <div class="two wide centered column" style="padding-left: 0 !important;">
+                <a id="go1" rel="leanModal" name="signup" href="#signup">
+                    <button type="submit" class="ui large right floated green button" style="color:#ffffff !important;margin-left: 0 !important;">
+                        保存为草稿
                     </button>
                 </a>
             </div>
@@ -424,8 +430,6 @@ Andrew->>China: I am good thanks!
               </textarea>
             </div>
         </div>
-
-
     </form>
 </div>
 
@@ -558,11 +562,70 @@ Andrew->>China: I am good thanks!
     </div>
 </div>
 
+
+</body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        toggleStatus();
+    });
+
+    function toggleStatus() {
+        var user = sessionStorage.getItem("user");
+        if(user!=null){
+            $('#header-images').show();
+            $('#login-btn').hide();
+        }else{
+            $('#header-images').hide();
+            $('#login-btn').show();
+        }
+        setTimeout(toggleStatus,100);
+    }
+
+    <!--退出操作异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "text",
+            success: function (result) {
+                if (result == "OK") {
+                    sessionStorage.removeItem("user");
+                    $("#login-btn").show();
+                    $('#header-images').hide();
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    });
+
+</script>
 <script src="../../../static/lib/editormd.min.js" th:src="@{/static/lib/editormd.min.js}"></script>
 <script src="../../../static/lib/editormd.amd.js" th:src="@{/static/editormd.amd.min.js}"></script>
+<!--控制头像的显示-->
+<script>
+    $(document).ready(function () {
+        toggleStatus();
+    });
 
+    function toggleStatus() {
+        var user = sessionStorage.getItem("user");
+        if(user!=null){
+            $('#header-images').show();
+            $('#login-btn').hide();
+        }else{
+            $('#header-images').hide();
+            $('#login-btn').show();
+        }
+        setTimeout(toggleStatus,100);
+    }
+</script>
 <script>
     //初始化Markdown编辑器
     var contentEditor;
@@ -665,7 +728,7 @@ Andrew->>China: I am good thanks!
 </script>
 
 <script type="text/javascript">
-     //控制分类栏
+    //控制分类栏
     $("#add-type-btn").click(function () {
         $("#add-input").show();
     });
@@ -705,5 +768,4 @@ Andrew->>China: I am good thanks!
 
 
 </script>
-</body>
 </html>

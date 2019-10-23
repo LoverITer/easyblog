@@ -1,5 +1,6 @@
 <!doctype html>
-<html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta name="referrer" content="always">
     <meta charset="UTF-8">
@@ -20,190 +21,14 @@
     <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/css/index.css">
     <!--new top-->
     <link rel="Stylesheet" type="text/css" href="https://csdnimg.cn/release/phoenix/static_blog/css/home.css">
-    <link rel="stylesheet" href="../css/me.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
-    <script src="https://csdnimg.cn/release/phoenix/static_blog/scripts/home.js?v=20111107"
-            type="text/javascript"></script>
-    <script type="text/javascript">
-        var adms = '6F07B2AE258FF4920292301557958538,C731D3C173098EBC6D79836BDF11B51C,00B651867221C68729CF63DC03F7BD24,02438EFC1FFF7673CB3D6171A901B571,7B85409EBD624050E4DD882A2AD87E2E,2FB898E92BFDD4CE7CC7D6102460EA05,86FADB1FC303B250CCB3F23593177BA3,1A08725CBB0D302AA800DFC8E97A572E,7E4470933EFA7C2BB6CB19FAC7D72D4A,0A0E033A10A8E08CAD06559EAA5DC60E,50C2B71FD2FCB003FAF3FCA51B1B4782,DCA5B199B9F9E5BA65E1A9FF4039DF0E,0E790C54A1D1DAE11A3BCDF043FA0118,E10DB1B6CF656CD84AA168F4E8CDAF5A,417B6F783E29B37E6CC9FC5FA0F53832,2FB898E92BFDD4CE7CC7D6102460EA05,E594E25A9F5BA4142B40F2F77E87C05B,061125C507766560F8DB3ADDB0FB32FA,9A73E0D52AEB3F2E6F6AB5EA4E670606,A90F64D75942CFDC3CF3ACBA4224F5A1,AA51610CA56F4BEB44C8772373FD1376,C814659C10006CF970163FEB52AC9592,155C48196C47BF78C7F50AB4CD9B19C6,EC8C1E7B59827F05C4284A31178D07B0,3B671C4D2C9ECC66E91CC48FB361B595,D7BD2D962E4BDAE12F9357F245BBAEC7,C14E9FB493B3CC800F741EA95C8D0862,E587FBB66EEB21BAA5E229D4C1081B59,3BC156E71CB09E239933148A44F030B4,56A5253F8B4AFA9BBAEE4389D399D789,';
-
-        function isadm(un) {
-            return adms.indexOf(md5(un)) > -1;
-        }
-    </script>
-    <script>
-        var _hmt = _hmt || [];
-        (function () {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-    </script>
-
-    <style type="text/css">
-        .help_container {
-            display: block !important;
-            margin: 0 auto !important;
-        }
-
-        .nav_side {
-            float: left;
-            width: 158px;
-            margin: 0 10px 0 0;
-            padding: 0 10px;
-            border: solid 1px #ccc;
-        }
-
-        .nav_side li {
-            border-bottom: solid 1px #ccc;
-            font: bold 14px/35px Arial, Helvetica, sans-serif;
-        }
-
-        .nav_side li.last {
-            border: none;
-        }
-
-        .nav_side li a {
-            display: block;
-            text-indent: 10px;
-        }
-
-        .nav_side li a:hover {
-            background: url(https://csdnimg.cn/release/phoenix/static_blog/images/arrow_1.gif) no-repeat right center;
-            color: #ca0000;
-        }
-
-        .help_con {
-            float: left;
-            width: 800px;
-            padding: 34px;
-            border: solid 1px #ccc;
-        }
-
-        .help_con .conbox {
-            margin: 0 0 20px 20px;
-        }
-
-        .help_con .conbox h1 {
-            margin: 0 0 20px 0;
-            padding: 0 0 10px 0;
-            border-bottom: solid 1px #ccc;
-            font: bold 18px/30px Arial, Helvetica, sans-serif;
-            text-align: center;
-        }
-
-        .help_con .conbox h4 {
-            margin: 0 0 1em 0;
-            font: bold 14px/26px Arial, Helvetica, sans-serif;
-        }
-
-        .help_con .conbox dl,
-        .help_con .conbox ul {
-            margin: 0 0 1em 0;
-            font: normal 14px/26px "Microsoft YaHei UI", Helvetica, sans-serif;
-        }
-
-        .help_con .conbox p {
-            margin: 0 0 1em 0;
-            font: normal 14px/26px 宋体, Helvetica, sans-serif;
-        }
-
-        .help_con .conbox dt {
-            font-weight: bold;
-        }
-
-        .help_spec_text {
-            margin-left: 6px;
-        }
-
-        .help-margin-left-big {
-            margin-left: 17em !important;
-        }
-    </style>
-    <style type="text/css">
-        .datatable {
-            background: #fff;
-            border: 1px solid #f0f0f0;
-            width: 100%;
-            text-align: center;
-            border-collapse: collapse;
-        }
-
-        .datatable thead {
-            font-size: 16px;
-        }
-
-        .datatable thead th {
-            border-right: 1px solid #f0f0f0;
-            border-top: 1px solid #f0f0f0;
-            padding: 0;
-            height: 40px;
-            text-align: center;
-            color: #333;
-        }
-
-        .datatable tbody {
-            font-size: 14px;
-        }
-
-        .datatable tbody td {
-            border-right: 1px solid #f0f0f0;
-            border-top: 1px solid #f0f0f0;
-            padding: 0;
-            height: 40px;
-        }
-
-        .blog_list1 {
-            text-decoration: none !important;
-            list-style-type: none;
-            padding: 0;
-        }
-
-    </style>
-
+    <link href="https://csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
 
 </head>
 <body>
 <!--导航-->
-<nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
-    <div class="ui container">
-        <div class="ui inverted secondary stackable menu">
-            <h2 class="ui teal header item">EasyBlog</h2>
-            <a href="#" class="active m-item item m-mobile-hide"><i class="mini home icon"></i>博客</a>
-            <div class="right m-item item m-mobile-hide">
-                <div class="ui icon inverted search input m-margin-tb-tiny">
-                    <input class="prompt" type="text" placeholder="Search....">
-                    <i class="search link icon"></i>
-                </div>
-            </div>
-            <!--我的头像-->
-            <div class="right m-item m-mobile-hide menu " style="margin-left: 1em !important;">
-                <div class="ui dropdown  item ">
-                    <div class="text">
-                        <img class="ui medium circular image image-42x42" style="max-height: none !important;"
-                             src="http://hbimg.b0.upaiyun.com/1f20743f57decb129f4563314eafca4f83f7a18d105ac-xpHDBI_fw658">
-                    </div>
-                    <div class="menu">
-                        <a href="#" class="item"><i class="bookmark icon"></i>我的关注</a>
-                        <!--<a href="#" class="item"><i class="star icon"></i>我的收藏</a>-->
-                        <a href="#" class="item"><i class="user icon"></i>个人中心</a>
-                        <a href="#" class="item"><i class="cogs icon"></i>账号设置</a>
-                        <div class="divider"></div>
-                        <a href="#" class="item"><i class="archive icon"></i>我的博客</a>
-                        <a href="#" class="item"><i class="edit icon"></i>管理博客</a>
-                        <div class="divider"></div>
-                        <a href="#" class="item"><i class="basic question  circle icon"></i>帮助</a>
-                        <a href="#" class="item"><i class="power offs icon"></i>注销</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
-        <i class="sidebar icon"></i>
-    </a>
-</nav>
+<div th:replace="~{nav::navbar}"></div>
 
 <!--中间内容-->
 <div class="ui m-container m-padded-tb-big stackable">
@@ -710,51 +535,197 @@
 </div>
 <div style="height: 25px"></div>
 <!--底部footer-->
-<footer class="ui inverted vertical segment m-padded-tb-massive">
-    <div class="ui center aligned container">
-        <div class="ui inverted divided stackable grid">
-            <div class="three wide column">
-                <div class="ui inverted link list">
-                    <div class="item">
-                        <img src="../images/wechat.jpg" class="ui rounded image" alt=""
-                             style="width: 125px">
-                    </div>
-                </div>
-            </div>
-            <div class="four wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced ">最新博客</h4>
-                <div class="ui inverted link list">
-                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
-                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
-                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
-                </div>
-            </div>
-            <div class="four wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
-                <div class="ui inverted link list">
-                    <a href="#" class="item m-text-thin m-txt-align-left">Email：2489868503hx@gmail.com</a>
-                    <a href="#" class="item m-text-thin m-txt-align-left">QQ：2489868503</a>
-                </div>
-            </div>
-            <div class="five wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
-                <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
-            </div>
-        </div>
-        <div class="ui inverted section divider"></div>
-        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2016 - 2017 EasyBlog Designed by HuangXin</p>
-    </div>
+<div th:replace="~{footer::footbar}"></div>
 
-</footer>
 
+</body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<!--控制用户头像的显示-->
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        toggleStatus();
+    });
+
+    function toggleStatus() {
+        var user = sessionStorage.getItem("user");
+        console.log(user);
+        if(user!=null){
+            $('#header-images').show();
+            $('#login-btn').hide();
+        }else{
+            $('#header-images').hide();
+            $('#login-btn').show();
+        }
+        setTimeout(toggleStatus,100);
+    }
+
+    <!--退出操作异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "text",
+            success: function (result) {
+                if (result == "OK") {
+                    sessionStorage.removeItem("user");
+                    $("#login-btn").show();
+                    $('#header-images').hide();
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    });
+
+</script>
 <script type="text/javascript">
     $('.ui.dropdown').dropdown({
         on: 'hover'
     });
 </script>
-<link href="https://csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet">
-</body>
+<script src="https://csdnimg.cn/release/phoenix/static_blog/scripts/home.js?v=20111107"
+        type="text/javascript"></script>
+<script type="text/javascript">
+    var adms = '6F07B2AE258FF4920292301557958538,C731D3C173098EBC6D79836BDF11B51C,00B651867221C68729CF63DC03F7BD24,02438EFC1FFF7673CB3D6171A901B571,7B85409EBD624050E4DD882A2AD87E2E,2FB898E92BFDD4CE7CC7D6102460EA05,86FADB1FC303B250CCB3F23593177BA3,1A08725CBB0D302AA800DFC8E97A572E,7E4470933EFA7C2BB6CB19FAC7D72D4A,0A0E033A10A8E08CAD06559EAA5DC60E,50C2B71FD2FCB003FAF3FCA51B1B4782,DCA5B199B9F9E5BA65E1A9FF4039DF0E,0E790C54A1D1DAE11A3BCDF043FA0118,E10DB1B6CF656CD84AA168F4E8CDAF5A,417B6F783E29B37E6CC9FC5FA0F53832,2FB898E92BFDD4CE7CC7D6102460EA05,E594E25A9F5BA4142B40F2F77E87C05B,061125C507766560F8DB3ADDB0FB32FA,9A73E0D52AEB3F2E6F6AB5EA4E670606,A90F64D75942CFDC3CF3ACBA4224F5A1,AA51610CA56F4BEB44C8772373FD1376,C814659C10006CF970163FEB52AC9592,155C48196C47BF78C7F50AB4CD9B19C6,EC8C1E7B59827F05C4284A31178D07B0,3B671C4D2C9ECC66E91CC48FB361B595,D7BD2D962E4BDAE12F9357F245BBAEC7,C14E9FB493B3CC800F741EA95C8D0862,E587FBB66EEB21BAA5E229D4C1081B59,3BC156E71CB09E239933148A44F030B4,56A5253F8B4AFA9BBAEE4389D399D789,';
+
+    function isadm(un) {
+        return adms.indexOf(md5(un)) > -1;
+    }
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<style type="text/css">
+    .help_container {
+        display: block !important;
+        margin: 0 auto !important;
+    }
+
+    .nav_side {
+        float: left;
+        width: 158px;
+        margin: 0 10px 0 0;
+        padding: 0 10px;
+        border: solid 1px #ccc;
+    }
+
+    .nav_side li {
+        border-bottom: solid 1px #ccc;
+        font: bold 14px/35px Arial, Helvetica, sans-serif;
+    }
+
+    .nav_side li.last {
+        border: none;
+    }
+
+    .nav_side li a {
+        display: block;
+        text-indent: 10px;
+    }
+
+    .nav_side li a:hover {
+        background: url(https://csdnimg.cn/release/phoenix/static_blog/images/arrow_1.gif) no-repeat right center;
+        color: #ca0000;
+    }
+
+    .help_con {
+        float: left;
+        width: 800px;
+        padding: 34px;
+        border: solid 1px #ccc;
+    }
+
+    .help_con .conbox {
+        margin: 0 0 20px 20px;
+    }
+
+    .help_con .conbox h1 {
+        margin: 0 0 20px 0;
+        padding: 0 0 10px 0;
+        border-bottom: solid 1px #ccc;
+        font: bold 18px/30px Arial, Helvetica, sans-serif;
+        text-align: center;
+    }
+
+    .help_con .conbox h4 {
+        margin: 0 0 1em 0;
+        font: bold 14px/26px Arial, Helvetica, sans-serif;
+    }
+
+    .help_con .conbox dl,
+    .help_con .conbox ul {
+        margin: 0 0 1em 0;
+        font: normal 14px/26px "Microsoft YaHei UI", Helvetica, sans-serif;
+    }
+
+    .help_con .conbox p {
+        margin: 0 0 1em 0;
+        font: normal 14px/26px 宋体, Helvetica, sans-serif;
+    }
+
+    .help_con .conbox dt {
+        font-weight: bold;
+    }
+
+    .help_spec_text {
+        margin-left: 6px;
+    }
+
+    .help-margin-left-big {
+        margin-left: 17em !important;
+    }
+</style>
+<style type="text/css">
+    .datatable {
+        background: #fff;
+        border: 1px solid #f0f0f0;
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+    }
+
+    .datatable thead {
+        font-size: 16px;
+    }
+
+    .datatable thead th {
+        border-right: 1px solid #f0f0f0;
+        border-top: 1px solid #f0f0f0;
+        padding: 0;
+        height: 40px;
+        text-align: center;
+        color: #333;
+    }
+
+    .datatable tbody {
+        font-size: 14px;
+    }
+
+    .datatable tbody td {
+        border-right: 1px solid #f0f0f0;
+        border-top: 1px solid #f0f0f0;
+        padding: 0;
+        height: 40px;
+    }
+
+    .blog_list1 {
+        text-decoration: none !important;
+        list-style-type: none;
+        padding: 0;
+    }
+
+</style>
 </html>
 
