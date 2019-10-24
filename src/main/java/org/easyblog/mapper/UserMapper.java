@@ -22,5 +22,4 @@ public interface UserMapper extends BaseMapper<User> {
 
     void updateUserSelective(User user);
 
-
 }

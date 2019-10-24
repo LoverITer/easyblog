@@ -66,6 +66,13 @@ body {
     padding-right: 4em !important;
 }
 
+.border-bottom-only{
+    border-bottom: 1px dotted #DDDDDD;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+}
+
 /*-------text -----*/
 
 .m-text {
