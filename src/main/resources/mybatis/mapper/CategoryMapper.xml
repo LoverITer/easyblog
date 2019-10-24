@@ -9,6 +9,7 @@
     <result column="category_article_num" jdbcType="INTEGER" property="categoryArticleNum" />
     <result column="category_click_num" jdbcType="INTEGER" property="categoryClickNum" />
     <result column="category_care_num" jdbcType="INTEGER" property="categoryCareNum" />
+    <result column="display" jdbcType="INTEGER" property="display"/>
   </resultMap>
 
 
@@ -23,9 +24,7 @@
 
 
   <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select *
-    from category
-    where category_id = #{categoryId,jdbcType=BIGINT}
+    select * from category where category_id = #{id}
   </select>
 
 
@@ -68,6 +67,9 @@
       <if test="categoryCareNum != null">
         category_care_num,
       </if>
+      <if test="display != null">
+        display,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="categoryId != null">
@@ -90,6 +92,9 @@
       </if>
       <if test="categoryCareNum != null">
         #{categoryCareNum,jdbcType=INTEGER},
+      </if>
+      <if test="display != null">
+        #{display}
       </if>
     </trim>
   </insert>
@@ -116,6 +121,9 @@
       <if test="categoryCareNum != null">
         category_care_num = #{categoryCareNum,jdbcType=INTEGER},
       </if>
+      <if test="display != null">
+        display=#{display}
+      </if>
     </set>
     where category_id = #{categoryId,jdbcType=BIGINT}
   </update>
@@ -128,7 +136,8 @@
       category_image_url = #{categoryImageUrl,jdbcType=VARCHAR},
       category_article_num = #{categoryArticleNum,jdbcType=INTEGER},
       category_click_num = #{categoryClickNum,jdbcType=INTEGER},
-      category_care_num = #{categoryCareNum,jdbcType=INTEGER}
+      category_care_num = #{categoryCareNum,jdbcType=INTEGER},
+      display=#{display,jdbcType=INTEGER},
     where category_id = #{categoryId,jdbcType=BIGINT}
   </update>
 </mapper>

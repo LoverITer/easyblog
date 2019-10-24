@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类专栏管理 - EasyBlog博客</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../../../css/me.css" th:href="@{/static/css/me.css}">
+</head>
+<body>
+
+<!--导航-->
+<div th:replace="~{nav :: navbar}"></div>
+
+
+<!--中间内容-->
+<div class="ui m-container m-padded-tb-big stackable">
+    <div class="ui stackable grid">
+        <!--侧边栏-->
+        <div th:replace="~{manage-sidebar::manage}"></div>
+        <!--博客内容-->
+        <div class="thirteen wide column">
+
+            <!--header-->
+            <div class="ui top attached segment " style="border-bottom: none !important;padding-bottom: 0 !important;">
+                <h2>分类专栏</h2>
+                <div class="ui top attached segment stackable"  style="border-top: none !important;border-left: none !important;border-right: none !important;">
+                    <div class="ui grid">
+                        <div class="row" style="padding-top: 10px !important;padding-bottom: 10px !important;">
+                            <div class="two wide column" style="padding-right: 0 !important;"><a id="all" href="#" th:href="@{/manage/category/list}" class="m-black" style="color:#349EDF !important;font-size: 1.1rem !important;">全部(<span>1</span>)</a></div>
+                            <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a id="public" href="#" th:href="@{/manage/category/dash}" style="color:#349EDF !important;font-size: 1.1rem !important;" class="m-black"><i class="trash alternate outline icon"></i>回收站(<span>1</span>)</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui top attached segment stackable"  style="border-top: none !important;border-left: none !important;border-right: none !important;">
+                    <div class="ui grid">
+                        <div class="row" style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                            <div class="fourteen wide column" style="padding-right: 0 !important;"><span  class="m-black" style="color:grey !important;font-size: 1.1rem !important;">类别</span></div>
+                            <div class="two wide column" style="padding-right: 0 !important;"><span  class="m-black" style="color:grey !important;font-size: 1.1rem !important;">操作</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui attached segment border-bt-none">
+                <div class="ui attached clearing segment border-bottom-only" style="padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
+                    <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
+                         src="https://img-blog.csdnimg.cn/20190918140037908.png">
+                    <span style="margin-left: 1rem">Redis</span>
+                    <span class="right floated" style="margin-left: 51rem"><a href="#" style="color:#349EDF !important;">一键恢复</a></span>
+                    <span class="right floated" style="margin-left: 0.5rem"><a href="#" style="color:#B50C13 !important;">彻底删除</a></span>
+                </div>
+                <div class="ui attached segment border-bottom-only" style="padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
+                    <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
+                         src="https://img-blog.csdnimg.cn/20190918140037908.png">
+                    <span style="margin-left: 1rem">Redis</span>
+                    <span style="margin-left: 51rem"><a href="#" style="color:#349EDF !important;">一键恢复</a></span>
+                    <span style="margin-left: 0.5rem"><a href="#" style="color:#B50C13 !important;">彻底删除</a></span>
+                </div>
+                <div class="ui attached segment border-bottom-only" style="padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
+                    <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
+                         src="https://img-blog.csdnimg.cn/20190918140037908.png">
+                    <span style="margin-left: 1rem">Redis</span>
+                    <span style="margin-left: 51rem"><a href="#" style="color:#349EDF !important;">一键恢复</a></span>
+                    <span style="margin-left: 0.5rem"><a href="#" style="color:#B50C13 !important;">彻底删除</a></span>
+                </div>
+                <div class="ui attached segment border-bottom-only" style="padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
+                    <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
+                         src="https://img-blog.csdnimg.cn/20190918140037908.png">
+                    <span style="margin-left: 1rem">Redis</span>
+                    <span style="margin-left: 51rem"><a href="#" style="color:#349EDF !important;">一键恢复</a></span>
+                    <span style="margin-left: 0.5rem"><a href="#" style="color:#B50C13 !important;">彻底删除</a></span>
+                </div>
+            </div>
+           <!-- &lt;!&ndash;分页按钮&ndash;&gt;
+            <div class="ui bottom attached segment ">
+                <div class="ui middle aligned two column grid"
+                     style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                    <div class="column" style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                        <a href="#" class="ui mini teal basic button">上一页</a>
+                    </div>
+                    <div class="right aligned column">
+                        <a href="#" class="ui mini teal basic button">下一页</a>
+                    </div>
+                </div>
+            </div>-->
+            <div class="ui bottom attached segment " style="height: 30em "></div>
+        </div>
+    </div>
+
+</div>
+
+
+<div style="height: 10em"></div>
+<!--底部footer-->
+<div th:replace="~{footer :: footbar}"></div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        toggleStatus();
+    });
+
+    function toggleStatus() {
+        var user = sessionStorage.getItem("user");
+        if(user!=null){
+            $('#header-images').show();
+            $('#login-btn').hide();
+        }else{
+            $('#header-images').hide();
+            $('#login-btn').show();
+        }
+        setTimeout(toggleStatus,100);
+    }
+
+    <!--退出操作异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "text",
+            success: function (result) {
+                if (result == "OK") {
+                    sessionStorage.removeItem("user");
+                    $("#login-btn").show();
+                    $('#header-images').hide();
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    });
+
+</script>
+
+<!--控制头像的显示-->
+<script>
+    $(document).ready(function () {
+        toggleStatus();
+    });
+
+    function toggleStatus() {
+        var user = sessionStorage.getItem("user");
+        if(user!=null){
+            $('#header-images').show();
+            $('#login-btn').hide();
+        }else{
+            $('#header-images').hide();
+            $('#login-btn').show();
+        }
+        setTimeout(toggleStatus,100);
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        var url=window.location.pathname;
+        console.log("location:"+url);
+    })
+
+</script>
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+
+    $('#searchBar').click(function () {
+        $('#reloadSearchBar').css("display", "block");  //显示div
+    });
+
+</script>
+</html>

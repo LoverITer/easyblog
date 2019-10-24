@@ -20,16 +20,19 @@ public class Category implements Serializable {
 
     private Integer categoryCareNum;
 
+    private Integer display;
+
     public Category() {
     }
 
-    public Category( Integer categoryUser, String categoryName, String categoryImageUrl, Integer categoryArticleNum, Integer categoryClickNum, Integer categoryCareNum) {
+    public Category( Integer categoryUser, String categoryName, String categoryImageUrl, Integer categoryArticleNum, Integer categoryClickNum, Integer categoryCareNum,Integer display) {
         this.categoryUser = categoryUser;
         this.categoryName = categoryName;
         this.categoryImageUrl = categoryImageUrl;
         this.categoryArticleNum = categoryArticleNum;
         this.categoryClickNum = categoryClickNum;
         this.categoryCareNum = categoryCareNum;
+        this.display=display;
     }
 
     public Long getCategoryId() {
@@ -88,6 +91,14 @@ public class Category implements Serializable {
         this.categoryCareNum = categoryCareNum;
     }
 
+    public Integer getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(Integer display) {
+        this.display = display;
+    }
+
     @Override
     public String toString() {
         return "Category{" +
@@ -98,6 +109,7 @@ public class Category implements Serializable {
                 ", categoryArticleNum=" + categoryArticleNum +
                 ", categoryClickNum=" + categoryClickNum +
                 ", categoryCareNum=" + categoryCareNum +
+                ", display=" + display +
                 '}';
     }
 }
