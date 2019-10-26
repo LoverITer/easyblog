@@ -28,13 +28,13 @@ public class CategoryController {
     @GetMapping(value = "/{id}/{userId}")
     public String categoryDetailsPage(@PathVariable(value = "id") int categoryId, @PathVariable("userId") int userId, Model model){
         Category category = categoryServiceImpl.getCategory(categoryId);
-        System.out.println("categoryId:"+categoryId);
         List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);
         model.addAttribute("care","false");
         System.out.println(categoryCare);
         if(Objects.nonNull(categoryCare)) {
             categoryCare.forEach(ele -> {
-                if (userId == ele.getCategoryCareId()) {
+                //待优化
+                if (userId == ele.getCategoryCareUserId()) {
                     model.addAttribute("care", "true");
                 }
             });
@@ -42,7 +42,7 @@ public class CategoryController {
         if(Objects.nonNull(category)) {
             model.addAttribute("category", category);
         }
-        //文章细节
+        //文章细节，待写
         return "category-details";
     }
 
@@ -53,12 +53,32 @@ public class CategoryController {
         Result result = new Result();
         result.setSuccess(false);
         result.setMsg("服务异常，请重试！");
-       // System.out.println(categoryId+" "+userId);
         ConcurrentHashMap<String, Object> map = new ConcurrentHashMap<>();
         map.put("categoryCareNum",1);   //更新关注数
         try {
             categoryServiceImpl.updateCategoryInfo(categoryId,map);
             categoryCareService.saveCareInfo(userId,categoryId);
+            result.setSuccess(true);
+            result.setMsg("OK");
+        }catch (Exception e){
+            return result;
+        }
+        return result;
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/cancelCare/{categoryId}")
+    public Result cancelCare(@PathVariable("categoryId") int categoryId,
+                               @RequestParam("userId")int userId){
+        Result result = new Result();
+        result.setSuccess(false);
+        result.setMsg("服务异常，请重试！");
+        ConcurrentHashMap<String, Object> map = new ConcurrentHashMap<>();
+        map.put("categoryCareNum",-1);   //更新关注数
+        try {
+            categoryServiceImpl.updateCategoryInfo(categoryId,map);
+            categoryCareService.deleteCareInfo(userId,categoryId);
             result.setSuccess(true);
             result.setMsg("OK");
         }catch (Exception e){

@@ -32,11 +32,14 @@ public interface ICategoryService {
     int saveCategory(int userId,String categoryName);
 
     /**
-     * 选择性更新分类列表的内容
+     * 选择性更新分类列表的内容，适用于表中有字段的值要增加的时候
      * @param categoryId
      * @param params
      * @return
      */
     boolean updateCategoryInfo(int categoryId, Map<String,Object> params);
+
+
+
 
 }

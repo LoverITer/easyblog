@@ -89,6 +89,7 @@ public class CategoryServiceImpl implements ICategoryService {
             e.printStackTrace();
             return false;
         }
-        return false;
+        return true;
     }
+
 }
