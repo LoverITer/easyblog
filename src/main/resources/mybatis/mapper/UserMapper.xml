@@ -6,16 +6,16 @@
     <insert id="save" useGeneratedKeys="true" keyColumn="user_id">
         insert into user (user_nickname, user_password, user_name, user_gender, user_birthday, user_qq, user_phone,
                           user_mail, user_address, user_score, user_rank, user_headerImg_url,
-                          user_description, user_register_time, user_register_ip, user_last_login_ip,
-                          user_last_update_time, user_lock, user_freeze, user_power)
+                          user_description, user_register_time, user_register_ip,
+                          user_last_update_time, user_lock, user_freeze, user_power,user_level,user_visit)
         values
         (#{userNickname}, #{userPassword}, #{userName},
         #{userGender}, #{userBirthday}, #{userQQ},
         #{userPhone}, #{userMail}, #{userAddress},
         #{userScore}, #{userRank}, #{userHeaderImgUrl},
         #{userDescription},now(), #{userRegisterIp},
-        #{userLastLoginIp}, #{userLastUpdateTime}, #{userLock},
-        #{userFreeze}, #{userPower})
+        #{userLastUpdateTime}, #{userLock},
+        #{userFreeze}, #{userPower},#{userLevel},#{userVisit})
     </insert>
 
     <!--批量插入数据-->
@@ -88,7 +88,13 @@
                 user_freeze=#{userFreeze},
             </if>
             <if test="userPower!=null">
-                user_power=#{userPower}
+                user_power=#{userPower},
+            </if>
+            <if test="userLevel != null">
+                user_level=#{userLevel},
+            </if>
+            <if test="userVisit != null">
+                user_visit=#{userVisit}
             </if>
         </set>
         where user_id=#{userId}
@@ -136,6 +142,12 @@
             </if>
             <if test="userPower!=null">
                 user_power=#{userPower}
+            </if>
+            <if test="userLevel != null">
+                user_level=#{userLevel},
+            </if>
+            <if test="userVisit != null">
+                user_visit=#{userVisit}
             </if>
         </set>
         where

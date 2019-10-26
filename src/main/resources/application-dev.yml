@@ -64,10 +64,15 @@ spring:
         max-idle: 8
         max-wait: 5000ms
       shutdown-timeout: 100ms
-
-
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
 logging:
   level:
     root: debug
     org.easyblog: debug
   file: easyblogDev.log
+
+cbs:
+  imagesPath: file:/E:/upload/

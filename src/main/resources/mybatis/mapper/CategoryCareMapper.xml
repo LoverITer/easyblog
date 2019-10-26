@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.easyblog.mapper.CategoryCareMapper">
+
+    <insert id="save" useGeneratedKeys="true" keyColumn="category_care_id">
+        insert into category_care(category_id, category_care_user_id) value
+        (#{categoryId},#{categoryCareUserId})
+    </insert>
+
+
+    <!--按照分类的ID查找这个分类的所有关注-->
+    <select id="getCategoryCareByCategoryId" resultType="org.easyblog.bean.CategoryCare">
+         select * from category_care where category_id=#{categoryId}
+    </select>
+
+</mapper>

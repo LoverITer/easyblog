@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
 </head>
-<body>
+<body onload="timer()">
 
 <!--导航-->
 <div th:replace="~{nav :: navbar}"></div>
@@ -40,9 +40,8 @@
     $('.ui.dropdown').dropdown({
         on: 'hover'
     });
-
     var t = 5;
-    setTimeout(timer, 1000);
+    setInterval("timer()", 1000);
 
     function timer() {
         if (t > 0) {
@@ -50,10 +49,11 @@
             t--;
         } else {
             //跳转到登录页面
-            window.location.href = "/toLoginPage";
+            window.location.href = "/user/loginPage";
         }
 
     }
+
 
 </script>
 </body>
