@@ -1,27 +1,21 @@
 package org.easyblog.bean;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Category implements Serializable {
 
     private static final long serialVersionUID = 8690952682535328046L;
 
     private Long categoryId;
-
     private Integer categoryUser;
-
     private String categoryName;
-
     private String categoryImageUrl;
-
     private Integer categoryArticleNum;
-
     private Integer categoryClickNum;
-
     private Integer categoryCareNum;
-
     private Integer display;
-
+    private Date createTime;
     public Category() {
     }
 
@@ -33,6 +27,15 @@ public class Category implements Serializable {
         this.categoryClickNum = categoryClickNum;
         this.categoryCareNum = categoryCareNum;
         this.display=display;
+    }
+
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Long getCategoryId() {

@@ -7,6 +7,7 @@ import org.easyblog.bean.enums.UserPower;
 import org.easyblog.handler.exception.NullUserException;
 import org.easyblog.mapper.UserMapper;
 import org.easyblog.service.base.IUserService;
+import org.easyblog.utils.FileUploadUtils;
 import org.easyblog.utils.RegexUtil;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
@@ -70,13 +71,13 @@ public class UserServiceImpl implements IUserService {
     @CachePut(cacheNames = "register",condition = "#result==true")
     @Override
     public boolean register(String nickname, String password, String account, String ipInfo) {
-
+        String headUrl= FileUploadUtils.defaultAvatar();
         try {
             User user = null;
             if (RegexUtil.isEmail(account)) {
-                user = new User(nickname, password, null, null, null, null, null, account, null, 0, 100000, null, null, ipInfo, null, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel());
+                user = new User(nickname, password, null, null, null, null, null, account, null, 0, 100000, headUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(),0,0);
             } else if (RegexUtil.isMobile(account)) {
-                user = new User(nickname, password, null, null, null, null, null, null, account, 0, 100000, null, null, ipInfo, null, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel());
+                user = new User(nickname, password, null, null, null, null, null, null, account, 0, 100000, headUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(),0,0);
             }
             if (user != null) {
                 userMapper.save(user);

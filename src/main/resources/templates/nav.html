@@ -23,7 +23,7 @@
                 <div class="ui dropdown  item ">
                     <div class="text">
                         <img class="ui medium circular image image-42x42" style="max-height: none !important;"
-                             src="https://img-blog.csdnimg.cn/20190927151132530.png"/>
+                             src="" th:src="@{${#session.getAttribute('user').getUserHeaderImgUrl()}}"/>
                     </div>
                     <div class="menu">
                         <a href="#" th:href="@{/uc/follow-list}" class="item"><i class="bookmark icon"></i>我的关注</a>

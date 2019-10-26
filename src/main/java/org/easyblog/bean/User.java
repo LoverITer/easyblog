@@ -23,17 +23,18 @@ public class User implements Serializable {
     private String userDescription;
     private Date userRegisterTime;
     private String userRegisterIp;
-    private String userLastLoginIp;
     private String userLastUpdateTime;
     private Integer userLock;
     private Integer userFreeze;
     private Integer userPower;
+    private Integer userLevel;
+    private Integer userVisit;
 
     public User() {
     }
 
 
-    public User(String userNickname, String userPassword, String userName, String userGender, Date userBirthday, String userQQ, String userPhone, String userMail, String userAddress, int userScore, int userRank, String userHeaderImgUrl, String userDescription, String userRegisterIp, String userLastLoginIp, String userLastUpdateTime, Integer userLock, Integer userFreeze, Integer userPower) {
+    public User(String userNickname, String userPassword, String userName, String userGender, Date userBirthday, String userQQ, String userPhone, String userMail, String userAddress, int userScore, int userRank, String userHeaderImgUrl, String userDescription, String userRegisterIp, String userLastUpdateTime, Integer userLock, Integer userFreeze, Integer userPower,Integer userLevel,Integer userVisit) {
         this.userNickname = userNickname;
         this.userPassword = userPassword;
         this.userName = userName;
@@ -48,11 +49,29 @@ public class User implements Serializable {
         this.userHeaderImgUrl = userHeaderImgUrl;
         this.userDescription = userDescription;
         this.userRegisterIp = userRegisterIp;
-        this.userLastLoginIp = userLastLoginIp;
         this.userLastUpdateTime = userLastUpdateTime;
         this.userLock = userLock;
         this.userFreeze = userFreeze;
         this.userPower = userPower;
+        this.userLevel=userLevel;
+        this.userVisit=userVisit;
+    }
+
+
+    public Integer getUserLevel() {
+        return userLevel;
+    }
+
+    public void setUserLevel(Integer userLevel) {
+        this.userLevel = userLevel;
+    }
+
+    public Integer getUserVisit() {
+        return userVisit;
+    }
+
+    public void setUserVisit(Integer userVisit) {
+        this.userVisit = userVisit;
     }
 
     public Integer getUserId() {
@@ -191,14 +210,6 @@ public class User implements Serializable {
         this.userRegisterIp = userRegisterIp;
     }
 
-    public String getUserLastLoginIp() {
-        return userLastLoginIp;
-    }
-
-    public void setUserLastLoginIp(String userLastLoginIp) {
-        this.userLastLoginIp = userLastLoginIp;
-    }
-
     public String getUserLastUpdateTime() {
         return userLastUpdateTime;
     }
@@ -229,5 +240,34 @@ public class User implements Serializable {
 
     public void setUserPower(Integer userPower) {
         this.userPower = userPower;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userNickname='" + userNickname + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userGender='" + userGender + '\'' +
+                ", userBirthday=" + userBirthday +
+                ", userQQ='" + userQQ + '\'' +
+                ", userPhone='" + userPhone + '\'' +
+                ", userWechart='" + userWechart + '\'' +
+                ", userMail='" + userMail + '\'' +
+                ", userAddress='" + userAddress + '\'' +
+                ", userScore=" + userScore +
+                ", userRank=" + userRank +
+                ", userHeaderImgUrl='" + userHeaderImgUrl + '\'' +
+                ", userDescription='" + userDescription + '\'' +
+                ", userRegisterTime=" + userRegisterTime +
+                ", userRegisterIp='" + userRegisterIp + '\'' +
+                ", userLastUpdateTime='" + userLastUpdateTime + '\'' +
+                ", userLock=" + userLock +
+                ", userFreeze=" + userFreeze +
+                ", userPower=" + userPower +
+                ", userLevel=" + userLevel +
+                ", userVisit=" + userVisit +
+                '}';
     }
 }

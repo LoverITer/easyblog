@@ -4,19 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style type="text/css">
+        a:hover{
+            color:#ca0c16 !important;
+        }
+    </style>
 </head>
 <body>
 
 <!--左边的卡片-->
 <div class="four wide column" th:fragment="sidebar">
+    <input id="userId" hidden="hidden" th:value="${#session.getAttribute('user').getUserId()}">
     <!--用户信息区域-->
     <div class="ui segments">
         <div class="ui equal width center aligned padded grid">
             <div class="row" style="padding-bottom: 0 !important;">
                 <div class="four wide column" style="padding-right: 0 !important;">
-                    <a href="#" class="m-black">
+                    <a href="#" th:href="@{/article/index/}+${#session.getAttribute('user').getUserId()}"
+                       class="m-black">
                         <img class="ui top avatar aligned tiny image medium circular image-50x50"
-                             src="https://img-blog.csdnimg.cn/20190927151132530.png"/>
+                             src="../static/images/header.jpg"
+                             th:src="@{${#session.getAttribute('user').getUserHeaderImgUrl()}}"/>
                     </a>
                 </div>
                 <div class="twelve wide column" style="padding-left: 0!important;">
@@ -33,7 +41,8 @@
                     </div>
 
                     <div class="row m-margin-top-large">
-                        <a href="#" th:href="@{/blog/home}" class="float-right" style="color: #3399ea">TA的个人主页&nbsp;></a>
+                        <a href="#" th:href="@{/article/home/}+${#session.getAttribute('user').getUserId()}"
+                           class="float-right" style="color: #3399ea">TA的个人主页&nbsp;></a>
                     </div>
                 </div>
 
@@ -64,25 +73,25 @@
 
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column m-txt-align-left ">
-                    等级：<span class="m-margin-left">7级</span>
+                    等级：<span class="m-margin-left" th:text="${#session.getAttribute('user').getUserLevel()}"></span>
                 </div>
                 <div class="column m-txt-align-left">
-                    访问：<span class="m-margin-left">7级</span>
+                    访问：<span class="m-margin-left" th:text="${#session.getAttribute('user').getUserVisit()}"></span>
                 </div>
             </div>
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column m-txt-align-left">
-                    积分：<span class="m-margin-left">7级</span>
+                    积分：<span class="m-margin-left" th:text="${#session.getAttribute('user').getUserScore()}"></span>
                 </div>
                 <div class="column m-txt-align-left">
-                    排名：<span class="m-margin-left">7级</span>
+                    排名：<span class="m-margin-left" th:text="${#session.getAttribute('user').getUserRank()}">7</span>
                 </div>
             </div>
-            <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
-                <div class="column m-txt-align-left">
-                    勋章：<span class="m-margin-left">7级</span>
-                </div>
-            </div  >
+            <!--            <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">-->
+            <!--                <div class="column m-txt-align-left">-->
+            <!--                    勋章：<span class="m-margin-left"><span th:text="${}">7</span>级</span>-->
+            <!--                </div>-->
+            <!--            </div  >-->
         </div>
     </div>
 
@@ -95,48 +104,15 @@
                 </div>
             </div>
         </div>
-        <div class="ui segment">
+        <div class="ui segment" th:each="categoty:${#session.getAttribute('categories')}">
             <!--专栏的图片-->
-            <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg">
-            <a href="#" target="_blank" class="m-black m-text-thin m-margin-left">2019年2月
-                <span class="count float-right">14篇</span>
+            <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg"
+                 th:src="${categoty.categoryImageUrl}">
+            <a href="#" th:href="@{/category/details/}+${categoty.categoryId}+@{/}+${#session.getAttribute('user').getUserId()}" target="_blank" class="m-black m-text-thin m-margin-left" th:text="${categoty.categoryName}">2019年2月
             </a>
-        </div>
-        <div class="ui segment">
-            <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg">
-            <a href="#" target="_blank" class="m-black m-text-thin m-margin-left">2019年2月
-                <span class="count float-right">14篇</span>
-            </a>
-        </div>
-        <div class="ui segment">
-            <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg">
-            <a href="#" target="_blank" class="m-black m-text-thin m-margin-left">2019年2月
-                <span class="count float-right">14篇</span>
-            </a>
-        </div>
-        <div class="ui segment">
-            <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg">
-            <a href="#" target="_blank" class="m-black m-text-thin m-margin-left">2019年2月
-                <span class="count float-right">14篇</span>
-            </a>
-        </div>
-        <div class="ui segment">
-            <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg">
-            <a href="#" target="_blank" class="m-black m-text-thin m-margin-left">2019年2月
-                <span class="count float-right">14篇</span>
-            </a>
-        </div>
-        <div class="ui segment">
-            <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg">
-            <a href="#" target="_blank" class="m-black m-text-thin m-margin-left">2019年2月
-                <span class="count float-right">14篇</span>
-            </a>
-        </div>
-        <div class="ui segment">
-            <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg">
-            <a href="#" target="_blank" class="m-black m-text-thin m-margin-left">2019年2月
-                <span class="count float-right">14篇</span>
-            </a>
+            <span class="count float-right">
+                [[${categoty.categoryArticleNum}]]篇
+            </span>
         </div>
 
     </div>

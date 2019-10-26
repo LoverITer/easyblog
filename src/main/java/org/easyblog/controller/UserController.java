@@ -14,7 +14,6 @@ import org.easyblog.utils.SendMessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,8 +37,7 @@ public class UserController {
     private final UserPhoneLogServiceImpl userPhoneLogService;
     private final SendEmailUtil emailUtil;
     private final UserSigninLogServiceImpl userSigninLogService;
-    /***封装AJAX请求的返回结果***/
-    private final Result result = new Result();
+
     /***ajax异步请求成功标志***/
     private static final String AJAX_SUCCESS = "OK";
     /***ajax异步请求失败标志***/
@@ -152,6 +150,7 @@ public class UserController {
         String captcha = (String) session.getAttribute("captcha-code");
         String ip = NetWorkUtil.getUserIp(request);
         String ipInfo = NetWorkUtil.getLocation(request, ip);
+        Result result = new Result();
         result.setSuccess(false);
 
         User user = userService.getUser(nickname);
@@ -174,6 +173,7 @@ public class UserController {
     @ResponseBody
     @GetMapping(value = "/checkNickname")
     public Result checkUserNickname(@RequestParam(value = "nickname", defaultValue = "") String nickname) {
+        Result result = new Result();
         result.setSuccess(true);
         if (!"".equals(nickname)) {
             User user = userService.getUser(nickname);
@@ -187,10 +187,11 @@ public class UserController {
     @ResponseBody
     @GetMapping(value = "/checkEmail")
     public Result checkUserEmail(@RequestParam(value = "email", defaultValue = "") String email) {
+        Result result = new Result();
         result.setSuccess(false);
         if (!"".equals(email)) {
             User user = userService.getUser(email);
-            if (user != null) {
+            if (user == null) {
                 result.setSuccess(true);
             }
         }
@@ -200,6 +201,7 @@ public class UserController {
     @ResponseBody
     @GetMapping(value = "/checkPhone")
     public Result checkUserPhone(@RequestParam(value = "phone", defaultValue = "") String phone) {
+        Result result = new Result();
         result.setSuccess(true);
         if (!"".equals(phone)) {
             User user = userService.getUser(phone);
@@ -214,6 +216,7 @@ public class UserController {
     @ResponseBody
     @GetMapping(value = "/checkPassword")
     public Result checkPassword(@RequestParam("password") String password) {
+        Result result = new Result();
         result.setSuccess(true);
         if (password.length() < 6 || password.length() > 16) {
             result.setSuccess(false);
@@ -227,7 +230,7 @@ public class UserController {
     public String login(@RequestParam(value = "username", defaultValue = "") String username,
                         @RequestParam(value = "password", defaultValue = "") String password,
                         @RequestParam(value = "remember", defaultValue = "") String remember,
-                        HttpSession session, Model model,
+                        HttpSession session,
                         RedirectAttributes redirectAttributes,
                         HttpServletRequest request,
                         HttpServletResponse response) {
@@ -238,18 +241,19 @@ public class UserController {
         try {
             if (user != null) {
                 user.setUserPassword(null);   //不要把用户密码带到前端页面
+                user.setUserPower(null);
                 session.setAttribute("LOGIN-USER", user);
+                session.setAttribute("user",user);
                 session.setMaxInactiveInterval(60 * 60 * 24 * 10);   //登录信息10天有效
                 // 保存登录状态
                 Cookie ck = new Cookie("JSESSIONID", request.getSession().getId());
                 ck.setPath("/");
                 ck.setMaxAge(30);
                 response.setHeader("JSESSIONID", ck.getValue());
-                model.addAttribute("uid", user.getUserId());
                 new Thread(() -> {
                     userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功"));
                 }).start();
-                return "redirect:/article/index";
+                return "redirect:/article/index/"+user.getUserId();
             } else {
                 redirectAttributes.addFlashAttribute("msg", "用户名和密码不正确！");
                 return "redirect:/user/loginPage";
@@ -296,6 +300,7 @@ public class UserController {
                                  @RequestParam("newPassword") String newPassword,
                                  @RequestParam(value = "code", defaultValue = "") String code,
                                  HttpSession session) {
+        Result result = new Result();
         if (code.equals(session.getAttribute("captcha-code"))&&
                 Objects.nonNull(newPassword)&&
                 Objects.nonNull(account)) {
