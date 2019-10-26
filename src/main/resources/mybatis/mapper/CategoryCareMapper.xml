@@ -13,4 +13,8 @@
          select * from category_care where category_id=#{categoryId}
     </select>
 
+    <delete id="deleteByUserIdAndCategoryId">
+        delete from category_care where category_care_user_id=#{userId} AND category_id=#{categoryId}
+    </delete>
+
 </mapper>

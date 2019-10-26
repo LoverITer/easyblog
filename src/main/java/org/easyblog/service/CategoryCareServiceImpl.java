@@ -26,8 +26,7 @@ public class CategoryCareServiceImpl implements ICategoryCareService {
     @Cacheable(cacheNames = "getCategoryCare", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<CategoryCare> getCategoryCare(int categoryId) {
-        categoryCareMapper.getCategoryCareByCategoryId(categoryId);
-        return null;
+       return categoryCareMapper.getCategoryCareByCategoryId(categoryId);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -41,5 +40,16 @@ public class CategoryCareServiceImpl implements ICategoryCareService {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    @Override
+    public boolean deleteCareInfo(int userId, int categoryId) {
+        try {
+            categoryCareMapper.deleteByUserIdAndCategoryId(userId, categoryId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

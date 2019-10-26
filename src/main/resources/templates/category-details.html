@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
 </head>
-<body onload="care()">
+<body>
 
 
 <!--导航-->
@@ -26,7 +26,7 @@
             <div class="ui top attached segment">
                 <div class="ui middle aligned two column grid">
                     <input id="category_Id" hidden="hidden" th:value="${category.getCategoryId()}"/>
-                    <input id="care_id" hidden="hidden" th:value="${care}">
+                    <input id="care_id" hidden="hidden" value="" th:value="${care}">
                     <!--分类的标题的图片-->
                     <div class="m-inline-block m-margin-top m-margin-bottom m-margin-left">
                         <img src="https://img-blog.csdnimg.cn/20190927151132530.png"
@@ -513,11 +513,17 @@
         on: 'hover'
     });
 </script>
+<!--控制关注按钮的状态-->
 <script type="text/javascript">
-    <!--颜色样式设置-->
-    function care() {
+    <!--关注按钮样式切换-->
+    $('#care-btn').ready(function () {
+        changeBtn();
+    });
+
+    function changeBtn(){
         var str = $('#care_id').val();
         if ("false" == str) {
+            $('#care-btn').text("关注");
             $('#care-btn').mouseenter(function () {
                 $('#care-btn').removeClass("basic");
             });
@@ -525,6 +531,10 @@
                 $('#care-btn').addClass("basic");
             });
         } else {
+            $('#care-btn').removeClass("red");
+            $('#care-btn').addClass("grey");
+            $('#care-btn').addClass("basic");
+            $('#care-btn').css("color", "#4d4d4d").text("已关注");
             $('#care-btn').mouseenter(function () {
                 $('#care-btn').css("color", "red").text("取消关注");
             });
@@ -537,29 +547,58 @@
     $('#care-btn').click(function () {
         //异步请求
         var id = $('#category_Id').val();
-        $.ajax({
-            url: "/category/details/care/" + id,
-            method: "GET",
-            sync: true,
-            data:{userId:$('#userId').val()},
-            dataType: "text",
-            success: function () {
-                $('#care-btn').removeClass("red");
-                $('#care-btn').addClass("grey");
-                $('#care-btn').addClass("basic");
-                $('#care-btn').css("color", "#4d4d4d").text("已关注");
-                $('#care-btn').mouseenter(function () {
-                    $('#care-btn').css("color", "red").text("取消关注");
-                });
-                $('#care-btn').mouseleave(function () {
+        var btnHtml=$('#care-btn').html();
+        if("关注"==btnHtml) {
+            $.ajax({
+                url: "/category/details/care/" + id,
+                method: "GET",
+                sync: true,
+                data: {userId: $('#userId').val()},
+                dataType: "text",
+                success: function () {
+                    $('#care_id').val("true");
+                    changeBtn();
+                  /*  $('#care-btn').removeClass("red");
+                    $('#care-btn').addClass("grey");
+                    $('#care-btn').addClass("basic");
                     $('#care-btn').css("color", "#4d4d4d").text("已关注");
-                });
-                $('#care_id').val("true");
-            },
-            error: function (result) {
-                alert(result.msg);
-            }
-        })
+                    $('#care-btn').mouseenter(function () {
+                        $('#care-btn').css("color", "red").text("取消关注");
+                    });
+                    $('#care-btn').mouseleave(function () {
+                        $('#care-btn').css("color", "#4d4d4d").text("已关注");
+                    });*/
+                },
+                error: function (result) {
+                    alert(result.msg);
+                }
+            })
+        }else if("取消关注"==btnHtml){
+            $.ajax({
+                url: "/category/details/cancelCare/" + id,
+                method: "GET",
+                sync: true,
+                data: {userId: $('#userId').val()},
+                dataType: "text",
+                success: function () {
+                    $('#care_id').val("false");
+                    changeBtn();
+                    /*$('#care-btn').removeClass("grey");
+                    $('#care-btn').addClass("red");
+                    $('#care-btn').addClass("basic");
+                    $('#care-btn').text("关注");
+                    $('#care-btn').mouseenter(function () {
+                        $('#care-btn').removeClass("basic");
+                    });
+                    $('#care-btn').mouseleave(function () {
+                        $('#care-btn').addClass("basic");
+                    });*/
+                },
+                error: function (result) {
+                    alert(result.msg);
+                }
+            })
+        }
     })
 </script>
 

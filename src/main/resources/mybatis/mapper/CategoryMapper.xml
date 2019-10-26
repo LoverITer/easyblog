@@ -117,13 +117,13 @@
         category_image_url = #{categoryImageUrl,jdbcType=VARCHAR},
       </if>
       <if test="categoryArticleNum != null">
-        category_article_num = #{categoryArticleNum,jdbcType=INTEGER},
+        category_article_num = category_article_num+#{categoryArticleNum},
       </if>
       <if test="categoryClickNum != null">
-        category_click_num = category_click_num+1,
+        category_click_num = category_click_num+#{categoryClickNum},
       </if>
       <if test="categoryCareNum != null">
-        category_care_num = category_care_num+1,
+        category_care_num = category_care_num+#{categoryCareNum},
       </if>
       <if test="display != null">
         display=#{display},
@@ -131,6 +131,7 @@
     </set>
     where category_id = #{categoryId,jdbcType=BIGINT}
   </update>
+
 
 
   <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Category">

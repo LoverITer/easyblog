@@ -12,4 +12,11 @@ public interface ICategoryCareService {
     int saveCareInfo(int careUserId,int categoryId);
 
 
+    /**
+     * 删除一条记录
+     * @param userId
+     * @param categoryId
+     * @return
+     */
+    boolean deleteCareInfo(int userId,int categoryId);
 }
