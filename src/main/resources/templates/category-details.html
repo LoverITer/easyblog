@@ -36,7 +36,7 @@
                             <h3 class="ui m-black m-inline-block header" th:text="${category.getCategoryName()}">
                                 数据结构与算法</h3>
                             <button id="care-btn"
-                                    class="ui mini red basic button  m-inline-block m-margin-top m-margin-left"
+                                    class="ui tiny red basic button  m-inline-block m-margin-top m-margin-left"
                                     style="font-size: 1rem;">
                                 关注
                             </button>
@@ -468,7 +468,7 @@
             <div class="ui bottom attached segment">
                 <div class="ui middle aligned two column grid">
                     <div class="column">
-                        <a href="#" class="ui mini teal basic button">上一页</a>
+                        <a href="#"  class="ui mini teal basic button">上一页</a>
                     </div>
                     <div class="right aligned column">
                         <a href="#" class="ui mini teal basic button">下一页</a>
@@ -523,23 +523,38 @@
     function changeBtn(){
         var str = $('#care_id').val();
         if ("false" == str) {
-            $('#care-btn').text("关注");
+            $('#care-btn').css("color","inherit").text("关注");
+            $('#care-btn').addClass("red");
+            $('#care-btn').addClass("basic");
             $('#care-btn').mouseenter(function () {
+                $('#care-btn').css("background","#DB2828");
+                $('#care-btn').addClass("red");
+                $('#care-btn').css("color","#ffffff").text("关注");
+                $('#care-btn').text("关注");
                 $('#care-btn').removeClass("basic");
             });
             $('#care-btn').mouseleave(function () {
+                $('#care-btn').css("color","inherit").text("关注");
+                $('#care-btn').text("关注");
                 $('#care-btn').addClass("basic");
             });
         } else {
             $('#care-btn').removeClass("red");
-            $('#care-btn').addClass("grey");
             $('#care-btn').addClass("basic");
-            $('#care-btn').css("color", "#4d4d4d").text("已关注");
+            $('#care-btn').addClass("grey");
+            $('#care-btn').css("color", "#7c7b7c").text("已关注");
             $('#care-btn').mouseenter(function () {
+                $('#care-btn').removeClass("basic");
+                $('#care-btn').removeClass("grey");
+                $('#care-btn').css("background","#fde3e4");
                 $('#care-btn').css("color", "red").text("取消关注");
             });
             $('#care-btn').mouseleave(function () {
-                $('#care-btn').css("color", "#4d4d4d").text("已关注");
+                $('#care-btn').css("box-shadow","none");
+                $('#care-btn').css("color","snow");
+                $('#care-btn').addClass("basic");
+                $('#care-btn').addClass("grey");
+                $('#care-btn').css("color", "#7c7b7c").text("已关注");
             });
         }
     }
@@ -558,16 +573,6 @@
                 success: function () {
                     $('#care_id').val("true");
                     changeBtn();
-                  /*  $('#care-btn').removeClass("red");
-                    $('#care-btn').addClass("grey");
-                    $('#care-btn').addClass("basic");
-                    $('#care-btn').css("color", "#4d4d4d").text("已关注");
-                    $('#care-btn').mouseenter(function () {
-                        $('#care-btn').css("color", "red").text("取消关注");
-                    });
-                    $('#care-btn').mouseleave(function () {
-                        $('#care-btn').css("color", "#4d4d4d").text("已关注");
-                    });*/
                 },
                 error: function (result) {
                     alert(result.msg);
@@ -583,16 +588,6 @@
                 success: function () {
                     $('#care_id').val("false");
                     changeBtn();
-                    /*$('#care-btn').removeClass("grey");
-                    $('#care-btn').addClass("red");
-                    $('#care-btn').addClass("basic");
-                    $('#care-btn').text("关注");
-                    $('#care-btn').mouseenter(function () {
-                        $('#care-btn').removeClass("basic");
-                    });
-                    $('#care-btn').mouseleave(function () {
-                        $('#care-btn').addClass("basic");
-                    });*/
                 },
                 error: function (result) {
                     alert(result.msg);
