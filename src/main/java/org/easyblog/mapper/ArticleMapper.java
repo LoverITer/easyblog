@@ -1,8 +1,12 @@
 package org.easyblog.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.easyblog.bean.Article;
+import org.easyblog.bean.ArticleCount;
 import org.easyblog.mapper.core.BaseMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public  interface ArticleMapper extends BaseMapper<Article> {
@@ -12,5 +16,55 @@ public  interface ArticleMapper extends BaseMapper<Article> {
     int updateByPrimaryKeySelective(Article record);
 
     int updateByPrimaryKeyWithContent(Article record);
+
+    /**
+     * 查询用户的所有文章数
+     * @param userId
+     * @return
+     */
+    int countByUserId(@Param("userId") int userId);
+
+    /**
+     * 查询最近的limit 篇文章
+     * @param userId
+     * @param limit
+     * @return
+     */
+    List<Article> getNewestArticles(@Param("userId") int userId,@Param("limit") int limit);
+
+    /**
+     * 得到用户limit篇访问量最高的文章
+     * @param userId
+     * @param limit
+     * @return
+     */
+    List<Article> getHotArticles(@Param("userId") int userId,@Param("limit") int limit);
+
+    /**
+     * 按照月份统计用户的userId这个月的文章数
+     * @param userId
+     * @return
+     */
+    List<ArticleCount> countByUserIdMonthly(@Param("userId") int userId);
+
+    /**
+     * 按月份查询用户的文章,按照时间降序排列
+     * @param userId
+     * @param year
+     * @param month
+     * @return
+     */
+    List<Article> getByUserIdMonthly(@Param("userId") int userId,@Param("year") String year,@Param("month") String month);
+
+
+    /**
+     * 按月份查询用户的文章,按照访问次数降序排列
+     * @param userId
+     * @param year
+     * @param month
+     * @return
+     */
+    List<Article> getByUserIdMonthlyOrderByClickNum(@Param("userId") int userId,@Param("year") String year,@Param("month") String month);
+
 
 }

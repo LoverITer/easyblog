@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/static/css/typo.css}">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
     <link rel="stylesheet" href="../static/css/prism.css" th:href="@{/static/css/prism.css}">
+    <style type="text/css">
+        a:hover{
+            color:#ca0c16 !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -21,7 +26,22 @@
     <div class="ui m-container">
         <div class="ui stackable grid">
             <!--左边的卡片-->
-            <div th:replace="userinfo_sidebar::sidebar"></div>
+            <div class="four wide column" style="padding-top: 0 !important;">
+                <input id="userId" hidden="hidden" th:value="${#session.getAttribute('user').getUserId()}">
+                <!--用户信息-->
+                <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
+                <!--最新文章-->
+                <div th:replace="~{userinfo_sidebar::sidebar_newest_article}"></div>
+                <!--分类-->
+                <div th:replace="~{userinfo_sidebar::sidebar_category}"></div>
+                <!--归档-->
+                <div th:replace="~{userinfo_sidebar::sidebar_archives}"></div>
+                <h4 class="ui horizontal divider header m-margin-top-large">扫码联系我</h4>
+                <div class="ui centered card" style="width: 11em">
+                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image">
+                </div>
+            </div>
+
             <!--右边文章-->
             <div class="twelve wide column">
                 <div class="ui top attached segment" style="padding-top: 5px !important;">

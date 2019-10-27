@@ -21,12 +21,10 @@
         insert into article (article_user, article_topic,
                              article_publish_time, article_click, article_category,
                              article_status, article_top, article_type,
-                             article_tags, article_content)
-        values (#{articleUser,jdbcType=INTEGER}, #{articleTopic,jdbcType=VARCHAR},
-                now(), #{articleClick,jdbcType=INTEGER},
-                #{articleCategory,jdbcType=VARCHAR},
-                #{articleStatus,jdbcType=CHAR}, #{articleTop,jdbcType=BIT}, #{articleType,jdbcType=CHAR},
-                #{articleTags,jdbcType=VARCHAR}, #{articleContent,jdbcType=LONGVARCHAR})
+                             article_tags, article_content,article_comment_num)
+        values (#{articleUser}, #{articleTopic},now(), #{articleClick},
+                #{articleCategory},#{articleStatus}, #{articleTop}, #{articleType},
+                #{articleTags}, #{articleContent},#{articleCommentNum})
     </insert>
 
 
@@ -47,25 +45,40 @@
     </insert>
 
     <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-        select *
-        from article
-        where article_id = #{id,jdbcType=BIGINT}
+        select * from article where article_id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="getAll" resultType="list">
-        select *
-        from article
+        select * from article
     </select>
 
-    <select id="count" resultType="integer">
-        select count(*)
-        from article
+    <select id="countByUserId" resultType="integer">
+        select count(*) from article where article_user=#{userId}
+    </select>
+
+    <select id="getNewestArticles" resultType="org.easyblog.bean.Article">
+        select * from article where article_user=#{userId} order by article_publish_time DESC limit #{limit}
+    </select>
+
+    <select id="getHotArticles" resultType="org.easyblog.bean.Article">
+        select * from article where article_user=#{userId} order by article_click DESC limit #{limit}
+    </select>
+
+    <select id="countByUserIdMonthly" resultType="org.easyblog.bean.ArticleCount">
+        SELECT DATE_FORMAT(article_publish_time,"%Y年%m月") AS date,COUNT(*) AS count FROM article where article_user=#{userId} GROUP BY DATE_FORMAT(article_publish_time,"%Y年%m月")
+        ORDER BY DATE_FORMAT(article_publish_time,"%Y年%m月") DESC
+    </select>
+
+    <select id="getByUserIdMonthly" resultType="org.easyblog.bean.Article">
+        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} ORDER BY article_publish_time DESC
+    </select>
+
+    <select id="getByUserIdMonthlyOrderByClickNum" resultType="org.easyblog.bean.Article">
+        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} ORDER BY article_click DESC
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete
-        from article
-        where article_id = #{articleId,jdbcType=BIGINT}
+        delete from article where article_id = #{articleId,jdbcType=BIGINT}
     </delete>
 
     <insert id="saveSelective" parameterType="org.easyblog.bean.Article">
@@ -104,6 +117,9 @@
             <if test="articleContent != null">
                 article_content,
             </if>
+            <if test="articleCommentNum != null">
+                article_comment_num,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="articleId != null">
@@ -138,6 +154,9 @@
             </if>
             <if test="articleContent != null">
                 #{articleContent,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="articleCommentNum != null">
+                #{articleCommentNum,jdbcType=INTEGER}
             </if>
         </trim>
     </insert>
@@ -175,6 +194,9 @@
             <if test="articleContent != null">
                 article_content = #{articleContent,jdbcType=LONGVARCHAR},
             </if>
+            <if test="articleCommentNum != null">
+                #{articleCommentNum,jdbcType=INTEGER}
+            </if>
         </set>
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
@@ -183,7 +205,6 @@
         update article
         set article_user         = #{articleUser,jdbcType=INTEGER},
             article_topic        = #{articleTopic,jdbcType=VARCHAR},
-            article_publish_time = #{articlePublishTime,jdbcType=TIMESTAMP},
             article_click        = #{articleClick,jdbcType=INTEGER},
             article_category     = #{articleCategory,jdbcType=VARCHAR},
             article_status       = #{articleStatus,jdbcType=CHAR},

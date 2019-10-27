@@ -28,11 +28,12 @@ public class Article implements Serializable {
     private String articleTags;
 
     private String articleContent;
+    private Integer articleCommentNum;
 
     public Article() {
     }
 
-    public Article(Integer articleUser, String articleTopic, Date articlePublishTime, Integer articleClick, String articleCategory, String articleStatus, Boolean articleTop, String articleType, String articleTags, String articleContent) {
+    public Article(Integer articleUser, String articleTopic, Date articlePublishTime, Integer articleClick, String articleCategory, String articleStatus, Boolean articleTop, String articleType, String articleTags, String articleContent,int articleCommentNum) {
         this.articleUser = articleUser;
         this.articleTopic = articleTopic;
         this.articlePublishTime = articlePublishTime;
@@ -43,6 +44,15 @@ public class Article implements Serializable {
         this.articleType = articleType;
         this.articleTags = articleTags;
         this.articleContent = articleContent;
+        this.articleCommentNum=articleCommentNum;
+    }
+
+    public Integer getArticleCommentNum() {
+        return articleCommentNum;
+    }
+
+    public void setArticleCommentNum(Integer articleCommentNum) {
+        this.articleCommentNum = articleCommentNum;
     }
 
     public Long getArticleId() {

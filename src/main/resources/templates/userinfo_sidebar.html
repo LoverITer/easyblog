@@ -4,19 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <style type="text/css">
-        a:hover{
-            color:#ca0c16 !important;
-        }
-    </style>
 </head>
 <body>
 
 <!--左边的卡片-->
-<div class="four wide column" th:fragment="sidebar">
+<div class="four wide column">
     <input id="userId" hidden="hidden" th:value="${#session.getAttribute('user').getUserId()}">
     <!--用户信息区域-->
-    <div class="ui segments">
+    <div class="ui segments" th:fragment="sidebar_userinfo">
         <div class="ui equal width center aligned padded grid">
             <div class="row" style="padding-bottom: 0 !important;">
                 <div class="four wide column" style="padding-right: 0 !important;">
@@ -45,7 +40,6 @@
                            class="float-right" style="color: #3399ea">TA的个人主页&nbsp;></a>
                     </div>
                 </div>
-
             </div>
 
             <div class="ui divider" style="margin-bottom: 5px !important;margin-top: 5px !important;"></div>
@@ -94,9 +88,8 @@
             <!--            </div  >-->
         </div>
     </div>
-
     <!--分类专栏-->
-    <div class="ui segments m-margin-top-large">
+    <div class="ui segments m-margin-top-large" th:fragment="sidebar_category">
         <div class="ui secondary segment">
             <div class="ui two column grid">
                 <div class="column">
@@ -108,7 +101,7 @@
             <!--专栏的图片-->
             <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg"
                  th:src="${categoty.categoryImageUrl}">
-            <a href="#" th:href="@{/category/details/}+${categoty.categoryId}+@{/}+${#session.getAttribute('user').getUserId()}" target="_blank" class="m-black m-text-thin m-margin-left" th:text="${categoty.categoryName}">2019年2月
+            <a href="#" th:href="@{/category/details/}+${categoty.categoryId}+@{/}+${categoty.categoryUser}" target="_blank" class="m-black m-text-thin m-margin-left" th:text="${categoty.categoryName}">2019年2月
             </a>
             <span class="count float-right">
                 [[${categoty.categoryArticleNum}]]篇
@@ -116,82 +109,24 @@
         </div>
 
     </div>
-
     <!--最新文章-->
-    <div class="ui segments m-margin-top-large">
+    <div class="ui segments m-margin-top-large" th:fragment="sidebar_newest_article">
         <div class="ui secondary segment ">
             <i class="bookmark icon"></i><strong>最新文章</strong>
         </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
+        <div class="ui segment" th:each="article:${#session.getAttribute('newestArticles')}">
+            <a href="#"  target="_blank" class="m-black m-text-thin" th:text="${article.articleTopic}">用户故事（User Story）</a>
         </div>
     </div>
-
     <!--归档-->
-    <div class="ui segments m-margin-top-large">
+    <div class="ui segments m-margin-top-large" th:fragment="sidebar_archives">
         <div class="ui secondary segment ">
             <i class="bookmark icon"></i><strong>归档</strong>
         </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">2019年1月
-                <span class="count float-right">14篇</span>
+        <div class="ui segment" th:each="archive:${#session.getAttribute('archives')}">
+            <a href="#" th:href="@{/archives/details/}+${archive.userId}+@{/}+${archive.date}" target="_blank" class="m-black m-text-thin" th:text="${archive.date}">2019年1月
             </a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">2019年2月
-                <span class="count float-right">14篇</span>
-            </a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">2019年3月
-                <span class="count float-right">14篇</span>
-            </a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">2019年4月
-                <span class="count float-right">14篇</span>
-            </a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">2019年5月
-                <span class="count float-right">14篇</span>
-            </a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">2019年6月
-                <span class="count float-right">14篇</span>
-            </a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">2019年7月
-                <span class="count float-right">14篇</span>
-            </a>
-        </div>
-        <div class="ui segment">
-            <a href="#" target="_blank" class="m-black m-text-thin">2019年8月
-                <span class="count float-right">12篇</span>
-            </a>
+            <span class="count float-right" th:text="${archive.count}">14篇</span>
         </div>
     </div>
 

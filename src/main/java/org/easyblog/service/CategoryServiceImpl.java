@@ -7,7 +7,7 @@ import org.easyblog.utils.FileUploadUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @CacheConfig(keyGenerator = "keyGenerator", cacheManager = "cacheManager")
-@Repository
+@Service
 public class CategoryServiceImpl implements ICategoryService {
 
 
