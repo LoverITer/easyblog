@@ -243,7 +243,7 @@ public class RegexUtil {
     }
 
     /**
-     * 判断字段是否为日期 符合返回ture
+     * 判断字段是否为日期 符合返回true
      *
      * @param str
      * @return boolean
@@ -263,7 +263,7 @@ public class RegexUtil {
     }
 
     /**
-     * 判断字段是否为年龄 符合返回ture
+     * 判断字段是否为年龄 符合返回true
      *
      * @param str
      * @return boolean
