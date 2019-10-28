@@ -37,10 +37,9 @@
                 <!--归档-->
                 <div th:replace="~{userinfo_sidebar::sidebar_archives}"></div>
 
-                <h4 class="ui horizontal divider header m-margin-top-large">扫码联系我</h4>
+                <h4 class="ui horizontal divider header m-margin-top-large">联系开发者</h4>
                 <div class="ui centered card" style="width: 11em">
-                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt=""
-                         class="ui rounded image">
+                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image">
                 </div>
             </div>
 
@@ -123,7 +122,7 @@
                 </div>
 
                 <!--content footer-->
-                <div th:if="${!#lists.isEmpty(articles)}" class="ui bottom attached segment">
+                <div th:if="${!#lists.isEmpty(articles)&&#lists.size(articles)>10}" class="ui bottom attached segment">
                     <div class="ui middle aligned two column grid">
                         <div class="column">
                             <a href="#" class="ui mini teal basic button">上一页</a>

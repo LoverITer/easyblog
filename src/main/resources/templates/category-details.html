@@ -38,7 +38,7 @@
             <!--归档-->
             <div th:replace="~{userinfo_sidebar::sidebar_archives}"></div>
 
-            <h4 class="ui horizontal divider header m-margin-top-large">扫码联系我</h4>
+            <h4 class="ui horizontal divider header m-margin-top-large">联系开发者</h4>
             <div class="ui centered card" style="width: 11em">
                 <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image">
             </div>
@@ -81,7 +81,7 @@
 
             <!--每个分类的文章-->
             <div class="ui top attached teal segment">
-                <div th:each="article:${categoryArticles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none"
+                <div th:if="${!#lists.isEmpty(categoryArticles)}" th:each="article:${categoryArticles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none"
                      style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
@@ -129,7 +129,7 @@
             </div>
 
             <!--分页按钮-->
-            <div class="ui bottom attached segment">
+            <div th:if="${!#lists.isEmpty(categoryArticles)&&#lists.size(categoryArticles)>10}" class="ui bottom attached segment">
                 <div class="ui middle aligned two column grid">
                     <div class="column">
                         <a href="#"  class="ui mini teal basic button">上一页</a>

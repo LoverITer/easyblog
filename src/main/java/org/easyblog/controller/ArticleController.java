@@ -57,19 +57,20 @@ public class ArticleController {
         return "user_home";
     }
 
-/*    @GetMapping(value = "display")
-    public String  display(@PathVariable("id") int userId,
-                           @RequestParam(defaultValue = "0") int option){
-        if(option==0){
-            return "forward:/article/index/"+userId+"?"+option;
-        }else if(option==1){
-            return "forward:/article/index/"+userId+"?"+option;
-        }
-    }*/
 
     @RequestMapping(value = "/home/{id}")
-    public String homePage(@PathVariable("id") String id){
+    public String homePage(@PathVariable("id") int userId,Model model){
+        final User user = userService.getUser(userId);
+        user.setUserPassword(null);
+        List<Article> articles = articleServiceImpl.getUserArticles(userId, 0);
+        if(articles.size()<10) {
+            model.addAttribute("articles", articles);
+        }else{
+            model.addAttribute("articles",articles.subList(0,10));
+        }
+        model.addAttribute("user",user);
         return "home";
     }
+
 
 }
