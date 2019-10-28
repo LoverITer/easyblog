@@ -56,6 +56,14 @@
         select count(*) from article where article_user=#{userId}
     </select>
 
+    <select id="getUserAllOrgArticles" resultType="org.easyblog.bean.Article">
+        select * from article where article_user=#{userId} AND article_type='0' order by article_publish_time DESC
+    </select>
+
+    <select id="getUserAllArticles" resultType="org.easyblog.bean.Article">
+        select * from article where article_user=#{userId} order by article_publish_time DESC
+    </select>
+
     <select id="getNewestArticles" resultType="org.easyblog.bean.Article">
         select * from article where article_user=#{userId} order by article_publish_time DESC limit #{limit}
     </select>
@@ -75,6 +83,11 @@
 
     <select id="getByUserIdMonthlyOrderByClickNum" resultType="org.easyblog.bean.Article">
         SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} ORDER BY article_click DESC
+    </select>
+
+    <select id="getByCategoryAndUserId" resultType="org.easyblog.bean.Article">
+        select * from article where article_user=#{userId} AND article_category
+            in (select category_name from category where category_id=#{categoryId}) ORDER BY article_publish_time DESC
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
