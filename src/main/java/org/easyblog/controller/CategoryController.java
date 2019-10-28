@@ -1,10 +1,14 @@
 package org.easyblog.controller;
 
+import org.easyblog.bean.Article;
 import org.easyblog.bean.Category;
 import org.easyblog.bean.CategoryCare;
+import org.easyblog.bean.User;
 import org.easyblog.config.Result;
+import org.easyblog.service.ArticleServiceImpl;
 import org.easyblog.service.CategoryCareServiceImpl;
 import org.easyblog.service.CategoryServiceImpl;
+import org.easyblog.service.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,16 +23,22 @@ public class CategoryController {
 
     private final CategoryServiceImpl categoryServiceImpl;
     private final CategoryCareServiceImpl categoryCareService;
+    private final ArticleServiceImpl articleService;
+    private final UserServiceImpl userService;
 
-    public CategoryController(CategoryServiceImpl categoryServiceImpl, CategoryCareServiceImpl categoryCareService) {
+    public CategoryController(CategoryServiceImpl categoryServiceImpl, CategoryCareServiceImpl categoryCareService, ArticleServiceImpl articleService, UserServiceImpl userService) {
         this.categoryServiceImpl = categoryServiceImpl;
         this.categoryCareService = categoryCareService;
+        this.articleService = articleService;
+        this.userService = userService;
     }
 
     @GetMapping(value = "/{id}/{userId}")
     public String categoryDetailsPage(@PathVariable(value = "id") int categoryId, @PathVariable("userId") int userId, Model model){
-        Category category = categoryServiceImpl.getCategory(categoryId);
-        List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);
+        final Category category = categoryServiceImpl.getCategory(categoryId);
+        final List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);
+        final List<Article> categoryArticles = articleService.getByCategoryAndUserId(userId, categoryId);
+        final User user = userService.getUser(userId);
         model.addAttribute("care","false");
         System.out.println(categoryCare);
         if(Objects.nonNull(categoryCare)) {
@@ -42,7 +52,9 @@ public class CategoryController {
         if(Objects.nonNull(category)) {
             model.addAttribute("category", category);
         }
-        //文章细节，待写
+        //文章细节
+        model.addAttribute("categoryArticles",categoryArticles);
+        model.addAttribute("user",user);
         return "category-details";
     }
 

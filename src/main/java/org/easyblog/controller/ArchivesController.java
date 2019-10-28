@@ -37,6 +37,7 @@ public class ArchivesController {
             model.addAttribute("articles", articles);
         }
         if(Objects.nonNull(user)) {
+            model.addAttribute("userHeaderImage",user.getUserHeaderImgUrl());
             model.addAttribute("userName", user.getUserNickname());
         }
         return "archives";

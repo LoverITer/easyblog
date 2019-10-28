@@ -24,6 +24,18 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      */
     int countByUserId(@Param("userId") int userId);
 
+
+    /**
+     * 得到用户的所有原创文章，按时间降序排列
+     * @param userId
+     * @return
+     */
+    List<Article> getUserAllArticles(@Param("userId") int userId);
+
+
+    List<Article> getUserAllOrgArticles(@Param("userId") int userId);
+
+
     /**
      * 查询最近的limit 篇文章
      * @param userId
@@ -65,6 +77,14 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @return
      */
     List<Article> getByUserIdMonthlyOrderByClickNum(@Param("userId") int userId,@Param("year") String year,@Param("month") String month);
+
+    /**
+     * 得到用户某个分类下的所有文章，按时间降序排列
+     * @param userId
+     * @param categoryId
+     * @return
+     */
+    List<Article> getByCategoryAndUserId(@Param("userId") int userId,@Param("categoryId") int categoryId);
 
 
 }

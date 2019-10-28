@@ -12,9 +12,12 @@ public interface IArticleService {
 
     List<ArticleCount>  getUserAllArticleArchives(int userId);
 
+    List<Article> getUserArticles(int userId,int option);
 
     List<Article> getUserArticlesMonthly(int userId,String year,String month);
 
-
     List<Article> getUserArticlesMonthlyOrderByClickNum(int userId,String year,String month);
+
+    List<Article> getByCategoryAndUserId(int userId,int categoryId);
+
 }
