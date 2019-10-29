@@ -18,22 +18,21 @@
                 </div>
             </div>
 
-            <div th:if="${session.user!=null}" class="right m-item m-mobile-hide menu " style="margin: 1.4rem 0 auto 0 !important;">
+            <div class="right m-item m-mobile-hide menu " style="margin: 1.4rem 0 auto 0 !important;">
                 <i class="teal paint brush icon"></i>
                 <a href="#" th:href="@{/manage/blog/post}" style="color :rgb(0,183,173);font-size: 17px" >写博客</a>
             </div>
 
             <!--我的头像-->
-            <div th:if="${session.user!=null}" id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu "
-                 style="margin-left: 1em !important;">
+            <div th:if="${session.user!=null}" id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
                 <div class="ui dropdown  item ">
                     <div class="text">
                         <img class="ui medium circular image image-42x42" style="max-height: none !important;"
-                             src="" th:src="@{${#session.getAttribute('user').getUserHeaderImgUrl()}}"/>
+                             src="" th:src="@{${#session.getAttribute('LOGIN-USER').getUserHeaderImgUrl()}}"/>
                     </div>
                     <div class="menu">
-                        <a href="#" th:href="@{/uc/follow-list}" class="item"><i class="bookmark icon"></i>我的关注</a>
-                        <a href="#" th:href="@{/uc/profile}" class="item"><i class="user icon"></i>个人中心</a>
+                        <a href="#" th:href="@{/manage/uc/follow-list}" class="item"><i class="bookmark icon"></i>我的关注</a>
+                        <a href="#" th:href="@{/manage/uc/profile}" class="item"><i class="user icon"></i>个人中心</a>
                         <a href="#" th:href="@{/account/reset/password}" class="item"><i class="cogs icon"></i>账号设置</a>
                         <div class="divider"></div>
                         <a href="#" class="item"><i class="archive icon"></i>我的博客</a>

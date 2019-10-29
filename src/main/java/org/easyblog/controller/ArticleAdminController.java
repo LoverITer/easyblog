@@ -2,11 +2,11 @@ package org.easyblog.controller;
 
 
 import org.easyblog.service.ArticleServiceImpl;
-import org.easyblog.service.CategoryServiceImpl;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -16,12 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/manage/blog")
 public class ArticleAdminController {
 
-    private final CategoryServiceImpl categoryService;
     private final ArticleServiceImpl articleService;
     private static final String PREFIX="admin/blog_manage";
 
-    public ArticleAdminController(CategoryServiceImpl categoryService, ArticleServiceImpl articleService) {
-        this.categoryService = categoryService;
+    public ArticleAdminController(ArticleServiceImpl articleService) {
         this.articleService = articleService;
     }
 
@@ -32,11 +30,23 @@ public class ArticleAdminController {
     }
 
     @GetMapping(value = "/post")
-    public String writeBlog(Model model){
-
+    public String writeBlog(HttpSession session){
+        //没有登录的话就去登录，登录后才可以写博客
+        if(null==session.getAttribute("LOGIN-USER")){
+            return "redirect:/user/loginPage";
+        }
         return PREFIX+"/blog-input";
     }
 
+    @RequestMapping(value = "/post")
+    public String postArticle(){
+       return "";
+    }
+
+    @RequestMapping(value = "")
+    public String saveArticle(){
+      return "";
+    }
 
     @GetMapping(value = "/public")
     public String pubBlog(){

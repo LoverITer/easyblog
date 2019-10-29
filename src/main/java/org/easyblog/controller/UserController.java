@@ -54,7 +54,12 @@ public class UserController {
     }
 
     @GetMapping("/loginPage")
-    public String toLoginPage() {
+    public String toLoginPage(HttpServletRequest request,HttpSession session) {
+        //把用户登录前的地址存下来
+        if(null==session.getAttribute("Referer")) {
+            String referUrl = request.getHeader("Referer");
+            session.setAttribute("Referer", referUrl);
+        }
         return "login";
     }
 
@@ -253,6 +258,13 @@ public class UserController {
                 new Thread(() -> {
                     userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功"));
                 }).start();
+                //得到用户登录前的页面
+                String refererUrl= (String) session.getAttribute("Referer");
+                System.out.println(refererUrl);
+                if(Objects.nonNull(refererUrl)&&!"".equals(refererUrl)){
+                    session.removeAttribute("Referer");
+                    return "redirect:"+refererUrl;
+                }
                 return "redirect:/article/index/"+user.getUserId();
             } else {
                 redirectAttributes.addFlashAttribute("msg", "用户名和密码不正确！");

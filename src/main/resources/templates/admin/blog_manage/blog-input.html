@@ -15,10 +15,11 @@
 <!--编辑器-->
 <div style="margin-top: 5px !important;">
     <form method="post" class="ui form">
+        <input hidden="hidden" th:if="${session.user!=null}" th:value="${#session.getAttribute('LOGIN-USER')}">
         <div class="ui row fluid  stackable centered grid" style="margin-left: 0.5rem !important;margin-right: 0.5em !important;">
             <div class="left float  right aligned  two wide centered column">
                 <div class="ui segment" style="background: none !important;border: none !important;box-shadow: none !important;padding-left: 0 !important;padding-right: 0 !important;">
-                    <a href="#" th:href="@{/manage/blog/}" class="ui right floated" style="color: #8da6ce !important;font-size: 1.3rem !important;">
+                    <a href="#" th:href="@{/manage/blog/}" class="ui right floated" style="color: #8da6ce !important;font-size: 1.23rem !important;">
                         <i class="chevron left icon"></i>文章管理
                     </a>
                 </div>
