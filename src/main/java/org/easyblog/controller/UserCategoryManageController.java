@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class UserCategoryManageController {
 
 
-    private static final String PREFIX="/admin/typemanage/";
+    private static final String PREFIX="/admin/type_manage/";
 
     /***封装AJAX请求的返回结果***/
     private final Result result = new Result();

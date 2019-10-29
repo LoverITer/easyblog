@@ -23,7 +23,7 @@
         <div class="ui stackable grid">
             <!--左边的卡片-->
             <div class="four wide column" style="padding-top: 0 !important;">
-                <input id="userId" hidden="hidden" th:value="${#session.getAttribute('user').getUserId()}">
+                <input id="userId" hidden="hidden" th:if="${session.user!=null}" th:value="${#session.getAttribute('user').getUserId()}">
 
                 <!--用户信息-->
                 <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
@@ -79,7 +79,7 @@
                                     <span th:case="1">转载</span>
                                     <span th:case="2">翻译</span>
                                 </button>
-                                <a href="#" th:text="${article.getArticleTopic()}"
+                                <a href="#" th:href="@{/article/details/}+${article.getArticleId()}"  th:text="${article.getArticleTopic()}"
                                    class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
                                 <p class="m-text"
                                    style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;"

@@ -7,8 +7,9 @@ import java.util.List;
 
 public interface IArticleService {
 
-    List<Article> getUserNewestArticles(int userId,int limit);
+    Article getArticleById(int articleId);
 
+    List<Article> getUserNewestArticles(int userId,int limit);
 
     List<ArticleCount>  getUserAllArticleArchives(int userId);
 

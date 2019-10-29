@@ -24,6 +24,21 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Cacheable(cacheNames = "article", condition = "#result!=null")
+    @Override
+    public Article getArticleById(int articleId) {
+        if(articleId>0){
+            try{
+                return articleMapper.getByPrimaryKey((long) articleId);
+            }catch (Exception e){
+                e.getMessage();
+                return null;
+            }
+        }
+        return null;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "userArticles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Article> getUserNewestArticles(int userId, int limit) {
@@ -39,7 +54,7 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "UserAllArticleArchives", condition = "#result!=null&&#result.size()>0")
+    @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<ArticleCount> getUserAllArticleArchives(int userId) {
         if (userId > 0) {
@@ -57,6 +72,8 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
+    @Transactional(isolation =Isolation.REPEATABLE_READ)
+    @Cacheable(cacheNames = "articles",condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Article> getUserArticles(int userId, int option) {
         if (userId > 0) {
@@ -76,7 +93,7 @@ public class ArticleServiceImpl implements IArticleService {
 
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "userArticles", condition = "#result!=null&&#result.size()>0")
+    @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Article> getUserArticlesMonthly(int userId, String year, String month) {
         if (userId > 0 && Objects.nonNull(year) && Objects.nonNull(month)) {
@@ -91,7 +108,7 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "userArticles", condition = "#result!=null&&result.size()>0")
+    @Cacheable(cacheNames = "articles", condition = "#result!=null&&result.size()>0")
     @Override
     public List<Article> getUserArticlesMonthlyOrderByClickNum(int userId, String year, String month) {
         if (userId > 0 && Objects.nonNull(year) && Objects.nonNull(month)) {
@@ -107,7 +124,7 @@ public class ArticleServiceImpl implements IArticleService {
 
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "userArticles", condition = "#result!=null&&result.size()>0")
+    @Cacheable(cacheNames = "articles", condition = "#result!=null&&result.size()>0")
     @Override
     public List<Article> getByCategoryAndUserId(int userId, int categoryId) {
         if (userId > 0 && categoryId > 0) {

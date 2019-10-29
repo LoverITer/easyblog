@@ -21,10 +21,10 @@
         insert into article (article_user, article_topic,
                              article_publish_time, article_click, article_category,
                              article_status, article_top, article_type,
-                             article_tags, article_content,article_comment_num)
+                             article_tags, article_content,article_comment_num,article_appreciate)
         values (#{articleUser}, #{articleTopic},now(), #{articleClick},
                 #{articleCategory},#{articleStatus}, #{articleTop}, #{articleType},
-                #{articleTags}, #{articleContent},#{articleCommentNum})
+                #{articleTags}, #{articleContent},#{articleCommentNum},#{articleAppreciate})
     </insert>
 
 
@@ -133,6 +133,9 @@
             <if test="articleCommentNum != null">
                 article_comment_num,
             </if>
+            <if test="articleAppreciate!=null">
+                article_appreciate
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="articleId != null">
@@ -170,6 +173,9 @@
             </if>
             <if test="articleCommentNum != null">
                 #{articleCommentNum,jdbcType=INTEGER}
+            </if>
+            <if test="articleAppreciate!=null">
+                #{articleAppreciate}
             </if>
         </trim>
     </insert>
@@ -210,6 +216,9 @@
             <if test="articleCommentNum != null">
                 #{articleCommentNum,jdbcType=INTEGER}
             </if>
+            <if test="articleAppreciate!=null">
+                #{articleAppreciate}
+            </if>
         </set>
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
@@ -224,7 +233,9 @@
             article_top          = #{articleTop,jdbcType=BIT},
             article_type         = #{articleType,jdbcType=CHAR},
             article_tags         = #{articleTags,jdbcType=VARCHAR},
-            article_content      = #{articleContent,jdbcType=LONGVARCHAR}
+            article_content      = #{articleContent,jdbcType=LONGVARCHAR},
+            article_comment_num =#{articleCommentNum},
+            article_appreciate=#{articleAppreciate}
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
@@ -238,7 +249,9 @@
             article_status       = #{articleStatus,jdbcType=CHAR},
             article_top          = #{articleTop,jdbcType=BIT},
             article_type         = #{articleType,jdbcType=CHAR},
-            article_tags         = #{articleTags,jdbcType=VARCHAR}
+            article_tags         = #{articleTags,jdbcType=VARCHAR},
+            article_comment_num =#{articleCommentNum},
+            article_appreciate=#{articleAppreciate}
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 </mapper>

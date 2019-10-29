@@ -1,7 +1,10 @@
 package org.easyblog.controller;
 
 
+import org.easyblog.service.ArticleServiceImpl;
+import org.easyblog.service.CategoryServiceImpl;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -11,10 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping(value = "/manage/blog")
-public class BlogAdminController {
+public class ArticleAdminController {
 
+    private final CategoryServiceImpl categoryService;
+    private final ArticleServiceImpl articleService;
+    private static final String PREFIX="admin/blog_manage";
 
-    private static final String PREFIX="admin/blogmanage";
+    public ArticleAdminController(CategoryServiceImpl categoryService, ArticleServiceImpl articleService) {
+        this.categoryService = categoryService;
+        this.articleService = articleService;
+    }
 
 
     @GetMapping(value = "/")
@@ -22,8 +31,9 @@ public class BlogAdminController {
         return PREFIX+"/blog-manage";
     }
 
-    @GetMapping(value = "/write")
-    public String writeBlog(){
+    @GetMapping(value = "/post")
+    public String writeBlog(Model model){
+
         return PREFIX+"/blog-input";
     }
 

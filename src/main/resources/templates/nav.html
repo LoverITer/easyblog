@@ -17,8 +17,14 @@
                     <i class="search link icon"></i>
                 </div>
             </div>
+
+            <div th:if="${session.user!=null}" class="right m-item m-mobile-hide menu " style="margin: 1.4rem 0 auto 0 !important;">
+                <i class="teal paint brush icon"></i>
+                <a href="#" th:href="@{/manage/blog/post}" style="color :rgb(0,183,173);font-size: 17px" >写博客</a>
+            </div>
+
             <!--我的头像-->
-            <div id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu "
+            <div th:if="${session.user!=null}" id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu "
                  style="margin-left: 1em !important;">
                 <div class="ui dropdown  item ">
                     <div class="text">
@@ -39,11 +45,9 @@
                 </div>
             </div>
 
-            <div id="login-btn"  class="right m-item m-mobile-hide menu "
-                 style="margin-left: 1em !important;">
+            <div id="login-btn"  class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
                 <a href="#" th:href="@{/user/loginPage}" class="m-item item m-mobile-hide"><i class="mini  icon"></i>登录/注册</a>
             </div>
-
         </div>
     </div>
     <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">

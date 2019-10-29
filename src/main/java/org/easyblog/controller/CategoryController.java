@@ -35,12 +35,12 @@ public class CategoryController {
 
     @GetMapping(value = "/{id}/{userId}")
     public String categoryDetailsPage(@PathVariable(value = "id") int categoryId, @PathVariable("userId") int userId, Model model){
+        new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId,0);
         final Category category = categoryServiceImpl.getCategory(categoryId);
         final List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);
         final List<Article> categoryArticles = articleService.getByCategoryAndUserId(userId, categoryId);
         final User user = userService.getUser(userId);
         model.addAttribute("care","false");
-        System.out.println(categoryCare);
         if(Objects.nonNull(categoryCare)) {
             categoryCare.forEach(ele -> {
                 //待优化

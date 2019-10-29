@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * 用户账户设置后台管理——修改以及查看个人信息
  */
 @Controller
-@RequestMapping(value = "/account")
+@RequestMapping(value = "/manage/account")
 public class UserAccountController {
 
     private static final String PREFIX="/admin/setting/";

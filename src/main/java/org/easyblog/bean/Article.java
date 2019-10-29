@@ -29,11 +29,13 @@ public class Article implements Serializable {
 
     private String articleContent;
     private Integer articleCommentNum;
+    private String articleAppreciate;
 
     public Article() {
     }
 
-    public Article(Integer articleUser, String articleTopic, Date articlePublishTime, Integer articleClick, String articleCategory, String articleStatus, Boolean articleTop, String articleType, String articleTags, String articleContent,int articleCommentNum) {
+    public Article(String articleAppreciate,Integer articleUser, String articleTopic, Date articlePublishTime, Integer articleClick, String articleCategory, String articleStatus, Boolean articleTop, String articleType, String articleTags, String articleContent,int articleCommentNum) {
+        this.articleAppreciate=articleAppreciate;
         this.articleUser = articleUser;
         this.articleTopic = articleTopic;
         this.articlePublishTime = articlePublishTime;
@@ -45,6 +47,14 @@ public class Article implements Serializable {
         this.articleTags = articleTags;
         this.articleContent = articleContent;
         this.articleCommentNum=articleCommentNum;
+    }
+
+    public String getArticleAppreciate() {
+        return articleAppreciate;
+    }
+
+    public void setArticleAppreciate(String articleAppreciate) {
+        this.articleAppreciate = articleAppreciate;
     }
 
     public Integer getArticleCommentNum() {
