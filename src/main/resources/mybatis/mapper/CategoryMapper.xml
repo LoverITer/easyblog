@@ -29,6 +29,9 @@
       select * from category where category_id = #{id}
   </select>
 
+  <select id="getUserAllCategory" resultType="org.easyblog.bean.Category">
+     select * from category where category_user=#{userId}
+  </select>
 
   <select id="getAll" resultType="org.easyblog.bean.Category">
     select * from category

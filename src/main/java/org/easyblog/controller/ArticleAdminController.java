@@ -1,12 +1,19 @@
 package org.easyblog.controller;
 
 
+import org.easyblog.bean.Article;
+import org.easyblog.bean.Category;
 import org.easyblog.service.ArticleServiceImpl;
+import org.easyblog.service.CategoryServiceImpl;
+import org.easyblog.service.UserServiceImpl;
+import org.easyblog.utils.MarkdownUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -17,10 +24,12 @@ import javax.servlet.http.HttpSession;
 public class ArticleAdminController {
 
     private final ArticleServiceImpl articleService;
+    private final CategoryServiceImpl categoryService;
     private static final String PREFIX="admin/blog_manage";
 
-    public ArticleAdminController(ArticleServiceImpl articleService) {
+    public ArticleAdminController(ArticleServiceImpl articleService, CategoryServiceImpl categoryService, UserServiceImpl userService) {
         this.articleService = articleService;
+        this.categoryService = categoryService;
     }
 
 
@@ -30,26 +39,41 @@ public class ArticleAdminController {
     }
 
     @GetMapping(value = "/post")
-    public String writeBlog(HttpSession session){
+    public String writeBlog(HttpSession session, Model model,@RequestParam(value = "userId",defaultValue = "-1",required = false) int userId){
         //没有登录的话就去登录，登录后才可以写博客
-        if(null==session.getAttribute("LOGIN-USER")){
+        if(null==session.getAttribute("user")){
             return "redirect:/user/loginPage";
+        }
+        if(userId!=-1) {
+            final List<Category> categories = categoryService.getUserAllCategories(userId);
+            model.addAttribute("categories", categories);
+            model.addAttribute("userId",userId);
         }
         return PREFIX+"/blog-input";
     }
 
-    @RequestMapping(value = "/post")
-    public String postArticle(){
-       return "";
+
+    @PostMapping(value = "/saveArticle/{userId}")
+    public String saveArticle(@PathVariable(value = "userId") Integer userId){
+        System.out.println(userId);
+        return PREFIX+"/blog-input";
     }
 
-    @RequestMapping(value = "")
-    public String saveArticle(){
-      return "";
+
+    @PostMapping(value = "/saveAsDraft/{userId}")
+    public String saveAsDraft(@PathVariable(value = "userId") Integer userId,
+                              @RequestParam(value = "content",defaultValue = "") String content,
+                              @RequestParam(value = "title",defaultValue = "")String title){
+        if(!"".equals(content)&&!"".equals(title)) {
+            String htmlContent = MarkdownUtil.markdownToHtmlExtensions(content);
+            final Article article = new Article(userId, title, new Date(), 0, "", "2", false, "0", "", htmlContent, 0, "0");
+            articleService.saveArticle(article);
+        }
+        return PREFIX+"/blog-input";
     }
 
     @GetMapping(value = "/public")
-    public String pubBlog(){
+    public String publicBlog(){
         return PREFIX+"/blog-public";
     }
 

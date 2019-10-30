@@ -23,20 +23,14 @@
         <div class="ui stackable grid">
             <!--左边的卡片-->
             <div class="four wide column" style="padding-top: 0 !important;">
-                <input id="userId" hidden="hidden" th:if="${session.user!=null}" th:value="${#session.getAttribute('user').getUserId()}">
-
                 <!--用户信息-->
                 <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
-
                 <!--最新文章-->
                 <div th:replace="~{userinfo_sidebar::sidebar_newest_article}"></div>
-
                 <!--分类-->
                 <div th:replace="~{userinfo_sidebar::sidebar_category}"></div>
-
                 <!--归档-->
                 <div th:replace="~{userinfo_sidebar::sidebar_archives}"></div>
-
                 <h4 class="ui horizontal divider header m-margin-top-large">联系开发者</h4>
                 <div class="ui centered card" style="width: 11em">
                     <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image">
@@ -44,7 +38,7 @@
             </div>
 
             <!--右边博客文章列表-->
-            <div class="twelve wide column">
+            <div class="twelve wide column" style="padding-top: 0 !important;">
                 <!--header-->
                 <div class="ui top attached segment">
                     <div class="ui middle aligned two column grid">

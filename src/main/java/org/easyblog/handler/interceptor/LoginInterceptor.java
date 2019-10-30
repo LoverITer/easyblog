@@ -25,7 +25,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String url=request.getRequestURL().toString();
         //用户进行后台（改个人信息、发布/修改/删除博客、分类、编辑评论....）操作的时候必须是处于登录状态
         if(url.contains("/manage")) {
-            User user = (User) request.getSession().getAttribute("LOGIN-USER");
+            User user = (User) request.getSession().getAttribute("user");
             if (Objects.isNull(user)) {
                 response.sendRedirect(request.getContextPath() + "/user/loginPage");
                 return false;

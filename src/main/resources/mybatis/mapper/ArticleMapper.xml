@@ -17,32 +17,17 @@
         <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent"/>
     </resultMap>
 
-    <insert id="save" parameterType="org.easyblog.bean.Article">
-        insert into article (article_user, article_topic,
-                             article_publish_time, article_click, article_category,
-                             article_status, article_top, article_type,
-                             article_tags, article_content,article_comment_num,article_appreciate)
-        values (#{articleUser}, #{articleTopic},now(), #{articleClick},
-                #{articleCategory},#{articleStatus}, #{articleTop}, #{articleType},
-                #{articleTags}, #{articleContent},#{articleCommentNum},#{articleAppreciate})
+    <insert id="save" useGeneratedKeys="true" keyColumn="article_id" parameterType="org.easyblog.bean.Article">
+        insert into
+            article (article_user, article_topic,article_publish_time,
+                     article_click, article_category,article_status,
+                     article_top, article_type,article_tags,
+                     article_content,article_comment_num,article_appreciate)
+        values (#{articleUser}, #{articleTopic},now(), 0,#{articleCategory},
+                #{articleStatus}, #{articleTop}, #{articleType},#{articleTags},
+                #{articleContent},0,#{articleAppreciate})
     </insert>
 
-
-     <!--批量插入数据-->
-    <insert id="saveBatch" parameterType="list">
-        insert into article (article_user, article_topic,
-        article_publish_time, article_click, article_category,
-        article_status, article_top, article_type,
-        article_tags, article_content)
-        values
-        <foreach collection="list" item="list" index="index" separator=",">
-            (#{list.articleUser,jdbcType=INTEGER}, #{list.articleTopic,jdbcType=VARCHAR},
-            now(), #{list.articleClick,jdbcType=INTEGER},
-            #{list.articleCategory,jdbcType=VARCHAR}, #{list.articleStatus,jdbcType=CHAR},
-            #{list.articleTop,jdbcType=BIT}, #{list.articleType,jdbcType=CHAR},
-            #{list.articleTags,jdbcType=VARCHAR}, #{list.articleContent,jdbcType=LONGVARCHAR})
-        </foreach>
-    </insert>
 
     <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
         select * from article where article_id = #{id,jdbcType=BIGINT}

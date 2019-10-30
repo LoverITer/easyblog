@@ -5,6 +5,7 @@ import org.easyblog.bean.ArticleCount;
 import org.easyblog.mapper.ArticleMapper;
 import org.easyblog.service.base.IArticleService;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -23,6 +24,21 @@ public class ArticleServiceImpl implements IArticleService {
         this.articleMapper = articleMapper;
     }
 
+    @Transactional(isolation =Isolation.REPEATABLE_READ)
+    @CachePut(cacheNames = "article",condition = "#result>0")
+    @Override
+    public int saveArticle(Article article) {
+        try {
+            if(Objects.nonNull(article)) {
+                return articleMapper.save(article);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+        return 0;
+    }
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "article", condition = "#result!=null")
     @Override
@@ -31,7 +47,7 @@ public class ArticleServiceImpl implements IArticleService {
             try{
                 return articleMapper.getByPrimaryKey((long) articleId);
             }catch (Exception e){
-                e.getMessage();
+                e.printStackTrace();
                 return null;
             }
         }
@@ -84,7 +100,7 @@ public class ArticleServiceImpl implements IArticleService {
                     return articleMapper.getUserAllOrgArticles(userId);   //得到用户的所有原创文章
                 }
             } catch (Exception e) {
-                e.getMessage();
+                e.printStackTrace();
                 return null;
             }
         }

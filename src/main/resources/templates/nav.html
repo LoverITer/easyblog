@@ -7,6 +7,7 @@
 <body>
 <!--公共的头部导航栏-->
 <nav th:fragment="navbar" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+    <!--用户信息-->
     <div class="ui m-container">
         <div class="ui inverted secondary stackable menu">
             <h2 class="ui teal header item">EasyBlog</h2>
@@ -20,15 +21,16 @@
 
             <div class="right m-item m-mobile-hide menu " style="margin: 1.4rem 0 auto 0 !important;">
                 <i class="teal paint brush icon"></i>
-                <a href="#" th:href="@{/manage/blog/post}" style="color :rgb(0,183,173);font-size: 17px" >写博客</a>
+                <a href="#"  th:unless="${session.user!=null}"  th:href="@{/manage/blog/post}" style="color :rgb(0,183,173);font-size: 17px" >写博客</a>
+                <a href="#"  th:unless="${session.user==null}"   th:href="@{/manage/blog/post}+@{/(userId=${#session.getAttribute('user').getUserId()})}" style="color :rgb(0,183,173);font-size: 17px" >写博客</a>
             </div>
 
             <!--我的头像-->
-            <div th:if="${session.user!=null}" id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
+            <div th:unless="${session.user==null}" id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
                 <div class="ui dropdown  item ">
                     <div class="text">
                         <img class="ui medium circular image image-42x42" style="max-height: none !important;"
-                             src="" th:src="@{${#session.getAttribute('LOGIN-USER').getUserHeaderImgUrl()}}"/>
+                             src="" th:src="@{${#session.getAttribute('user').getUserHeaderImgUrl()}}"/>
                     </div>
                     <div class="menu">
                         <a href="#" th:href="@{/manage/uc/follow-list}" class="item"><i class="bookmark icon"></i>我的关注</a>
@@ -52,6 +54,7 @@
     <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
         <i class="sidebar icon"></i>
     </a>
+    <input id="userId" hidden="hidden" th:if="${session.user!=null}" th:value="${#session.getAttribute('user').getUserId()}">
 </nav>
 
 <script type="text/javascript" th:fragment="javascript ">

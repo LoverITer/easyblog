@@ -34,7 +34,7 @@ public class Article implements Serializable {
     public Article() {
     }
 
-    public Article(String articleAppreciate,Integer articleUser, String articleTopic, Date articlePublishTime, Integer articleClick, String articleCategory, String articleStatus, Boolean articleTop, String articleType, String articleTags, String articleContent,int articleCommentNum) {
+    public Article(Integer articleUser, String articleTopic, Date articlePublishTime, Integer articleClick, String articleCategory, String articleStatus, Boolean articleTop, String articleType, String articleTags, String articleContent,int articleCommentNum,String articleAppreciate) {
         this.articleAppreciate=articleAppreciate;
         this.articleUser = articleUser;
         this.articleTopic = articleTopic;

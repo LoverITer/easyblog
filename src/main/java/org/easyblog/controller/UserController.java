@@ -54,9 +54,9 @@ public class UserController {
     }
 
     @GetMapping("/loginPage")
-    public String toLoginPage(HttpServletRequest request,HttpSession session) {
+    public String toLoginPage(HttpServletRequest request, HttpSession session) {
         //把用户登录前的地址存下来
-        if(null==session.getAttribute("Referer")) {
+        if (null == session.getAttribute("Referer")) {
             String referUrl = request.getHeader("Referer");
             session.setAttribute("Referer", referUrl);
         }
@@ -247,8 +247,7 @@ public class UserController {
             if (user != null) {
                 user.setUserPassword(null);   //不要把用户密码带到前端页面
                 user.setUserPower(null);
-                session.setAttribute("LOGIN-USER", user);
-                session.setAttribute("user",user);
+                session.setAttribute("user", user);
                 session.setMaxInactiveInterval(60 * 60 * 24 * 10);   //登录信息10天有效
                 // 保存登录状态
                 Cookie ck = new Cookie("JSESSIONID", request.getSession().getId());
@@ -259,21 +258,21 @@ public class UserController {
                     userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功"));
                 }).start();
                 //得到用户登录前的页面
-                String refererUrl= (String) session.getAttribute("Referer");
+                String refererUrl = (String) session.getAttribute("Referer");
                 System.out.println(refererUrl);
-                if(Objects.nonNull(refererUrl)&&!"".equals(refererUrl)){
+                if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
                     session.removeAttribute("Referer");
-                    return "redirect:"+refererUrl;
+                    return "redirect:" + refererUrl;
                 }
-                return "redirect:/article/index/"+user.getUserId();
+                return "redirect:/article/index/" + user.getUserId();
             } else {
-                redirectAttributes.addFlashAttribute("msg", "用户名和密码不正确！");
+                redirectAttributes.addFlashAttribute("msg", "抱歉！用户名和密码不匹配！");
                 return "redirect:/user/loginPage";
             }
-        }catch (Exception e){
-            session.removeAttribute("LOGIN-USER");
+        } catch (Exception e) {
+            session.removeAttribute("user");
             new Thread(() -> {
-                if(Objects.nonNull(user)) {
+                if (Objects.nonNull(user)) {
                     userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录失败"));
                 }
             }).start();
@@ -286,7 +285,7 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("LOGIN-USER");
+        session.removeAttribute("user");
         return AJAX_SUCCESS;
     }
 
@@ -294,7 +293,7 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "/checkUserStatus")
     public int checkUserLoginStatus(HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("LOGIN-USER");
+        User user = (User) request.getSession().getAttribute("user");
         if (Objects.nonNull(user)) {
             return UserLoginStatus.LOGIN.getStatus();
         }
@@ -313,11 +312,11 @@ public class UserController {
                                  @RequestParam(value = "code", defaultValue = "") String code,
                                  HttpSession session) {
         Result result = new Result();
-        if (code.equals(session.getAttribute("captcha-code"))&&
-                Objects.nonNull(newPassword)&&
+        if (code.equals(session.getAttribute("captcha-code")) &&
+                Objects.nonNull(newPassword) &&
                 Objects.nonNull(account)) {
             try {
-                new Thread(()->{
+                new Thread(() -> {
                     userService.updateUserInfo(account, EncryptUtil.getInstance().DESEncode(newPassword, "user"));
                 }).start();
                 result.setSuccess(true);

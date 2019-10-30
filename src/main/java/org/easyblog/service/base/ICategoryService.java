@@ -16,6 +16,13 @@ public interface ICategoryService {
     List<Category> getUserAllViableCategory(int userId);
 
     /**
+     * 得到用户的所有分类
+     * @param userId
+     * @return
+     */
+    List<Category> getUserAllCategories(int userId);
+
+    /**
      * 根据分类ID获得一个分类记录
      * @param categoryId
      * @return
@@ -38,7 +45,6 @@ public interface ICategoryService {
      * @return
      */
     boolean updateCategoryInfo(int categoryId, Map<String,Object> params);
-
 
 
 

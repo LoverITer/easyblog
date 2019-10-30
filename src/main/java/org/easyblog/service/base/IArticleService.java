@@ -7,6 +7,13 @@ import java.util.List;
 
 public interface IArticleService {
 
+    /**
+     * 保存一篇文章
+     * @param article
+     * @return
+     */
+    int saveArticle(Article article);
+
     Article getArticleById(int articleId);
 
     List<Article> getUserNewestArticles(int userId,int limit);

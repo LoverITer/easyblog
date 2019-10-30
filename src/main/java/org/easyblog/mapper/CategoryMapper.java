@@ -16,4 +16,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
 
     List<Category> getSelective(@Param("id") int id);
 
+
+    List<Category> getUserAllCategory(@Param("userId") int userId);
+
 }

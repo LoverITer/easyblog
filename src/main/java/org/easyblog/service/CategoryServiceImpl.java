@@ -92,4 +92,18 @@ public class CategoryServiceImpl implements ICategoryService {
         return true;
     }
 
+
+    @Transactional
+    @Cacheable(cacheNames = "categories",condition = "#result!=null&&#reslut.size>0")
+    @Override
+    public List<Category> getUserAllCategories(int userId) {
+        if(userId>0) {
+            try {
+                return categoryMapper.getUserAllCategory(userId);
+            }catch (Exception e){
+                return null;
+            }
+        }
+        return null;
+    }
 }

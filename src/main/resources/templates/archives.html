@@ -25,8 +25,6 @@
     <div class="ui stackable grid">
         <!--左边的卡片-->
         <div class="four wide column" style="padding-top: 0 !important;">
-            <input id="userId" hidden="hidden" th:value="${session.user}">
-            <!--用户信息-->
             <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
             <!--归档-->
             <div th:replace="~{userinfo_sidebar::sidebar_archives}"></div>
@@ -41,7 +39,7 @@
         </div>
 
         <!--右边的分类内容-->
-        <div class="twelve wide column">
+        <div class="twelve wide column" style="padding-top: 0 !important;">
             <!--分类的header-->
             <div class="ui top attached segment">
                 <div class="ui middle aligned two column grid">
@@ -151,7 +149,7 @@
     });
 
     function toggleStatus() {
-        var user = sessionStorage.getItem("user");
+        var user = sessionStorage.getItem("LOGIN-USER");
         if (user != null) {
             $('#header-images').show();
             $('#login-btn').hide();
@@ -161,6 +159,27 @@
         }
         setTimeout(toggleStatus, 100);
     }
+
+    <!--退出操作异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "text",
+            success: function (result) {
+                if (result == "OK") {
+                    sessionStorage.removeItem("user");
+                    $("#login-btn").show();
+                    $('#header-images').hide();
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    });
 </script>
 
 <script>
