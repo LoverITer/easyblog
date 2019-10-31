@@ -7,6 +7,21 @@ import java.util.Map;
 
 public interface ICategoryService {
 
+    /**
+     * 保存一条分类信息
+     * @param userId
+     * @param categoryName
+     * @return
+     */
+    int saveCategory(int userId,String categoryName);
+
+
+    /**
+     * 保存一条分类信息
+     * @param category
+     * @return
+     */
+    int saveCategory(Category category);
 
     /**
      * 获取某个用户的所有允许显示的分类
@@ -30,13 +45,8 @@ public interface ICategoryService {
     Category getCategory(int categoryId);
 
 
-    /**
-     * 保存一条分类信息
-     * @param userId
-     * @param categoryName
-     * @return
-     */
-    int saveCategory(int userId,String categoryName);
+    Category getCategoryByUserIdAndName(int userId,String categoryName);
+
 
     /**
      * 选择性更新分类列表的内容，适用于表中有字段的值要增加的时候
@@ -46,6 +56,12 @@ public interface ICategoryService {
      */
     boolean updateCategoryInfo(int categoryId, Map<String,Object> params);
 
+
+    /**
+     * 根据主键更新
+     * @param category
+     */
+    void updateByPKSelective(Category category);
 
 
 }

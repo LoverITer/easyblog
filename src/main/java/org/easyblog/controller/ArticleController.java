@@ -5,6 +5,7 @@ import org.easyblog.bean.User;
 import org.easyblog.service.ArticleServiceImpl;
 import org.easyblog.service.CategoryServiceImpl;
 import org.easyblog.service.UserServiceImpl;
+import org.easyblog.utils.HtmlParserUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,13 @@ public class ArticleController {
                         Model model) {
         new ControllerUtils(categoryServiceImpl,articleServiceImpl).getArticleUserInfo(model,userId,option);
         final User user = userService.getUser(userId);
+        List<Article> articles = articleServiceImpl.getUserArticles(userId, option);
+        if(articles!=null){
+            articles.forEach(article -> {
+                article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
+            });
+        }
+        model.addAttribute("articles",articles);
         user.setUserPassword(null);
         model.addAttribute("user", user);
         if (option == 0) {
@@ -51,6 +59,9 @@ public class ArticleController {
         final User user = userService.getUser(userId);
         user.setUserPassword(null);
         List<Article> articles = articleServiceImpl.getUserArticles(userId, 0);
+        articles.forEach(article -> {
+            article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
+        });
         if (articles.size() < 10) {
             model.addAttribute("articles", articles);
         } else {

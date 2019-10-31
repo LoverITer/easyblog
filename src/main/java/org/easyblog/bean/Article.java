@@ -21,7 +21,7 @@ public class Article implements Serializable {
 
     private String articleStatus;
 
-    private Boolean articleTop;
+    private String articleTop;
 
     private String articleType;
 
@@ -34,7 +34,7 @@ public class Article implements Serializable {
     public Article() {
     }
 
-    public Article(Integer articleUser, String articleTopic, Date articlePublishTime, Integer articleClick, String articleCategory, String articleStatus, Boolean articleTop, String articleType, String articleTags, String articleContent,int articleCommentNum,String articleAppreciate) {
+    public Article(Integer articleUser, String articleTopic, Date articlePublishTime, Integer articleClick, String articleCategory, String articleStatus, String articleTop, String articleType, String articleTags, String articleContent,int articleCommentNum,String articleAppreciate) {
         this.articleAppreciate=articleAppreciate;
         this.articleUser = articleUser;
         this.articleTopic = articleTopic;
@@ -47,6 +47,14 @@ public class Article implements Serializable {
         this.articleTags = articleTags;
         this.articleContent = articleContent;
         this.articleCommentNum=articleCommentNum;
+    }
+
+    public String getArticleTop() {
+        return articleTop;
+    }
+
+    public void setArticleTop(String articleTop) {
+        this.articleTop = articleTop;
     }
 
     public String getArticleAppreciate() {
@@ -121,13 +129,6 @@ public class Article implements Serializable {
         this.articleStatus = articleStatus == null ? null : articleStatus.trim();
     }
 
-    public Boolean getArticleTop() {
-        return articleTop;
-    }
-
-    public void setArticleTop(Boolean articleTop) {
-        this.articleTop = articleTop;
-    }
 
     public String getArticleType() {
         return articleType;

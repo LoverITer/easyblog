@@ -10,7 +10,7 @@ public class FileUploadUtils {
     /**用户默认头像路径**/
     public static final String DEFAULT_AVATAR= "/static/images/header.jpg";
 
-    public static final String DEFAULT_CATEGORY="/static/images/default/category";
+    public static final String DEFAULT_CATEGORY="/static/images/";
 
     private static final Logger  log= LoggerFactory.getLogger(FileUploadUtils.class);
 

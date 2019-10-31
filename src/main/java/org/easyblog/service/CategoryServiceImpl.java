@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @CacheConfig(keyGenerator = "keyGenerator", cacheManager = "cacheManager")
 @Service
@@ -48,6 +49,19 @@ public class CategoryServiceImpl implements ICategoryService {
         return null;
     }
 
+    @Override
+    public Category getCategoryByUserIdAndName(int userId, String categoryName) {
+        if(userId>0&&!"".equals(categoryName)){
+            try {
+                categoryMapper.getCategoryByUserIdAndName(userId, categoryName);
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return null;
+    }
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @CachePut(cacheNames = "saveCategory", condition = "#result>0")
     @Override
@@ -59,6 +73,49 @@ public class CategoryServiceImpl implements ICategoryService {
         return -1;
     }
 
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @CachePut(cacheNames = "saveCategory", condition = "#result>0")
+    @Override
+    public int saveCategory(Category category) {
+        if (Objects.nonNull(category)) {
+            try {
+                 return categoryMapper.save(category);
+            }catch (Exception e){
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+
+
+    @Transactional
+    @Cacheable(cacheNames = "categories",condition = "#result!=null&&#reslut.size>0")
+    @Override
+    public List<Category> getUserAllCategories(int userId) {
+        if(userId>0) {
+            try {
+                return categoryMapper.getUserAllCategory(userId);
+            }catch (Exception e){
+                return null;
+            }
+        }
+        return null;
+    }
+
+
+    @Override
+    public void updateByPKSelective(Category category) {
+        if(Objects.nonNull(category)){
+            try {
+                categoryMapper.updateByPrimaryKeySelective(category);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @CachePut(cacheNames = "updateCategoryInfo", condition = "#result!=null")
     @Override
@@ -67,7 +124,7 @@ public class CategoryServiceImpl implements ICategoryService {
             return false;
         }
         Category category = new Category();
-        category.setCategoryId((long) categoryId);
+        category.setCategoryId(categoryId);
         params.forEach((k, v) -> {
             if ("categoryName".equals(k)) {
                 category.setCategoryName((String) v);
@@ -93,17 +150,4 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
 
-    @Transactional
-    @Cacheable(cacheNames = "categories",condition = "#result!=null&&#reslut.size>0")
-    @Override
-    public List<Category> getUserAllCategories(int userId) {
-        if(userId>0) {
-            try {
-                return categoryMapper.getUserAllCategory(userId);
-            }catch (Exception e){
-                return null;
-            }
-        }
-        return null;
-    }
 }

@@ -47,6 +47,7 @@ public class MarkdownUtil {
         Parser parser = Parser.builder()
                 .extensions(tableExtension)
                 .build();
+        markdown=markdown.replaceAll("\\[TOC\\]", "");
         Node document = parser.parse(markdown);
         HtmlRenderer renderer = HtmlRenderer.builder()
                 .extensions(headingAnchorExtensions)

@@ -87,4 +87,10 @@ public  interface ArticleMapper extends BaseMapper<Article> {
     List<Article> getByCategoryAndUserId(@Param("userId") int userId,@Param("categoryId") int categoryId);
 
 
+    /**
+     * 删除用户的草稿文件
+     * @param userId
+     * @param title
+     */
+    void deleteArticleByUserIdAndTitle(@Param("userId") int userId,@Param("title") String title);
 }

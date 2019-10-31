@@ -42,36 +42,36 @@
     </select>
 
     <select id="getUserAllOrgArticles" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} AND article_type='0' order by article_publish_time DESC
+        select * from article where article_user=#{userId} AND article_type='0' AND article_status='0' order by article_publish_time DESC
     </select>
 
     <select id="getUserAllArticles" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} order by article_publish_time DESC
+        select * from article where article_user=#{userId} AND article_status='0' order by article_publish_time DESC
     </select>
 
     <select id="getNewestArticles" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} order by article_publish_time DESC limit #{limit}
+        select * from article where article_user=#{userId} AND article_status='0' order by article_publish_time DESC limit #{limit}
     </select>
 
     <select id="getHotArticles" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} order by article_click DESC limit #{limit}
+        select * from article where article_user=#{userId} AND article_status='0' order by article_click DESC limit #{limit}
     </select>
 
     <select id="countByUserIdMonthly" resultType="org.easyblog.bean.ArticleCount">
-        SELECT DATE_FORMAT(article_publish_time,"%Y年%m月") AS date,COUNT(*) AS count FROM article where article_user=#{userId} GROUP BY DATE_FORMAT(article_publish_time,"%Y年%m月")
+        SELECT DATE_FORMAT(article_publish_time,"%Y年%m月") AS date,COUNT(*) AS count FROM article where article_user=#{userId} AND article_status='0' GROUP BY DATE_FORMAT(article_publish_time,"%Y年%m月")
         ORDER BY DATE_FORMAT(article_publish_time,"%Y年%m月") DESC
     </select>
 
     <select id="getByUserIdMonthly" resultType="org.easyblog.bean.Article">
-        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} ORDER BY article_publish_time DESC
+        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} AND article_status='0' ORDER BY article_publish_time DESC
     </select>
 
     <select id="getByUserIdMonthlyOrderByClickNum" resultType="org.easyblog.bean.Article">
-        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} ORDER BY article_click DESC
+        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} AND article_status='0' ORDER BY article_click DESC
     </select>
 
     <select id="getByCategoryAndUserId" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} AND article_category
+        select * from article where article_user=#{userId} AND article_status='0' AND article_category
             in (select category_name from category where category_id=#{categoryId}) ORDER BY article_publish_time DESC
     </select>
 
@@ -239,4 +239,12 @@
             article_appreciate=#{articleAppreciate}
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
+
+
+    <!--根据用户的ID和文章标题删除草稿文章-->
+    <delete id="deleteArticleByUserIdAndTitle" >
+        delete from article where article_user=#{userId} AND article_topic=#{title} AND article_status='2'
+    </delete>
+
+
 </mapper>

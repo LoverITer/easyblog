@@ -46,19 +46,19 @@
                     <div class="ui  grid">
                         <div class="four row">
                             <div class="ui breadcrumb m-margin-left">
-                                <a class="section" th:href="@{/article/index/}+${userId}" style="color: black">全部文章</a>
+                                <a class="section" th:href="@{/article/index/}+${user.getUserId()}" style="color: black">全部文章</a>
                                 <i class="right angle icon divider"></i>
                                 <span class="section" th:text="${date}">2019年6月</span>
                             </div>
                             <div class="m-margin-left-massive "><span style="color: #888888">排序：</span>
                                 <span class="m-margin-right-bigger m-margin-left">
-                                    <a href="#" th:href="@{/archives/details/}+${userId}+@{/}+${date}" class="m-black">默认排序</a>
+                                    <a href="#" th:href="@{/archives/details/}+${user.getUserId()}+@{/}+${date}" class="m-black">默认排序</a>
                                 </span>
                                 <span class="m-margin-right-bigger">
-                                    <a href="#" th:href="@{/archives/details/orderByUpdateTime/}+${userId}+@{/}+${date}" class="m-black">按更新时间</a>
+                                    <a href="#" th:href="@{/archives/details/orderByUpdateTime/}+${user.getUserId()}+@{/}+${date}" class="m-black">按更新时间</a>
                                 </span>
                                 <span class="m-margin-right-bigger">
-                                    <a href="#" th:href="@{/archives/details/orderByClickNum/}+${userId}+@{/}+${date}"  class="m-black">按访问量</a>
+                                    <a href="#" th:href="@{/archives/details/orderByClickNum/}+${user.getUserId()}+@{/}+${date}"  class="m-black">按访问量</a>
                                 </span>
                             </div>
                         </div>
@@ -80,29 +80,26 @@
                             <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" th:text="${article.getArticleTopic()}"
                                class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
                             <p class="m-text" style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;"
-                               th:text="${#strings.abbreviate(article.getArticleContent(),100)}">
+                               th:text="${#strings.abbreviate(article.getArticleContent(),150)}">
                                 正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
                             </p>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
                                         <div class="item">
-                                            <img src="https://unsplash.it/100/100?image=1005" th:src="@{${userHeaderImage}}" alt=""
+                                            <img src="https://unsplash.it/100/100?image=1005" th:src="@{${user.getUserHeaderImgUrl()}}" alt=""
                                                  class="ui avatar image">
-                                            <div class="content"><a href="#" th:href="@{/article/index/}+${userId}"
-                                                                    class="header" th:text="${userName}">黄鑫</a></div>
+                                            <div class="content"><a href="#" th:href="@{/article/index/}+${userId}"  class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
                                         </div>
                                         <div class="item">
                                             <i class="calendar icon"></i> <span
                                                 th:text="${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd  hh:mm:ss')}">2017-10-01</span>
                                         </div>
                                         <div class="item">
-                                            <i class="eye icon"></i> <span
-                                                th:text="${article.getArticleClick()}">2342</span>
+                                            <i class="eye icon"></i> <span th:text="${article.getArticleClick()}">2342</span>
                                         </div>
                                         <div class="item">
-                                            <i class="comment alternate icon"></i> <span
-                                                th:text="${article.getArticleCommentNum()}">2342</span>
+                                            <i class="comment alternate icon"></i> <span th:text="${article.getArticleCommentNum()}">2342</span>
                                         </div>
                                     </div>
                                 </div>

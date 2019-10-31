@@ -9,6 +9,7 @@ import org.easyblog.service.ArticleServiceImpl;
 import org.easyblog.service.CategoryCareServiceImpl;
 import org.easyblog.service.CategoryServiceImpl;
 import org.easyblog.service.UserServiceImpl;
+import org.easyblog.utils.HtmlParserUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,10 @@ public class CategoryController {
         final List<Article> categoryArticles = articleService.getByCategoryAndUserId(userId, categoryId);
         final User user = userService.getUser(userId);
         model.addAttribute("care","false");
+
+        categoryArticles.forEach(article -> {
+            article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
+        });
         if(Objects.nonNull(categoryCare)) {
             categoryCare.forEach(ele -> {
                 //待优化

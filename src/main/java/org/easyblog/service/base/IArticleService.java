@@ -28,4 +28,6 @@ public interface IArticleService {
 
     List<Article> getByCategoryAndUserId(int userId,int categoryId);
 
+    void deleteByUserIdAndTitle(int userId,String title);
+
 }

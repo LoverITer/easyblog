@@ -5,6 +5,7 @@ import org.easyblog.bean.User;
 import org.easyblog.service.ArticleServiceImpl;
 import org.easyblog.service.CategoryServiceImpl;
 import org.easyblog.service.UserServiceImpl;
+import org.easyblog.utils.HtmlParserUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,34 +37,28 @@ public class ArchivesController {
         final List<Article> articles = articleService.getUserArticlesMonthly(userId, date.substring(0,4), date.substring(5,7));
         final User user = userService.getUser(userId);
         model.addAttribute("date", date);
-        model.addAttribute("userId", userId);
         if(Objects.nonNull(articles)) {
+            articles.forEach(article -> {
+                //把HTML文本转化为人可以直接看懂的纯文本
+                article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
+            });
             model.addAttribute("articles", articles);
         }
-        if(Objects.nonNull(user)) {
-            model.addAttribute("userHeaderImage",user.getUserHeaderImgUrl());
-            model.addAttribute("userName", user.getUserNickname());
+        if(Objects.nonNull(user)){
+            model.addAttribute("user",user);
         }
         return "archives";
     }
 
-    /*private void getArticleUserInfo(Model model, int userId, int option){
-        final List<Category> lists = categoryServiceImpl.getUserAllViableCategory(userId);
-        final List<ArticleCount> archives = articleService.getUserAllArticleArchives(userId);
-        final List<Article> newestArticles = articleService.getUserNewestArticles(userId, 5);
-        List<Article> articles = articleService.getUserArticles(userId, option);
-        model.addAttribute("categories", lists);
-        model.addAttribute("archives", archives);
-        model.addAttribute("newestArticles", newestArticles);
-        model.addAttribute("articles", articles);
-        model.addAttribute("articleNum", articles.size());
-    }*/
 
     @GetMapping(value = "orderByClickNum/{userId}/{date}")
     public String orderByClickNum(@PathVariable("userId") int userId,
                                   @PathVariable("date") String date,
                                   Model model){
         final List<Article> articles = articleService.getUserArticlesMonthlyOrderByClickNum(userId, date.substring(0,4), date.substring(5,7));
+        articles.forEach(article -> {
+            article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
+        });
         model.addAttribute("articles",articles);
         model.addAttribute("date",date);
         model.addAttribute("userId",userId);

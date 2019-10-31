@@ -5,6 +5,7 @@ import org.easyblog.bean.ArticleCount;
 import org.easyblog.mapper.ArticleMapper;
 import org.easyblog.service.base.IArticleService;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -152,5 +153,18 @@ public class ArticleServiceImpl implements IArticleService {
             }
         }
         return null;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @CacheEvict(cacheNames = "article")
+    @Override
+    public void deleteByUserIdAndTitle(int userId, String title) {
+        if(userId>0&&!"".equals(title)){
+            try {
+                articleMapper.deleteArticleByUserIdAndTitle(userId, title);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 }
