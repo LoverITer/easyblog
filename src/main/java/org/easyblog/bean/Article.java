@@ -1,5 +1,7 @@
 package org.easyblog.bean;
 
+import org.springframework.data.annotation.Id;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,6 +9,7 @@ public class Article implements Serializable {
 
     private static final long serialVersionUID = -1882730239589668817L;
 
+    @Id
     private Long articleId;
 
     private Integer articleUser;
@@ -21,7 +24,7 @@ public class Article implements Serializable {
 
     private String articleStatus;
 
-    private Boolean articleTop;
+    private String articleTop;
 
     private String articleType;
 
@@ -29,11 +32,13 @@ public class Article implements Serializable {
 
     private String articleContent;
     private Integer articleCommentNum;
+    private String articleAppreciate;
 
     public Article() {
     }
 
-    public Article(Integer articleUser, String articleTopic, Date articlePublishTime, Integer articleClick, String articleCategory, String articleStatus, Boolean articleTop, String articleType, String articleTags, String articleContent,int articleCommentNum) {
+    public Article(Integer articleUser, String articleTopic, Date articlePublishTime, Integer articleClick, String articleCategory, String articleStatus, String articleTop, String articleType, String articleTags, String articleContent,int articleCommentNum,String articleAppreciate) {
+        this.articleAppreciate=articleAppreciate;
         this.articleUser = articleUser;
         this.articleTopic = articleTopic;
         this.articlePublishTime = articlePublishTime;
@@ -45,6 +50,22 @@ public class Article implements Serializable {
         this.articleTags = articleTags;
         this.articleContent = articleContent;
         this.articleCommentNum=articleCommentNum;
+    }
+
+    public String getArticleTop() {
+        return articleTop;
+    }
+
+    public void setArticleTop(String articleTop) {
+        this.articleTop = articleTop;
+    }
+
+    public String getArticleAppreciate() {
+        return articleAppreciate;
+    }
+
+    public void setArticleAppreciate(String articleAppreciate) {
+        this.articleAppreciate = articleAppreciate;
     }
 
     public Integer getArticleCommentNum() {
@@ -111,13 +132,6 @@ public class Article implements Serializable {
         this.articleStatus = articleStatus == null ? null : articleStatus.trim();
     }
 
-    public Boolean getArticleTop() {
-        return articleTop;
-    }
-
-    public void setArticleTop(Boolean articleTop) {
-        this.articleTop = articleTop;
-    }
 
     public String getArticleType() {
         return articleType;

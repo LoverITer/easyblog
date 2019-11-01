@@ -11,17 +11,15 @@
     <result column="category_care_num" jdbcType="INTEGER" property="categoryCareNum" />
     <result column="display" jdbcType="INTEGER" property="display"/>
     <result column="create_time" property="createTime"/>
-    <result column="care_user_id" property="careUserId"/>
   </resultMap>
 
 
   <insert id="save" parameterType="org.easyblog.bean.Category">
     insert into category (category_user, category_name,
       category_image_url, category_article_num, category_click_num,
-      category_care_num,display,create_time,care_user_id)
-    values (#{categoryUser,jdbcType=INTEGER}, #{categoryName,jdbcType=VARCHAR},
-      #{categoryImageUrl,jdbcType=VARCHAR}, #{categoryArticleNum,jdbcType=INTEGER}, #{categoryClickNum,jdbcType=INTEGER},
-      #{categoryCareNum,jdbcType=INTEGER},#{display},now(),0)
+      category_care_num,display,create_time)
+    values (#{categoryUser}, #{categoryName},#{categoryImageUrl}, #{categoryArticleNum},
+    #{categoryClickNum},0,1,now())
   </insert>
 
 
@@ -29,6 +27,9 @@
       select * from category where category_id = #{id}
   </select>
 
+  <select id="getUserAllCategory" resultType="org.easyblog.bean.Category">
+     select * from category where category_user=#{userId}
+  </select>
 
   <select id="getAll" resultType="org.easyblog.bean.Category">
     select * from category
@@ -39,6 +40,10 @@
     select * from category where category_user=#{id} and display=1;
   </select>
 
+
+  <select id="getCategoryByUserIdAndName" resultType="org.easyblog.bean.Category">
+    select * from category where category_user=#{userId} AND category_name=#{categoryName}
+  </select>
 
   <select id="count">
     select count(*) from category
@@ -117,16 +122,16 @@
         category_image_url = #{categoryImageUrl,jdbcType=VARCHAR},
       </if>
       <if test="categoryArticleNum != null">
-        category_article_num = category_article_num+#{categoryArticleNum},
+        category_article_num = #{categoryArticleNum},
       </if>
       <if test="categoryClickNum != null">
-        category_click_num = category_click_num+#{categoryClickNum},
+        category_click_num = category_click_num+1,
       </if>
       <if test="categoryCareNum != null">
-        category_care_num = category_care_num+#{categoryCareNum},
+        category_care_num = category_care_num+1,
       </if>
       <if test="display != null">
-        display=#{display},
+        display=#{display}
       </if>
     </set>
     where category_id = #{categoryId,jdbcType=BIGINT}
@@ -142,7 +147,7 @@
       category_article_num = #{categoryArticleNum,jdbcType=INTEGER},
       category_click_num = #{categoryClickNum,jdbcType=INTEGER},
       category_care_num = #{categoryCareNum,jdbcType=INTEGER},
-      display=#{display,jdbcType=INTEGER},
+      display=#{display,jdbcType=INTEGER}
     where category_id = #{categoryId,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -7,8 +7,16 @@ import java.util.List;
 
 public interface IArticleService {
 
-    List<Article> getUserNewestArticles(int userId,int limit);
+    /**
+     * 保存一篇文章
+     * @param article
+     * @return
+     */
+    int saveArticle(Article article);
 
+    Article getArticleById(int articleId);
+
+    List<Article> getUserNewestArticles(int userId,int limit);
 
     List<ArticleCount>  getUserAllArticleArchives(int userId);
 
@@ -19,5 +27,10 @@ public interface IArticleService {
     List<Article> getUserArticlesMonthlyOrderByClickNum(int userId,String year,String month);
 
     List<Article> getByCategoryAndUserId(int userId,int categoryId);
+
+    void deleteByUserIdAndTitle(int userId,String title);
+
+
+    int countUserArticleInCategory(int userId,String categoryName);
 
 }

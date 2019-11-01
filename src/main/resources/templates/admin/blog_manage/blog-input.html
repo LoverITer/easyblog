@@ -1,0 +1,406 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>写文章 - EasyBlog博客</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
+    <link rel="stylesheet" href="../../../static/lib/css/editormd.css" th:href="@{/static/lib/css/editormd.css}">
+</head>
+<body>
+
+
+<!--编辑器-->
+<div style="margin-top: 5px !important;">
+    <input id="publish-url" type="hidden" th:if="${session.user!=null}" th:value="@{/manage/blog/saveArticle/}+${session.user.getUserId()}">
+    <form id="blog" action="" th:if="${session.user!=null}" th:action="@{/manage/blog/saveAsDraft/}+${session.user.getUserId()}" method="post" class="ui form">
+        <div class="ui row fluid  stackable centered grid"
+             style="margin-left: 0.5rem !important;margin-right: 0.5em !important;">
+            <div class="left float  right aligned  two wide centered column">
+                <div class="ui segment"
+                     style="background: none !important;border: none !important;box-shadow: none !important;padding-left: 0 !important;padding-right: 0 !important;">
+                    <a href="#" th:href="@{/manage/blog/}" class="ui right floated"
+                       style="color: #8da6ce !important;font-size: 1.23rem !important;">
+                        <i class="chevron left icon"></i>文章管理
+                    </a>
+                </div>
+            </div>
+            <div  class="ten wide centered column">
+                <div class="field" style="margin-bottom: 0.5em !important;">
+                    <div  class="ui left large  input">
+                        <input  th:if="${title==null}" id="title" type="text" name="title" placeholder="文章标题">
+                        <input th:if="${title!=null}" th:value="${title}" id="title" type="text" name="title" placeholder="文章标题">
+                    </div>
+                </div>
+            </div>
+            <div class="two wide centered column"
+                 style="padding-left: 0 !important;width: 8% !important;margin-right: 0 !important;padding-right: 0 !important;">
+                <a id="go" rel="leanModal" name="signup" href="#signup">
+                    <button  class="ui medium right floated red button" style="color:#ffffff !important;margin-left: 0 !important;">
+                        发布文章
+                    </button>
+                </a>
+            </div>
+            <div class="two wide centered column" style="padding-left: 0 !important;width: 10%!important">
+               <button class="ui medium right floated grey button" style="color:#ffffff !important;margin-left: 0 !important;">
+                   保存为草稿
+               </button>
+            </div>
+        </div>
+        <div class="field" style="margin-top: 1px !important;">
+            <div id="md-content" style="z-index: 1 !important;">
+              <textarea th:if="${content==null}"  id="content" name="content" style="display: none"></textarea>
+              <textarea th:if="${content!=null}" th:text="${content}" id="content"  name="content" style="display: none"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<!--弹出框-->
+<div id="signup">
+    <div id="signup-ct">
+        <div id="signup-header">
+            <h2>发布文章</h2>
+            <a class="modal_close" href="#"></a>
+        </div>
+        <div>
+            <input type="hidden" name="articleUser" th:value="${userId}">
+            <div class="ui doubling stackable grid container">
+                <!--分类专栏-->
+                <div class="row" style="margin-top: 15px !important;">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        分类专栏
+                    </div>
+                    <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
+                        <div class="ui field">
+                            <select  id="types" name="maxCount" multiple="" class="ui dropdown type">
+                                <option value="" selected="">请选择</option>
+                                <option th:each="category:${categories}" value="1" th:value="${category.getCategoryId()}">[[${category.getCategoryName()}]]</option>
+                            </select>
+                        </div>
+                        <div class="ui fluid icon input">
+                            <input id="add-input" type="text" placeholder="添加分类..." style="display: none !important;">
+                            <div class="ui field" style="padding-top: 5px !important;padding-left: 3px !important;">
+                                <div id="add-type-btn" class="ui tiny primary submit button">
+                                    <i class="add icon"></i>
+                                    增加分类
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--文章类型-->
+                <div class="row">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        文章类型
+                    </div>
+                    <div class="thirteen wide column" style="padding-left: 0 !important;">
+                        <div class="field">
+                            <select id="article_type" name="minCount" class="ui dropdown">
+                                <option value="-1">请选择</option>
+                                <option value="0">原创</option>
+                                <option value="1">转载</option>
+                                <option value="2">翻译</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row " style="margin-top: 15px !important;">
+                   <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                       开启赞赏
+                   </div>
+                   <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
+                       <div class="ui field">
+                           <select id="appreciate" name="maxCount" class="ui dropdown tags">
+                               <option value="-1" selected="">请选择</option>
+                               <option value="0">否</option>
+                               <option value="1">是</option>
+                           </select>
+                       </div>
+                   </div>
+               </div>
+
+                <!--发布形式-->
+                <div class="row">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        发布形式
+                    </div>
+                    <div class="thirteen wide column" style="padding-left: 0 !important;">
+                        <div class="ui form">
+                            <div class="inline fields">
+                                <div class="field">
+                                    <div class="ui radio checkbox">
+                                        <input id="public" type="radio" name="frequency" checked="checked">
+                                        <label>公开</label>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="ui radio checkbox">
+                                        <input id="private"  type="radio" name="frequency">
+                                        <label>私有</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                    <div class="right aligned sixteen wide column" style="padding-top: 0.5em !important;">
+                        <span style="color: rgb(202, 12, 22)">温馨提示：请勿发布涉及政治、广告、营销、翻墙、违反国家法律法规等内容</span>
+                    </div>
+                </div>
+                <div class="right aligned row" style="padding-bottom: 5px !important;">
+                    <div class="right aligned sixteen wide column" style="padding-top: 0.5em !important;">
+                        <button id="cancel-btn" class="ui  floated button basic">取消</button>
+                        <button id="draft-btn" class="ui  floated button basic blue ">保存为草稿</button>
+                        <button id="publish-btn" class="ui  floated button basic red ">发布文章</button>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-bottom: 10px !important;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        toggleStatus();
+    });
+
+    function toggleStatus() {
+        var user = sessionStorage.getItem("user");
+        if (user != null) {
+            $('#header-images').show();
+            $('#login-btn').hide();
+        } else {
+            $('#header-images').hide();
+            $('#login-btn').show();
+        }
+        setTimeout(toggleStatus, 100);
+    }
+
+    <!--退出操作异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "text",
+            success: function (result) {
+                if (result == "OK") {
+                    sessionStorage.removeItem("user");
+                    $("#login-btn").show();
+                    $('#header-images').hide();
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    });
+
+</script>
+<script src="../../../static/lib/editormd.min.js" th:src="@{/static/lib/editormd.min.js}"></script>
+<script src="../../../static/lib/editormd.amd.js" th:src="@{/static/lib/editormd.amd.min.js}"></script>
+<script>
+    //初始化Markdown编辑器
+    var contentEditor;
+    $(function () {
+        contentEditor = editormd("md-content", {
+            width: "100%",
+            height: 635,
+            syncScrolling: "single",
+            path: "../../../static/lib/lib/"
+        });
+    });
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('a[rel*=leanModal]').leanModal({top: 200, closeButton: ".modal_close"});
+    });
+</script>
+<!--弹出框js-->
+<script type="text/javascript">
+    (function ($) {
+        $.fn.extend({
+            leanModal: function (options) {
+                var defaults = {
+                    top: 100,
+                    overlay: 0.5,
+                    closeButton: null
+                };
+                var overlay = $("<div id='lean_overlay'></div>");
+                $("body").append(overlay);
+                options = $.extend(defaults, options);
+                return this.each(function () {
+                    var o = options;
+                    $(this).click(function (e) {
+                        var modal_id = $(this).attr("href");
+                        $("#lean_overlay").click(function () {
+                            close_modal(modal_id)
+                        });
+                        $(o.closeButton).click(function () {
+                            close_modal(modal_id)
+                        });
+                        var modal_height = $(modal_id).outerHeight();
+                        var modal_width = $(modal_id).outerWidth();
+                        $("#lean_overlay").css({
+                            "display": "block",
+                            opacity: 0
+                        });
+                        $("#lean_overlay").fadeTo(200, o.overlay);
+                        $(modal_id).css({
+                            "display": "block",
+                            "position": "fixed",
+                            "opacity": 0,
+                            "z-index": 11000,
+                            "left": 50 + "%",
+                            "margin-left": -(modal_width / 2) + "px",
+                            "top": o.top - 100 + "px"
+                        });
+                        $(modal_id).fadeTo(200, 1);
+                        e.preventDefault()
+                    })
+                });
+
+                function close_modal(modal_id) {
+                    $("#lean_overlay").fadeOut(200);
+                    $(modal_id).css({
+                        "display": "none"
+                    })
+                }
+            }
+        })
+    })(jQuery);
+</script>
+<script type="text/javascript">
+    //控制分类栏
+    $("#add-type-btn").click(function () {
+        $("#add-input").show();
+    });
+    $("#add-input").blur(function () {
+        var str = $("#add-input").val();
+        if (str != null && str.length > 0) {
+            var select = document.getElementById("types");
+            var option = new Option();  //产生一个Option结点
+            var value = select.childElementCount;
+            select.append(option);
+            option.text = str;
+            option.value = value;
+            $('.type').append('<a class=\"ui label transition visible\" data-value=' + value + " style=\"display: inline-block !important;\">" + str + "<i class=\"delete icon\"></i></a>");
+            $("#types").val(value);
+        }
+        $("#add-input").hide();
+    });
+
+    //控制标签栏
+    $("#add-tag-btn").click(function () {
+        $("#tag-input").show();
+    });
+    $("#tag-input").blur(function () {
+        var str = $("#tag-input").val();
+        if (str != null && str.length > 0) {
+            var select = document.getElementById("tags");
+            var option = new Option();  //产生一个Option结点
+            var value = select.childElementCount;
+            select.append(option);
+            option.text = str;
+            option.value = value;
+            $('.tags').append("<a class=\"ui label transition visible\" data-value=" + value + " style=\"display: inline-block !important;\">" + str + "<i class=\"delete icon\"></i></a>");
+            $("#tags").val(value);
+        }
+        $("#tag-input").hide();
+    });
+
+
+</script>
+
+<script type="text/javascript">
+ $('#cancel-btn').click(function(){
+     $('#signup').css("display","none");
+ });
+ $('#draft-btn').click(function () {
+     $('#blog').submit();
+ });
+
+ //发布按钮按下后的操作
+ $('#publish-btn').click(function () {
+     var url=$('#publish-url').val();
+     var title=$('#title').val();
+     var content=$('#content').val();
+     var categoryName=$('#types').find("option:selected").text();
+     var articleType=$('#article_type').val();
+     var appreciate=$('#appreciate').find("option:selected").text();
+     if("是"==appreciate){
+         appreciate="1";
+     }else{
+         appreciate="0";
+     }
+     var public=$('#public').is(":checked");
+     var status="0";
+     if(!public){
+         status="1";
+     }
+    if(title==null||title==""){
+        alert("标题是必填项");
+    }else if(content==null||content==""){
+        alert("文章内容是必填项")
+    }else if("请选择"==categoryName){
+        alert("文章分类是必填项")
+    }else if("-1"==articleType){
+        alert("文章类型是必填项")
+    }else {
+        $.ajax({
+            url: url,
+            method: "POST",
+            sync: true,
+            contentType: "application/json",
+            data: JSON.stringify({
+                articleTopic: title,
+                articleCategory: categoryName,
+                articleType: articleType,
+                articleAppreciate: appreciate,
+                articleStatus: status,
+                articleContent: content
+            }),
+            dataType: "json",  //服务器返回的数据类型
+            success: function (response) {
+                //跳转页面
+                var articleId=response.msg;
+                if(response.success){
+                    window.location.href="/manage/blog/success/"+articleId;
+                }else{
+                    alert("抱歉，服务异常，请重新提交！")
+                }
+            },
+            error: function (response) {
+                alert(response.msg);
+            }
+        });
+    }
+ })
+</script>
+
+</html>

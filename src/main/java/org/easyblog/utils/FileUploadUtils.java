@@ -10,7 +10,7 @@ public class FileUploadUtils {
     /**用户默认头像路径**/
     public static final String DEFAULT_AVATAR= "/static/images/header.jpg";
 
-    public static final String DEFAULT_CATEGORY="/static/images/default/category";
+    public static final String DEFAULT_CATEGORY="/static/images/";
 
     private static final Logger  log= LoggerFactory.getLogger(FileUploadUtils.class);
 
@@ -30,12 +30,7 @@ public class FileUploadUtils {
         Random random = new Random();
         /**随机产生一个[0,21)的数**/
         int nextInt = random.nextInt(21)+1;
-        return DEFAULT_CATEGORY+"/"+nextInt+".jpg";
+        return DEFAULT_CATEGORY+nextInt+".jpg";
     }
-
-  /*  public static void main(String[] args) {
-        for(int i=0;i<1000;i++)
-        System.out.println(defaultCategoryImage());
-    }*/
 
 }

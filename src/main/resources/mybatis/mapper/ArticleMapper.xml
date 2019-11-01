@@ -17,32 +17,16 @@
         <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent"/>
     </resultMap>
 
-    <insert id="save" parameterType="org.easyblog.bean.Article">
-        insert into article (article_user, article_topic,
-                             article_publish_time, article_click, article_category,
-                             article_status, article_top, article_type,
-                             article_tags, article_content,article_comment_num)
-        values (#{articleUser}, #{articleTopic},now(), #{articleClick},
-                #{articleCategory},#{articleStatus}, #{articleTop}, #{articleType},
-                #{articleTags}, #{articleContent},#{articleCommentNum})
+    <insert id="save" useGeneratedKeys="true" keyProperty="articleId" keyColumn="article_id" parameterType="org.easyblog.bean.Article">
+        insert into article (article_user, article_topic,article_publish_time,
+                     article_click, article_category,article_status,
+                     article_top, article_type,article_tags,
+                     article_content,article_comment_num,article_appreciate)
+        values (#{articleUser}, #{articleTopic},now(), 0,#{articleCategory},
+                #{articleStatus}, #{articleTop}, #{articleType},#{articleTags},
+                #{articleContent},0,#{articleAppreciate})
     </insert>
 
-
-     <!--批量插入数据-->
-    <insert id="saveBatch" parameterType="list">
-        insert into article (article_user, article_topic,
-        article_publish_time, article_click, article_category,
-        article_status, article_top, article_type,
-        article_tags, article_content)
-        values
-        <foreach collection="list" item="list" index="index" separator=",">
-            (#{list.articleUser,jdbcType=INTEGER}, #{list.articleTopic,jdbcType=VARCHAR},
-            now(), #{list.articleClick,jdbcType=INTEGER},
-            #{list.articleCategory,jdbcType=VARCHAR}, #{list.articleStatus,jdbcType=CHAR},
-            #{list.articleTop,jdbcType=BIT}, #{list.articleType,jdbcType=CHAR},
-            #{list.articleTags,jdbcType=VARCHAR}, #{list.articleContent,jdbcType=LONGVARCHAR})
-        </foreach>
-    </insert>
 
     <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
         select * from article where article_id = #{id,jdbcType=BIGINT}
@@ -56,37 +40,41 @@
         select count(*) from article where article_user=#{userId}
     </select>
 
+    <select id="countUserArticlesInCategory" resultType="integer">
+        select count(*) from article where article_user=#{userId} AND article_category=#{categoryName}
+    </select>
+
     <select id="getUserAllOrgArticles" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} AND article_type='0' order by article_publish_time DESC
+        select * from article where article_user=#{userId} AND article_type='0' AND article_status='0' order by article_publish_time DESC
     </select>
 
     <select id="getUserAllArticles" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} order by article_publish_time DESC
+        select * from article where article_user=#{userId} AND article_status='0' order by article_publish_time DESC
     </select>
 
     <select id="getNewestArticles" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} order by article_publish_time DESC limit #{limit}
+        select * from article where article_user=#{userId} AND article_status='0' order by article_publish_time DESC limit #{limit}
     </select>
 
     <select id="getHotArticles" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} order by article_click DESC limit #{limit}
+        select * from article where article_user=#{userId} AND article_status='0' order by article_click DESC limit #{limit}
     </select>
 
     <select id="countByUserIdMonthly" resultType="org.easyblog.bean.ArticleCount">
-        SELECT DATE_FORMAT(article_publish_time,"%Y年%m月") AS date,COUNT(*) AS count FROM article where article_user=#{userId} GROUP BY DATE_FORMAT(article_publish_time,"%Y年%m月")
+        SELECT DATE_FORMAT(article_publish_time,"%Y年%m月") AS date,COUNT(*) AS count FROM article where article_user=#{userId} AND article_status='0' GROUP BY DATE_FORMAT(article_publish_time,"%Y年%m月")
         ORDER BY DATE_FORMAT(article_publish_time,"%Y年%m月") DESC
     </select>
 
     <select id="getByUserIdMonthly" resultType="org.easyblog.bean.Article">
-        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} ORDER BY article_publish_time DESC
+        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} AND article_status='0' ORDER BY article_publish_time DESC
     </select>
 
     <select id="getByUserIdMonthlyOrderByClickNum" resultType="org.easyblog.bean.Article">
-        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} ORDER BY article_click DESC
+        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} AND article_status='0' ORDER BY article_click DESC
     </select>
 
     <select id="getByCategoryAndUserId" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} AND article_category
+        select * from article where article_user=#{userId} AND article_status='0' AND article_category
             in (select category_name from category where category_id=#{categoryId}) ORDER BY article_publish_time DESC
     </select>
 
@@ -133,6 +121,9 @@
             <if test="articleCommentNum != null">
                 article_comment_num,
             </if>
+            <if test="articleAppreciate!=null">
+                article_appreciate
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="articleId != null">
@@ -170,6 +161,9 @@
             </if>
             <if test="articleCommentNum != null">
                 #{articleCommentNum,jdbcType=INTEGER}
+            </if>
+            <if test="articleAppreciate!=null">
+                #{articleAppreciate}
             </if>
         </trim>
     </insert>
@@ -210,6 +204,9 @@
             <if test="articleCommentNum != null">
                 #{articleCommentNum,jdbcType=INTEGER}
             </if>
+            <if test="articleAppreciate!=null">
+                #{articleAppreciate}
+            </if>
         </set>
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
@@ -224,7 +221,9 @@
             article_top          = #{articleTop,jdbcType=BIT},
             article_type         = #{articleType,jdbcType=CHAR},
             article_tags         = #{articleTags,jdbcType=VARCHAR},
-            article_content      = #{articleContent,jdbcType=LONGVARCHAR}
+            article_content      = #{articleContent,jdbcType=LONGVARCHAR},
+            article_comment_num =#{articleCommentNum},
+            article_appreciate=#{articleAppreciate}
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
@@ -238,7 +237,17 @@
             article_status       = #{articleStatus,jdbcType=CHAR},
             article_top          = #{articleTop,jdbcType=BIT},
             article_type         = #{articleType,jdbcType=CHAR},
-            article_tags         = #{articleTags,jdbcType=VARCHAR}
+            article_tags         = #{articleTags,jdbcType=VARCHAR},
+            article_comment_num =#{articleCommentNum},
+            article_appreciate=#{articleAppreciate}
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
+
+
+    <!--根据用户的ID和文章标题删除草稿文章-->
+    <delete id="deleteArticleByUserIdAndTitle" >
+        delete from article where article_user=#{userId} AND article_topic=#{title} AND article_status='2'
+    </delete>
+
+
 </mapper>

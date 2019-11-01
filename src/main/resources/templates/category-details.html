@@ -24,8 +24,6 @@
     <div class="ui stackable grid">
         <!--左边的卡片-->
         <div class="four wide column" style="padding-top: 0 !important;">
-            <input id="userId" hidden="hidden" th:value="${#session.getAttribute('user').getUserId()}">
-
             <!--用户信息-->
             <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
 
@@ -80,7 +78,7 @@
             </div>
 
             <!--每个分类的文章-->
-            <div class="ui top attached teal segment">
+            <div class="ui top attached teal segment" style="padding-top: 0 !important;">
                 <div th:if="${!#lists.isEmpty(categoryArticles)}" th:each="article:${categoryArticles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none"
                      style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid">
@@ -90,10 +88,10 @@
                                 <span th:case="1">转载</span>
                                 <span th:case="2">翻译</span>
                             </button>
-                            <a href="#" th:text="${article.getArticleTopic()}"
+                            <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" th:text="${article.getArticleTopic()}"
                                class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
                             <p class="m-text" style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;"
-                               th:text="${#strings.abbreviate(article.getArticleContent(),100)}">
+                               th:text="${#strings.abbreviate(article.getArticleContent(),150)}">
                                 正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
                             </p>
                             <div class="ui stackable grid">
@@ -152,7 +150,8 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script>
+<script type="text/javascript">
+
     $(document).ready(function () {
         toggleStatus();
     });
@@ -168,6 +167,28 @@
         }
         setTimeout(toggleStatus, 100);
     }
+
+    <!--退出操作异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "text",
+            success: function (result) {
+                if (result == "OK") {
+                    sessionStorage.removeItem("user");
+                    $("#login-btn").show();
+                    $('#header-images').hide();
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    });
+
 </script>
 <script>
     $('.menu.toggle').click(function () {
@@ -177,6 +198,45 @@
         on: 'hover'
     });
 </script>
+<script>
+    $(document).ready(function () {
+        toggleStatus();
+    });
+
+    function toggleStatus() {
+        var user = sessionStorage.getItem("LOGIN-USER");
+        if (user != null) {
+            $('#header-images').show();
+            $('#login-btn').hide();
+        } else {
+            $('#header-images').hide();
+            $('#login-btn').show();
+        }
+        setTimeout(toggleStatus, 100);
+    }
+
+    <!--退出操作异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "text",
+            success: function (result) {
+                if (result == "OK") {
+                    sessionStorage.removeItem("LOGIN-USER");
+                    $("#login-btn").show();
+                    $('#header-images').hide();
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    });
+</script>
+
 <!--控制关注按钮的状态-->
 <script type="text/javascript">
     <!--关注按钮样式切换-->

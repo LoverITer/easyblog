@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>写文章 - EasyBlog博客</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+<link rel="stylesheet" href="..//css/me.css" th:href="@{/static/css/me.css}">
+</head>
+<body>
+
+<!--导航-->
+<div th:replace="~{nav :: navbar}"></div>
+
+<br>
+<br>
+<br>
+
+<div class="m-container-small m-padded-tb-massive">
+    <div class="ui message m-padded-tb-huge" style="padding-top: 20px !important;background-color: #FFFFFF !important;">
+        <div style="padding-bottom: 20px !important;"><a href="#" style="color: #3399ea !important;font-size: 14px !important;"><i class="chevron blue left icon"></i> 管理博文</a></div>
+        <div class="ui container" style="background-color: #f5f6f7 !important;margin-bottom: 50px !important;">
+            <div style="padding: 10px 10px !important;">
+                <div style="margin: 16px auto 8px auto !important;font-size: 18px !important;color: #474747 !important;" th:text="${article.getArticleTopic()}">SpringMVC</div>
+                <div th:text="${#strings.abbreviate(article.getArticleContent(),500)}" style="color: #999 !important;font-size: 14px !important;">
+                    synchronized实现原理
+                    synchronized 是基于 Java 对象头和 Monitor 机制来实现的。
+                    1.	Java 对象头
+                    一个对象在堆内存中包含三部分：对象头，实例数据和对齐填充。其中 Java 对象头包含两部分：
+                    	<1>实例变量：存放类的属性数据信息，包括父类的属性信息，如果是数组的实例部分还包括数组的长度，这部分内存按4字节对齐。
+                    	<2>填充数据：由于虚拟机要求对象起始地址必须是 8 字节的整数倍。填充数据不是必须存在的，仅仅是为了字节对齐。
+                    	<3>对象头：对象头主要包括两部分数据：Mark Word（标记字段）、Class Point（类型指针）。其中 Class Point 是对象指向它的类元数据的指针，虚拟机通过这个指针来确定这个对象是哪个类的实例，Mark Word 用于存储对象自身的运行时数据，它是实现轻量级锁和偏向锁的关键。它还用于存储对象自身的运行时数据，如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等等
+                </div>
+            </div>
+        </div>
+        <span th:if="${article!=null}"><i class="green check icon"></i><a href="#" th:href="@{/article/details/}+${article.getArticleId()}" style="color: #3399ea !important;font-size: 14px !important;">文章发布成功查看文章<i class="chevron blue right icon"></i></a></span>
+        <span><a href="#" th:href="@{/manage/blog/post}" style="color: #3399ea !important;font-size: 14px !important;margin-left: 30px !important;">再写一篇</a></span>
+    </div>
+</div>
+
+
+<div style="height: 16rem"></div>
+
+<!--footer-->
+<div th:replace="~{footer :: footbar}"></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        toggleStatus();
+    });
+
+    function toggleStatus() {
+        var user = sessionStorage.getItem("user");
+        if (user != null) {
+            $('#header-images').show();
+            $('#login-btn').hide();
+        } else {
+            $('#header-images').hide();
+            $('#login-btn').show();
+        }
+        setTimeout(toggleStatus, 100);
+    }
+
+    <!--退出操作异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "text",
+            success: function (result) {
+                if (result == "OK") {
+                    sessionStorage.removeItem("user");
+                    $("#login-btn").show();
+                    $('#header-images').hide();
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    });
+
+</script>
+<script type="text/javascript">
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+</script>
+</body>
+</html>

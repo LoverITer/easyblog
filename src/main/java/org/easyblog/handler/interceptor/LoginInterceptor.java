@@ -22,12 +22,16 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("Request from：{}",request.getRequestURL());
-        User user = (User) request.getSession().getAttribute("LOGIN-USER");
-        if(Objects.isNull(user)){
-
-            response.sendRedirect(request.getContextPath()+"/user/loginPage");
-            return false;
+        String url=request.getRequestURL().toString();
+        //用户进行后台（改个人信息、发布/修改/删除博客、分类、编辑评论....）操作的时候必须是处于登录状态
+        if(url.contains("/manage")) {
+            User user = (User) request.getSession().getAttribute("user");
+            if (Objects.isNull(user)) {
+                response.sendRedirect(request.getContextPath() + "/user/loginPage");
+                return false;
+            }
         }
+        //如果仅仅是查看一下别人的博客，分类...都一律放行
         return true;
     }
 

@@ -25,8 +25,6 @@
     <div class="ui stackable grid">
         <!--左边的卡片-->
         <div class="four wide column" style="padding-top: 0 !important;">
-            <input id="userId" hidden="hidden" th:value="${#session.getAttribute('user').getUserId()}">
-            <!--用户信息-->
             <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
             <!--归档-->
             <div th:replace="~{userinfo_sidebar::sidebar_archives}"></div>
@@ -41,36 +39,35 @@
         </div>
 
         <!--右边的分类内容-->
-        <div class="twelve wide column">
+        <div class="twelve wide column" style="padding-top: 0 !important;">
             <!--分类的header-->
             <div class="ui top attached segment">
                 <div class="ui middle aligned two column grid">
                     <div class="ui  grid">
                         <div class="four row">
-
                             <div class="ui breadcrumb m-margin-left">
-                                <a class="section" th:href="@{/article/index/}+${userId}" style="color: black">全部文章</a>
+                                <a class="section" th:href="@{/article/index/}+${user.getUserId()}" style="color: black">全部文章</a>
                                 <i class="right angle icon divider"></i>
                                 <span class="section" th:text="${date}">2019年6月</span>
                             </div>
                             <div class="m-margin-left-massive "><span style="color: #888888">排序：</span>
-                                <span class="m-margin-right-bigger m-margin-left"><a href="#"
-                                                                                     th:href="@{/archives/details/}+${userId}+@{/}+${date}"
-                                                                                     class="m-black">默认排序</a></span>
-                                <span class="m-margin-right-bigger"><a href="#"
-                                                                       th:href="@{/archives/details/orderByUpdateTime/}+${userId}+@{/}+${date}"
-                                                                       class="m-black">按更新时间</a></span>
-                                <span class="m-margin-right-bigger"><a href="#"
-                                                                       th:href="@{/archives/details/orderByClickNum/}+${userId}+@{/}+${date}"
-                                                                       class="m-black">按访问量</a></span>
+                                <span class="m-margin-right-bigger m-margin-left">
+                                    <a href="#" th:href="@{/archives/details/}+${user.getUserId()}+@{/}+${date}" class="m-black">默认排序</a>
+                                </span>
+                                <span class="m-margin-right-bigger">
+                                    <a href="#" th:href="@{/archives/details/orderByUpdateTime/}+${user.getUserId()}+@{/}+${date}" class="m-black">按更新时间</a>
+                                </span>
+                                <span class="m-margin-right-bigger">
+                                    <a href="#" th:href="@{/archives/details/orderByClickNum/}+${user.getUserId()}+@{/}+${date}"  class="m-black">按访问量</a>
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!--每个归档的文章-->
             <div  class="ui top attached teal segment">
+                <!--每个归档的文章-->
                 <div th:if="${!#lists.isEmpty(articles)}" th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear" style="padding: 10px 5px 20px 20px !important;">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
@@ -80,32 +77,29 @@
                                 <span th:case="1">转载</span>
                                 <span th:case="2">翻译</span>
                             </button>
-                            <a href="#" th:text="${article.getArticleTopic()}"
+                            <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" th:text="${article.getArticleTopic()}"
                                class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
                             <p class="m-text" style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;"
-                               th:text="${#strings.abbreviate(article.getArticleContent(),100)}">
+                               th:text="${#strings.abbreviate(article.getArticleContent(),150)}">
                                 正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
                             </p>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
                                         <div class="item">
-                                            <img src="https://unsplash.it/100/100?image=1005" th:src="@{${userHeaderImage}}" alt=""
+                                            <img src="https://unsplash.it/100/100?image=1005" th:src="@{${user.getUserHeaderImgUrl()}}" alt=""
                                                  class="ui avatar image">
-                                            <div class="content"><a href="#" th:href="@{/article/index/}+${userId}"
-                                                                    class="header" th:text="${userName}">黄鑫</a></div>
+                                            <div class="content"><a href="#" th:href="@{/article/index/}+${userId}"  class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
                                         </div>
                                         <div class="item">
                                             <i class="calendar icon"></i> <span
                                                 th:text="${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd  hh:mm:ss')}">2017-10-01</span>
                                         </div>
                                         <div class="item">
-                                            <i class="eye icon"></i> <span
-                                                th:text="${article.getArticleClick()}">2342</span>
+                                            <i class="eye icon"></i> <span th:text="${article.getArticleClick()}">2342</span>
                                         </div>
                                         <div class="item">
-                                            <i class="comment alternate icon"></i> <span
-                                                th:text="${article.getArticleCommentNum()}">2342</span>
+                                            <i class="comment alternate icon"></i> <span th:text="${article.getArticleCommentNum()}">2342</span>
                                         </div>
                                     </div>
                                 </div>
@@ -115,13 +109,11 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="five wide column">
                             <a href="#" target="_blank">
                                 <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
                             </a>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -137,7 +129,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -155,7 +146,7 @@
     });
 
     function toggleStatus() {
-        var user = sessionStorage.getItem("user");
+        var user = sessionStorage.getItem("LOGIN-USER");
         if (user != null) {
             $('#header-images').show();
             $('#login-btn').hide();
@@ -165,6 +156,27 @@
         }
         setTimeout(toggleStatus, 100);
     }
+
+    <!--退出操作异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "text",
+            success: function (result) {
+                if (result == "OK") {
+                    sessionStorage.removeItem("user");
+                    $("#login-btn").show();
+                    $('#header-images').hide();
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    });
 </script>
 
 <script>

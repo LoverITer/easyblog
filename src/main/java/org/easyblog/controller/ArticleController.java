@@ -1,20 +1,20 @@
 package org.easyblog.controller;
 
 import org.easyblog.bean.Article;
-import org.easyblog.bean.ArticleCount;
-import org.easyblog.bean.Category;
 import org.easyblog.bean.User;
 import org.easyblog.service.ArticleServiceImpl;
 import org.easyblog.service.CategoryServiceImpl;
 import org.easyblog.service.UserServiceImpl;
+import org.easyblog.utils.HtmlParserUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/article")
@@ -30,46 +30,58 @@ public class ArticleController {
         this.articleServiceImpl = articleServiceImpl;
     }
 
-    @RequestMapping(value = "/index/{id}")
-    public String index(@PathVariable("id") int userId,
+    @RequestMapping(value = "/index/{userId}")
+    public String index(@PathVariable("userId") int userId,
                         @RequestParam(defaultValue = "0") int option,
-                        HttpSession session,
-                        Model model){
-        final List<Category> lists = categoryServiceImpl.getUserAllViableCategory(userId);
-        final List<ArticleCount> archives = articleServiceImpl.getUserAllArticleArchives(userId);
-        final List<Article> newestArticles = articleServiceImpl.getUserNewestArticles(userId, 5);
-        List<Article> articles = articleServiceImpl.getUserArticles(userId,option);
-        session.setAttribute("categories",lists);
-        session.setAttribute("archives",archives);
-        session.setAttribute("newestArticles",newestArticles);
-        model.addAttribute("articles",articles);
-        model.addAttribute("articleNum",articles.size());
-        session.setMaxInactiveInterval(60*60*12);   //保存一天
-
+                        Model model) {
+        new ControllerUtils(categoryServiceImpl,articleServiceImpl).getArticleUserInfo(model,userId,option);
         final User user = userService.getUser(userId);
+        List<Article> articles = articleServiceImpl.getUserArticles(userId, option);
+        if(articles!=null){
+            articles.forEach(article -> {
+                article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
+            });
+        }
+        model.addAttribute("articles",articles);
         user.setUserPassword(null);
-        model.addAttribute("user",user);
-        if(option==0){
-            model.addAttribute("display","0");
+        model.addAttribute("user", user);
+        if (option == 0) {
+            model.addAttribute("display", "0");
         } else if (option == 1) {
-            model.addAttribute("display","1");
+            model.addAttribute("display", "1");
         }
         return "user_home";
     }
 
 
-    @RequestMapping(value = "/home/{id}")
-    public String homePage(@PathVariable("id") int userId,Model model){
+    @RequestMapping(value = "/home/{userId}")
+    public String homePage(@PathVariable("userId") int userId, Model model) {
         final User user = userService.getUser(userId);
         user.setUserPassword(null);
         List<Article> articles = articleServiceImpl.getUserArticles(userId, 0);
-        if(articles.size()<10) {
+        articles.forEach(article -> {
+            article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
+        });
+        if (articles.size() < 10) {
             model.addAttribute("articles", articles);
-        }else{
-            model.addAttribute("articles",articles.subList(0,10));
+        } else {
+            model.addAttribute("articles", articles.subList(0, 10));
         }
-        model.addAttribute("user",user);
+        model.addAttribute("user", user);
         return "home";
+    }
+
+
+    @GetMapping(value = "/details/{articleId}")
+    public String articleDetails(@PathVariable("articleId") int articleId, Model model) {
+        final Article article = articleServiceImpl.getArticleById(articleId);
+        model.addAttribute("article",article);
+        User user = userService.getUser(article.getArticleUser());
+        model.addAttribute("user",user);
+        if(Objects.nonNull(user)) {
+            new ControllerUtils(categoryServiceImpl, articleServiceImpl).getArticleUserInfo(model, user.getUserId(), 0);
+        }
+        return "blog";
     }
 
 

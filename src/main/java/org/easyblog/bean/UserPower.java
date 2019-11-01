@@ -1,10 +1,13 @@
 package org.easyblog.bean;
 
+import org.springframework.data.annotation.Id;
+
 import java.io.Serializable;
 
 public class UserPower implements Serializable {
 
     private static final long serialVersionUID = -3934031817257705616L;
+    @Id
     private Integer powerId;
 
     private String powerName;

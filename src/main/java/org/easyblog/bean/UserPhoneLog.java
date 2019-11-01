@@ -1,11 +1,14 @@
 package org.easyblog.bean;
 
+import org.springframework.data.annotation.Id;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class UserPhoneLog implements Serializable {
 
     private static final long serialVersionUID = 7393331110726779645L;
+    @Id
     private Long logId;
 
     private String phone;
