@@ -4,6 +4,7 @@ import org.easyblog.bean.Article;
 import org.easyblog.bean.Category;
 import org.easyblog.bean.CategoryCare;
 import org.easyblog.bean.User;
+import org.easyblog.bean.enums.ArticleType;
 import org.easyblog.config.Result;
 import org.easyblog.service.ArticleServiceImpl;
 import org.easyblog.service.CategoryCareServiceImpl;
@@ -36,7 +37,7 @@ public class CategoryController {
 
     @GetMapping(value = "/{id}/{userId}")
     public String categoryDetailsPage(@PathVariable(value = "id") int categoryId, @PathVariable("userId") int userId, Model model){
-        new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId,0);
+        new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
         final Category category = categoryServiceImpl.getCategory(categoryId);
         final List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);
         final List<Article> categoryArticles = articleService.getByCategoryAndUserId(userId, categoryId);

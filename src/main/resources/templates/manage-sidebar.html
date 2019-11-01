@@ -9,31 +9,31 @@
 <!--左侧查单栏-->
 <div class="three wide column" th:fragment="manage">
     <!--菜单栏-->
-    <div class="ui segments " >
-        <div id="side-bnt1" class="ui segment border-bt-none m-a-bg-hover">
-            <a href="#" th:href="@{/manage/blog/write}" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left: 20% !important;"><i class="pencil alternate icon"></i>MarkDown编辑器</a>
+    <div class="ui segments" th:if="${session.user!=null}">
+        <div id="side-bnt1" class="ui mouse segment border-bt-none m-a-bg-hover">
+            <a href="#" th:href="@{/manage/blog/post}" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left: 20% !important;"><i class="pencil alternate icon"></i>MarkDown编辑器</a>
         </div>
         <div   class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;" ></div>
 
-        <div id="side-bnt2"  class="ui segment border-bt-none m-a-bg-hover">
-            <a href="#" th:href="@{/article/index}" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left: 20% !important;"><i class="home icon"></i>查看主页</a>
+        <div id="side-bnt2"  class="ui mouse segment border-bt-none m-a-bg-hover">
+            <a href="#" th:href="@{/article/index/}+${#session.getAttribute('user').getUserId()}" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left: 20% !important;"><i class="home icon"></i>查看主页</a>
         </div>
         <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;" ></div>
-        <div id="side-bnt3"  class="ui segment border-bt-none m-a-bg-hover">
+        <div id="side-bnt3"  class="ui mouse segment border-bt-none m-a-bg-hover">
             <a href="#" th:href="@{/manage/blog/}" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left: 20% !important;"><i class="folder open outline icon"></i>文章管理</a>
         </div>
         <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;" ></div>
-        <div  id="side-bnt4" class="ui segment border-bt-none m-a-bg-hover">
+        <div  id="side-bnt4" class="ui mouse segment border-bt-none m-a-bg-hover">
             <a href="#" th:href="@{/manage/comment/list}" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left: 20% !important;"><i class="talk icon"></i>评论管理</a>
         </div>
         <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;" ></div>
-        <div  id="side-bnt5"  class="ui segment border-bt-none m-a-bg-hover">
+        <div  id="side-bnt5"  class="ui mouse segment border-bt-none m-a-bg-hover">
             <a href="#" th:href="@{/manage/category/list}" target="_blank" class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left:20% !important;"><i class="mini idea icon"></i>分类专栏</a>
         </div>
     </div>
 
     <!--二维码-->
-    <h4 class="ui horizontal divider header m-margin-top-large" >扫码关注我</h4>
+    <h4 class="ui horizontal divider header m-margin-top-large" >联系开发者</h4>
     <div class="ui centered card" style="width: 11em">
         <img src="../../images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image">
     </div>

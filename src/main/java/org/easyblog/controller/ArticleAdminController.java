@@ -3,6 +3,8 @@ package org.easyblog.controller;
 
 import org.easyblog.bean.Article;
 import org.easyblog.bean.Category;
+import org.easyblog.bean.User;
+import org.easyblog.bean.enums.ArticleType;
 import org.easyblog.config.Result;
 import org.easyblog.service.ArticleServiceImpl;
 import org.easyblog.service.CategoryServiceImpl;
@@ -14,8 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -36,20 +41,39 @@ public class ArticleAdminController {
 
 
     @GetMapping(value = "/")
-    public String manageBlog() {
+    public String manageBlog(HttpSession session, Model model) {
+        try {
+            User user = (User) session.getAttribute("user");
+            if (Objects.nonNull(user)) {
+                //去管理页面默认展示所有的已发布的文章
+                List<Article> articles = articleService.getUserArticles(user.getUserId(), ArticleType.Original.getArticleType());
+                model.addAttribute("articles", articles);
+                model.addAttribute("user", user);
+            } else {
+                return "redirect:/user/loginPage";
+            }
+        } catch (Exception ex) {
+            return "/error/error";
+        }
         return PREFIX + "/blog-manage";
     }
 
     @RequestMapping(value = "/post")
     public String writeBlog(HttpSession session, Model model, @RequestParam(value = "userId", defaultValue = "-1", required = false) int userId) {
         //没有登录的话就去登录，登录后才可以写博客
-        if (null == session.getAttribute("user")) {
+        User user = (User) session.getAttribute("user");
+        if (Objects.isNull(user)) {
             return "redirect:/user/loginPage";
         }
-        if (userId != -1) {
+        if (userId == -1) {
+            userId = user.getUserId();
+        }
+        try {
             final List<Category> categories = categoryService.getUserAllCategories(userId);
             model.addAttribute("categories", categories);
             model.addAttribute("userId", userId);
+        } catch (Exception ex) {
+            return "/error/error";
         }
         return PREFIX + "/blog-input";
     }
@@ -95,6 +119,15 @@ public class ArticleAdminController {
         }
     }
 
+    @RequestMapping(value = "/success/{articleId}")
+    public String articlePublishSuccess(@PathVariable(value = "articleId") int articleId,
+                                        Model model) {
+        Article article = articleService.getArticleById(articleId);
+        article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
+        model.addAttribute("article", article);
+        return PREFIX + "/blog-input-success";
+    }
+
 
     @PostMapping(value = "/saveAsDraft/{userId}")
     public String saveAsDraft(@PathVariable(value = "userId") Integer userId,
@@ -112,10 +145,36 @@ public class ArticleAdminController {
             final List<Category> categories = categoryService.getUserAllCategories(userId);
             model.addAttribute("categories", categories);
             model.addAttribute("userId", userId);
-        }catch (Exception e){
+        } catch (Exception e) {
             return "/error/error";
         }
         return PREFIX + "/blog-input";
+    }
+
+    @GetMapping(value = "/edit")
+    public String editArticle(Model model, HttpServletRequest request, @RequestParam("articleId") int articleId) {
+        if (articleId < 0) {
+            String Referer = request.getHeader("Referer");
+            return "redirect:" + Referer;
+        }
+        try {
+            Article article = articleService.getArticleById(articleId);
+            model.addAttribute("content", article.getArticleContent());
+            model.addAttribute("title",article.getArticleTopic());
+            final List<Category> categories = categoryService.getUserAllCategories(article.getArticleUser());
+            model.addAttribute("categories", categories);
+            model.addAttribute("userId", article.getArticleUser());
+        }catch (Exception ex){
+            return  "/error/error";
+        }
+        return PREFIX + "/blog-input";
+    }
+
+
+    @GetMapping(value = "/delete")
+    public String deleteArticle(Model model, @RequestParam("articleId") int articleId) {
+        articleService.deleteByPK(articleId);
+        return "redirect:/manage/blog/";
     }
 
 
@@ -139,14 +198,5 @@ public class ArticleAdminController {
         return PREFIX + "/blog-dash";
     }
 
-
-    @RequestMapping(value = "/success/{articleId}")
-    public String articlePublishSuccess(@PathVariable(value = "articleId") int articleId,
-                                        Model model) {
-        Article article = articleService.getArticleById(articleId);
-        article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
-        model.addAttribute("article", article);
-        return PREFIX + "/blog-input-success";
-    }
 
 }

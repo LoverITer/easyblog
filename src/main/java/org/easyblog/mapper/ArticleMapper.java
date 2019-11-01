@@ -41,8 +41,12 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      */
     List<Article> getUserAllArticles(@Param("userId") int userId);
 
-
-    List<Article> getUserAllOrgArticles(@Param("userId") int userId);
+    /**
+     * 筛选用户不同的文章数据
+     * @param userId
+     * @return
+     */
+    List<Article> getUserArticlesSelective(@Param("userId") int userId,@Param("articleType") String articleType);
 
 
     /**

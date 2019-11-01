@@ -537,10 +537,10 @@
 <!--底部footer-->
 <div th:replace="~{footer::footbar}"></div>
 
-
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+
 <!--控制用户头像的显示-->
 <script type="text/javascript">
 
@@ -550,7 +550,6 @@
 
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
-        console.log(user);
         if(user!=null){
             $('#header-images').show();
             $('#login-btn').hide();
@@ -568,12 +567,11 @@
             method: "GET",
             sync: true,
             data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
+            dataType: "json",   //服务器返回的数据格式
+            success: function (response) {
+                if (response.success) {
                     sessionStorage.removeItem("user");
-                    $("#login-btn").show();
-                    $('#header-images').hide();
+                    window.location.href="/user/loginPage"
                 }
             },
             error: function () {

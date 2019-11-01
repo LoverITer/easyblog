@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/manage/comment")
 public class CommentController {
 
-    private static final String PREFIX="/admin/comment-manage/";
+    private static final String PREFIX="/admin/comment_manage/";
 
     @GetMapping(value = "/list")
     public String commentListPage(){

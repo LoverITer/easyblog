@@ -20,7 +20,13 @@ public interface IArticleService {
 
     List<ArticleCount>  getUserAllArticleArchives(int userId);
 
-    List<Article> getUserArticles(int userId,int option);
+    /**
+     *
+     * @param userId  用户ID
+     * @param articleType
+     * @return
+     */
+    List<Article> getUserArticles(int userId,String articleType);
 
     List<Article> getUserArticlesMonthly(int userId,String year,String month);
 
@@ -30,6 +36,11 @@ public interface IArticleService {
 
     void deleteByUserIdAndTitle(int userId,String title);
 
+    /**
+     * 根据主键删除一篇文章
+     * @param articleId
+     */
+    void deleteByPK(int articleId);
 
     int countUserArticleInCategory(int userId,String categoryName);
 

@@ -2,6 +2,7 @@ package org.easyblog.service;
 
 import org.easyblog.bean.Article;
 import org.easyblog.bean.ArticleCount;
+import org.easyblog.bean.enums.ArticleType;
 import org.easyblog.mapper.ArticleMapper;
 import org.easyblog.service.base.IArticleService;
 import org.springframework.cache.annotation.CacheConfig;
@@ -92,13 +93,13 @@ public class ArticleServiceImpl implements IArticleService {
     @Transactional(isolation =Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "articles",condition = "#result!=null&&#result.size()>0")
     @Override
-    public List<Article> getUserArticles(int userId, int option) {
+    public List<Article> getUserArticles(int userId, String articleType) {
         if (userId > 0) {
             try {
-                if (option == 0) {
+                if (ArticleType.Unlimited.getArticleType().equals(articleType)) {
                     return articleMapper.getUserAllArticles(userId);  //得到用户的所有文章
-                } else if (option == 1) {
-                    return articleMapper.getUserAllOrgArticles(userId);   //得到用户的所有原创文章
+                } else {
+                    return articleMapper.getUserArticlesSelective(userId,articleType);  //根据option
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -164,6 +165,16 @@ public class ArticleServiceImpl implements IArticleService {
                 articleMapper.deleteArticleByUserIdAndTitle(userId, title);
             }catch (Exception e){
                 e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void deleteByPK(int articleId) {
+        if(articleId>0){
+            try {
+                articleMapper.deleteByPrimaryKey((long) articleId);
+            }catch (Exception ignored){
             }
         }
     }

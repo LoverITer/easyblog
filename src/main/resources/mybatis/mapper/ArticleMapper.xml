@@ -44,8 +44,8 @@
         select count(*) from article where article_user=#{userId} AND article_category=#{categoryName}
     </select>
 
-    <select id="getUserAllOrgArticles" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} AND article_type='0' AND article_status='0' order by article_publish_time DESC
+    <select id="getUserArticlesSelective" resultType="org.easyblog.bean.Article">
+        select * from article where article_user=#{userId} AND article_type=#{articleType} AND article_status='0' order by article_publish_time DESC
     </select>
 
     <select id="getUserAllArticles" resultType="org.easyblog.bean.Article">

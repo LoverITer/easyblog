@@ -4,5 +4,10 @@
       "name": "spring.profiles",
       "type": "java.lang.String",
       "description": "Description for spring.profiles."
-  }
-] }
+    },
+    {
+      "name": "spring.datasource.initial-size",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.initial-size."
+    }
+  ] }

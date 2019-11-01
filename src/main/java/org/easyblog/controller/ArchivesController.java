@@ -2,6 +2,7 @@ package org.easyblog.controller;
 
 import org.easyblog.bean.Article;
 import org.easyblog.bean.User;
+import org.easyblog.bean.enums.ArticleType;
 import org.easyblog.service.ArticleServiceImpl;
 import org.easyblog.service.CategoryServiceImpl;
 import org.easyblog.service.UserServiceImpl;
@@ -33,7 +34,7 @@ public class ArchivesController {
     public String archivesPage(@PathVariable("date") String date,
                                @PathVariable(value = "userId") int userId,
                                Model model){
-        new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId,0);
+        new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
         final List<Article> articles = articleService.getUserArticlesMonthly(userId, date.substring(0,4), date.substring(5,7));
         final User user = userService.getUser(userId);
         model.addAttribute("date", date);
