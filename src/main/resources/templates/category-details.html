@@ -165,7 +165,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 100);
+        setTimeout(toggleStatus, 500);
     }
 
     <!--退出操作异步请求-->
@@ -175,12 +175,11 @@
             method: "GET",
             sync: true,
             data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
                     sessionStorage.removeItem("user");
-                    $("#login-btn").show();
-                    $('#header-images').hide();
+                    toggleStatus();
                 }
             },
             error: function () {
@@ -198,45 +197,6 @@
         on: 'hover'
     });
 </script>
-<script>
-    $(document).ready(function () {
-        toggleStatus();
-    });
-
-    function toggleStatus() {
-        var user = sessionStorage.getItem("LOGIN-USER");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-        setTimeout(toggleStatus, 100);
-    }
-
-    <!--退出操作异步请求-->
-    $('#logout').click(function () {
-        $.ajax({
-            url: "/user/logout",
-            method: "GET",
-            sync: true,
-            data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
-                    sessionStorage.removeItem("LOGIN-USER");
-                    $("#login-btn").show();
-                    $('#header-images').hide();
-                }
-            },
-            error: function () {
-                alert("服务异常，请重试！")
-            }
-        });
-    });
-</script>
-
 <!--控制关注按钮的状态-->
 <script type="text/javascript">
     <!--关注按钮样式切换-->

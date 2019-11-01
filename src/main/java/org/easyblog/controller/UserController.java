@@ -284,9 +284,12 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/logout")
-    public String logout(HttpSession session) {
+    public Result logout(HttpSession session) {
         session.removeAttribute("user");
-        return AJAX_SUCCESS;
+        Result result = new Result();
+        result.setSuccess(true);
+        result.setMsg(AJAX_SUCCESS);
+        return result;
     }
 
 

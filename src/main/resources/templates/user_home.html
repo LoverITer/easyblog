@@ -154,6 +154,9 @@
         toggleStatus();
     });
 
+    /**
+     * 不断检查用户的登录情况
+     */
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
         if (user != null) {
@@ -163,7 +166,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 100);
+        setTimeout(toggleStatus, 500);
     }
 
     <!--退出操作异步请求-->
@@ -173,12 +176,11 @@
             method: "GET",
             sync: true,
             data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
                     sessionStorage.removeItem("user");
-                    $("#login-btn").show();
-                    $('#header-images').hide();
+                    toggleStatus();
                 }
             },
             error: function () {

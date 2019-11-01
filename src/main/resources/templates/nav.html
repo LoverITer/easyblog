@@ -26,7 +26,7 @@
             </div>
 
             <!--我的头像-->
-            <div th:unless="${session.user==null}" id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
+            <div th:if="${session.user!=null}" id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
                 <div class="ui dropdown  item ">
                     <div class="text">
                         <img class="ui medium circular image image-42x42" style="max-height: none !important;"
@@ -56,34 +56,6 @@
     </a>
     <input id="userId" hidden="hidden" th:if="${session.user!=null}" th:value="${#session.getAttribute('user').getUserId()}">
 </nav>
-
-<script type="text/javascript" th:fragment="javascript ">
-
-    $.ready(function () {
-        $('#header-images').hide();
-    })
-
-    <!--退出异步请求-->
-    $('#logout').click(function () {
-        $.ajax({
-            url: "/user/logout",
-            method: "GET",
-            sync: true,
-            data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
-                    $("#login-btn").show();
-                    $('#header-images').hide();
-                }
-            },
-            error: function () {
-                alert("服务异常，请重试！")
-            }
-        });
-    })
-</script>
-
 
 </body>
 </html>

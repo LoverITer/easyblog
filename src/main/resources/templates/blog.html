@@ -233,7 +233,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-
+<script src="../static/js/prism.js" th:src="@{/static/js/prism.js}"></script>
 <script type="text/javascript">
     //图像/登录注册按钮显示控制
     $(document).ready(function () {
@@ -249,7 +249,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 100);
+        setTimeout(toggleStatus, 500);
     }
 
     <!--退出操作异步请求-->
@@ -259,12 +259,11 @@
             method: "GET",
             sync: true,
             data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
                     sessionStorage.removeItem("user");
-                    $("#login-btn").show();
-                    $('#header-images').hide();
+                    toggleStatus();
                 }
             },
             error: function () {
@@ -274,9 +273,6 @@
     });
 
 </script>
-
-
-<script src="../static/js/prism.js" th:src="@{/static/js/prism.js}"></script>
 
 <!--实现评论框的各种效果-->
 <script type="text/javascript">
@@ -294,9 +290,7 @@
     $(function () {
         $('#commentInput').on('keyup', function () {
             var txtval = $('#commentInput').val().length;
-            console.log(txtval);
             var str = parseInt(500 - txtval);
-            console.log(str);
             if (str > 0) {
                 $('#num_txt').html(str);
             } else {
