@@ -17,9 +17,8 @@
         <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent"/>
     </resultMap>
 
-    <insert id="save" useGeneratedKeys="true" keyColumn="article_id" parameterType="org.easyblog.bean.Article">
-        insert into
-            article (article_user, article_topic,article_publish_time,
+    <insert id="save" useGeneratedKeys="true" keyProperty="articleId" keyColumn="article_id" parameterType="org.easyblog.bean.Article">
+        insert into article (article_user, article_topic,article_publish_time,
                      article_click, article_category,article_status,
                      article_top, article_type,article_tags,
                      article_content,article_comment_num,article_appreciate)
@@ -39,6 +38,10 @@
 
     <select id="countByUserId" resultType="integer">
         select count(*) from article where article_user=#{userId}
+    </select>
+
+    <select id="countUserArticlesInCategory" resultType="integer">
+        select count(*) from article where article_user=#{userId} AND article_category=#{categoryName}
     </select>
 
     <select id="getUserAllOrgArticles" resultType="org.easyblog.bean.Article">

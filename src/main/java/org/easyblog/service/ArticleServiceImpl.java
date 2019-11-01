@@ -167,4 +167,17 @@ public class ArticleServiceImpl implements IArticleService {
             }
         }
     }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public int countUserArticleInCategory(int userId, String categoryName) {
+        if(userId>0&&Objects.nonNull(categoryName)){
+            try {
+               return articleMapper.countUserArticlesInCategory(userId, categoryName);
+            }catch (Exception e){
+                return 0;
+            }
+        }
+        return 0;
+    }
 }

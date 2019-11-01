@@ -26,6 +26,15 @@ public  interface ArticleMapper extends BaseMapper<Article> {
 
 
     /**
+     * 查询用户某一分类下的文章数量
+     * @param userId
+     * @param categoryName
+     * @return
+     */
+    int countUserArticlesInCategory(@Param("userId") int userId,@Param("categoryName") String categoryName);
+
+
+    /**
      * 得到用户的所有原创文章，按时间降序排列
      * @param userId
      * @return

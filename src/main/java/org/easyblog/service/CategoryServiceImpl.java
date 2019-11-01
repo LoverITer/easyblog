@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements ICategoryService {
     public Category getCategoryByUserIdAndName(int userId, String categoryName) {
         if(userId>0&&!"".equals(categoryName)){
             try {
-                categoryMapper.getCategoryByUserIdAndName(userId, categoryName);
+                return categoryMapper.getCategoryByUserIdAndName(userId, categoryName);
             }catch (Exception e){
                 e.printStackTrace();
                 return null;

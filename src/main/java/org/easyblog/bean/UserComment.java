@@ -1,5 +1,7 @@
 package org.easyblog.bean;
 
+import org.springframework.data.annotation.Id;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,6 +9,7 @@ public class UserComment implements Serializable {
 
     private static final long serialVersionUID = 6652860225449766128L;
 
+    @Id
     private Integer commentId;
 
     private Integer commentSend;

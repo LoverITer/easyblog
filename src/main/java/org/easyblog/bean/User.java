@@ -1,11 +1,14 @@
 package org.easyblog.bean;
 
+import org.springframework.data.annotation.Id;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class User implements Serializable {
 
     private static final long serialVersionUID = 9108908247105270923L;
+    @Id
     private Integer  userId;
     private String userNickname;
     private String userPassword;

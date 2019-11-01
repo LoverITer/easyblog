@@ -30,7 +30,7 @@ public class FileUploadUtils {
         Random random = new Random();
         /**随机产生一个[0,21)的数**/
         int nextInt = random.nextInt(21)+1;
-        return DEFAULT_CATEGORY+"/"+nextInt+".jpg";
+        return DEFAULT_CATEGORY+nextInt+".jpg";
     }
 
 }

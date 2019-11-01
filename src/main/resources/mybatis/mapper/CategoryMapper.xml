@@ -18,7 +18,8 @@
     insert into category (category_user, category_name,
       category_image_url, category_article_num, category_click_num,
       category_care_num,display,create_time)
-    values (#{categoryUser}, #{categoryName},#{categoryImageUrl}, 0, #{categoryClickNum},0,1,now())
+    values (#{categoryUser}, #{categoryName},#{categoryImageUrl}, #{categoryArticleNum},
+    #{categoryClickNum},0,1,now())
   </insert>
 
 
@@ -121,7 +122,7 @@
         category_image_url = #{categoryImageUrl,jdbcType=VARCHAR},
       </if>
       <if test="categoryArticleNum != null">
-        category_article_num = category_article_num+1,
+        category_article_num = #{categoryArticleNum},
       </if>
       <if test="categoryClickNum != null">
         category_click_num = category_click_num+1,

@@ -1,11 +1,14 @@
 package org.easyblog.bean;
 
+import org.springframework.data.annotation.Id;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class UserMailLog implements Serializable {
 
     private static final long serialVersionUID = -8994188567591744802L;
+    @Id
     private Long logId;
 
     private String email;

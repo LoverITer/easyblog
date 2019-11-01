@@ -30,4 +30,7 @@ public interface IArticleService {
 
     void deleteByUserIdAndTitle(int userId,String title);
 
+
+    int countUserArticleInCategory(int userId,String categoryName);
+
 }
