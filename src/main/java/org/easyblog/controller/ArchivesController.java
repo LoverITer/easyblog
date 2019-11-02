@@ -2,6 +2,7 @@ package org.easyblog.controller;
 
 import org.easyblog.bean.Article;
 import org.easyblog.bean.User;
+import org.easyblog.bean.enums.ArticleType;
 import org.easyblog.service.ArticleServiceImpl;
 import org.easyblog.service.CategoryServiceImpl;
 import org.easyblog.service.UserServiceImpl;
@@ -33,7 +34,7 @@ public class ArchivesController {
     public String archivesPage(@PathVariable("date") String date,
                                @PathVariable(value = "userId") int userId,
                                Model model){
-        new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId,0);
+        new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
         final List<Article> articles = articleService.getUserArticlesMonthly(userId, date.substring(0,4), date.substring(5,7));
         final User user = userService.getUser(userId);
         model.addAttribute("date", date);
@@ -55,13 +56,22 @@ public class ArchivesController {
     public String orderByClickNum(@PathVariable("userId") int userId,
                                   @PathVariable("date") String date,
                                   Model model){
-        final List<Article> articles = articleService.getUserArticlesMonthlyOrderByClickNum(userId, date.substring(0,4), date.substring(5,7));
-        articles.forEach(article -> {
-            article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
-        });
-        model.addAttribute("articles",articles);
-        model.addAttribute("date",date);
-        model.addAttribute("userId",userId);
+        try {
+            new ControllerUtils(categoryServiceImpl, articleService).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
+            final List<Article> articles = articleService.getUserArticlesMonthlyOrderByClickNum(userId, date.substring(0, 4), date.substring(5, 7));
+            articles.forEach(article -> {
+                article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
+            });
+            model.addAttribute("articles", articles);
+            model.addAttribute("date", date);
+            final User user = userService.getUser(userId);
+            if (Objects.isNull(user)) {
+                return "redirect:/error/404";
+            }
+            model.addAttribute("user", user);
+        }catch (Exception ex){
+            return "redirect:/error/error";
+        }
         return "archives";
     }
 

@@ -35,12 +35,12 @@
                     <div class="menu">
                         <a href="#" th:href="@{/manage/uc/follow-list}" class="item"><i class="bookmark icon"></i>我的关注</a>
                         <a href="#" th:href="@{/manage/uc/profile}" class="item"><i class="user icon"></i>个人中心</a>
-                        <a href="#" th:href="@{/account/reset/password}" class="item"><i class="cogs icon"></i>账号设置</a>
+                        <a href="#" th:href="@{/manage/account/reset/password}" class="item"><i class="cogs icon"></i>账号设置</a>
                         <div class="divider"></div>
-                        <a href="#" class="item"><i class="archive icon"></i>我的博客</a>
+                        <a href="#" th:href="@{/article/index/}+${#session.getAttribute('user').getUserId()}" class="item"><i class="archive icon"></i>我的博客</a>
                         <a href="#" th:href="@{/manage/blog/}" class="item"><i class="edit icon"></i>管理博客</a>
                         <div class="divider"></div>
-                        <a href="#" th:href="@{/account/help}" class="item"><i class="basic question  circle icon"></i>帮助</a>
+                        <a href="#" th:href="@{/manage/account/help}" class="item"><i class="basic question  circle icon"></i>帮助</a>
                         <a id="logout" class="item"><i class="power offs icon"></i>退出</a>
                     </div>
                 </div>

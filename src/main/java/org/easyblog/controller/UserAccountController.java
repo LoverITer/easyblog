@@ -15,8 +15,7 @@ public class UserAccountController {
 
     private static final String PREFIX="/admin/setting/";
 
-    @GetMapping(value = "help")
-
+    @GetMapping(value = "/help")
     public String help() {
         return "help";
     }

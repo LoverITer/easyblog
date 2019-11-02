@@ -43,7 +43,7 @@
             <!--分类的header-->
             <div class="ui top attached segment">
                 <div class="ui middle aligned two column grid">
-                    <div class="ui  grid">
+                    <div th:if="${user!=null}" class="ui  grid">
                         <div class="four row">
                             <div class="ui breadcrumb m-margin-left">
                                 <a class="section" th:href="@{/article/index/}+${user.getUserId()}" style="color: black">全部文章</a>
@@ -89,7 +89,7 @@
                                         <div class="item">
                                             <img src="https://unsplash.it/100/100?image=1005" th:src="@{${user.getUserHeaderImgUrl()}}" alt=""
                                                  class="ui avatar image">
-                                            <div class="content"><a href="#" th:href="@{/article/index/}+${userId}"  class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
+                                            <div class="content"><a href="#" th:href="@{/article/index/}+${user.getUserId()}"  class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
                                         </div>
                                         <div class="item">
                                             <i class="calendar icon"></i> <span

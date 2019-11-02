@@ -2,6 +2,7 @@ package org.easyblog.service;
 
 import org.easyblog.bean.Article;
 import org.easyblog.bean.ArticleCount;
+import org.easyblog.bean.enums.ArticleType;
 import org.easyblog.mapper.ArticleMapper;
 import org.easyblog.service.base.IArticleService;
 import org.springframework.cache.annotation.CacheConfig;
@@ -92,13 +93,13 @@ public class ArticleServiceImpl implements IArticleService {
     @Transactional(isolation =Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "articles",condition = "#result!=null&&#result.size()>0")
     @Override
-    public List<Article> getUserArticles(int userId, int option) {
+    public List<Article> getUserArticles(int userId, String articleType) {
         if (userId > 0) {
             try {
-                if (option == 0) {
+                if (ArticleType.Unlimited.getArticleType().equals(articleType)) {
                     return articleMapper.getUserAllArticles(userId);  //得到用户的所有文章
-                } else if (option == 1) {
-                    return articleMapper.getUserAllOrgArticles(userId);   //得到用户的所有原创文章
+                } else {
+                    return articleMapper.getUserArticlesSelective(userId,articleType);  //根据option
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -156,6 +157,21 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Cacheable(cacheNames = "articles",condition = "#result!=null&&#result.size()>0")
+    @Override
+    public List<Article> getArticlesSelective(Article article, String year, String month) {
+       try {
+           if (article != null) {
+               return  articleMapper.getArticlesSelective(article, year, month);
+           }
+       }catch (Exception e){
+           e.printStackTrace();
+           return null;
+       }
+        return null;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @CacheEvict(cacheNames = "article")
     @Override
     public void deleteByUserIdAndTitle(int userId, String title) {
@@ -164,6 +180,16 @@ public class ArticleServiceImpl implements IArticleService {
                 articleMapper.deleteArticleByUserIdAndTitle(userId, title);
             }catch (Exception e){
                 e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void deleteByPK(int articleId) {
+        if(articleId>0){
+            try {
+                articleMapper.deleteByPrimaryKey((long) articleId);
+            }catch (Exception ignored){
             }
         }
     }
@@ -179,5 +205,30 @@ public class ArticleServiceImpl implements IArticleService {
             }
         }
         return 0;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public int countSelective(Article article) {
+        if(Objects.nonNull(article)){
+            try{
+                return articleMapper.countSelective(article);
+            }catch (Exception e){
+                e.printStackTrace();
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public void updateSelective(Article article) {
+        if(Objects.nonNull(article)){
+            try{
+                articleMapper.updateByPrimaryKeySelective(article);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 }

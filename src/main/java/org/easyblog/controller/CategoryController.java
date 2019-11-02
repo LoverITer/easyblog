@@ -4,6 +4,7 @@ import org.easyblog.bean.Article;
 import org.easyblog.bean.Category;
 import org.easyblog.bean.CategoryCare;
 import org.easyblog.bean.User;
+import org.easyblog.bean.enums.ArticleType;
 import org.easyblog.config.Result;
 import org.easyblog.service.ArticleServiceImpl;
 import org.easyblog.service.CategoryCareServiceImpl;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,8 +37,8 @@ public class CategoryController {
     }
 
     @GetMapping(value = "/{id}/{userId}")
-    public String categoryDetailsPage(@PathVariable(value = "id") int categoryId, @PathVariable("userId") int userId, Model model){
-        new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId,0);
+    public String categoryDetailsPage(HttpSession session,@PathVariable(value = "id") int categoryId, @PathVariable("userId") int userId, Model model){
+        new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
         final Category category = categoryServiceImpl.getCategory(categoryId);
         final List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);
         final List<Article> categoryArticles = articleService.getByCategoryAndUserId(userId, categoryId);
@@ -59,7 +61,12 @@ public class CategoryController {
         }
         //文章细节
         model.addAttribute("categoryArticles",categoryArticles);
+        user.setUserPassword(null);
         model.addAttribute("user",user);
+        User user1 = (User) session.getAttribute("user");
+        if(null!=user1){
+            model.addAttribute("userId",user1.getUserId());
+        }
         return "category-details";
     }
 

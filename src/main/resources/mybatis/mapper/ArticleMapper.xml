@@ -36,16 +36,12 @@
         select * from article
     </select>
 
-    <select id="countByUserId" resultType="integer">
-        select count(*) from article where article_user=#{userId}
-    </select>
-
     <select id="countUserArticlesInCategory" resultType="integer">
         select count(*) from article where article_user=#{userId} AND article_category=#{categoryName}
     </select>
 
-    <select id="getUserAllOrgArticles" resultType="org.easyblog.bean.Article">
-        select * from article where article_user=#{userId} AND article_type='0' AND article_status='0' order by article_publish_time DESC
+    <select id="getUserArticlesSelective" resultType="org.easyblog.bean.Article">
+        select * from article where article_user=#{userId} AND article_type=#{articleType} AND article_status='0' order by article_publish_time DESC
     </select>
 
     <select id="getUserAllArticles" resultType="org.easyblog.bean.Article">
@@ -76,6 +72,85 @@
     <select id="getByCategoryAndUserId" resultType="org.easyblog.bean.Article">
         select * from article where article_user=#{userId} AND article_status='0' AND article_category
             in (select category_name from category where category_id=#{categoryId}) ORDER BY article_publish_time DESC
+    </select>
+
+
+    <select id="getArticlesSelective" resultType="org.easyblog.bean.Article">
+        select * from article
+        <where>
+            <if test="article.articleTopic != null">
+                article_topic=#{article.articleTopic} AND
+            </if>
+            <if test="year!= null">
+                YEAR(article_publish_time)=#{year} AND
+            </if>
+            <if test="month!=null">
+                MONTH(article_publish_time)=#{month} AND
+            </if>
+            <if test="article.articleClick != null">
+                article_click=#{article.articleClick} AND
+            </if>
+            <if test="article.articleCategory != null">
+                article_category=#{article.articleCategory} AND
+            </if>
+            <if test="article.articleStatus != null">
+                article_status=#{article.articleStatus} AND
+            </if>
+            <if test="article.articleTop != null">
+                article_top=#{article.articleTop} AND
+            </if>
+            <if test="article.articleType != null">
+                article_type=#{article.articleType} AND
+            </if>
+            <if test="article.articleTags != null">
+                article_tags=#{article.articleTags} AND
+            </if>
+            <if test="article.articleCommentNum != null">
+                article_comment_num=#{article.articleCommentNum} AND
+            </if>
+            <if test="article.articleAppreciate!=null">
+                article_appreciate=#{article.articleAppreciate} AND
+            </if>
+            <if test="1==1">article_user = #{article.articleUser,jdbcType=BIGINT}</if>
+        </where>
+    </select>
+
+    <select id="countByUserId" resultType="integer">
+        select count(*) from article where article_user=#{userId}
+    </select>
+
+    <select id="countSelective" resultType="integer">
+        select count(*) from article
+        <where>
+            <if test="article.articleTopic != null">
+                article_topic=#{article.articleTopic} AND
+            </if>
+            <if test="article.articleClick != null">
+                article_click=#{article.articleClick} AND
+            </if>
+            <if test="article.articleCategory != null">
+                article_category=#{article.articleCategory} AND
+            </if>
+            <if test="article.articleStatus != null">
+                article_status=#{article.articleStatus} AND
+            </if>
+            <if test="article.articleTop != null">
+                article_top=#{article.articleTop} AND
+            </if>
+            <if test="article.articleType != null">
+                article_type=#{article.articleType} AND
+            </if>
+            <if test="article.articleTags != null">
+                article_tags=#{article.articleTags} AND
+            </if>
+            <if test="article.articleCommentNum != null">
+                article_comment_num=#{article.articleCommentNum} AND
+            </if>
+            <if test="article.articleAppreciate!=null">
+                article_appreciate=#{article.articleAppreciate} AND
+            </if>
+            <if test="1==1">article_user = #{article.articleUser}</if>
+        </where>
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

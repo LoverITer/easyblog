@@ -2,6 +2,7 @@ package org.easyblog.controller;
 
 import org.easyblog.bean.Article;
 import org.easyblog.bean.User;
+import org.easyblog.bean.enums.ArticleType;
 import org.easyblog.service.ArticleServiceImpl;
 import org.easyblog.service.CategoryServiceImpl;
 import org.easyblog.service.UserServiceImpl;
@@ -32,23 +33,21 @@ public class ArticleController {
 
     @RequestMapping(value = "/index/{userId}")
     public String index(@PathVariable("userId") int userId,
-                        @RequestParam(defaultValue = "0") int option,
+                        @RequestParam(value = "articleType",defaultValue = "3") int articleType,
                         Model model) {
-        new ControllerUtils(categoryServiceImpl,articleServiceImpl).getArticleUserInfo(model,userId,option);
+        new ControllerUtils(categoryServiceImpl,articleServiceImpl).getArticleUserInfo(model,userId,articleType+"");
         final User user = userService.getUser(userId);
-        List<Article> articles = articleServiceImpl.getUserArticles(userId, option);
+        List<Article> articles = articleServiceImpl.getUserArticles(userId, articleType+"");
         if(articles!=null){
-            articles.forEach(article -> {
-                article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
-            });
+            articles.forEach(article -> article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent())));
         }
         model.addAttribute("articles",articles);
         user.setUserPassword(null);
         model.addAttribute("user", user);
-        if (option == 0) {
-            model.addAttribute("display", "0");
-        } else if (option == 1) {
-            model.addAttribute("display", "1");
+        if (ArticleType.Original.getArticleType().equals(articleType+"")) {
+            model.addAttribute("displayOnlyOriginal", "1");
+        } else if (ArticleType.Unlimited.getArticleType().equals(articleType+"")) {
+            model.addAttribute("displayOnlyOriginal", "0");
         }
         return "user_home";
     }
@@ -58,14 +57,14 @@ public class ArticleController {
     public String homePage(@PathVariable("userId") int userId, Model model) {
         final User user = userService.getUser(userId);
         user.setUserPassword(null);
-        List<Article> articles = articleServiceImpl.getUserArticles(userId, 0);
+        List<Article> articles = articleServiceImpl.getUserArticles(userId, ArticleType.Original.getArticleType());
         articles.forEach(article -> {
             article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
         });
-        if (articles.size() < 10) {
+        if (articles.size() < 15) {
             model.addAttribute("articles", articles);
         } else {
-            model.addAttribute("articles", articles.subList(0, 10));
+            model.addAttribute("articles", articles.subList(0, 15));
         }
         model.addAttribute("user", user);
         return "home";
@@ -79,7 +78,7 @@ public class ArticleController {
         User user = userService.getUser(article.getArticleUser());
         model.addAttribute("user",user);
         if(Objects.nonNull(user)) {
-            new ControllerUtils(categoryServiceImpl, articleServiceImpl).getArticleUserInfo(model, user.getUserId(), 0);
+            new ControllerUtils(categoryServiceImpl, articleServiceImpl).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
         }
         return "blog";
     }

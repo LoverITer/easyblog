@@ -24,13 +24,13 @@ class ControllerUtils {
      * 这是几个页面公共需要查询数据
      * @param model
      * @param userId
-     * @param option
+     * @param articleType
      */
-    void getArticleUserInfo(Model model, int userId, int option){
+    void getArticleUserInfo(Model model, int userId, String articleType){
         final List<Category> lists = categoryService.getUserAllViableCategory(userId);
         final List<ArticleCount> archives = articleService.getUserAllArticleArchives(userId);
         final List<Article> newestArticles = articleService.getUserNewestArticles(userId, 5);
-        List<Article> articles = articleService.getUserArticles(userId, option);
+        List<Article> articles = articleService.getUserArticles(userId, articleType);
         model.addAttribute("categories", lists);
         model.addAttribute("archives", archives);
         model.addAttribute("newestArticles", newestArticles);

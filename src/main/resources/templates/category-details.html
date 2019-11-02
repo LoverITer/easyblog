@@ -48,7 +48,7 @@
             <div class="ui top attached segment">
                 <div class="ui middle aligned two column grid">
                     <input id="category_Id" hidden="hidden" th:value="${category.getCategoryId()}"/>
-                    <input id="care_id" hidden="hidden" value="" th:value="${care}">
+                    <input id="care_id" hidden="hidden" th:value="${care}">
                     <!--分类的标题的图片-->
                     <div class="m-inline-block m-margin-top m-margin-bottom m-margin-left">
                         <img src="https://img-blog.csdnimg.cn/20190927151132530.png"
@@ -141,7 +141,7 @@
         </div>
     </div>
 </div>
-
+<input type="hidden" id="userId" th:value="${userId}">
 <div style="height: 25px"></div>
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>

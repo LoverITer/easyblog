@@ -45,11 +45,11 @@
                         <div class="column">
                             <h3 class="ui teal header m-inline-block">TA的博客</h3>
                             <div class="ui checked checkbox m-inline-block m-margin-left">
-                                <input type="checkbox" checked th:if="${display=='1'}">
-                                <input type="checkbox" th:if="${display=='0'}">
+                                <input id="checkbox" type="checkbox" checked th:if="${displayOnlyOriginal=='1'}">
+                                <input id="checkbox" type="checkbox"  th:if="${displayOnlyOriginal=='0'}">
                                 <label>只看原创</label>
                                 <a id="display1" style="color: #0a001f" hidden
-                                   th:href="@{/article/index/}+${user.getUserId()}+@{?option=1}">只看原创</a>
+                                   th:href="@{/article/index/}+${user.getUserId()}+@{?articleType=0}">只看原创</a>
                                 <a id="display2" style="color: #0a001f" hidden
                                    th:href="@{/article/index/}+${user.getUserId()}">查看全部</a>
                             </div>
@@ -191,8 +191,8 @@
 
 </script>
 <script>
-    $(':checkbox').click(function () {
-        if ($(':checkbox').is(":checked")) {
+    $('#checkbox').click(function () {
+        if ($('#checkbox').is(":checked")) {
             window.location.href = $('#display1').attr("href");
         } else {
             window.location.href = $('#display2').attr("href");
