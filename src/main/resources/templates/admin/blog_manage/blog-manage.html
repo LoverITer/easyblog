@@ -132,7 +132,7 @@
                                 <span th:case="2">翻译</span>
                             </button>
                             <h3 class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">
-                                <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a></h3>
+                                <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" title="查看" class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a></h3>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
@@ -258,8 +258,9 @@
     $('.ui.mouse').mouseenter(function () {
         $('.ui.mouse').css("color","#fff");
     });
-    $('.ui.mouse').mouseleave(function () {
-        $('.ui.mouse').css("color","#000");
-    })
+</script>
+<script>
+    $('#side-bnt3').css("background","#DB2828");
+    $('#side-bnt3').css("color","#ffffff");
 </script>
 </html>

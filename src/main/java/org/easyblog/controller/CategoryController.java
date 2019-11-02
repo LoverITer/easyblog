@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +37,7 @@ public class CategoryController {
     }
 
     @GetMapping(value = "/{id}/{userId}")
-    public String categoryDetailsPage(@PathVariable(value = "id") int categoryId, @PathVariable("userId") int userId, Model model){
+    public String categoryDetailsPage(HttpSession session,@PathVariable(value = "id") int categoryId, @PathVariable("userId") int userId, Model model){
         new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
         final Category category = categoryServiceImpl.getCategory(categoryId);
         final List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);
@@ -60,7 +61,12 @@ public class CategoryController {
         }
         //文章细节
         model.addAttribute("categoryArticles",categoryArticles);
+        user.setUserPassword(null);
         model.addAttribute("user",user);
+        User user1 = (User) session.getAttribute("user");
+        if(null!=user1){
+            model.addAttribute("userId",user1.getUserId());
+        }
         return "category-details";
     }
 

@@ -128,15 +128,20 @@ public class CategoryServiceImpl implements ICategoryService {
         params.forEach((k, v) -> {
             if ("categoryName".equals(k)) {
                 category.setCategoryName((String) v);
-            } else if ("categoryImageUrl".equals(k)) {
+            }
+            if ("categoryImageUrl".equals(k)) {
                 category.setCategoryImageUrl((String) v);
-            } else if ("categoryArticleNum".equals(k)) {
+            }
+            if ("categoryArticleNum".equals(k)) {
                 category.setCategoryArticleNum((Integer) v);
-            } else if ("categoryClickNum".equals(k)) {
+            }
+            if ("categoryClickNum".equals(k)) {
                 category.setCategoryClickNum((Integer) v);
-            } else if ("categoryCareNum".equals(k)) {
+            }
+            if ("categoryCareNum".equals(k)) {
                 category.setCategoryCareNum((Integer) v);
-            } else if ("display".equals(k)) {
+            }
+            if ("display".equals(k)) {
                 category.setDisplay((Integer) v);
             }
         });

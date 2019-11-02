@@ -102,7 +102,7 @@
             <!--专栏的图片-->
             <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg"
                  th:src="${categoty.categoryImageUrl}">
-            <a href="#" th:href="@{/category/details/}+${categoty.categoryId}+@{/}+${categoty.categoryUser}" target="_blank" class="m-black m-text-thin m-margin-left" th:text="${categoty.categoryName}">2019年2月
+            <a href="#" th:href="@{/category/details/}+${categoty.categoryId}+@{/}+${categoty.categoryUser}" target class="m-black m-text-thin m-margin-left" th:text="${categoty.categoryName}">2019年2月
             </a>
             <span class="count float-right">
                 [[${categoty.categoryArticleNum}]]篇
@@ -116,7 +116,7 @@
             <i class="bookmark icon"></i><strong>最新文章</strong>
         </div>
         <div class="ui segment" th:each="article:${newestArticles}">
-            <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" target="_blank" class="m-black m-text-thin" th:text="${article.articleTopic}">用户故事（User Story）</a>
+            <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" target class="m-black m-text-thin" th:text="${article.articleTopic}">用户故事（User Story）</a>
         </div>
     </div>
     <!--归档-->
@@ -125,7 +125,7 @@
             <i class="bookmark icon"></i><strong>归档</strong>
         </div>
         <div class="ui segment" th:each="archive:${archives}">
-            <a href="#" th:href="@{/archives/details/}+${archive.userId}+@{/}+${archive.date}" target="_blank" class="m-black m-text-thin" th:text="${archive.date}">2019年1月
+            <a href="#" th:href="@{/archives/details/}+${archive.userId}+@{/}+${archive.date}" target class="m-black m-text-thin" th:text="${archive.date}">2019年1月
             </a>
             <span class="count float-right" th:text="${archive.count}">14篇</span>
         </div>

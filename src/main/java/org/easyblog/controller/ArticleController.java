@@ -33,9 +33,9 @@ public class ArticleController {
 
     @RequestMapping(value = "/index/{userId}")
     public String index(@PathVariable("userId") int userId,
-                        @RequestParam(defaultValue = "0") String articleType,
+                        @RequestParam(value = "articleType",defaultValue = "3") int articleType,
                         Model model) {
-        new ControllerUtils(categoryServiceImpl,articleServiceImpl).getArticleUserInfo(model,userId,articleType);
+        new ControllerUtils(categoryServiceImpl,articleServiceImpl).getArticleUserInfo(model,userId,articleType+"");
         final User user = userService.getUser(userId);
         List<Article> articles = articleServiceImpl.getUserArticles(userId, articleType+"");
         if(articles!=null){
@@ -44,10 +44,10 @@ public class ArticleController {
         model.addAttribute("articles",articles);
         user.setUserPassword(null);
         model.addAttribute("user", user);
-        if (ArticleType.Original.getArticleType().equals(articleType)) {
-            model.addAttribute("display", "0");
-        } else if (ArticleType.Unlimited.getArticleType().equals(articleType)) {
-            model.addAttribute("display", "1");
+        if (ArticleType.Original.getArticleType().equals(articleType+"")) {
+            model.addAttribute("displayOnlyOriginal", "1");
+        } else if (ArticleType.Unlimited.getArticleType().equals(articleType+"")) {
+            model.addAttribute("displayOnlyOriginal", "0");
         }
         return "user_home";
     }

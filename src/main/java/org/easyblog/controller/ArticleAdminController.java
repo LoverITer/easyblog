@@ -172,7 +172,7 @@ public class ArticleAdminController {
 
 
     @GetMapping(value = "/delete")
-    public String deleteArticle(Model model, @RequestParam("articleId") int articleId) {
+    public String deleteArticle(@RequestParam("articleId") int articleId) {
         articleService.deleteByPK(articleId);
         return "redirect:/manage/blog/";
     }
