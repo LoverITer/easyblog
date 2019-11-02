@@ -35,6 +35,15 @@ public  interface ArticleMapper extends BaseMapper<Article> {
 
 
     /**
+     * 根据不同的条件动态的查询用户的文章
+     * @param article   查询的其他条件
+     * @param year  查询的年份   如果没有写null
+     * @param month 查询的月份  如果没有写null
+     * @return
+     */
+    List<Article> getArticlesSelective(@Param("article") Article article,@Param("year") String year,@Param("month") String month);
+
+    /**
      * 得到用户的所有原创文章，按时间降序排列
      * @param userId
      * @return

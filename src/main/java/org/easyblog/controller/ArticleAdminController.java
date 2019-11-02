@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 /**
@@ -48,15 +46,83 @@ public class ArticleAdminController {
                 //去管理页面默认展示所有的已发布的文章
                 List<Article> articles = articleService.getUserArticles(user.getUserId(), ArticleType.Original.getArticleType());
                 model.addAttribute("articles", articles);
-                model.addAttribute("user", user);
+                getShareInfo(model,user);
             } else {
                 return "redirect:/user/loginPage";
             }
+
         } catch (Exception ex) {
             return "/error/error";
         }
         return PREFIX + "/blog-manage";
     }
+
+    private void getShareInfo(Model model,User user){
+        try {
+            model.addAttribute("user", user);
+            final List<Category> categories = categoryService.getUserAllCategories(user.getUserId());
+            model.addAttribute("categories", categories);
+            Date registerTime = user.getUserRegisterTime();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(registerTime);
+            final int year = calendar.get(Calendar.YEAR);
+            calendar.setTime(new Date());
+            List<Integer> years = new ArrayList<>();
+            for (int i = year; i <= calendar.get(Calendar.YEAR); i++) {
+                years.add(i);
+            }
+            model.addAttribute("years", years);
+            model.addAttribute("months", new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    @GetMapping(value = "/search")
+    public String searchByCondition(HttpSession session,
+                                    @RequestParam(defaultValue = "不限") String year,
+                                    @RequestParam(defaultValue = "不限") String month,
+                                    @RequestParam(defaultValue = "不限") String articleType,
+                                    @RequestParam(defaultValue = "不限") String categoryName,
+                                    @RequestParam(defaultValue = "") String articleTopic,
+                                    Model model) {
+        User user = (User) session.getAttribute("user");
+        if (Objects.nonNull(user)) {
+            try {
+                Article article = new Article();
+                article.setArticleUser(user.getUserId());  //把userId传给service
+                if ("不限".equals(year)) {
+                    year = null;
+                }
+                if ("不限".equals(month)) {
+                    month = null;
+                }
+                if (!"不限".equals(articleType)) {
+                    article.setArticleType(articleType);
+                }
+                if (!"不限".equals(categoryName)) {
+                    article.setArticleCategory(categoryName);
+                }
+                if (!"".equals(articleTopic)) {
+                    article.setArticleTopic(articleTopic);
+                }
+                List<Article> articles = articleService.getArticlesSelective(article, year, month);
+                model.addAttribute("articles",articles);
+                getShareInfo(model,user);
+                System.out.println(year+" "+month+" "+articleType+" "+categoryName);
+                model.addAttribute("currentMonth",month+"");
+                model.addAttribute("currentYear",year+"");
+                model.addAttribute("currentType",articleType);
+                model.addAttribute("currentCategory",categoryName);
+                return PREFIX + "/blog-manage";
+            } catch (Exception ex) {
+                return "redirect:/error/error";
+            }
+        }
+        return "redirect:/user/loginPage";
+    }
+
 
     @RequestMapping(value = "/post")
     public String writeBlog(HttpSession session, Model model, @RequestParam(value = "userId", defaultValue = "-1", required = false) int userId) {
@@ -160,12 +226,12 @@ public class ArticleAdminController {
         try {
             Article article = articleService.getArticleById(articleId);
             model.addAttribute("content", article.getArticleContent());
-            model.addAttribute("title",article.getArticleTopic());
+            model.addAttribute("title", article.getArticleTopic());
             final List<Category> categories = categoryService.getUserAllCategories(article.getArticleUser());
             model.addAttribute("categories", categories);
             model.addAttribute("userId", article.getArticleUser());
-        }catch (Exception ex){
-            return  "/error/error";
+        } catch (Exception ex) {
+            return "/error/error";
         }
         return PREFIX + "/blog-input";
     }
@@ -173,7 +239,11 @@ public class ArticleAdminController {
 
     @GetMapping(value = "/delete")
     public String deleteArticle(@RequestParam("articleId") int articleId) {
-        articleService.deleteByPK(articleId);
+        try {
+            articleService.deleteByPK(articleId);
+        } catch (Exception e) {
+            return "redirect:/error/error";
+        }
         return "redirect:/manage/blog/";
     }
 

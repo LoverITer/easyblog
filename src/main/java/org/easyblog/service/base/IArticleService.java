@@ -34,6 +34,8 @@ public interface IArticleService {
 
     List<Article> getByCategoryAndUserId(int userId,int categoryId);
 
+    List<Article> getArticlesSelective(Article article,String year,String month);
+
     void deleteByUserIdAndTitle(int userId,String title);
 
     /**

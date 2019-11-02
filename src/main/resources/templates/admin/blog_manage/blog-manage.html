@@ -25,62 +25,69 @@
             <div th:replace="~{blog-manage-header::header}"></div>
 
             <!--条件查询表单-->
-            <form action="#" method="post" class="ui attached segment form" style="background-color: #f2f5f7">
+            <form action="#" th:action="@{/manage/blog/search}" method="GET" class="ui attached segment form" style="background-color: #f2f5f7">
                 <div class="inline fields stackable">
                     <span class="m-black m-inline-block m-mobile-hide">筛选：</span>
                     <!--年-->
                     <div class="field">
                         <div class="ui selection dropdown compact m-mobile-wide-selectBar-calender">
-                            <input type="hidden" name="type">
+                            <input type="hidden" name="year">
                             <i class="dropdown icon"></i>
                             <div class="default text">年</div>
                             <div class="menu compact">
-                                <div class="text item" data-value="0">不限</div>
-                                <div class="item" data-value="1">2019</div>
+                                <div class="text item" data-value="不限">不限</div>
+                                <div class="item" th:each="year:${years}"  th:if="${currentYear!=year+''}" th:data-value="${year}" data-value="1" th:text="${year}">2019</div>
+                                <div class="item active selected" th:each="year:${years}" th:if="${currentYear==year+''}"  th:data-value="${year}" data-value="1" th:text="${year}"></div>
                             </div>
                         </div>
                     </div>
                     <!--月-->
                     <div class="field">
                         <div class="ui selection dropdown compact m-mobile-wide-selectBar-calender">
-                            <input type="hidden" name="type">
+                            <input type="hidden" name="month">
                             <i class="dropdown icon"></i>
                             <div class="default text">月</div>
                             <div class="menu compact">
-                                <div class="text item" data-value="0">不限</div>
-                                <div class="item" data-value="1">9</div>
+                                <div class="text item" data-value="不限">不限</div>
+                                <div class="item"  th:each="month:${months}" th:if="${currentMonth!=month+''}" th:data-value="${month}" data-value="1" th:text="${month}">9</div>
+                                <div class="item active selected" th:each="month:${months}" th:if="${currentMonth==month+''}"  th:data-value="${month}" data-value="1" th:text="${year}"></div>
                             </div>
                         </div>
                     </div>
                     <!--文章类型-->
                     <div class="field">
                         <div class="ui selection dropdown m-mobile-wide-selectBar" style="max-width: 30px !important;">
-                            <input type="hidden" name="type">
+                            <input type="hidden" name="articleType">
                             <i class="dropdown icon"></i>
                             <div class="default text">文章类型</div>
                             <div class="menu">
-                                <div class="item" data-value="0">不限</div>
-                                <div class="item" data-value="1">原创</div>
-                                <div class="item" data-value="2">转载</div>
-                                <div class="item" data-value="3">翻译</div>
+                                <div class="item" th:if="${currentType!='不限'}" data-value="不限">不限</div>
+                                <div class="item active selected" th:if="${currentType=='不限'}"  data-value="不限">不限</div>
+                                <div class="item" th:if="${currentType!='原创'}" data-value="原创">原创</div>
+                                <div class="item active selected" th:if="${currentType=='原创'}"  data-value="原创">原创</div>
+                                <div class="item" th:if="${currentType!='转载'}" data-value="转载">转载</div>
+                                <div class="item active selected" th:if="${currentType=='转载'}"  data-value="转载">转载</div>
+                                <div class="item" th:if="${currentType!='翻译'}"  data-value="翻译">翻译</div>
+                                <div class="item active selected" th:if="${currentType=='翻译'}"  data-value="翻译">翻译</div>
                             </div>
                         </div>
                     </div>
                     <!--分类-->
                     <div class="field">
                         <div class="ui selection dropdown m-mobile-wide-selectBar" style="max-width: 30px !important;">
-                            <input type="hidden" name="type">
+                            <input type="hidden" name="categoryName">
                             <i class="dropdown icon"></i>
                             <div class="default text">分类专栏</div>
                             <div class="menu">
-                                <div class="item" data-value="0">不限</div>
-                                <div class="item" data-value="1">SpringBoot</div>
+                                <div class="item" th:if="${currentCategory!='不限'}" data-value="不限">不限</div>
+                                <div class="item"  th:if="${currentCategory!=category+''}" th:each="category:${categories}" th:data-value="${category.getCategoryName()}" data-value="1" th:text="${category.getCategoryName()}">SpringBoot</div>
+                                <div class="item active selected"  th:if="${currentCategory==category+''}" th:each="category:${categories}" th:data-value="${category.getCategoryName()}" data-value="1" th:text="${category.getCategoryName()}">SpringBoot</div>
                             </div>
                         </div>
                     </div>
                     <!--文章标题-->
                     <div class="field">
-                        <input class="m-mobile-wide-selectBar" type="text" name="title" placeholder="标题">
+                        <input class="m-mobile-wide-selectBar" type="text" name="articleTopic" placeholder="标题">
                     </div>
                     <div id="searchBar" class="field m-mobile-wide-selectBar">
                         <button class="ui tiny red  button"><i class="search icon"></i>搜索</button>
@@ -120,7 +127,7 @@
             </form>
 
             <!--content-->
-            <div class="ui attached segment border-bt-none">
+            <div class="ui attached bottom segment border-bt-none" style="padding-top: 0 !important;">
                 <div th:if="${articles!=null}" th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed"
                      style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid">
@@ -132,7 +139,8 @@
                                 <span th:case="2">翻译</span>
                             </button>
                             <h3 class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">
-                                <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" title="查看" class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a></h3>
+                                <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" title="查看" class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a>
+                            </h3>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
@@ -170,8 +178,11 @@
                     </div>
                 </div>
             </div>
+            <div class="ui bottom attached segment " th:if="${#lists.size(articles)==0}" style="padding-top: 10rem !important;padding-left: 30rem !important;padding-bottom: 10rem !important;">
+                <div style="color: grey !important;font-size: 16px !important;">没有符合条件的文章</div>
+            </div>
             <!--分页按钮-->
-            <div class="ui bottom attached segment ">
+            <div th:if="${#lists.size(articles)>15}" class="ui bottom attached segment ">
                 <div class="ui middle aligned two column grid"
                      style="padding-top: 0 !important;padding-bottom: 0 !important;">
                     <div class="column" style="padding-top: 0 !important;padding-bottom: 0 !important;">
@@ -262,5 +273,6 @@
 <script>
     $('#side-bnt3').css("background","#DB2828");
     $('#side-bnt3').css("color","#ffffff");
+    $('#all').css("cssText","color: #349EDF !important");
 </script>
 </html>
