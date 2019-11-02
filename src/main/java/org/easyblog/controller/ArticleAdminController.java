@@ -47,6 +47,7 @@ public class ArticleAdminController {
                 List<Article> articles = articleService.getUserArticles(user.getUserId(), ArticleType.Original.getArticleType());
                 model.addAttribute("articles", articles);
                 getShareInfo(model,user);
+                packageArticleNumToModel(user,model);
             } else {
                 return "redirect:/user/loginPage";
             }
@@ -115,6 +116,8 @@ public class ArticleAdminController {
                 model.addAttribute("currentYear",year+"");
                 model.addAttribute("currentType",articleType);
                 model.addAttribute("currentCategory",categoryName);
+                //统计各种状态文章的数量
+                packageArticleNumToModel(user,model);
                 return PREFIX + "/blog-manage";
             } catch (Exception ex) {
                 return "redirect:/error/error";
@@ -240,33 +243,99 @@ public class ArticleAdminController {
     @GetMapping(value = "/delete")
     public String deleteArticle(@RequestParam("articleId") int articleId) {
         try {
-            articleService.deleteByPK(articleId);
+            updateArticle(articleId,"3");
         } catch (Exception e) {
             return "redirect:/error/error";
         }
         return "redirect:/manage/blog/";
     }
 
+    @GetMapping(value = "/recycleToDraft")
+    public String recycleArticleToDraft(int articleId){
+        try{
+            updateArticle(articleId,"2");
+        }catch (Exception e){
+            return "redirect:/error/error";
+        }
+        return "redirect:/manage/blog/";
+    }
+
+    private void updateArticle(int articleId,String destArticleStatus){
+        final Article article = new Article();
+        article.setArticleId((long) articleId);
+        article.setArticleStatus(destArticleStatus);
+        articleService.updateSelective(article);
+    }
+
+    @GetMapping(value = "/deleteComplete")
+    public String deleteComplete(@RequestParam("articleId") int articleId){
+        try{
+            articleService.deleteByPK(articleId);
+        }catch (Exception e){
+            return "redirect:/error/error";
+        }
+        return "redirect:/manage/blog/";
+    }
+
+
 
     @GetMapping(value = "/public")
-    public String publicBlog() {
-        return PREFIX + "/blog-public";
+    public String publicBlog(Model model,HttpSession session) {
+       return getArticles(model,session,"0","/blog-public");
     }
 
     @GetMapping(value = "/private")
-    public String privateBlog() {
-        return PREFIX + "/blog-private";
+    public String privateBlog(Model model,HttpSession session) {
+        return getArticles(model,session,"1","/blog-private");
     }
 
     @GetMapping(value = "/draft")
-    public String draftBlog() {
-        return PREFIX + "/blog-draft-box";
+    public String draftBlog(Model model,HttpSession session) {
+        return getArticles(model,session,"2","/blog-draft-box");
     }
 
     @GetMapping(value = "/dash")
-    public String dashBlog() {
-        return PREFIX + "/blog-dash";
+    public String dashBlog(Model model,HttpSession session) {
+        return getArticles(model,session,"3","/blog-dash");
     }
 
 
+    private String getArticles(Model model,HttpSession session,String articleStatus,String dest){
+        User user = (User) session.getAttribute("user");
+        if (Objects.nonNull(user)) {
+            try {
+                final Article article = new Article();
+                article.setArticleUser(user.getUserId());
+                article.setArticleStatus(articleStatus);
+                final List<Article> articles = articleService.getArticlesSelective(article, null, null);
+                model.addAttribute("articles",articles);
+                packageArticleNumToModel(user,model);
+                return PREFIX +dest;
+            }catch (Exception e){
+                return "redirect:/error/error";
+            }
+        }
+        return "redirect:/user/loginPage";
+    }
+
+    /**
+     * 将各种状态的文章统计的数据放到model中
+     * @param user
+     * @param model
+     */
+    private void packageArticleNumToModel(User user,Model model){
+        model.addAttribute("allArticles",getArticlesNum(user,null));
+        model.addAttribute("publicArticles",getArticlesNum(user,"0"));
+        model.addAttribute("privateArticles",getArticlesNum(user,"1"));
+        model.addAttribute("draftArticles",getArticlesNum(user,"2"));
+        model.addAttribute("dashArticles",getArticlesNum(user,"3"));
+    }
+
+
+    private int  getArticlesNum(User user,String articleStatus){
+        final Article article = new Article();
+        article.setArticleUser(user.getUserId());
+        article.setArticleStatus(articleStatus);
+        return articleService.countSelective(article);
+    }
 }

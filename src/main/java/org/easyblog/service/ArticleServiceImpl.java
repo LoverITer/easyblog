@@ -206,4 +206,29 @@ public class ArticleServiceImpl implements IArticleService {
         }
         return 0;
     }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public int countSelective(Article article) {
+        if(Objects.nonNull(article)){
+            try{
+                return articleMapper.countSelective(article);
+            }catch (Exception e){
+                e.printStackTrace();
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public void updateSelective(Article article) {
+        if(Objects.nonNull(article)){
+            try{
+                articleMapper.updateByPrimaryKeySelective(article);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
 }

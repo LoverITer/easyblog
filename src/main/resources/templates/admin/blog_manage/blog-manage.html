@@ -56,7 +56,7 @@
                     </div>
                     <!--文章类型-->
                     <div class="field">
-                        <div class="ui selection dropdown m-mobile-wide-selectBar" style="max-width: 30px !important;">
+                        <div class="ui selection dropdown category m-mobile-wide-selectBar" style="max-width: 30px !important;">
                             <input type="hidden" name="articleType">
                             <i class="dropdown icon"></i>
                             <div class="default text">文章类型</div>
@@ -127,7 +127,7 @@
             </form>
 
             <!--content-->
-            <div class="ui attached bottom segment border-bt-none" style="padding-top: 0 !important;">
+            <div class="ui attached bottom segment border-bt-none" style="padding-top: 0 !important;padding-bottom: 0 !important;">
                 <div th:if="${articles!=null}" th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed"
                      style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid">
@@ -178,8 +178,8 @@
                     </div>
                 </div>
             </div>
-            <div class="ui bottom attached segment " th:if="${#lists.size(articles)==0}" style="padding-top: 10rem !important;padding-left: 30rem !important;padding-bottom: 10rem !important;">
-                <div style="color: grey !important;font-size: 16px !important;">没有符合条件的文章</div>
+            <div class="ui bottom attached segment " th:if="${#lists.size(articles)==0}" style="padding-top: 10rem !important;padding-left: 30rem !important;padding-bottom: 20rem !important;">
+                <div style="color: grey !important;font-size: 14px !important;">没有符合条件的文章</div>
             </div>
             <!--分页按钮-->
             <div th:if="${#lists.size(articles)>15}" class="ui bottom attached segment ">
@@ -193,6 +193,7 @@
                     </div>
                 </div>
             </div>
+            <div th:if="${#lists.size(articles)<15 and #lists.size(articles)!=0}" class="ui bottom attached segment" style="padding-top: 5px !important;padding-bottom: 5px !important;"></div>
         </div>
     </div>
 

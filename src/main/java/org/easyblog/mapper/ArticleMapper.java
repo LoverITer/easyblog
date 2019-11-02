@@ -26,6 +26,14 @@ public  interface ArticleMapper extends BaseMapper<Article> {
 
 
     /**
+     * 选择性的统计文章数
+     * @param article
+     * @return
+     */
+    int countSelective(@Param("article")Article article);
+
+
+    /**
      * 查询用户某一分类下的文章数量
      * @param userId
      * @param categoryName
@@ -107,6 +115,7 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @return
      */
     List<Article> getByCategoryAndUserId(@Param("userId") int userId,@Param("categoryId") int categoryId);
+
 
 
     /**

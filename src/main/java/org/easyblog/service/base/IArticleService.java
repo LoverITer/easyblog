@@ -9,6 +9,7 @@ public interface IArticleService {
 
     /**
      * 保存一篇文章
+     *
      * @param article
      * @return
      */
@@ -16,34 +17,48 @@ public interface IArticleService {
 
     Article getArticleById(int articleId);
 
-    List<Article> getUserNewestArticles(int userId,int limit);
+    List<Article> getUserNewestArticles(int userId, int limit);
 
-    List<ArticleCount>  getUserAllArticleArchives(int userId);
+    List<ArticleCount> getUserAllArticleArchives(int userId);
 
     /**
-     *
-     * @param userId  用户ID
+     * @param userId      用户ID
      * @param articleType
      * @return
      */
-    List<Article> getUserArticles(int userId,String articleType);
+    List<Article> getUserArticles(int userId, String articleType);
 
-    List<Article> getUserArticlesMonthly(int userId,String year,String month);
+    List<Article> getUserArticlesMonthly(int userId, String year, String month);
 
-    List<Article> getUserArticlesMonthlyOrderByClickNum(int userId,String year,String month);
+    List<Article> getUserArticlesMonthlyOrderByClickNum(int userId, String year, String month);
 
-    List<Article> getByCategoryAndUserId(int userId,int categoryId);
+    List<Article> getByCategoryAndUserId(int userId, int categoryId);
 
-    List<Article> getArticlesSelective(Article article,String year,String month);
+    List<Article> getArticlesSelective(Article article, String year, String month);
 
-    void deleteByUserIdAndTitle(int userId,String title);
+    void deleteByUserIdAndTitle(int userId, String title);
 
     /**
      * 根据主键删除一篇文章
+     *
      * @param articleId
      */
     void deleteByPK(int articleId);
 
-    int countUserArticleInCategory(int userId,String categoryName);
+    int countUserArticleInCategory(int userId, String categoryName);
 
+    /**
+     * 选择性的统计文章的数量
+     * @param article
+     * @return
+     */
+    int countSelective(Article article);
+
+
+    /**
+     * 选择性更新文章信息
+     * @param article
+     */
+    void updateSelective(Article article);
 }
+

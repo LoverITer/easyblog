@@ -58,7 +58,9 @@ public class UserController {
         //把用户登录前的地址存下来
         if (null == session.getAttribute("Referer")) {
             String referUrl = request.getHeader("Referer");
-            session.setAttribute("Referer", referUrl);
+            if(!referUrl.contains("/login")&&!referUrl.contains("register")&&!referUrl.contains("loginPage")){
+                session.setAttribute("Referer", referUrl);
+            }
         }
         return "login";
     }

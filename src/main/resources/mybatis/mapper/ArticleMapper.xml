@@ -36,10 +36,6 @@
         select * from article
     </select>
 
-    <select id="countByUserId" resultType="integer">
-        select count(*) from article where article_user=#{userId}
-    </select>
-
     <select id="countUserArticlesInCategory" resultType="integer">
         select count(*) from article where article_user=#{userId} AND article_category=#{categoryName}
     </select>
@@ -116,6 +112,44 @@
                 article_appreciate=#{article.articleAppreciate} AND
             </if>
             <if test="1==1">article_user = #{article.articleUser,jdbcType=BIGINT}</if>
+        </where>
+    </select>
+
+    <select id="countByUserId" resultType="integer">
+        select count(*) from article where article_user=#{userId}
+    </select>
+
+    <select id="countSelective" resultType="integer">
+        select count(*) from article
+        <where>
+            <if test="article.articleTopic != null">
+                article_topic=#{article.articleTopic} AND
+            </if>
+            <if test="article.articleClick != null">
+                article_click=#{article.articleClick} AND
+            </if>
+            <if test="article.articleCategory != null">
+                article_category=#{article.articleCategory} AND
+            </if>
+            <if test="article.articleStatus != null">
+                article_status=#{article.articleStatus} AND
+            </if>
+            <if test="article.articleTop != null">
+                article_top=#{article.articleTop} AND
+            </if>
+            <if test="article.articleType != null">
+                article_type=#{article.articleType} AND
+            </if>
+            <if test="article.articleTags != null">
+                article_tags=#{article.articleTags} AND
+            </if>
+            <if test="article.articleCommentNum != null">
+                article_comment_num=#{article.articleCommentNum} AND
+            </if>
+            <if test="article.articleAppreciate!=null">
+                article_appreciate=#{article.articleAppreciate} AND
+            </if>
+            <if test="1==1">article_user = #{article.articleUser}</if>
         </where>
     </select>
 

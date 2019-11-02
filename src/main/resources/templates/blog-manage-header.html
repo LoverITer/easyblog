@@ -11,12 +11,12 @@
 <div class="ui top attached segment stackable" th:fragment="header">
     <div class="ui grid">
         <div class="row" style="padding-top: 2em !important;padding-bottom: 1.5em !important;">
-            <div class="two wide column" style="padding-right: 0 !important;"><a id="all" href="#" th:href="@{/manage/blog/}" class="m-black" style="font-size: 1.1rem !important;">全部(<span>1</span>)</a></div>
-            <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a id="public" href="#" th:href="@{/manage/blog/public}" class="m-black" style="font-size: 1.1rem !important;">公开(<span>1</span>)</a></div>
-            <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a id="private" href="#" th:href="@{/manage/blog/private}" class="m-black" style="font-size: 1.1rem !important;">私有(<span>1</span>)</a></div>
-            <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a id="draft" href="#" th:href="@{/manage/blog/draft}" class="m-black" style="font-size: 1.1rem !important;">草稿箱(<span>1</span>)</a></div>
+            <div class="two wide column" style="padding-right: 0 !important;"><a id="all" href="#" th:href="@{/manage/blog/}" class="m-black" style="font-size: 1.1rem !important;">全部(<span th:text="${allArticles}">1</span>)</a></div>
+            <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a id="public" href="#" th:href="@{/manage/blog/public}" class="m-black" style="font-size: 1.1rem !important;">公开(<span th:text="${publicArticles}">1</span>)</a></div>
+            <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a id="private" href="#" th:href="@{/manage/blog/private}" class="m-black" style="font-size: 1.1rem !important;">私有(<span th:text="${privateArticles}">1</span>)</a></div>
+            <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a id="draft" href="#" th:href="@{/manage/blog/draft}" class="m-black" style="font-size: 1.1rem !important;">草稿箱(<span th:text="${draftArticles}">1</span>)</a></div>
             <div class="two wide column" style="padding-right: 0 !important;padding-left: 0 !important;"><a id="dash" href="#" th:href="@{/manage/blog/dash}" class="m-black" style="font-size: 1.1rem !important;">
-                <i class="trash alternate outline icon"></i>回收站(<span>1</span>)</a></div>
+                <i class="trash alternate outline icon"></i>回收站(<span th:text="${dashArticles}">1</span>)</a></div>
         </div>
     </div>
 </div>
