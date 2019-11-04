@@ -169,7 +169,7 @@ public class ArticleAdminController {
                 return result;
             }
             if (Objects.isNull(category)) {
-                category = new Category(userId, article0.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1");
+                category = new Category(userId, article0.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1","");
                 categoryService.saveCategory(category);
             } else {
                 Category category0 = new Category();

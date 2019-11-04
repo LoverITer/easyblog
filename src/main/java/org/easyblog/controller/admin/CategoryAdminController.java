@@ -6,10 +6,7 @@ import org.easyblog.config.Result;
 import org.easyblog.service.CategoryServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -25,6 +22,7 @@ public class CategoryAdminController {
 
 
     private static final String PREFIX = "/admin/type_manage/";
+    private static final String LOGIN_PAGE="redirect:/user/loginPage";
 
     private final CategoryServiceImpl categoryService;
 
@@ -32,11 +30,7 @@ public class CategoryAdminController {
         this.categoryService = categoryService;
     }
 
-    /**
-     * 去分类管理页面
-     *
-     * @return
-     */
+
     @GetMapping(value = "/list")
     public String categoryPage(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
@@ -48,7 +42,7 @@ public class CategoryAdminController {
             putCategoryNumInModel(user,model);
             return PREFIX + "category-manage";
         }
-        return "redirect:/user/loginPage";
+        return LOGIN_PAGE;
     }
 
     @ResponseBody
@@ -90,12 +84,19 @@ public class CategoryAdminController {
     }
 
 
-    /**
-     * 彻底删除一个分类
-     *
-     * @param categoryId
-     * @return
-     */
+    @GetMapping(value = "/restore")
+    public String restoreCategory(@RequestParam int categoryId){
+        if (categoryId > 0) {
+            final Category category = new Category();
+            category.setCategoryId(categoryId);
+            category.setDisplay("1");
+            categoryService.updateByPKSelective(category);
+            return "redirect:/manage/category/dash";
+        }
+        return LOGIN_PAGE;
+    }
+
+
     @GetMapping(value = "/deleteComplete")
     public String deleteComplete(@RequestParam int categoryId) {
         if (categoryId > 0) {
@@ -104,13 +105,12 @@ public class CategoryAdminController {
             categoryService.deleteCategoryByCondition(category);
             return "redirect:/manage/category/dash";
         }
-        return "redirect:/user/loginPage";
+        return LOGIN_PAGE;
     }
 
 
     /**
      * 从分类管理首页删除的分类进入到垃圾箱中，垃圾箱页面
-     *
      * @param session
      * @param model
      * @return
@@ -124,7 +124,7 @@ public class CategoryAdminController {
             putCategoryNumInModel(user,model);
             return PREFIX + "category-dash";
         }
-        return "redirect:/user/loginPage";
+        return LOGIN_PAGE;
     }
 
     /**
@@ -158,8 +158,43 @@ public class CategoryAdminController {
 
 
     @GetMapping(value = "/edit")
-    public String categoryEdit() {
-        return PREFIX + "category-edit";
+    public String categoryEdit(HttpSession session,@RequestParam int categoryId,Model model) {
+        User user = (User) session.getAttribute("user");
+        if(Objects.nonNull(user)){
+            final Category category = categoryService.getCategory(categoryId);
+            model.addAttribute("category",category);
+            return PREFIX + "category-edit";
+        }
+       return LOGIN_PAGE;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/saveEdit/{categoryId}")
+    public Result saveEdit(HttpSession session, @PathVariable("categoryId") int categoryId,
+                           @RequestParam String categoryName,
+                           @RequestParam String categoryDesc,
+                           @RequestParam String categoryImgUrl){
+        Result result = new Result();
+        result.setSuccess(false);
+        User user = (User) session.getAttribute("user");
+        if(Objects.nonNull(user)){
+            try{
+                final Category category = new Category();
+                category.setCategoryId(categoryId);
+                category.setCategoryName(categoryName);
+                category.setCategoryDescription(categoryDesc);
+                category.setCategoryImageUrl(categoryImgUrl);
+                int re = categoryService.updateByPKSelective(category);
+                if(re>0) {
+                    result.setSuccess(true);
+                    result.setMsg("OK");
+                }
+            }catch (Exception ex){
+                result.setMsg("更新失败，请重试！");
+                return result;
+            }
+        }
+        return result;
     }
 
 

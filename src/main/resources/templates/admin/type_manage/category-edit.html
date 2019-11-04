@@ -29,33 +29,33 @@
                             <a style="color:#bbbbbb;font-size: 1rem !important;" href="#" th:href="@{/manage/category/list}">< 返回分类专栏</a>
                         </div>
                     </div>
-                    <div class="row" style="padding-left: 2rem !important;">
+                      <div class="row" style="padding-left: 2rem !important;">
                         <div class="ui form">
                             <div class="inline field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏名称：</label>
-                                <input id="category-name" type="text" style="width: 340px !important;" placeholder="请输入分类专栏名称">
+                                <input id="category-name" name="categoryName" type="text" style="width: 340px !important;" th:value="${category.getCategoryName()}" placeholder="请输入分类专栏名称">
                                 <span hidden="hidden" id="category-name-msg" style="color: #C92027 !important;margin-left: 10px !important;">不可为空</span>
                             </div>
                         </div>
                     </div>
-                    <div class="row" style="padding-left: 2rem !important;">
+                      <div class="row" style="padding-left: 2rem !important;">
                         <div class="ui form">
                             <div class="inline  field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏简介：</label>
-                                <textarea style="width: 340px !important;" rows="5" placeholder="输入分类专栏简介"></textarea>
+                                <textarea id="categoryDesc" name="categoryDesc" style="width: 340px !important;" rows="5" placeholder="输入分类专栏简介" th:text="${category.getCategoryDescription()}"></textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="row" style="padding-left: 2rem !important;">
-                        <div class="ui form">
+                      <div class="row" style="padding-left: 2rem !important;">
+                        <form id="images" class="ui form" method="post" th:action="@{/upload/images(categoryId=${category.getCategoryId()})}" enctype="multipart/form-data">
                             <div class="inline  field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏配图：</label>
-                               <input id="input_file"  style="position:absolute;opacity:0;height: 120px !important;padding: 0 !important;" onchange="show(this)" accept="image/*" type="file"/>
-                               <img id="pre-look" style="width: 306px;height: 120px;" src="" th:src="@{/static/images/wechat.jpg}">
+                               <input id="categoryImgUrl"  name="file"  th:value="${category.getCategoryImageUrl()}" style="position:absolute;opacity:0;height: 120px !important;padding: 0 !important;" onchange="show(this)" accept="image/*" type="file"/>
+                               <img id="pre-look" style="width: 306px;height: 120px;" src="" th:src="${category.getCategoryImageUrl()}">
                             </div>
-                        </div>
+                        </form>
                     </div>
-                    <div class="row" style="padding-left: 2rem !important;">
+                      <div class="row" style="padding-left: 2rem !important;">
                         <button id="add-btn" class="medium  ui basic red button" style="margin-left: 8rem !important;">
                             提交
                         </button>
@@ -65,7 +65,6 @@
             <div class="ui bottom attached segment " style="height: 30em "></div>
         </div>
     </div>
-
 </div>
 
 
@@ -84,6 +83,7 @@
         $('#add-btn').addClass("basic");
     })
 </script>
+
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -99,7 +99,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 100);
+        setTimeout(toggleStatus, 500);
     }
 
     <!--退出操作异步请求-->
@@ -109,12 +109,11 @@
             method: "GET",
             sync: true,
             data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
                     sessionStorage.removeItem("user");
-                    $("#login-btn").show();
-                    $('#header-images').hide();
+                    window.location.href = "/user/loginPage";
                 }
             },
             error: function () {
@@ -122,34 +121,41 @@
             }
         });
     });
-
 </script>
 
-<!--控制头像的显示-->
-<script>
+<script th:inline="javascript">
     $(document).ready(function () {
-        toggleStatus();
+        var url = window.location.href;
+        console.log("location:" + url);
     });
 
-    function toggleStatus() {
-        var user = sessionStorage.getItem("user");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-        setTimeout(toggleStatus, 100);
-    }
-</script>
-<script>
-    $(document).ready(function () {
-        var url = window.location.pathname;
-        console.log("location:" + url);
+    $('#add-btn').click(function () {
+        var categoryName=$('#category-name').val();
+        var categoryDesc=$('#categoryDesc').val();
+        var categoryImgUrl=$('#categoryImgUrl').attr("value");
+        $('#images').submit();
+        console.log(categoryName+" "+categoryDesc+" "+categoryImgUrl);
+        $.ajax({
+            url:"/manage/category/saveEdit/"+[[${category.getCategoryId()}]],
+            method:"GET",
+            sync:true,
+            data:{categoryName:categoryName,categoryDesc:categoryDesc,categoryImgUrl:categoryImgUrl},
+            dataType:"json",
+            success:function (response) {
+                if(response.success){
+                    window.location.href="/manage/category/list";
+                }else{
+                    alert(response.msg)
+                }
+            },
+            error:function () {
+                alert("服务异常，请重试！")
+            }
+        })
     })
 
 </script>
+
 <script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
@@ -167,10 +173,10 @@
 <script>
     $('#add-btn').mouseenter(function () {
         $('#add-btn').removeClass("basic");
-    })
+    });
     $('#add-btn').mouseleave(function () {
         $('#add-btn').addClass("basic");
-    })
+    });
     $('#add-btn').click(function () {
         var str=$('#category-name').val();
         if(""==str||null==str){
@@ -182,15 +188,56 @@
 </script>
 <script>
     function show(obj) {
-        var rd = new FileReader();//创建文件读取对象
-        var files = obj.files[0];//获取file组件中的文件
-        rd.readAsDataURL(files);//文件读取装换为base64类型
+        var rd = new FileReader(); //创建文件读取对象
+        var files = obj.files[0];  //获取file组件中的文件
+        rd.readAsDataURL(files);   //文件读取装换为base64类型
         rd.onloadend = function(e) {
             //加载完毕之后获取结果赋值给img
             $('#pre-look').height(120);
             $('#pre-look').width(120);
             document.getElementById("pre-look").src = this.result;
-        }
+        };
+
+       /* var path = $("#categoryImgUrl").val(); //获取上传的图片路径
+        var var1 = path.split('\\'); //分割
+        var originalPicName = var1[var1.length - 1]; //去掉 // 获取图片名
+        var suffix = originalPicName.lastIndexOf('.'); //获取 . 出现的位置
+        var ext = originalPicName.substring(suffix, originalPicName.length).toUpperCase(); //切割 . 获取文件后缀
+        var file = $('#categoryImgUrl').get(0).files[0]; //获取上传的文件
+        var maxSize = 1048576*5;
+        console.log(path+" "+var1+" "+originalPicName+" "+ext+" "+file);
+        if (ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.BMP') {
+            alert('文件类型错误,请上传图片类型');
+            return false;
+        } else if (parseInt(file.size) >= parseInt(maxSize)) {
+            alert('上传的文件不能超过5MB');
+            return false;
+        } else {
+            //上传请求
+            var formData = new FormData();
+            formData.append("file", file);
+            $.ajax({
+                url: "/upload/images",
+                method: "POST",
+                sync:true,
+                data : {file:formData},
+                dataType: "json",
+                success : function(response) {
+                    if (response.success) {
+                        $("#ti").attr("src", data.data);
+                        $("#header").val(data.data);
+                        location.reload();
+                        alert("修改专栏图片成功！");
+                    }else{
+                        alert("修改专栏图片失败");
+                    }
+                },
+                error : function() {
+                    alert("修改专栏图片失败");
+                }
+            });
+        }*/
+
     }
 </script>
 <script>

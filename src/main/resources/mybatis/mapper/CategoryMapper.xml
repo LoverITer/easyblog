@@ -17,9 +17,9 @@
   <insert id="save" parameterType="org.easyblog.bean.Category">
     insert into category (category_user, category_name,
       category_image_url, category_article_num, category_click_num,
-      category_care_num,display,create_time)
+      category_care_num,display,create_time,category_descrption)
     values (#{categoryUser}, #{categoryName},#{categoryImageUrl}, #{categoryArticleNum},
-    #{categoryClickNum},0,'1',now())
+    #{categoryClickNum},0,'1',now(),#{categoryDescription})
   </insert>
 
 
@@ -188,7 +188,10 @@
         category_care_num = category_care_num+1,
       </if>
       <if test="display != null">
-        display=#{display}
+        display=#{display},
+      </if>
+      <if test="categoryDescription != null">
+        category_description=#{categoryDescription}
       </if>
     </set>
     where category_id = #{categoryId,jdbcType=BIGINT}
@@ -204,7 +207,8 @@
       category_article_num = #{categoryArticleNum,jdbcType=INTEGER},
       category_click_num = #{categoryClickNum,jdbcType=INTEGER},
       category_care_num = #{categoryCareNum,jdbcType=INTEGER},
-      display=#{display,jdbcType=INTEGER}
+      display=#{display,jdbcType=INTEGER},
+      category_description=#{categoryDescription}
     where category_id = #{categoryId,jdbcType=BIGINT}
   </update>
 </mapper>
