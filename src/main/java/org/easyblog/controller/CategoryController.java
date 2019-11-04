@@ -36,8 +36,8 @@ public class CategoryController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/{id}/{userId}")
-    public String categoryDetailsPage(HttpSession session,@PathVariable(value = "id") int categoryId, @PathVariable("userId") int userId, Model model){
+    @GetMapping(value = "/{categoryId}/{userId}")
+    public String categoryDetailsPage(HttpSession session,@PathVariable(value = "categoryId") int categoryId, @PathVariable("userId") int userId, Model model){
         new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
         final Category category = categoryServiceImpl.getCategory(categoryId);
         final List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);

@@ -9,7 +9,7 @@
     <result column="category_article_num" jdbcType="INTEGER" property="categoryArticleNum" />
     <result column="category_click_num" jdbcType="INTEGER" property="categoryClickNum" />
     <result column="category_care_num" jdbcType="INTEGER" property="categoryCareNum" />
-    <result column="display" jdbcType="INTEGER" property="display"/>
+    <result column="display"  property="display"/>
     <result column="create_time" property="createTime"/>
   </resultMap>
 
@@ -19,7 +19,7 @@
       category_image_url, category_article_num, category_click_num,
       category_care_num,display,create_time)
     values (#{categoryUser}, #{categoryName},#{categoryImageUrl}, #{categoryArticleNum},
-    #{categoryClickNum},0,1,now())
+    #{categoryClickNum},0,'1',now())
   </insert>
 
 
@@ -28,16 +28,19 @@
   </select>
 
   <select id="getUserAllCategory" resultType="org.easyblog.bean.Category">
-     select * from category where category_user=#{userId}
+     select * from category where category_user=#{userId} AND  display in('0','1')
+  </select>
+
+  <select id="getUserAllDeletedCategory" resultType="org.easyblog.bean.Category">
+    select * from category where category_user=#{userId} AND  display='2'
   </select>
 
   <select id="getAll" resultType="org.easyblog.bean.Category">
     select * from category
   </select>
 
-  <!--查询用户允许显示的所有分类-->
   <select id="getSelective" resultType="org.easyblog.bean.Category">
-    select * from category where category_user=#{id} and display=1;
+    select * from category where category_user=#{id} and display='1';
   </select>
 
 
@@ -49,10 +52,64 @@
     select count(*) from category
   </select>
 
+  <select id="countSelective" resultType="java.lang.Integer">
+    select count(*) from category
+    <where>
+      <if test="category.categoryUser != null">
+        category_user=#{category.categoryUser} AND
+      </if>
+      <if test="category.categoryName != null">
+        category_name=#{category.categoryName} AND
+      </if>
+      <if test="category.categoryArticleNum != null">
+        category_article_num=#{category.categoryArticleNum} AND
+      </if>
+      <if test="category.categoryClickNum != null">
+        category_click_num=#{category.categoryCareNum} AND
+      </if>
+      <if test="category.categoryCareNum != null">
+        category_care_num=#{category.categoryCareNum} AND
+      </if>
+      <if test="category.display != null">
+        display=#{category.display}
+      </if>
+    </where>
+  </select>
+
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from category where category_id = #{categoryId,jdbcType=BIGINT}
   </delete>
+
+
+  <delete id="deleteSelective">
+       delete from category
+    <where>
+      <if test="categoryUser != null">
+        category_user=#{categoryUser} AND
+      </if>
+      <if test="categoryName != null">
+        category_name=#{categoryName} AND
+      </if>
+      <if test="categoryArticleNum != null">
+        category_article_num=#{categoryArticleNum} AND
+      </if>
+      <if test="categoryClickNum != null">
+        category_click_num=#{categoryCareNum} AND
+      </if>
+      <if test="categoryCareNum != null">
+        category_care_num=#{categoryCareNum} AND
+      </if>
+      <if test="display != null">
+        display=#{display}  AND
+      </if>
+      <if test="categoryId != null">
+        category_id=#{categoryId}
+      </if>
+    </where>
+  </delete>
+
+
 
   <insert id="insertSelective" parameterType="org.easyblog.bean.Category">
     insert into category

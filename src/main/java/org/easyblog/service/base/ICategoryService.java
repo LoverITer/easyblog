@@ -54,14 +54,31 @@ public interface ICategoryService {
      * @param params
      * @return
      */
-    boolean updateCategoryInfo(int categoryId, Map<String,Object> params);
+    int updateCategoryInfo(int categoryId, Map<String,Object> params);
 
 
     /**
      * 根据主键更新
      * @param category
      */
-    void updateByPKSelective(Category category);
+    int  updateByPKSelective(Category category);
+
+
+    List<Category> getUserAllDeletedCategory(int userId);
+
+    /**
+     * 选择性的删除
+     * @param category
+     */
+    int deleteCategoryByCondition(Category category);
+
+
+    /**
+     * 选择性的统计分类数量
+     * @param category
+     * @return
+     */
+    int countSelective(Category category);
 
 
 }

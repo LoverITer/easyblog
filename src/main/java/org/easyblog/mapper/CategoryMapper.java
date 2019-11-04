@@ -18,7 +18,20 @@ public interface CategoryMapper extends BaseMapper<Category> {
 
     List<Category> getSelective(@Param("id") int id);
 
-
+    /**
+     * 得到用户所有不在垃圾桶中的分类
+     * @param userId
+     * @return
+     */
     List<Category> getUserAllCategory(@Param("userId") int userId);
+
+    /**
+     * 得到用户所有垃圾桶中的分类
+     * @param userId
+     * @return
+     */
+    List<Category> getUserAllDeletedCategory(@Param("userId") int userId);
+
+    int countSelective(@Param("category") Category category);
 
 }

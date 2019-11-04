@@ -16,12 +16,12 @@ public class Category implements Serializable {
     private Integer categoryArticleNum;
     private Integer categoryClickNum;
     private Integer categoryCareNum;
-    private Integer display;
+    private String display;
     private Date createTime;
     public Category() {
     }
 
-    public Category( Integer categoryUser, String categoryName, String categoryImageUrl, Integer categoryArticleNum, Integer categoryClickNum, Integer categoryCareNum,Integer display) {
+    public Category( Integer categoryUser, String categoryName, String categoryImageUrl, Integer categoryArticleNum, Integer categoryClickNum, Integer categoryCareNum,String display) {
         this.categoryUser = categoryUser;
         this.categoryName = categoryName;
         this.categoryImageUrl = categoryImageUrl;
@@ -96,11 +96,11 @@ public class Category implements Serializable {
         this.categoryCareNum = categoryCareNum;
     }
 
-    public Integer getDisplay() {
+    public String getDisplay() {
         return display;
     }
 
-    public void setDisplay(Integer display) {
+    public void setDisplay(String display) {
         this.display = display;
     }
 
