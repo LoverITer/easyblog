@@ -29,7 +29,8 @@
                             <h3>分类专栏</h3>
                         </div>
                         <div class="right floated column">
-                            <button id="add-btn" class="ui right floated small basic red button"><a href="#" style="color: inherit" th:href="@{/manage/category/add}">新建</a>
+                            <button id="add-btn" class="ui right floated small basic red button">
+                                <a href="#" style="color: inherit"  th:href="@{/manage/category/add}">新建</a>
                             </button>
                         </div>
                     </div>
@@ -40,15 +41,15 @@
                         <div class="row" style="padding-top: 10px !important;padding-bottom: 10px !important;">
                             <div class="two wide column" style="padding-right: 0 !important;">
                                 <a id="all" href="#" th:href="@{/manage/category/list}" class="m-black"
-                                   style="color:#349EDF !important;font-size: 1.1rem !important;">全部(<span>1</span>)</a>
+                                   style="color:#349EDF !important;font-size: 1.1rem !important;">全部(<span
+                                        th:text="${visibleCategoryNum}">1</span>)</a>
                             </div>
                             <div class="two wide column"
                                  style="padding-right: 0 !important;padding-left: 0 !important;">
-                                <a id="public" href="#"
-                                   th:href="@{/manage/category/dash}"
-                                   style="font-size: 1.1rem !important;"
-                                   class="m-black"><i
-                                        class="trash alternate outline icon"></i>回收站(<span>1</span>)</a></div>
+                                <a id="public" href="#" th:href="@{/manage/category/dash}"
+                                   style="font-size: 1.1rem !important;" class="m-black"><i
+                                        class="trash alternate outline icon"></i>回收站(<span th:text="${deletedCategoryNum}">1</span>)</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -57,86 +58,145 @@
                     <div class="ui grid">
                         <div class="row" style="padding-top: 0 !important;padding-bottom: 0 !important;">
                             <div class="ten wide column" style="padding-right: 0 !important;">
-                                <span class="m-black" style="color:grey !important;font-size: 1.1rem !important;">类别</span>
+                                <span class="m-black"
+                                      style="color:grey !important;font-size: 1.1rem !important;">类别</span>
                             </div>
-                            <div class="two wide column" style="padding-right: 0 !important;"><span class="m-black"  style="color:grey !important;font-size: 1.1rem !important;">操作</span>
+                            <div class="two wide column" style="padding-right: 0 !important;"><span class="m-black"
+                                                                                                    style="color:grey !important;font-size: 1.1rem !important;">操作</span>
                             </div>
-                            <div class="two wide column" style="padding-right: 0 !important;"><span class="m-black" style="color:grey !important;font-size: 1.1rem !important;">前台是否显示</span>
+                            <div class="two wide column" style="padding-right: 0 !important;"><span class="m-black"
+                                                                                                    style="color:grey !important;font-size: 1.1rem !important;">前台是否显示</span>
                             </div>
                             <div class="two wide column" style="padding-right: 0 !important;">
-                                <span class="m-black" style="color:grey !important;font-size: 1.1rem !important;">文章数</span>
+                                <span class="m-black"
+                                      style="color:grey !important;font-size: 1.1rem !important;">文章数</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="ui attached segment border-bt-none">
-                <div class="ui attached segment border-bottom-only"
-                     style="padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
-                    <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
-                         src="https://img-blog.csdnimg.cn/20190918140037908.png">
-                    <span style="margin-left: 1rem">Redis</span>
-                    <span style="margin-left: 35rem"><a href="#" style="color:#349EDF !important;">查看</a></span>
-                    <span style="margin-left: 0.5rem"><a href="#" th:href="@{/manage/category/edit}" style="color:#349EDF !important;">编辑</a></span>
-                    <span style="margin-left: 0.5rem"><a href="#" th:href="@{/manage/category/delete}" style="color:#B50C13 !important;">删除</a></span>
-                    <div class="column m-inline-block" style="margin-left: 5rem">
-                        <div class="ui test toggle checkbox">
-                            <input type="checkbox" checked="checked">
-                            <label> </label>
+            <!--content-->
+            <div class="ui attached segment  stackable" style="border-bottom: none !important;">
+                <div class="ui grid">
+                    <div th:if="${!#lists.isEmpty(categories)}" th:each="category:${categories}" class="ui row attached segment bottom"  style="border-top: none !important;border-right:none !important;padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
+                        <div class="four wide column">
+                            <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
+                                 th:src="${category.getCategoryImageUrl()}"
+                                 src="https://img-blog.csdnimg.cn/20190918140037908.png">
+                            <span style="margin-left: 1rem" th:text="${category.getCategoryName()}">Redis</span>
+                        </div>
+                        <div class="six wide column right aligned" style="padding-right: 0 !important;">
+                            <div style="padding-top: 15px !important;">
+                              <a href="#" th:href="@{/category/details/}+${category.getCategoryId()}+@{/}+${userId}" style="color:#349EDF !important;">查看</a>
+                            </div>
+                        </div>
+                        <div class="one wide column center aligned" style="padding-left: 0 !important;padding-right: 0 !important;">
+                            <div style="padding-top: 15px !important;">
+                              <a href="#" th:href="@{/manage/category/edit(categoryId=${category.getCategoryId()})}" style="color:#349EDF !important;">编辑</a>
+                            </div>
+                        </div>
+                        <div class="one wide column left aligned" style="padding-left: 0 !important;">
+                            <div style="padding-top: 15px !important;">
+                              <a href="#" th:href="@{/manage/category/delete(categoryId=${category.getCategoryId()})}" style="color:#B50C13 !important;">删除</a>
+                            </div>
+                        </div>
+                        <div class="two wide column center aligned">
+                            <div class="column m-inline-block" style="padding-top: 10px !important;">
+                                <div class="ui test toggle checkbox">
+                                    <input onclick="changeDisplayOrNot(this)" th:id="checkbox+${category.getCategoryId()}" th:value="${category.getCategoryId()}" type="checkbox" th:checked="${category.display=='1'}" checked="checked">
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="one wide column center aligned">
+                            <div style="padding-top: 15px !important;">
+                              <a href="#" style="color: black !important;padding-top: 10px !important;">
+                                 <span th:text="${category.getCategoryArticleNum()}">0</span>
+                              </a>
+                            </div>
                         </div>
                     </div>
-                    <span style="margin-left: 4rem"><a href="#"
-                                                       style="color: black !important;"><span>0</span></a></span>
-                </div>
-                <div class="ui attached segment border-bottom-only"
-                     style="padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
-                    <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
-                         src="https://img-blog.csdnimg.cn/20190918140037908.png">
-                    <span style="margin-left: 1rem">Redis</span>
-                    <span style="margin-left: 35rem"><a href="#" style="color:#349EDF !important;">查看</a></span>
-                    <span style="margin-left: 0.5rem"><a href="#" style="color:#349EDF !important;">编辑</a></span>
-                    <span style="margin-left: 0.5rem"><a href="#" style="color:#B50C13 !important;">删除</a></span>
-                    <div class="column m-inline-block" style="margin-left: 5rem">
-                        <div class="ui test toggle checkbox">
-                            <input type="checkbox" checked="checked">
-                            <label> </label>
-                        </div>
-                    </div>
-                    <span style="margin-left: 4rem"><a href="#"
-                                                       style="color: black !important;"><span>0</span></a></span>
-                </div>
-                <div class="ui attached segment border-bottom-only"
-                     style="padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
-                    <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
-                         src="https://img-blog.csdnimg.cn/20190918140037908.png">
-                    <span style="margin-left: 1rem">Redis</span>
-                    <span style="margin-left: 35rem"><a href="#" style="color:#349EDF !important;">查看</a></span>
-                    <span style="margin-left: 0.5rem"><a href="#" style="color:#349EDF !important;">编辑</a></span>
-                    <span style="margin-left: 0.5rem"><a href="#" style="color:#B50C13 !important;">删除</a></span>
-                    <div class="column m-inline-block" style="margin-left: 5rem">
-                        <div class="ui test toggle checkbox">
-                            <input type="checkbox" checked="checked">
-                            <label> </label>
-                        </div>
-                    </div>
-                    <span style="margin-left: 4rem"><a href="#"
-                                                       style="color: black !important;"><span>0</span></a></span>
                 </div>
             </div>
-            <div class="ui bottom attached segment " style="height: 30em "></div>
+
+            <div class="ui bottom attached segment " th:if="${#lists.size(categories)==0}"
+                 style="margin: 0 auto !important;">
+                <div style="padding: 5em 29rem 10em 29rem!important;">
+                    <div style="padding-bottom: 1em !important;padding-left: 2.9898em !important;color: grey !important;font-size: 14px !important;">
+                        您没有还任何分类
+                    </div>
+                    <a th:href="@{/manage/category/add}" target style="color: #FFFFFF !important;">
+                        <button class="red fluid ui button">新建分类</button>
+                    </a>
+                </div>
+            </div>
+            <!--分页按钮-->
+            <div th:if="${#lists.size(categories)>10}" class="ui bottom attached segment ">
+                <div class="ui middle aligned two column grid"
+                     style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                    <div class="column" style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                        <a href="#" class="ui mini teal basic button">上一页</a>
+                    </div>
+                    <div class="right aligned column">
+                        <a href="#" class="ui mini teal basic button">下一页</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
 </div>
 
 
-<div style="height: 10em"></div>
+<div style="height: 16em"></div>
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script>
+    function changeDisplayOrNot(obj) {
+        var categoryId=$(obj).val();
+        var status=$(obj).is(":checked");
+        if(status){
+            //改为显示
+            $.ajax({
+                url: "/manage/category/changeDisplay",
+                sync:true,
+                method:"GET",
+                data:{categoryId:categoryId,displayStatus:"1"},
+                dataType:"json",
+                success:function (response) {
+                    if(!response.success){
+                        alert("抱歉，服务异常，请重试！");
+                    }
+                },
+                error:function () {
+                   alert("抱歉，服务异常，请重试！");
+                }
+            })
+        }else{
+            //改为不显示
+            $.ajax({
+                url: "/manage/category/changeDisplay",
+                sync:true,
+                method:"GET",
+                data:{categoryId:categoryId,displayStatus:"0"},
+                dataType:"json",
+                success:function (response) {
+                    if(!response.success){
+                        alert("抱歉，服务异常，请重试！");
+                    }
+                },
+                error:function () {
+                    alert("抱歉，服务异常，请重试！");
+                }
+            })
+        }
+    }
+</script>
 <script>
     $('#add-btn').mouseenter(function () {
         $('#add-btn').removeClass("basic");
@@ -160,7 +220,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 100);
+        setTimeout(toggleStatus, 500);
     }
 
     <!--退出操作异步请求-->
@@ -170,12 +230,11 @@
             method: "GET",
             sync: true,
             data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
                     sessionStorage.removeItem("user");
-                    $("#login-btn").show();
-                    $('#header-images').hide();
+                    window.location.href = "/user/loginPage";
                 }
             },
             error: function () {
@@ -184,25 +243,6 @@
         });
     });
 
-</script>
-
-<!--控制头像的显示-->
-<script>
-    $(document).ready(function () {
-        toggleStatus();
-    });
-
-    function toggleStatus() {
-        var user = sessionStorage.getItem("user");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-        setTimeout(toggleStatus, 100);
-    }
 </script>
 <script>
     $(document).ready(function () {
@@ -219,17 +259,9 @@
     $('.ui.dropdown').dropdown({
         on: 'hover'
     });
-
-    $('#searchBar').click(function () {
-        $('#reloadSearchBar').css("display", "block");  //显示div
-    });
-
-    $('.ui.checkbox')
-        .checkbox()
-    ;
 </script>
 <script>
-    $('#side-bnt5').css("background","#DB2828");
-    $('#side-bnt5').css("color","#ffffff");
+    $('#side-bnt5').css("background", "#DB2828");
+    $('#side-bnt5').css("color", "#ffffff");
 </script>
 </html>

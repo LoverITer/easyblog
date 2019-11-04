@@ -1,4 +1,4 @@
-package org.easyblog.controller;
+package org.easyblog.bean;
 
 public enum UserLoginStatus {
 

@@ -30,28 +30,24 @@
                             <h3>分类专栏</h3>
                         </div>
                         <div class="right floated column">
-                            <button id="add-btn" class="ui right floated small basic red button"><a href="#"
-                                                                                                    style="color: inherit"
-                                                                                                    th:href="@{/manage/category/add}">新建</a>
+                            <button id="add-btn" class="ui right floated small basic red button">
+                                <a href="#" style="color: inherit" th:href="@{/manage/category/add}">新建</a>
                             </button>
                         </div>
                     </div>
                 </div>
-                <div class="ui top attached segment stackable"
-                     style="border-top: none !important;border-left: none !important;border-right: none !important;">
+                <div class="ui top attached segment stackable"  style="border-top: none !important;border-left: none !important;border-right: none !important;">
                     <div class="ui grid">
                         <div class="row" style="padding-top: 10px !important;padding-bottom: 10px !important;">
                             <div class="two wide column" style="padding-right: 0 !important;">
-                                <a id="all" href="#" th:href="@{/manage/category/list}" class="m-black"
-                                   style="font-size: 1.1rem !important;">全部(<span>1</span>)</a>
+                                <a id="all" href="#" th:href="@{/manage/category/list}" class="m-black"  style="font-size: 1.1rem !important;">全部(<span th:text="${visibleCategoryNum}">1</span>)</a>
                             </div>
                             <div class="two wide column"
                                  style="padding-right: 0 !important;padding-left: 0 !important;">
-                                <a id="public" href="#"
-                                   th:href="@{/manage/category/dash}"
-                                   style="color:#349EDF !important;font-size: 1.1rem !important;"
-                                   class="m-black"><i
-                                        class="trash alternate outline icon"></i>回收站(<span>1</span>)</a></div>
+                                <a id="public" href="#" th:href="@{/manage/category/dash}"  style="color:#349EDF !important;font-size: 1.1rem !important;"  class="m-black">
+                                    <i class="trash alternate outline icon"></i>回收站(<span th:text="${deletedCategoryNum}">1</span>)
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -59,64 +55,52 @@
                      style="border-top: none !important;border-left: none !important;border-right: none !important;">
                     <div class="ui grid">
                         <div class="row" style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                            <div class="fourteen wide column" style="padding-right: 0 !important;"><span class="m-black"
-                                                                                                         style="color:grey !important;font-size: 1.1rem !important;">类别</span>
+                            <div class="fourteen wide column" style="padding-right: 0 !important;">
+                                <span class="m-black" style="color:grey !important;font-size: 1.1rem !important;">类别</span>
                             </div>
-                            <div class="two wide column" style="padding-right: 0 !important;"><span class="m-black"
-                                                                                                    style="color:grey !important;font-size: 1.1rem !important;">操作</span>
+                            <div class="two wide column" style="padding-left: 0 !important;padding-right: 0 !important;">
+                                <span class="m-black" style="color:grey !important;font-size: 1.1rem !important;">操作</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="ui attached segment border-bt-none">
-                <div class="ui attached clearing segment border-bottom-only"
-                     style="padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
-                    <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
-                         src="https://img-blog.csdnimg.cn/20190918140037908.png">
-                    <span style="margin-left: 1rem">Redis</span>
-                    <span class="right floated" style="margin-left: 51rem"><a href="#"
-                                                                              style="color:#349EDF !important;">一键恢复</a></span>
-                    <span class="right floated" style="margin-left: 0.5rem"><a href="#"
-                                                                               style="color:#B50C13 !important;">彻底删除</a></span>
-                </div>
-                <div class="ui attached segment border-bottom-only"
-                     style="padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
-                    <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
-                         src="https://img-blog.csdnimg.cn/20190918140037908.png">
-                    <span style="margin-left: 1rem">Redis</span>
-                    <span style="margin-left: 51rem"><a href="#" style="color:#349EDF !important;">一键恢复</a></span>
-                    <span style="margin-left: 0.5rem"><a href="#" style="color:#B50C13 !important;">彻底删除</a></span>
-                </div>
-                <div class="ui attached segment border-bottom-only"
-                     style="padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
-                    <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
-                         src="https://img-blog.csdnimg.cn/20190918140037908.png">
-                    <span style="margin-left: 1rem">Redis</span>
-                    <span style="margin-left: 51rem"><a href="#" style="color:#349EDF !important;">一键恢复</a></span>
-                    <span style="margin-left: 0.5rem"><a href="#" style="color:#B50C13 !important;">彻底删除</a></span>
-                </div>
-                <div class="ui attached segment border-bottom-only"
-                     style="padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
-                    <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
-                         src="https://img-blog.csdnimg.cn/20190918140037908.png">
-                    <span style="margin-left: 1rem">Redis</span>
-                    <span style="margin-left: 51rem"><a href="#" style="color:#349EDF !important;">一键恢复</a></span>
-                    <span style="margin-left: 0.5rem"><a href="#" style="color:#B50C13 !important;">彻底删除</a></span>
+            <!--content-->
+            <div class="ui attached segment  stackable" style="border-bottom: none !important;">
+                <div class="ui grid">
+                    <div th:if="${!#lists.isEmpty(categories)}" th:each="category:${categories}" class="ui row attached segment bottom"  style="border-top: none !important;border-right:none !important;padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
+                        <div class="five wide column">
+                            <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
+                                 th:src="${category.getCategoryImageUrl()}"
+                                 src="https://img-blog.csdnimg.cn/20190918140037908.png">
+                            <span style="margin-left: 1rem" th:text="${category.getCategoryName()}">Redis</span>
+                        </div>
+                        <div class="nine wide column right aligned" style="padding-right: 0 !important;">
+                            <div style="padding-top: 15px !important;">
+                                <a href="#" th:href="@{/category/details/}+${category.getCategoryId()}+@{/}+${userId}" style="color:#349EDF !important;">一键恢复</a>
+                            </div>
+                        </div>
+                        <div class="two wide column left aligned" style="padding-left: 5px !important;">
+                            <div style="padding-top: 15px !important;">
+                                <a href="#" th:href="@{/manage/category/deleteComplete(categoryId=${category.getCategoryId()})}" style="color:#B50C13 !important;">彻底删除</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <!-- &lt;!&ndash;分页按钮&ndash;&gt;
-             <div class="ui bottom attached segment ">
-                 <div class="ui middle aligned two column grid"
-                      style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                     <div class="column" style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                         <a href="#" class="ui mini teal basic button">上一页</a>
-                     </div>
-                     <div class="right aligned column">
-                         <a href="#" class="ui mini teal basic button">下一页</a>
-                     </div>
-                 </div>
-             </div>-->
+
+            <!--分页按钮-->
+            <div th:if="${!#lists.isEmpty(categories) and #lists.size(categories)>10}" class="ui bottom attached segment ">
+                <div class="ui middle aligned two column grid"
+                     style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                    <div class="column" style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                        <a href="#" class="ui mini teal basic button">上一页</a>
+                    </div>
+                    <div class="right aligned column">
+                        <a href="#" class="ui mini teal basic button">下一页</a>
+                    </div>
+                </div>
+            </div>
             <div class="ui bottom attached segment " style="height: 30em "></div>
         </div>
     </div>
@@ -154,7 +138,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 100);
+        setTimeout(toggleStatus, 500);
     }
 
     <!--退出操作异步请求-->
@@ -164,12 +148,11 @@
             method: "GET",
             sync: true,
             data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
                     sessionStorage.removeItem("user");
-                    $("#login-btn").show();
-                    $('#header-images').hide();
+                    window.location.href = "/user/loginPage";
                 }
             },
             error: function () {
@@ -178,25 +161,6 @@
         });
     });
 
-</script>
-
-<!--控制头像的显示-->
-<script>
-    $(document).ready(function () {
-        toggleStatus();
-    });
-
-    function toggleStatus() {
-        var user = sessionStorage.getItem("user");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-        setTimeout(toggleStatus, 100);
-    }
 </script>
 <script>
     $(document).ready(function () {

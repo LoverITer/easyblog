@@ -1,6 +1,7 @@
 package org.easyblog.controller;
 
 import org.easyblog.bean.User;
+import org.easyblog.bean.UserLoginStatus;
 import org.easyblog.bean.UserSigninLog;
 import org.easyblog.config.Result;
 import org.easyblog.service.UserEmailLogServiceImpl;
@@ -58,7 +59,7 @@ public class UserController {
         //把用户登录前的地址存下来
         if (null == session.getAttribute("Referer")) {
             String referUrl = request.getHeader("Referer");
-            if(!referUrl.contains("/login")&&!referUrl.contains("register")&&!referUrl.contains("loginPage")){
+            if(Objects.nonNull(referUrl)&&!"".equals(referUrl)&&!referUrl.contains("/login")&&!referUrl.contains("register")&&!referUrl.contains("loginPage")){
                 session.setAttribute("Referer", referUrl);
             }
         }
@@ -218,7 +219,6 @@ public class UserController {
         }
         return result;
     }
-
 
     @ResponseBody
     @GetMapping(value = "/checkPassword")

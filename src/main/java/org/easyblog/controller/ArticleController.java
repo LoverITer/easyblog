@@ -73,14 +73,18 @@ public class ArticleController {
 
     @GetMapping(value = "/details/{articleId}")
     public String articleDetails(@PathVariable("articleId") int articleId, Model model) {
-        final Article article = articleServiceImpl.getArticleById(articleId);
-        model.addAttribute("article",article);
-        User user = userService.getUser(article.getArticleUser());
-        model.addAttribute("user",user);
-        if(Objects.nonNull(user)) {
-            new ControllerUtils(categoryServiceImpl, articleServiceImpl).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
+        try {
+            final Article article = articleServiceImpl.getArticleById(articleId);
+            model.addAttribute("article", article);
+            User user = userService.getUser(article.getArticleUser());
+            model.addAttribute("user", user);
+            if (Objects.nonNull(user)) {
+                new ControllerUtils(categoryServiceImpl, articleServiceImpl).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
+            }
+            return "blog";
+        }catch (Exception e){
+            return "/error/error";
         }
-        return "blog";
     }
 
 

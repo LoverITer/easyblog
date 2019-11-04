@@ -5,6 +5,7 @@ import org.easyblog.mapper.CategoryMapper;
 import org.easyblog.service.base.ICategoryService;
 import org.easyblog.utils.FileUploadUtils;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "getCategory", condition = "#result!=null")
+    @Cacheable(cacheNames = "category", condition = "#result!=null")
     @Override
     public Category getCategory(int categoryId) {
         if (categoryId > 0) {
@@ -49,6 +50,8 @@ public class CategoryServiceImpl implements ICategoryService {
         return null;
     }
 
+    @Transactional
+    @Cacheable(cacheNames = "category",condition = "#result!=null")
     @Override
     public Category getCategoryByUserIdAndName(int userId, String categoryName) {
         if(userId>0&&!"".equals(categoryName)){
@@ -63,11 +66,11 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @CachePut(cacheNames = "saveCategory", condition = "#result>0")
+    @CachePut(cacheNames = "category", condition = "#result>0")
     @Override
     public int saveCategory(int userId, String categoryName) {
         if (userId > 0 && categoryName != null) {
-            Category category = new Category(userId, categoryName, FileUploadUtils.defaultCategoryImage(), 0, 0, 0, 1);
+            Category category = new Category(userId, categoryName, FileUploadUtils.defaultCategoryImage(), 0, 0, 0, "1");
             return categoryMapper.insertSelective(category);
         }
         return -1;
@@ -75,7 +78,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @CachePut(cacheNames = "saveCategory", condition = "#result>0")
+    @CachePut(cacheNames = "category", condition = "#result>0")
     @Override
     public int saveCategory(Category category) {
         if (Objects.nonNull(category)) {
@@ -104,24 +107,41 @@ public class CategoryServiceImpl implements ICategoryService {
         return null;
     }
 
-
+    @Transactional
+    @Cacheable(cacheNames = "categories",condition = "#result!=null&&#reslut.size>0")
     @Override
-    public void updateByPKSelective(Category category) {
+    public List<Category> getUserAllDeletedCategory(int userId) {
+        if(userId>0){
+            try {
+                return categoryMapper.getUserAllDeletedCategory(userId);
+            }catch (Exception ex){
+                ex.printStackTrace();
+                return null;
+            }
+        }
+        return null;
+    }
+
+    @Transactional(isolation=Isolation.REPEATABLE_READ)
+    @CachePut(cacheNames = "category", condition = "#result>0")
+    @Override
+    public int updateByPKSelective(Category category) {
         if(Objects.nonNull(category)){
             try {
-                categoryMapper.updateByPrimaryKeySelective(category);
+                return categoryMapper.updateByPrimaryKeySelective(category);
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
+        return 0;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @CachePut(cacheNames = "updateCategoryInfo", condition = "#result!=null")
+    @CachePut(cacheNames = "category", condition = "#result>0")
     @Override
-    public boolean updateCategoryInfo(int categoryId, Map<String, Object> params) {
+    public int updateCategoryInfo(int categoryId, Map<String, Object> params) {
         if (categoryId < 0 || params == null) {
-            return false;
+            return 0;
         }
         Category category = new Category();
         category.setCategoryId(categoryId);
@@ -142,17 +162,42 @@ public class CategoryServiceImpl implements ICategoryService {
                 category.setCategoryCareNum((Integer) v);
             }
             if ("display".equals(k)) {
-                category.setDisplay((Integer) v);
+                category.setDisplay(v+"");
             }
         });
         try {
-            categoryMapper.updateByPrimaryKeySelective(category);
+            return categoryMapper.updateByPrimaryKeySelective(category);
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return 0;
         }
-        return true;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @CacheEvict(cacheNames = "category",condition = "#result>0")
+    @Override
+    public int deleteCategoryByCondition(Category category) {
+        if(Objects.nonNull(category)) {
+            try {
+                return categoryMapper.deleteSelective(category);
+            }catch (Exception e){
+                return 0;
+            }
+        }
+        return 0;
+    }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public int countSelective(Category category) {
+        if(Objects.nonNull(category)){
+            try{
+                return categoryMapper.countSelective(category);
+            }catch (Exception e){
+                e.printStackTrace();
+                return 0;
+            }
+        }
+        return 0;
+    }
 }

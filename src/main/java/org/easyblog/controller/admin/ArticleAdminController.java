@@ -1,4 +1,4 @@
-package org.easyblog.controller;
+package org.easyblog.controller.admin;
 
 
 import org.easyblog.bean.Article;
@@ -47,7 +47,7 @@ public class ArticleAdminController {
                 List<Article> articles = articleService.getUserArticles(user.getUserId(), ArticleType.Original.getArticleType());
                 model.addAttribute("articles", articles);
                 getShareInfo(model,user);
-                packageArticleNumToModel(user,model);
+                putArticleNumToModel(user,model);
             } else {
                 return "redirect:/user/loginPage";
             }
@@ -117,7 +117,7 @@ public class ArticleAdminController {
                 model.addAttribute("currentType",articleType);
                 model.addAttribute("currentCategory",categoryName);
                 //统计各种状态文章的数量
-                packageArticleNumToModel(user,model);
+                putArticleNumToModel(user,model);
                 return PREFIX + "/blog-manage";
             } catch (Exception ex) {
                 return "redirect:/error/error";
@@ -169,7 +169,7 @@ public class ArticleAdminController {
                 return result;
             }
             if (Objects.isNull(category)) {
-                category = new Category(userId, article0.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, 1);
+                category = new Category(userId, article0.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1");
                 categoryService.saveCategory(category);
             } else {
                 Category category0 = new Category();
@@ -309,7 +309,7 @@ public class ArticleAdminController {
                 article.setArticleStatus(articleStatus);
                 final List<Article> articles = articleService.getArticlesSelective(article, null, null);
                 model.addAttribute("articles",articles);
-                packageArticleNumToModel(user,model);
+                putArticleNumToModel(user,model);
                 return PREFIX +dest;
             }catch (Exception e){
                 return "redirect:/error/error";
@@ -323,7 +323,7 @@ public class ArticleAdminController {
      * @param user
      * @param model
      */
-    private void packageArticleNumToModel(User user,Model model){
+    private void putArticleNumToModel(User user,Model model){
         model.addAttribute("allArticles",getArticlesNum(user,null));
         model.addAttribute("publicArticles",getArticlesNum(user,"0"));
         model.addAttribute("privateArticles",getArticlesNum(user,"1"));
@@ -331,7 +331,12 @@ public class ArticleAdminController {
         model.addAttribute("dashArticles",getArticlesNum(user,"3"));
     }
 
-
+    /**
+     * 得到不同状态的文章数量
+     * @param user
+     * @param articleStatus
+     * @return
+     */
     private int  getArticlesNum(User user,String articleStatus){
         final Article article = new Article();
         article.setArticleUser(user.getUserId());

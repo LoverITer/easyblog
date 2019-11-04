@@ -15,11 +15,11 @@ import java.util.Arrays;
 
 @Aspect
 @Component
-public class WebRequestLogAspect {
+public class WebAdminRequestLogAspect {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Pointcut(value = "execution(* org.easyblog.controller.*.*(..))")
+    @Pointcut(value = "execution(* org.easyblog.controller.*.*.*(..))")
     public void log() {}
 
 
