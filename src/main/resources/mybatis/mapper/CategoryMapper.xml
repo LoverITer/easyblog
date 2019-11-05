@@ -17,7 +17,7 @@
   <insert id="save" parameterType="org.easyblog.bean.Category">
     insert into category (category_user, category_name,
       category_image_url, category_article_num, category_click_num,
-      category_care_num,display,create_time,category_descrption)
+      category_care_num,display,create_time,category_description)
     values (#{categoryUser}, #{categoryName},#{categoryImageUrl}, #{categoryArticleNum},
     #{categoryClickNum},0,'1',now(),#{categoryDescription})
   </insert>

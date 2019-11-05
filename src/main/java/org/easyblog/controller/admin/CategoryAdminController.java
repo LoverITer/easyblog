@@ -4,9 +4,12 @@ import org.easyblog.bean.Category;
 import org.easyblog.bean.User;
 import org.easyblog.config.Result;
 import org.easyblog.service.CategoryServiceImpl;
+import org.easyblog.utils.FileUploadUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -152,8 +155,40 @@ public class CategoryAdminController {
     }
 
     @GetMapping(value = "/add")
-    public String categoryAddPage() {
-        return PREFIX + "category-add";
+    public String categoryAddPage(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if(Objects.nonNull(user)){
+            return PREFIX + "category-add";
+        }
+        return LOGIN_PAGE;
+    }
+
+    @PostMapping(value = "/saveAdd")
+    public String saveAdd(HttpSession session,
+                          @RequestParam String categoryName,
+                          @RequestParam(required = false,defaultValue = "") String categoryDesc,
+                          @RequestParam(required = false) MultipartFile categoryImg,
+                          RedirectAttributes attributes){
+        User user = (User) session.getAttribute("user");
+        if(Objects.nonNull(user)){
+            Category var0 = categoryService.getCategoryByUserIdAndName(user.getUserId(), categoryName);
+            if(Objects.nonNull(var0)){
+                attributes.addFlashAttribute("msg","你以存在该分类，请勿重复创建！");
+                return "redirect:/manage/category/add";
+            }
+            Category category = new Category(user.getUserId(),categoryName,"",0,0,0,"1",categoryDesc);
+            //用户新建分类的时没有上传图片，系统随机分配一张
+            if(Objects.isNull(categoryImg)){
+               category.setCategoryImageUrl(FileUploadUtils.defaultCategoryImage());
+            }else{
+                //上传到图床的URL
+                category.setCategoryImageUrl("");
+            }
+            category.setCategoryName(categoryName);
+            categoryService.saveCategory(category);
+            return "redirect:/manage/category/list";
+        }
+        return LOGIN_PAGE;
     }
 
 
@@ -167,6 +202,7 @@ public class CategoryAdminController {
         }
        return LOGIN_PAGE;
     }
+
 
     @ResponseBody
     @RequestMapping(value = "/saveEdit/{categoryId}")

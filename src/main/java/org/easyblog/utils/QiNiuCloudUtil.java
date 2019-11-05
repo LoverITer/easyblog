@@ -13,11 +13,15 @@ import com.qiniu.util.UrlSafeBase64;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 
 public class QiNiuCloudUtil {
+
+    private Logger log= LoggerFactory.getLogger(QiNiuCloudUtil.class);
 
     // 设置需要操作的账号的AK和SK
     private static final String ACCESS_KEY = "vRxHtqsnLfzK2h2DTGcEfFlLLDDNgqAvoZf0H08D";
@@ -25,7 +29,7 @@ public class QiNiuCloudUtil {
 
 
     // 要上传的空间
-    private static final String bucketname = "/easy";
+    private static final String bucketname = "cqy-space0";
 
     // 密钥
     private static final Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
@@ -51,8 +55,7 @@ public class QiNiuCloudUtil {
             // 调用put方法上传
             String token = auth.uploadToken(bucketname);
             Response res = uploadManager.put(filePath, fileName, token);
-            // 打印返回的信息
-            System.out.println(res.bodyString());
+            log.info("返回信息：{}",res.bodyString());
             if (res.isOK()) {
                 Ret ret = res.jsonToObject(Ret.class);
                 //如果不需要对图片进行样式处理，则使用以下方式即可
@@ -61,11 +64,9 @@ public class QiNiuCloudUtil {
             }
         } catch (QiniuException e) {
             Response r = e.response;
-            // 请求失败时打印的异常的信息
-            System.out.println(r.toString());
+            log.error("异常信息：{}",r.toString());
             try {
-                // 响应的文本信息
-                System.out.println(r.bodyString());
+                log.error("异常响应信息：{}",r.bodyString());
             } catch (QiniuException e1) {
                 // ignore
             }
@@ -86,17 +87,15 @@ public class QiNiuCloudUtil {
                 addHeader("Content-Type", "application/octet-stream")
                 .addHeader("Authorization", "UpToken " + getUpToken())
                 .post(rb).build();
-        //System.out.println(request.headers());
         OkHttpClient client = new OkHttpClient();
         okhttp3.Response response = client.newCall(request).execute();
-        System.out.println(response);
         //如果不需要添加图片样式，使用以下方式
         //return DOMAIN + key;
         return DOMAIN + key + "?" + style;
     }
 
 
-    // 普通删除(暂未使用以下方法，未测试)
+    // 普通删除
     public void delete(String key) throws IOException {
         // 实例化一个BucketManager对象
         BucketManager bucketManager = new BucketManager(auth,configuration);
@@ -108,11 +107,11 @@ public class QiNiuCloudUtil {
         } catch (QiniuException e) {
             // 捕获异常信息
             Response r = e.response;
-            System.out.println(r.toString());
+            log.error(r.toString());
         }
     }
 
-    class Ret {
+    static class Ret {
         public long fsize;
         public String key;
         public String hash;

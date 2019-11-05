@@ -162,10 +162,15 @@
     });
 
 </script>
-<script>
+<script th:inline="javascript">
     $(document).ready(function () {
-        var url = window.location.pathname;
-        console.log("location:" + url);
+       $('#add-btn').click(function () {
+           var msg=[[${msg}]];
+           console.log(msg);
+           if(msg!=undefined&&msg!=null&&msg!=""){
+               alert(msg);
+           }
+       })
     })
 
 </script>

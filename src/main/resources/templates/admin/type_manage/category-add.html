@@ -23,60 +23,48 @@
         <div class="thirteen wide column">
             <!--header-->
             <div class="ui top attached segment " style="border-bottom: none !important;padding-bottom: 0 !important;">
-                <div class="ui stackable grid">
                     <div class="four column row" style="padding-bottom: 0 !important;padding-left: 1.13rem !important;">
                         <div class="left floated column">
-                            <a style="color:#bbbbbb;font-size: 1rem !important;" href="#" th:href="@{/manage/category/list}">< 返回分类专栏</a>
+                            <a style="color:#bbbbbb;font-size: 1rem !important;" href="#"
+                               th:href="@{/manage/category/list}">< 返回分类专栏</a>
                         </div>
                     </div>
-                    <div class="row" style="padding-left: 2rem !important;">
-                        <div class="ui form">
-                            <div class="inline field">
-                                <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏名称：</label>
-                                <input id="category-name" type="text" style="width: 340px !important;" placeholder="请输入分类专栏名称">
-                                <span hidden="hidden" id="category-name-msg" style="color: #C92027 !important;margin-left: 10px !important;">不可为空</span>
+                    <form class="ui form" method="Post" th:action="@{/manage/category/saveAdd}" enctype="multipart/form-data">
+                        <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
+                            <div class="ui form">
+                                <div class="inline field">
+                                    <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏名称：</label>
+                                    <input id="category-name" name="categoryName" type="text" style="width: 340px !important;" placeholder="请输入分类专栏名称">
+                                    <span hidden="hidden" id="category-name-msg" style="color: #C92027 !important;margin-left: 10px !important;">不可为空</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row" style="padding-left: 2rem !important;">
-                        <div class="ui form">
-                            <div class="inline  field">
-                                <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏简介：</label>
-                                <textarea style="width: 340px !important;" rows="5" placeholder="输入分类专栏简介"></textarea>
+                        <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
+                            <div class="ui form">
+                                <div class="inline  field">
+                                    <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏简介：</label>
+                                    <textarea name="categoryDesc" style="width: 340px !important;" rows="5" placeholder="输入分类专栏简介"></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row" style="padding-left: 2rem !important;">
-                        <div class="ui form">
-                            <div class="inline  field">
-                                <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏配图：</label>
-                               <input id="input_file"  style="position:absolute;opacity:0;height: 120px !important;padding: 0 !important;" onchange="show(this)" accept="image/*" type="file"/>
-                               <img id="pre-look" style="width: 306px;height: 120px;" src="" th:src="@{/static/images/wechat.jpg}">
-
+                        <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
+                            <div class="ui form">
+                                <div class="inline  field">
+                                    <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏配图：</label>
+                                    <input id="input_file"  style="position:absolute;opacity:0;height: 120px !important;padding: 0 !important;"
+                                           onchange="show(this)" accept="image/*" type="file"/>
+                                    <img id="pre-look" style="width: 306px;height: 120px;" src=""  th:src="@{/static/images/wechat.jpg}">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row" style="padding-left: 2rem !important;">
-                        <button id="add-btn" class="medium  ui basic red button" style="margin-left: 8rem !important;">
-                            提交
-                        </button>
-                    </div>
-
-                </div>
-
+                        <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
+                            <button type="submit"  class="medium  ui basic red button"
+                                    style="margin-left: 9rem !important;">
+                                提交
+                            </button>
+                        </div>
+                    </form>
             </div>
-            <!-- &lt;!&ndash;分页按钮&ndash;&gt;
-             <div class="ui bottom attached segment ">
-                 <div class="ui middle aligned two column grid"
-                      style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                     <div class="column" style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                         <a href="#" class="ui mini teal basic button">上一页</a>
-                     </div>
-                     <div class="right aligned column">
-                         <a href="#" class="ui mini teal basic button">下一页</a>
-                     </div>
-                 </div>
-             </div>-->
             <div class="ui bottom attached segment " style="height: 30em "></div>
         </div>
     </div>
@@ -92,6 +80,14 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script>
+    $('#add-btn').click(function () {
+        var categoryName = $('#category-name').val();
+        var categoryDesc = $('#categoryDesc').val();
+        var category
+
+    })
+</script>
+<script>
     $('#add-btn').mouseenter(function () {
         $('#add-btn').removeClass("basic");
     })
@@ -99,6 +95,7 @@
         $('#add-btn').addClass("basic");
     })
 </script>
+
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -114,7 +111,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 100);
+        setTimeout(toggleStatus, 500);
     }
 
     <!--退出操作异步请求-->
@@ -124,12 +121,11 @@
             method: "GET",
             sync: true,
             data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
                     sessionStorage.removeItem("user");
-                    $("#login-btn").show();
-                    $('#header-images').hide();
+                    window.location.href = "/user/loginPage";
                 }
             },
             error: function () {
@@ -137,32 +133,6 @@
             }
         });
     });
-
-</script>
-
-<!--控制头像的显示-->
-<script>
-    $(document).ready(function () {
-        toggleStatus();
-    });
-
-    function toggleStatus() {
-        var user = sessionStorage.getItem("user");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-        setTimeout(toggleStatus, 100);
-    }
-</script>
-<script>
-    $(document).ready(function () {
-        var url = window.location.pathname;
-        console.log("location:" + url);
-    })
 
 </script>
 <script>
@@ -187,10 +157,10 @@
         $('#add-btn').addClass("basic");
     })
     $('#add-btn').click(function () {
-        var str=$('#category-name').val();
-        if(""==str||null==str){
+        var str = $('#category-name').val();
+        if ("" == str || null == str) {
             $('#category-name-msg').show();
-        }else{
+        } else {
             $('#category-name-msg').hide();
         }
     })
@@ -200,7 +170,7 @@
         var rd = new FileReader();//创建文件读取对象
         var files = obj.files[0];//获取file组件中的文件
         rd.readAsDataURL(files);//文件读取装换为base64类型
-        rd.onloadend = function(e) {
+        rd.onloadend = function (e) {
             //加载完毕之后获取结果赋值给img
             $('#pre-look').height(120);
             $('#pre-look').width(120);
@@ -210,7 +180,7 @@
     }
 </script>
 <script>
-    $('#side-bnt5').css("background","#DB2828");
-    $('#side-bnt5').css("color","#ffffff");
+    $('#side-bnt5').css("background", "#DB2828");
+    $('#side-bnt5').css("color", "#ffffff");
 </script>
 </html>
