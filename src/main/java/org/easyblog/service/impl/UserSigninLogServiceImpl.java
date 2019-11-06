@@ -1,8 +1,8 @@
-package org.easyblog.service;
+package org.easyblog.service.impl;
 
 import org.easyblog.bean.UserSigninLog;
 import org.easyblog.mapper.UserSigninLogMapper;
-import org.easyblog.service.base.IUserSigninLogService;
+import org.easyblog.service.IUserSigninLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;

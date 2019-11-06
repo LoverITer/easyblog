@@ -1,4 +1,4 @@
-package org.easyblog.service;
+package org.easyblog.service.impl;
 
 import org.easyblog.bean.User;
 import org.easyblog.bean.enums.UserFreeze;
@@ -6,7 +6,7 @@ import org.easyblog.bean.enums.UserLock;
 import org.easyblog.bean.enums.UserPower;
 import org.easyblog.handler.exception.NullUserException;
 import org.easyblog.mapper.UserMapper;
-import org.easyblog.service.base.IUserService;
+import org.easyblog.service.IUserService;
 import org.easyblog.utils.FileUploadUtils;
 import org.easyblog.utils.RegexUtil;
 import org.springframework.cache.annotation.CacheConfig;

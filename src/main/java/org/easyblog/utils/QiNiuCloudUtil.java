@@ -35,9 +35,9 @@ public class QiNiuCloudUtil {
     private static final Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
 
     //外链默认域名
-    private static final String DOMAIN = "oi6buyfwl.bkt.clouddn.com";
+    private static final String DOMAIN = "q0hiemlhp.bkt.clouddn.com";
 
-    private static final String style = ".jpg";
+    private static final String style = "imageView2/1/w/200/h/200/format/jpg/q/100|imageslim";
 
     //构造一个带指定Zone对象的配置类
     Configuration configuration = new Configuration(Zone.zone0());

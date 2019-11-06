@@ -3,7 +3,7 @@ package org.easyblog.controller.admin;
 import org.easyblog.bean.Category;
 import org.easyblog.bean.User;
 import org.easyblog.config.Result;
-import org.easyblog.service.CategoryServiceImpl;
+import org.easyblog.service.impl.CategoryServiceImpl;
 import org.easyblog.utils.FileUploadUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

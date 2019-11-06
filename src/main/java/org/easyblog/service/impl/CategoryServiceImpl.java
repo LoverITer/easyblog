@@ -1,8 +1,8 @@
-package org.easyblog.service;
+package org.easyblog.service.impl;
 
 import org.easyblog.bean.Category;
 import org.easyblog.mapper.CategoryMapper;
-import org.easyblog.service.base.ICategoryService;
+import org.easyblog.service.ICategoryService;
 import org.easyblog.utils.FileUploadUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
