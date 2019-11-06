@@ -3,8 +3,8 @@ package org.easyblog.controller;
 import org.easyblog.bean.Article;
 import org.easyblog.bean.ArticleCount;
 import org.easyblog.bean.Category;
-import org.easyblog.service.ArticleServiceImpl;
-import org.easyblog.service.CategoryServiceImpl;
+import org.easyblog.service.impl.ArticleServiceImpl;
+import org.easyblog.service.impl.CategoryServiceImpl;
 import org.springframework.ui.Model;
 
 import java.util.List;

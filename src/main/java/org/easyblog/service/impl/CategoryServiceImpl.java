@@ -1,8 +1,8 @@
-package org.easyblog.service;
+package org.easyblog.service.impl;
 
 import org.easyblog.bean.Category;
 import org.easyblog.mapper.CategoryMapper;
-import org.easyblog.service.base.ICategoryService;
+import org.easyblog.service.ICategoryService;
 import org.easyblog.utils.FileUploadUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -70,7 +70,7 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public int saveCategory(int userId, String categoryName) {
         if (userId > 0 && categoryName != null) {
-            Category category = new Category(userId, categoryName, FileUploadUtils.defaultCategoryImage(), 0, 0, 0, "1");
+            Category category = new Category(userId, categoryName, FileUploadUtils.defaultCategoryImage(), 0, 0, 0, "1","");
             return categoryMapper.insertSelective(category);
         }
         return -1;

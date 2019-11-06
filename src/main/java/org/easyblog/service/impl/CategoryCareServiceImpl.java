@@ -1,8 +1,8 @@
-package org.easyblog.service;
+package org.easyblog.service.impl;
 
 import org.easyblog.bean.CategoryCare;
 import org.easyblog.mapper.CategoryCareMapper;
-import org.easyblog.service.base.ICategoryCareService;
+import org.easyblog.service.ICategoryCareService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

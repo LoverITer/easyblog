@@ -68,8 +68,11 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 10MB
+      enabled: true
 logging:
   level:
     root: debug
     org.easyblog: debug
   file: easyblogDev.log
+cbs:
+  imagesPath: file:/E:/fileUpload/

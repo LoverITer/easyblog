@@ -4,10 +4,10 @@ import org.easyblog.bean.User;
 import org.easyblog.bean.UserLoginStatus;
 import org.easyblog.bean.UserSigninLog;
 import org.easyblog.config.Result;
-import org.easyblog.service.UserEmailLogServiceImpl;
-import org.easyblog.service.UserPhoneLogServiceImpl;
-import org.easyblog.service.UserServiceImpl;
-import org.easyblog.service.UserSigninLogServiceImpl;
+import org.easyblog.service.impl.UserEmailLogServiceImpl;
+import org.easyblog.service.impl.UserPhoneLogServiceImpl;
+import org.easyblog.service.impl.UserServiceImpl;
+import org.easyblog.service.impl.UserSigninLogServiceImpl;
 import org.easyblog.utils.EncryptUtil;
 import org.easyblog.utils.NetWorkUtil;
 import org.easyblog.utils.SendEmailUtil;
@@ -286,8 +286,12 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/logout")
-    public Result logout(HttpSession session) {
-        session.removeAttribute("user");
+    public Result logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        //session.removeAttribute("user");
+        if(session!=null){
+            session.invalidate();
+        }
         Result result = new Result();
         result.setSuccess(true);
         result.setMsg(AJAX_SUCCESS);

@@ -18,10 +18,12 @@ public class Category implements Serializable {
     private Integer categoryCareNum;
     private String display;
     private Date createTime;
+    private String categoryDescription;
+
     public Category() {
     }
 
-    public Category( Integer categoryUser, String categoryName, String categoryImageUrl, Integer categoryArticleNum, Integer categoryClickNum, Integer categoryCareNum,String display) {
+    public Category( Integer categoryUser, String categoryName, String categoryImageUrl, Integer categoryArticleNum, Integer categoryClickNum, Integer categoryCareNum,String display,String categoryDescription) {
         this.categoryUser = categoryUser;
         this.categoryName = categoryName;
         this.categoryImageUrl = categoryImageUrl;
@@ -29,8 +31,16 @@ public class Category implements Serializable {
         this.categoryClickNum = categoryClickNum;
         this.categoryCareNum = categoryCareNum;
         this.display=display;
+        this.categoryDescription = categoryDescription;
     }
 
+    public String getCategoryDescription() {
+        return categoryDescription;
+    }
+
+    public void setCategoryDescription(String categoryDescription) {
+        this.categoryDescription = categoryDescription;
+    }
 
     public Date getCreateTime() {
         return createTime;

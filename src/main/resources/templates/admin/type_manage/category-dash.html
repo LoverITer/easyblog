@@ -77,7 +77,7 @@
                         </div>
                         <div class="nine wide column right aligned" style="padding-right: 0 !important;">
                             <div style="padding-top: 15px !important;">
-                                <a href="#" th:href="@{/category/details/}+${category.getCategoryId()}+@{/}+${userId}" style="color:#349EDF !important;">一键恢复</a>
+                                <a href="#" th:href="@{/manage/category/restore(categoryId=${category.getCategoryId()})}" style="color:#349EDF !important;">一键恢复</a>
                             </div>
                         </div>
                         <div class="two wide column left aligned" style="padding-left: 5px !important;">
@@ -162,10 +162,15 @@
     });
 
 </script>
-<script>
+<script th:inline="javascript">
     $(document).ready(function () {
-        var url = window.location.pathname;
-        console.log("location:" + url);
+       $('#add-btn').click(function () {
+           var msg=[[${msg}]];
+           console.log(msg);
+           if(msg!=undefined&&msg!=null&&msg!=""){
+               alert(msg);
+           }
+       })
     })
 
 </script>

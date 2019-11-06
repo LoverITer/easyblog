@@ -1,4 +1,4 @@
-package org.easyblog.service.base;
+package org.easyblog.service;
 
 public interface IUserPhoneLogService {
 

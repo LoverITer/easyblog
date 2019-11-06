@@ -1,4 +1,4 @@
-package org.easyblog.service.base;
+package org.easyblog.service;
 
 import org.easyblog.bean.CategoryCare;
 

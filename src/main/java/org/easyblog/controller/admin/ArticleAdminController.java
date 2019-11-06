@@ -6,9 +6,9 @@ import org.easyblog.bean.Category;
 import org.easyblog.bean.User;
 import org.easyblog.bean.enums.ArticleType;
 import org.easyblog.config.Result;
-import org.easyblog.service.ArticleServiceImpl;
-import org.easyblog.service.CategoryServiceImpl;
-import org.easyblog.service.UserServiceImpl;
+import org.easyblog.service.impl.ArticleServiceImpl;
+import org.easyblog.service.impl.CategoryServiceImpl;
+import org.easyblog.service.impl.UserServiceImpl;
 import org.easyblog.utils.FileUploadUtils;
 import org.easyblog.utils.HtmlParserUtil;
 import org.easyblog.utils.MarkdownUtil;
@@ -169,7 +169,7 @@ public class ArticleAdminController {
                 return result;
             }
             if (Objects.isNull(category)) {
-                category = new Category(userId, article0.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1");
+                category = new Category(userId, article0.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1","");
                 categoryService.saveCategory(category);
             } else {
                 Category category0 = new Category();
