@@ -28,7 +28,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "checkUser",unless = "#result==null")
+    @Cacheable(cacheNames = "user",unless = "#result==null")
     @Override
     public User checkUser(String username, String password) {
         User user = null;
@@ -44,7 +44,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "getUser",condition = "#result!=null")
+    @Cacheable(cacheNames = "user",condition = "#result!=null")
     @Override
     public User getUser(String queryStr) {
         User user = null;
@@ -59,7 +59,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "getUser", condition = "#result!=null")
+    @Cacheable(cacheNames = "user", condition = "#result!=null")
     @Override
     public User getUser(long uid) {
         return userMapper.getByPrimaryKey(uid);
@@ -68,7 +68,7 @@ public class UserServiceImpl implements IUserService {
 
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @CachePut(cacheNames = "register",condition = "#result==true")
+    @CachePut(cacheNames = "user",condition = "#result==true")
     @Override
     public boolean register(String nickname, String password, String account, String ipInfo) {
         String headUrl= FileUploadUtils.defaultAvatar();
@@ -80,8 +80,7 @@ public class UserServiceImpl implements IUserService {
                 user = new User(nickname, password, null, null, null, null, null, null, account, 0, 100000, headUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(),0,0);
             }
             if (user != null) {
-                userMapper.save(user);
-                return true;
+                return userMapper.save(user) > 0;
             } else {
                 throw new NullUserException("用户不可为空！");
             }
@@ -92,7 +91,7 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-    @CachePut(cacheNames = "updateUserInfo")
+    @CachePut(cacheNames = "user",condition = "#result==true")
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public boolean updateUserInfo(String account,String newPassword) {

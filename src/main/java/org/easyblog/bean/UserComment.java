@@ -4,6 +4,8 @@ import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserComment implements Serializable {
 
@@ -28,6 +30,8 @@ public class UserComment implements Serializable {
 
     private String commentContent;
 
+    private Map<String,String> info=new HashMap<>();
+
     public UserComment() {
     }
 
@@ -40,6 +44,14 @@ public class UserComment implements Serializable {
         this.pid = pid;
         this.level = level;
         this.commentContent = commentContent;
+    }
+
+    public Map<String, String> getInfo() {
+        return info;
+    }
+
+    public void setInfo(Map<String, String> info) {
+        this.info = info;
     }
 
     public Integer getCommentId() {

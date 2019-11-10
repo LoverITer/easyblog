@@ -14,6 +14,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.Objects;
 
 @EnableCaching
 @Configuration
@@ -29,12 +30,15 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
     public KeyGenerator keyGenerator() {
         return (obj, method, params) -> {
             StringBuilder sb = new StringBuilder();
-            sb.append(obj.getClass().getName()); // 类目
-            sb.append("."+method.getName()); // 方法名
-            for (Object param : params) {
-                sb.append(".["+param.toString()); // 参数名
+            sb.append(obj.getClass().getName()); // 类
+            sb.append(".").append(method.getName()); // 方法名
+            if(Objects.nonNull(params)&&params.length>0) {
+                for (Object param : params) {
+                    sb.append(".").append(param.hashCode()); // 参数名的hashcode
+                }
+            }else{
+                sb.append(".").append("0");
             }
-            sb.append("]");
             return sb.toString();
         };
     }
