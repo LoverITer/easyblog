@@ -17,9 +17,7 @@
 
 
   <select id="getByPrimaryKey" parameterType="long" resultMap="ResultMapWithBLOBs">
-    select *
-    from user_comment
-    where comment_id = #{id,jdbcType=INTEGER}
+    select * from user_comment where comment_id = #{id,jdbcType=INTEGER}
   </select>
 
   <select id="getAll" resultType="list">
@@ -31,9 +29,16 @@
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="long">
-    delete from user_comment
-    where comment_id = #{commentId,jdbcType=INTEGER}
+    delete from user_comment where comment_id = #{commentId,jdbcType=INTEGER}
   </delete>
+
+  <select id="getSendComment" resultType="org.easyblog.bean.UserComment">
+    select * from user_comment where comment_send=#{sendUser}
+  </select>
+
+  <select id="getReceiveComment" resultType="org.easyblog.bean.UserComment">
+    select * from user_comment where comment_received=#{receiveUser}
+  </select>
 
   <insert id="save" parameterType="org.easyblog.bean.UserComment">
     insert into user_comment (comment_id, comment_send, comment_received, 
@@ -162,4 +167,6 @@
       level = #{level,jdbcType=INTEGER}
     where comment_id = #{commentId,jdbcType=INTEGER}
   </update>
+
+
 </mapper>

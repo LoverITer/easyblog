@@ -40,7 +40,7 @@ public class QiNiuCloudUtil {
     private static final String style = "imageView2/1/w/200/h/200/format/jpg/q/100|imageslim";
 
     //构造一个带指定Zone对象的配置类
-    Configuration configuration = new Configuration(Zone.zone0());
+    private Configuration configuration = new Configuration(Zone.zone0());
 
     public String getUpToken() {
         return auth.uploadToken(bucketname, null, 3600, new StringMap().put("insertOnly", 1));

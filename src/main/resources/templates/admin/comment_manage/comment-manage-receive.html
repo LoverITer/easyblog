@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评论管理 - EasyBlog博客</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../../../css/me.css" th:href="@{/static/css/me.css}">
+</head>
+<body>
+
+<!--导航-->
+<div th:replace="~{nav :: navbar}"></div>
+
+
+<!--中间内容-->
+<div class="ui m-container m-padded-tb-big stackable">
+    <div class="ui stackable grid">
+        <!--侧边栏-->
+        <div th:replace="~{manage-sidebar::manage}"></div>
+        <!--博客内容-->
+        <div class="thirteen wide column">
+
+            <!--header-->
+            <div class="ui top attached segment " style="border-bottom: none !important;padding-bottom: 0 !important;">
+                <div class="ui stackable grid">
+                    <div class="four column row">
+                        <div class="left floated column">
+                            <h3>评论管理</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui top attached segment stackable"
+                     style="border-top: none !important;border-left: none !important;border-right: none !important;">
+                    <div class="ui grid">
+                        <div class="row" style="padding-top: 10px !important;padding-bottom: 10px !important;">
+                            <div class="two wide column" style="padding-right: 0 !important;">
+                                <a id="all" href="#" th:href="@{/manage/comment/receive}" class="m-black"
+                                   style="color:#349EDF !important;font-size: 1.1rem !important;">我的文章评论</a>
+                            </div>
+                            <div class="two wide column"
+                                 style="padding-right: 0 !important;padding-left: 0 !important;">
+                                <a id="public" href="#" th:href="@{/manage/comment/publish}"
+                                   style="font-size: 1.1rem !important;" class="m-black">
+                                    我发表的评论
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--content-->
+            <div style="padding-top: 0 !important;" class="ui attached segment border-bt-none">
+                <div th:each="comment:${comments}" id="comment-msg" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed"
+                     style="padding-bottom: 20px !important;padding-top: 10px !important;">
+                    <div class="ui mobile reversed stackable grid" style="border-bottom: grey dot-dash !important;">
+                        <div class="sixteen wide column">
+                            <div class="ui stackable grid">
+                                <div class="eleven wide column" style="padding-bottom:  10px !important;">
+                            <span  style="min-height: 22px;color: grey !important;font-size: 15px !important;"
+                                   class="ui m-inline-block m-margin-top-small m-margin-bottom-small">
+                                我在 <span style="color: black !important;" th:text="${#dates.format(comment.getCommentTime(),'yyyy年MM月dd日 hh:mm:ss')}">时间</span> 评论了 <span
+                                    style="color: black !important;">ABC</span> 的文章 <a href="#">你真的理解什么是财富自由吗？</a>
+                            </span>
+                                </div>
+                                <div  class="right aligned five wide column">
+                                    <div class="five  wide  column" style="padding-bottom:  5px !important;">
+                                        <div id="del-btn" class="ui horizontal list">
+                                            <div class="item"><a href="#" style="color: #CA0C16" th:value="${comment.getCommentId()}" onclick="deleteComment(this)">删除</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ui stackable grid" >
+                                <div class="sixteen wide column" style="padding-top:  0 !important;">
+                                    <i class="quote grey left icon"></i>
+                                    <span style="margin: auto 5px !important;" th:text="${comment.getCommentContent()}">有时候我们避免不了多表联查，这样带来的问题是返回的结果类型中的一个字段在resultType中的不存在，这就会造成问题。MyBatis中使用resultMap来解决这个问题。 resultMap 元素有很多子元素和一个值得讨论的结构。 下面是 resultMap 标签中可以使用的属性如下：</span>
+                                    <i class="quote  grey right icon"></i>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div th:if="${#lists.size(comments)<15}" class="ui bottom attached segment ">
+                <div class="ui middle aligned two column grid"
+                     style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                </div>
+            </div>
+            <!--分页按钮-->
+            <div th:if="${#lists.size(comments)>15}" class="ui bottom attached segment ">
+                <div class="ui middle aligned two column grid"
+                     style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                    <div class="column" style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                        <a href="#" class="ui mini teal basic button">上一页</a>
+                    </div>
+                    <div class="right aligned column">
+                        <a href="#" class="ui mini teal basic button">下一页</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div style="height: 10em"></div>
+<!--底部footer-->
+<div th:replace="~{footer :: footbar}"></div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        toggleStatus();
+    });
+
+    function toggleStatus() {
+        var user = sessionStorage.getItem("user");
+        if(user!=null){
+            $('#header-images').show();
+            $('#login-btn').hide();
+        }else{
+            $('#header-images').hide();
+            $('#login-btn').show();
+        }
+        setTimeout(toggleStatus,300);
+    }
+
+    <!--退出操作异步请求-->
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: $('#userId').val()},
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    sessionStorage.removeItem("user");
+                    window.location.href="/user/loginPage";
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试！")
+            }
+        });
+    });
+
+</script>
+<script>
+    function deleteComment(obj) {
+        var commentId=$(obj).val();
+        $.ajax({
+            url:"/manage/comment/delete",
+            method:"GET",
+            data:{commentId:commentId},
+            sync:true,
+            dataType:"json",
+            success:function (response) {
+                if(response.success){
+                    alert("删除成功");
+                }else{
+                    if("未登录"==response.msg){
+                        window.location.href="/user/loginPage";
+                    }else{
+                        alert("服务异常，请重试！");
+                    }
+                }
+            },
+            error:function () {
+                alert("服务异常，请重试！");
+            }
+        })
+    }
+</script>
+<script>
+    $('#del-btn').ready(function () {
+        $('#del-btn').hide();
+    });
+    $('#comment-msg').mouseenter(function () {
+        $('#del-btn').show();
+    });
+    $('#comment-msg').mouseleave(function () {
+        $('#del-btn').hide();
+    });
+</script>
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+
+    $('#searchBar').click(function () {
+        $('#reloadSearchBar').css("display", "block");  //显示div
+    });
+
+</script>
+<script>
+    $('#side-bnt4').css("background", "#DB2828");
+    $('#side-bnt4').css("color", "#ffffff");
+</script>
+</html>
