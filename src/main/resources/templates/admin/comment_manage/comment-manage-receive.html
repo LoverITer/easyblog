@@ -61,8 +61,8 @@
                                 <div class="eleven wide column" style="padding-bottom:  10px !important;">
                             <span  style="min-height: 22px;color: grey !important;font-size: 15px !important;"
                                    class="ui m-inline-block m-margin-top-small m-margin-bottom-small">
-                                我在 <span style="color: black !important;" th:text="${#dates.format(comment.getCommentTime(),'yyyy年MM月dd日 hh:mm:ss')}">时间</span> 评论了 <span
-                                    style="color: black !important;">ABC</span> 的文章 <a href="#">你真的理解什么是财富自由吗？</a>
+                                <span style="color: black !important;" th:text="${comment.getInfo().get('userName')}">ABC</span> 在 <span style="color: black !important;" th:text="${#dates.format(comment.getCommentTime(),'yyyy年MM月dd日 hh:mm:ss')}">时间</span> 评论了
+                                我的的文章 <a href="#" th:text="${comment.getInfo().get('article')}">你真的理解什么是财富自由吗？</a>
                             </span>
                                 </div>
                                 <div  class="right aligned five wide column">
@@ -82,16 +82,22 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
 
             </div>
 
-            <div th:if="${#lists.size(comments)<15}" class="ui bottom attached segment ">
+            <div th:if="${#lists.size(comments)<15 and #lists.size(comments)!=0}" class="ui bottom attached segment " >
                 <div class="ui middle aligned two column grid"
                      style="padding-top: 0 !important;padding-bottom: 0 !important;">
+
+                </div>
+            </div>
+
+            <div style="height: 30em !important;" th:if="${#lists.size(comments)==0}" class="ui bottom attached segment " >
+                <div class="ui middle aligned two column grid"
+                     style="padding-top: 0 !important;padding-bottom: 0 !important;">
+                    <div style="margin: 10em auto !important;float: left !important;"><span style="color: grey !important;">当前没有任何评论</span></div>
                 </div>
             </div>
             <!--分页按钮-->
@@ -160,7 +166,7 @@
 </script>
 <script>
     function deleteComment(obj) {
-        var commentId=$(obj).val();
+        var commentId=$(obj).attr("value");
         $.ajax({
             url:"/manage/comment/delete",
             method:"GET",
@@ -170,6 +176,7 @@
             success:function (response) {
                 if(response.success){
                     alert("删除成功");
+                    window.location.href="/manage/comment/receive"
                 }else{
                     if("未登录"==response.msg){
                         window.location.href="/user/loginPage";

@@ -39,7 +39,6 @@ public class CommentAdminController {
         User user = (User) session.getAttribute("user");
         if(Objects.nonNull(user)){
             List<UserComment> comments = commentService.getComment(user.getUserId(), "send");
-
             model.addAttribute("comments",comments);
             return PREFIX+"comment-manage-publish";
         }
