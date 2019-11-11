@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!--左侧菜单栏-->
+<div th:fragment="sidebar" class="three wide column">
+    <div class="ui segments ">
+        <div id="side-profile" class="ui segment border-bt-none m-a-bg-hover">
+            <a href="#" target="" class="m-black m-text-thin m-text-spaced m-a-bg-hover"
+               style="color:inherit !important;font-size: 14px !important;padding-left: 20% !important;" th:href="@{/manage/uc/profile}"><i class="list alternate outline icon"></i>个人资料</a>
+        </div>
+        <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
+
+        <div id="side-care" class="ui segment border-bt-none m-a-bg-hover">
+            <a  href="#" target="" class="m-black m-text-thin m-text-spaced m-a-bg-hover"
+               style="color:inherit !important;font-size: 14px !important;padding-left: 20% !important;" th:href="@{/manage/uc/follow-list}"><i class="heart icon"></i>我关注的人</a>
+        </div>
+        <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
+        <div id="side-fans" class="ui segment border-bt-none m-a-bg-hover">
+            <a href="#" target="" class="m-black m-text-thin m-text-spaced m-a-bg-hover"
+               style="color:inherit !important;font-size: 14px !important;padding-left: 20% !important;" th:href="@{/manage/uc/fans-list}"><i class="users icon"></i>我的粉丝</a>
+        </div>
+        <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
+        <div class="ui segment border-bt-none m-a-bg-hover">
+            <a href="#" target="" class="m-black m-text-thin m-text-spaced m-a-bg-hover"
+               style="color:inherit !important;font-size: 14px !important;padding-left: 20% !important;" th:href="@{/manage/blog/}"><i class="archive icon"></i>我的博客</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

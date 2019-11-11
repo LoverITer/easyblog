@@ -32,6 +32,8 @@ public class User implements Serializable {
     private Integer userPower;
     private Integer userLevel;
     private Integer userVisit;
+    private String userJobPosition;
+    private String userPrefession;
 
     public User() {
     }
@@ -60,6 +62,21 @@ public class User implements Serializable {
         this.userVisit=userVisit;
     }
 
+    public String getUserJobPosition() {
+        return userJobPosition;
+    }
+
+    public void setUserJobPosition(String userJobPosition) {
+        this.userJobPosition = userJobPosition;
+    }
+
+    public String getUserPrefession() {
+        return userPrefession;
+    }
+
+    public void setUserPrefession(String userPrefession) {
+        this.userPrefession = userPrefession;
+    }
 
     public Integer getUserLevel() {
         return userLevel;
@@ -271,6 +288,8 @@ public class User implements Serializable {
                 ", userPower=" + userPower +
                 ", userLevel=" + userLevel +
                 ", userVisit=" + userVisit +
+                ", userJobPosition='" + userJobPosition + '\'' +
+                ", userPrefession='" + userPrefession + '\'' +
                 '}';
     }
 }

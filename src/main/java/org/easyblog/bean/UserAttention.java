@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 public class UserAttention implements Serializable {
 
@@ -18,6 +19,11 @@ public class UserAttention implements Serializable {
 
     private Date attentionTime;
 
+    /**
+     * 封住对用户的详细
+     */
+    private Map<String,User> userInfo;
+
     public UserAttention() {
     }
 
@@ -25,6 +31,14 @@ public class UserAttention implements Serializable {
         this.userId = userId;
         this.attentionId = attentionId;
         this.attentionTime = attentionTime;
+    }
+
+    public Map<String, User> getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(Map<String, User> userInfo) {
+        this.userInfo = userInfo;
     }
 
     public Integer getId() {

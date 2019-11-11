@@ -2,7 +2,7 @@ package org.easyblog.service.impl;
 
 import org.easyblog.bean.Article;
 import org.easyblog.bean.ArticleCount;
-import org.easyblog.bean.enums.ArticleType;
+import org.easyblog.enumHelper.ArticleType;
 import org.easyblog.mapper.ArticleMapper;
 import org.easyblog.service.IArticleService;
 import org.springframework.cache.annotation.CacheConfig;

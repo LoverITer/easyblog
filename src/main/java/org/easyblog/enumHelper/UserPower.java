@@ -1,4 +1,4 @@
-package org.easyblog.bean.enums;
+package org.easyblog.enumHelper;
 
 
 /**

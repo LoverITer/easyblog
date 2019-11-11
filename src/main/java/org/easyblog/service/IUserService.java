@@ -40,6 +40,8 @@ public interface IUserService {
     boolean register(String nickname, String password, String account, String ipInfo);
 
 
-    boolean updateUserInfo(String account,String newPassword);
+    int updateUserInfo(String account,String newPassword);
 
+
+    int updateUserInfo(User user);
 }

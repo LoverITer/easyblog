@@ -98,6 +98,7 @@ public class RegexUtil {
             "|(^([1][89][2468][048])([-\\/\\._]?)(0?2)([-\\/\\._]?)(29)$)|(^([2-9][0-9][2468][048])([-\\/\\._]?)(0?2)" +
             "([-\\/\\._]?)(29)$)|(^([1][89][13579][26])([-\\/\\._]?)(0?2)([-\\/\\._]?)(29)$)|" +
             "(^([2-9][0-9][13579][26])([-\\/\\._]?)(0?2)([-\\/\\._]?)(29)$))";
+
     /***
      * 日期正则 支持：
      *  YYYY-MM-DD
@@ -129,7 +130,6 @@ public class RegexUtil {
      * 匹配数字组成的字符串  ^[0-9]+$
      */
     public static final String STR_NUM = "^[0-9]+$";
-
 
 
     /**
@@ -294,9 +294,8 @@ public class RegexUtil {
         if (Objects.isNull(str)) return false;
         if (str.trim().length() == 15 || str.trim().length() == 18) {
             return Regular(str, IDCARD);
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -373,11 +372,12 @@ public class RegexUtil {
 
     /**
      * 判断一个字符串是否是QQ号
+     *
      * @param str
      * @return
      */
-    public static boolean isQQ(String str){
-        return Regular(str,"/^[1-9][0-9]{4,9}$/gim");
+    public static boolean isQQ(String str) {
+        return Regular(str, "/^[1-9][0-9]{4,9}$/gim");
     }
 
     /**

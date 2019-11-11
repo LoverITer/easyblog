@@ -61,6 +61,20 @@
     select count(*) from secret_message
   </select>
 
+  <select id="getUserAllAttentionInfoSelective" resultType="org.easyblog.bean.UserAttention">
+      select * from user_attention
+    <where>
+      <choose>
+        <when test="userAttention.userId!=null">
+          user_id=#{userAttention.userId}
+        </when>
+        <when test="userAttention.attentionId!=null">
+          attention_id=#{userAttention.attentionId}
+        </when>
+      </choose>
+    </where>
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="long">
     delete from user_attention
     where id = #{id,jdbcType=SMALLINT}
