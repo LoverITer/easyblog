@@ -23,22 +23,23 @@
                              th:src="@{${user.getUserHeaderImgUrl()}}"/>
                     </a>
                 </div>
-                <div class="twelve wide column" style="padding-left: 0!important;">
-                    <div class="row">
-                        <span style="font-size: 16px"><strong>LoveITer</strong></span>
-                        <button class="ui right floated  mini yellow basic button">
+                <div class="twelve wide column grid" style="padding-left: 0!important;">
+                    <div class=" m-margin-bottom">
+                            <div  style="float: left !important;font-size: 16px" th:text="${user.getUserNickname()}"></div>
+                    </div>
+                    <div style="clear: both !important;"></div>
+                    <div class=" m-margin-bottom"></div>
+                    <div  class="row" >
+                        <button  class="ui left floated  mini yellow basic button">
                             <a href="#"
                                style="color: orange;font-size: 12px;">私信</a>
                         </button>
-                        <button class="ui right floated  mini red basic button">
+                        <button class="ui left floated  mini red basic button">
                             <a href="#"
                                style="color: red;font-size: 12px;">关注</a>
                         </button>
-                    </div>
-
-                    <div class="row m-margin-top-large">
                         <a href="#" th:if="${user!=null}" th:href="@{/article/home/}+${user.getUserId()}"
-                           class="float-right" style="color: #3399ea">TA的个人主页&nbsp;></a>
+                           class="float-right" style="color: #3399ea;font-size: 12px !important;">TA的个人主页&nbsp;></a>
                     </div>
                 </div>
             </div>

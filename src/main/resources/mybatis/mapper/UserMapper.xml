@@ -39,65 +39,74 @@
         </foreach>
     </insert>
 
-    <update id="updateByPrimaryKey">
+    <update id="updateByPrimaryKeySelective">
         update user
         <set>
-            <if test="userNickname!=null">
-                user_nickname=#{userNickname},
+            <if test="user.userNickname!=null">
+                user_nickname=#{user.userNickname},
             </if>
-            <if test="userPassword != null">
-                user_password=#{userPassword},
+            <if test="user.userName!=null">
+                user_name=#{user.userName},
             </if>
-            <if test="userGender!=null">
-                user_gender=#{userGender},
+            <if test="user.userPassword != null">
+                user_password=#{user.userPassword},
             </if>
-            <if test="userQQ!=null">
-                user_qq=#{userQQ},
+            <if test="user.userGender!=null">
+                user_gender=#{user.userGender},
             </if>
-            <if test="userPhone!=null">
-                user_phone=#{userPhone},
+            <if test="user.userQQ!=null">
+                user_qq=#{user.userQQ},
             </if>
-            <if test="userMail!=null">
-                user_mail=#{userMail},
+            <if test="user.userPhone!=null">
+                user_phone=#{user.userPhone},
             </if>
-            <if test="userAddress">
-                user_address=#{userAddress},
+            <if test="user.userMail!=null">
+                user_mail=#{user.userMail},
             </if>
-            <if test="userScore!=null">
-                user_score=#{userScore},
+            <if test="user.userAddress!=null">
+                user_address=#{user.userAddress},
             </if>
-            <if test="userRank!=null">
-                user_rank=#{userRank},
+            <if test="user.userBirthday!=null">
+                user_birthday=#{user.userBirthday},
             </if>
-            <if test="userHeaderImgUrl!=null">
-                user_headerImg_url=#{userHeaderImgUrl},
+            <if test="user.userScore!=null">
+                user_score=#{user.userScore},
             </if>
-            <if test="userDescription!=null">
-                user_description=#{userDescription},
+            <if test="user.userRank!=null">
+                user_rank=#{user.userRank},
             </if>
-            <if test="userLastLoginIp">
-                user_last_login_ip=#{userLastLoginIp},
+            <if test="user.userHeaderImgUrl!=null">
+                user_headerImg_url=#{user.userHeaderImgUrl},
             </if>
-            <if test="userLastUpdateTime!=null">
-                user_last_update_time=#{userLastUpdateTime},
+            <if test="user.userDescription!=null">
+                user_description=#{user.userDescription},
             </if>
-            <if test="userFreeze!=null">
-                user_lock=#{userLock},
+            <if test="user.userLastUpdateTime!=null">
+                user_last_update_time=#{user.userLastUpdateTime},
             </if>
-            <if test="userFreeze!=null">
-                user_freeze=#{userFreeze},
+            <if test="user.userFreeze!=null">
+                user_lock=#{user.userLock},
             </if>
-            <if test="userPower!=null">
-                user_power=#{userPower},
+            <if test="user.userFreeze!=null">
+                user_freeze=#{user.userFreeze},
             </if>
-            <if test="userLevel != null">
-                user_level=#{userLevel},
+            <if test="user.userPower!=null">
+                user_power=#{user.userPower},
             </if>
-            <if test="userVisit != null">
-                user_visit=#{userVisit}
+            <if test="user.userLevel != null">
+                user_level=#{user.userLevel},
+            </if>
+            <if test="user.userVisit != null">
+                user_visit=#{user.userVisit},
+            </if>
+            <if test="user.userPrefession!=null">
+                user_prefession=#{user.userPrefession},
+            </if>
+            <if test="user.userJobPosition!=null">
+                user_job_position=#{user.userJobPosition}
             </if>
         </set>
-        where user_id=#{userId}
+        where user_id=#{user.userId}
     </update>
 
     <!--根据邮件修改用户信息-->
@@ -148,6 +157,12 @@
             </if>
             <if test="userVisit != null">
                 user_visit=#{userVisit}
+            </if>
+            <if test="userPrefession!=null">
+                user_prefession=#{userPrefession}
+            </if>
+            <if test="userJobPosition!=null">
+                user_job_position=#{userJobPosition}
             </if>
         </set>
         where

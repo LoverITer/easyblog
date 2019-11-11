@@ -31,7 +31,8 @@ public class EncryptUtil {
     private EncryptUtil(){
         //单例
     }
-    //双重锁
+
+    //DCL双检查锁
     public static EncryptUtil getInstance(){
         if (me==null) {
             synchronized (EncryptUtil.class) {

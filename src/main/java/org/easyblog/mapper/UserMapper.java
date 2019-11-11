@@ -20,6 +20,8 @@ public interface UserMapper extends BaseMapper<User> {
 
     User getUserByEmail(@Param("email") String phone);
 
-    void updateUserSelective(User user);
+    int updateUserSelective(User user);
+
+    int updateByPrimaryKeySelective(@Param("user") User user);
 
 }

@@ -1,9 +1,9 @@
 package org.easyblog.service.impl;
 
 import org.easyblog.bean.User;
-import org.easyblog.bean.enums.UserFreeze;
-import org.easyblog.bean.enums.UserLock;
-import org.easyblog.bean.enums.UserPower;
+import org.easyblog.enumHelper.UserFreeze;
+import org.easyblog.enumHelper.UserLock;
+import org.easyblog.enumHelper.UserPower;
 import org.easyblog.handler.exception.NullUserException;
 import org.easyblog.mapper.UserMapper;
 import org.easyblog.service.IUserService;
@@ -15,6 +15,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @CacheConfig(keyGenerator = "keyGenerator", cacheManager = "cacheManager")
 @Service
@@ -91,10 +93,10 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-    @CachePut(cacheNames = "user",condition = "#result==true")
+    @CachePut(cacheNames = "user",condition = "#result>0")
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
-    public boolean updateUserInfo(String account,String newPassword) {
+    public int updateUserInfo(String account,String newPassword) {
         try {
             User user = new User();
             if(RegexUtil.isEmail(account)){
@@ -103,11 +105,25 @@ public class UserServiceImpl implements IUserService {
                 user.setUserPhone(account);
             }
             user.setUserPassword(newPassword);
-            userMapper.updateUserSelective(user);
+            return userMapper.updateUserSelective(user);
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return 0;
         }
-        return true;
+    }
+
+    @CachePut(cacheNames = "user",condition = "#result>0")
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public int updateUserInfo(User user) {
+        if(Objects.nonNull(user)){
+            try {
+                return userMapper.updateByPrimaryKeySelective(user);
+            }catch (Exception e){
+                e.printStackTrace();
+                return 0;
+            }
+        }
+        return 0;
     }
 }
