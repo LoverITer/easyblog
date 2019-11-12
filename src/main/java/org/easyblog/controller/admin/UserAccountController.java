@@ -1,9 +1,18 @@
 package org.easyblog.controller.admin;
 
 
+import org.easyblog.bean.User;
+import org.easyblog.bean.UserSigninLog;
+import org.easyblog.service.impl.UserServiceImpl;
+import org.easyblog.service.impl.UserSigninLogServiceImpl;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Objects;
 
 
 /***
@@ -14,10 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserAccountController {
 
     private static final String PREFIX="/admin/setting/";
+    private static final String LOGIN_PAGE = "redirect:/user/loginPage";
+    private final UserSigninLogServiceImpl userSigninLogService;
+    private final UserServiceImpl userService;
 
-    @GetMapping(value = "/help")
-    public String help() {
-        return "help";
+    public UserAccountController(UserSigninLogServiceImpl userSigninLogService, UserServiceImpl userService) {
+        this.userSigninLogService = userSigninLogService;
+        this.userService = userService;
     }
 
 
@@ -50,10 +62,29 @@ public class UserAccountController {
     }
 
 
-    @GetMapping(value = "/loginLog")
-    public String loginLog() {
-        return PREFIX+"/account-setting-signInLog";
+    @GetMapping(value = "/logs")
+    public String loginLog(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if(user!=null){
+            List<UserSigninLog> infos = userSigninLogService.getUserLoginInfo(user.getUserId(), 50);
+            model.addAttribute("infos",infos);
+            return PREFIX+"/account-setting-signInLog";
+        }
+       return LOGIN_PAGE;
+    }
+
+    @GetMapping(value="/accountDestruction")
+    public String accountDestruction(HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(Objects.nonNull(user)){
+
+        }
+        return LOGIN_PAGE;
     }
 
 
+    @GetMapping(value = "/help")
+    public String help() {
+        return "help";
+    }
 }

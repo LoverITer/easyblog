@@ -2,6 +2,8 @@ package org.easyblog.service;
 
 import org.easyblog.bean.UserSigninLog;
 
+import java.util.List;
+
 public interface IUserSigninLogService {
 
     /**
@@ -9,6 +11,9 @@ public interface IUserSigninLogService {
      * @param log
      */
     int saveSigninLog(UserSigninLog log);
+
+
+    List<UserSigninLog> getUserLoginInfo(int userId, int num);
 
 
 }
