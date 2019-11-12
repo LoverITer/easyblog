@@ -7,7 +7,7 @@ import java.util.Objects;
 public class CalendarUtil {
 
 
-    private static CalendarUtil calendarUtil = null;
+    volatile private static CalendarUtil calendarUtil = null;
 
     private CalendarUtil() {
 

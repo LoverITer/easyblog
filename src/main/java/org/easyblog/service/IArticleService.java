@@ -59,6 +59,6 @@ public interface IArticleService {
      * 选择性更新文章信息
      * @param article
      */
-    void updateSelective(Article article);
+    int updateSelective(Article article);
 }
 

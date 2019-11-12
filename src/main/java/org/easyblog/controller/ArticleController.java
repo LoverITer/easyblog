@@ -21,6 +21,7 @@ import java.util.Objects;
 @RequestMapping("/article")
 public class ArticleController {
 
+
     private final UserServiceImpl userService;
     private final CategoryServiceImpl categoryServiceImpl;
     private final ArticleServiceImpl articleServiceImpl;
@@ -79,9 +80,15 @@ public class ArticleController {
             User user = userService.getUser(article.getArticleUser());
             model.addAttribute("user", user);
             if (Objects.nonNull(user)) {
+                User var0 = new User();
+                var0.setUserId(user.getUserId());
+                var0.setUserVisit(user.getUserVisit()+1);
+                userService.updateUserInfo(var0);
+                user.setUserPassword(null);
                 new ControllerUtils(categoryServiceImpl, articleServiceImpl).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
+                return "blog";
             }
-            return "blog";
+            return "/error/404";
         }catch (Exception e){
             return "/error/error";
         }

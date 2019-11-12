@@ -30,11 +30,13 @@ public class ArticleAdminController {
 
     private final ArticleServiceImpl articleService;
     private final CategoryServiceImpl categoryService;
+    private final UserServiceImpl userService;
     private static final String PREFIX = "admin/blog_manage";
 
-    public ArticleAdminController(ArticleServiceImpl articleService, CategoryServiceImpl categoryService, UserServiceImpl userService) {
+    public ArticleAdminController(ArticleServiceImpl articleService, CategoryServiceImpl categoryService, UserServiceImpl userService, UserServiceImpl userService1) {
         this.articleService = articleService;
         this.categoryService = categoryService;
+        this.userService = userService1;
     }
 
 
@@ -46,8 +48,8 @@ public class ArticleAdminController {
                 //去管理页面默认展示所有的已发布的文章
                 List<Article> articles = articleService.getUserArticles(user.getUserId(), ArticleType.Original.getArticleType());
                 model.addAttribute("articles", articles);
-                getShareInfo(model,user);
-                putArticleNumToModel(user,model);
+                getShareInfo(model, user);
+                putArticleNumToModel(user, model);
             } else {
                 return "redirect:/user/loginPage";
             }
@@ -58,7 +60,7 @@ public class ArticleAdminController {
         return PREFIX + "/blog-manage";
     }
 
-    private void getShareInfo(Model model,User user){
+    private void getShareInfo(Model model, User user) {
         try {
             model.addAttribute("user", user);
             final List<Category> categories = categoryService.getUserAllCategories(user.getUserId());
@@ -74,7 +76,7 @@ public class ArticleAdminController {
             }
             model.addAttribute("years", years);
             model.addAttribute("months", new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -109,15 +111,15 @@ public class ArticleAdminController {
                     article.setArticleTopic(articleTopic);
                 }
                 List<Article> articles = articleService.getArticlesSelective(article, year, month);
-                model.addAttribute("articles",articles);
-                getShareInfo(model,user);
-                System.out.println(year+" "+month+" "+articleType+" "+categoryName);
-                model.addAttribute("currentMonth",month+"");
-                model.addAttribute("currentYear",year+"");
-                model.addAttribute("currentType",articleType);
-                model.addAttribute("currentCategory",categoryName);
+                model.addAttribute("articles", articles);
+                getShareInfo(model, user);
+                System.out.println(year + " " + month + " " + articleType + " " + categoryName);
+                model.addAttribute("currentMonth", month + "");
+                model.addAttribute("currentYear", year + "");
+                model.addAttribute("currentType", articleType);
+                model.addAttribute("currentCategory", categoryName);
                 //统计各种状态文章的数量
-                putArticleNumToModel(user,model);
+                putArticleNumToModel(user, model);
                 return PREFIX + "/blog-manage";
             } catch (Exception ex) {
                 return "redirect:/error/error";
@@ -151,13 +153,14 @@ public class ArticleAdminController {
     @ResponseBody
     @PostMapping(value = "/saveArticle/{userId}")
     public Result saveArticle(@RequestBody Article article0,
-                              @PathVariable(value = "userId") Integer userId) {
+                              @PathVariable(value = "userId") Integer userId,
+                              HttpSession session) {
+        User user = (User) session.getAttribute("user");
         Result result = new Result();
         result.setSuccess(false);
-        String htmlContent = MarkdownUtil.markdownToHtmlExtensions(article0.getArticleContent());
-        //不管有没有删除当前用户的这篇草稿
-        try {
-            articleService.deleteByUserIdAndTitle(userId, article0.getArticleTopic());
+        if (Objects.nonNull(user)) {
+            String htmlContent = MarkdownUtil.markdownToHtmlExtensions(article0.getArticleContent());
+            
             final Article article = new Article(userId, article0.getArticleTopic(), new Date(), 0, article0.getArticleCategory(), article0.getArticleStatus(), "0", article0.getArticleType(), "", htmlContent, 0, article0.getArticleAppreciate());
             //根据分类名查用户的分类
             Category category = null;
@@ -168,8 +171,9 @@ public class ArticleAdminController {
                 result.setMsg("文章分类名不可为空");
                 return result;
             }
+            //处理用户文章分类
             if (Objects.isNull(category)) {
-                category = new Category(userId, article0.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1","");
+                category = new Category(userId, article0.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1", "");
                 categoryService.saveCategory(category);
             } else {
                 Category category0 = new Category();
@@ -178,14 +182,21 @@ public class ArticleAdminController {
                 category0.setCategoryArticleNum(num + 1);
                 categoryService.updateByPKSelective(category0);
             }
-            articleService.saveArticle(article);
+
+            //用户之前的可能把文章已经保存为草稿了，再次提交发布就更新
+            int res = articleService.updateSelective(article);
+            if(res<=0) {
+                //如果更新影响的行数是0，那就直接保存文章
+                articleService.saveArticle(article);
+            }
+            user.setUserScore(article0.getArticleType());
+            user.setUserRank();
+            userService.updateUserInfo(user);
             result.setSuccess(true);
             result.setMsg(article.getArticleId() + "");  //把文章的ID返回给页面
             return result;
-        } catch (Exception e) {
-            result.setMsg("抱歉！服务异常，请重新提交！");
-            return result;
         }
+        return result;
     }
 
     @RequestMapping(value = "/success/{articleId}")
@@ -243,7 +254,7 @@ public class ArticleAdminController {
     @GetMapping(value = "/delete")
     public String deleteArticle(@RequestParam("articleId") int articleId) {
         try {
-            updateArticle(articleId,"3");
+            updateArticle(articleId, "3");
         } catch (Exception e) {
             return "redirect:/error/error";
         }
@@ -251,16 +262,16 @@ public class ArticleAdminController {
     }
 
     @GetMapping(value = "/recycleToDraft")
-    public String recycleArticleToDraft(int articleId){
-        try{
-            updateArticle(articleId,"2");
-        }catch (Exception e){
+    public String recycleArticleToDraft(int articleId) {
+        try {
+            updateArticle(articleId, "2");
+        } catch (Exception e) {
             return "redirect:/error/error";
         }
         return "redirect:/manage/blog/";
     }
 
-    private void updateArticle(int articleId,String destArticleStatus){
+    private void updateArticle(int articleId, String destArticleStatus) {
         final Article article = new Article();
         article.setArticleId((long) articleId);
         article.setArticleStatus(destArticleStatus);
@@ -268,39 +279,38 @@ public class ArticleAdminController {
     }
 
     @GetMapping(value = "/deleteComplete")
-    public String deleteComplete(@RequestParam("articleId") int articleId){
-        try{
+    public String deleteComplete(@RequestParam("articleId") int articleId) {
+        try {
             articleService.deleteByPK(articleId);
-        }catch (Exception e){
+        } catch (Exception e) {
             return "redirect:/error/error";
         }
         return "redirect:/manage/blog/";
     }
 
 
-
     @GetMapping(value = "/public")
-    public String publicBlog(Model model,HttpSession session) {
-       return getArticles(model,session,"0","/blog-public");
+    public String publicBlog(Model model, HttpSession session) {
+        return getArticles(model, session, "0", "/blog-public");
     }
 
     @GetMapping(value = "/private")
-    public String privateBlog(Model model,HttpSession session) {
-        return getArticles(model,session,"1","/blog-private");
+    public String privateBlog(Model model, HttpSession session) {
+        return getArticles(model, session, "1", "/blog-private");
     }
 
     @GetMapping(value = "/draft")
-    public String draftBlog(Model model,HttpSession session) {
-        return getArticles(model,session,"2","/blog-draft-box");
+    public String draftBlog(Model model, HttpSession session) {
+        return getArticles(model, session, "2", "/blog-draft-box");
     }
 
     @GetMapping(value = "/dash")
-    public String dashBlog(Model model,HttpSession session) {
-        return getArticles(model,session,"3","/blog-dash");
+    public String dashBlog(Model model, HttpSession session) {
+        return getArticles(model, session, "3", "/blog-dash");
     }
 
 
-    private String getArticles(Model model,HttpSession session,String articleStatus,String dest){
+    private String getArticles(Model model, HttpSession session, String articleStatus, String dest) {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
             try {
@@ -308,10 +318,10 @@ public class ArticleAdminController {
                 article.setArticleUser(user.getUserId());
                 article.setArticleStatus(articleStatus);
                 final List<Article> articles = articleService.getArticlesSelective(article, null, null);
-                model.addAttribute("articles",articles);
-                putArticleNumToModel(user,model);
-                return PREFIX +dest;
-            }catch (Exception e){
+                model.addAttribute("articles", articles);
+                putArticleNumToModel(user, model);
+                return PREFIX + dest;
+            } catch (Exception e) {
                 return "redirect:/error/error";
             }
         }
@@ -320,24 +330,26 @@ public class ArticleAdminController {
 
     /**
      * 将各种状态的文章统计的数据放到model中
+     *
      * @param user
      * @param model
      */
-    private void putArticleNumToModel(User user,Model model){
-        model.addAttribute("allArticles",getArticlesNum(user,null));
-        model.addAttribute("publicArticles",getArticlesNum(user,"0"));
-        model.addAttribute("privateArticles",getArticlesNum(user,"1"));
-        model.addAttribute("draftArticles",getArticlesNum(user,"2"));
-        model.addAttribute("dashArticles",getArticlesNum(user,"3"));
+    private void putArticleNumToModel(User user, Model model) {
+        model.addAttribute("allArticles", getArticlesNum(user, null));
+        model.addAttribute("publicArticles", getArticlesNum(user, "0"));
+        model.addAttribute("privateArticles", getArticlesNum(user, "1"));
+        model.addAttribute("draftArticles", getArticlesNum(user, "2"));
+        model.addAttribute("dashArticles", getArticlesNum(user, "3"));
     }
 
     /**
      * 得到不同状态的文章数量
+     *
      * @param user
      * @param articleStatus
      * @return
      */
-    private int  getArticlesNum(User user,String articleStatus){
+    private int getArticlesNum(User user, String articleStatus) {
         final Article article = new Article();
         article.setArticleUser(user.getUserId());
         article.setArticleStatus(articleStatus);

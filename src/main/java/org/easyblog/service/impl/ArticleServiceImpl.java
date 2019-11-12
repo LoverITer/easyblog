@@ -222,13 +222,14 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public void updateSelective(Article article) {
+    public int updateSelective(Article article) {
         if(Objects.nonNull(article)){
             try{
-                articleMapper.updateByPrimaryKeySelective(article);
+                return  articleMapper.updateByPrimaryKeySelective(article);
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
+        return 0;
     }
 }
