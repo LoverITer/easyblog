@@ -1,5 +1,6 @@
 package org.easyblog.bean;
 
+import org.easyblog.enumHelper.ArticleType;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -186,12 +187,63 @@ public class User implements Serializable {
         return userScore;
     }
 
+    public void setUserScore(String type) {
+        if(ArticleType.Original.getArticleType().equals(type)){
+            this.userScore=this.userScore+5;   //原创文章+5分
+        }else if(ArticleType.Translate.getArticleType().equals(type)){
+            this.userScore=this.userScore+3;   //翻译文章+3分
+        }else{
+            this.userScore=this.userScore+1;   //转载的文章+1分
+        }
+    }
+
     public void setUserScore(Integer userScore) {
         this.userScore = userScore;
     }
 
     public Integer getUserRank() {
         return userRank;
+    }
+
+    public void setUserRank() {
+        if(this.userScore<256){
+            setUserRank(1);
+        }else if(this.userScore < 512){
+            setUserRank(2);
+        }else if(this.userScore < 1024){
+            setUserRank(3);
+        }else if(this.userScore < 2048){
+            setUserRank(4);
+        }else if(this.userScore < 4096){
+            setUserRank(5);
+        }else if(this.userScore<8192){
+            setUserRank(6);
+        }else if(this.userScore<16384){
+            setUserRank(7);
+        }else if(this.userScore<32768){
+            setUserRank(8);
+        }else if(this.userScore<65536){
+            setUserRank(9);
+        }else if(this.userScore<131072){
+            setUserRank(10);
+        }else if(this.userScore<262144){
+            setUserRank(11);
+        }else if(this.userScore<524288){
+            setUserRank(12);
+        }else if(this.userScore<1048576){
+            setUserRank(13);
+        }else if(this.userScore<2097152){
+            setUserRank(14);
+        }else if(this.userScore<4194304){
+            setUserRank(15);
+        }else if(this.userScore<8388608){
+            setUserRank(16);
+        }else if(this.userScore<16777216){
+            setUserRank(17);
+        }else {
+            setUserRank(this.userRank);
+        }
+
     }
 
     public void setUserRank(Integer userRank) {

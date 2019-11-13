@@ -269,14 +269,14 @@
                 data: {email: str,option:"register"},
                 dataType: "text",
                 success: function () {
-                    $('#captcha-msg').show().css("color", "#00ec3f").text("验证码已发送，请注意查收！");
+                    alert("验证码已发送，请注意查收！");
                 },
                 error: function () {
-                    $('#captcha-msg').show().css("color", "#d0393f").text("服务异常，请尝试重新输入邮箱！");
+                    alert("服务异常，请尝试重新输入邮箱！");
                 }
             })
         } else {
-            $('#captcha-msg').show().css("color", "#d0393f").text("请输入正确的手机号或者邮箱地址");
+            alert("请输入正确的手机号或者邮箱地址");
         }
     })
 

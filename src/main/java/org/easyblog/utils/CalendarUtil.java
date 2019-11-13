@@ -1,5 +1,6 @@
 package org.easyblog.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
@@ -7,7 +8,9 @@ import java.util.Objects;
 public class CalendarUtil {
 
 
-    private static CalendarUtil calendarUtil = null;
+    volatile private static CalendarUtil calendarUtil = null;
+    private static final ThreadLocal<SimpleDateFormat> threadLocal=new ThreadLocal<>();
+    private final Object lock=new Object();
 
     private CalendarUtil() {
 
@@ -58,4 +61,21 @@ public class CalendarUtil {
         return calendar.getTime();
     }
 
+    /**
+     * 得到线程安全的SimpleDateFormat实例
+     * @param pattern
+     * @return
+     */
+    public SimpleDateFormat getSafeInstance(String pattern){
+        SimpleDateFormat sdf=threadLocal.get();
+        if(sdf==null){
+            synchronized (lock){
+                if(sdf==null){
+                    sdf=new SimpleDateFormat(pattern);
+                    threadLocal.set(sdf);
+                }
+            }
+        }
+        return sdf;
+    }
 }

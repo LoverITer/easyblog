@@ -14,6 +14,8 @@ public class Result {
         return msg;
     }
 
+
+
     public void setMsg(String msg) {
         this.msg = msg;
     }

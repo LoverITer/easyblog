@@ -18,46 +18,8 @@
 <div class="ui m-container m-padded-tb-big stackable">
     <div class="ui stackable grid">
         <div class="one wide column"></div>
-        <!--左侧查单栏-->
-        <div class="three wide column">
-            <div class="ui segments ">
-                <div class="ui segment border-bt-none m-a-bg-hover">
-                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced"
-                       style="font-size: 14px !important;padding-left: 20% !important;"><i
-                            class="cogs  icon"></i>修改密码</a>
-                </div>
-                <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
-
-                <div class="ui segment border-bt-none m-a-bg-hover">
-                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced"
-                       style="font-size: 14px !important;padding-left: 20% !important;"><i
-                            class="mobile alternate icon"></i>修改手机</a>
-                </div>
-                <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
-                <div class="ui segment border-bt-none m-a-bg-hover">
-                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced"
-                       style="font-size: 14px !important;padding-left: 20% !important;"><i
-                            class="envelope outline icon"></i>修改邮箱</a>
-                </div>
-                <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
-                <!-- <div class="ui segment border-bt-none m-a-bg-hover">
-                     <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced"
-                        style="font-size: 14px !important;padding-left: 20% !important;"><i
-                             class="users icon"></i>绑定登录账号</a>
-                 </div>
-                 <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>-->
-                <div class="ui segment border-bt-none m-a-bg-hover">
-                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced"
-                       style="font-size: 14px !important;padding-left: 20% !important;"><i
-                            class="book icon"></i>登录日志</a>
-                </div>
-                <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
-                <div class="ui segment border-bt-none m-a-bg-hover">
-                    <a href="#" target="_blank" class="m-black m-text-thin m-text-spaced"
-                       style="font-size: 14px !important;padding-left: 20% !important;"><i class="power off icon"></i>账号注销</a>
-                </div>
-            </div>
-        </div>
+        <!--左侧菜单栏-->
+        <div th:replace="~{account-setting-sidebar::sidebar}"></div>
         <!--博客内容-->
         <div class="twelve wide column">
             <div class="ui top attached segment stackable">
@@ -99,6 +61,8 @@
 
 </body>
 
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -114,7 +78,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus,100);
+        setTimeout(toggleStatus,300);
     }
 
     <!--退出操作异步请求-->
@@ -124,12 +88,11 @@
             method: "GET",
             sync: true,
             data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
                     sessionStorage.removeItem("user");
-                    $("#login-btn").show();
-                    $('#header-images').hide();
+                    window.location.href="/user/loginPage";
                 }
             },
             error: function () {
@@ -139,25 +102,9 @@
     });
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<!--控制头像的显示-->
 <script>
-    $(document).ready(function () {
-        toggleStatus();
-    });
-
-    function toggleStatus() {
-        var user = sessionStorage.getItem("user");
-        if(user!=null){
-            $('#header-images').show();
-            $('#login-btn').hide();
-        }else{
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-        setTimeout(toggleStatus,100);
-    }
+    $('#account2').css("background",'#ca0c16');
+    $('#account2').css('color','#ffffff')
 </script>
 <!--控制按钮的禁用和可用状态-->
 <script type="text/javascript">

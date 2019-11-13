@@ -30,11 +30,10 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
     public KeyGenerator keyGenerator() {
         return (obj, method, params) -> {
             StringBuilder sb = new StringBuilder();
-            sb.append(obj.getClass().getName()); // 类
-            sb.append(".").append(method.getName()); // 方法名
+            sb.append(obj.getClass().getName()+"@"); // 类
             if(Objects.nonNull(params)&&params.length>0) {
                 for (Object param : params) {
-                    sb.append(".").append(param.hashCode()); // 参数名的hashcode
+                    sb.append(param.hashCode()); // 参数名的hashcode
                 }
             }else{
                 sb.append(".").append("0");
