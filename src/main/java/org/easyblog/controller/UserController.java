@@ -59,7 +59,7 @@ public class UserController {
         //把用户登录前的地址存下来
         if (null == session.getAttribute("Referer")) {
             String referUrl = request.getHeader("Referer");
-            if(Objects.nonNull(referUrl)&&!"".equals(referUrl)&&!referUrl.contains("/login")&&!referUrl.contains("register")&&!referUrl.contains("loginPage")){
+            if(Objects.nonNull(referUrl)&&!"".equals(referUrl)&&!referUrl.contains("/login")&&!referUrl.contains("register")&&!referUrl.contains("loginPage")&&!referUrl.contains("change_password")){
                 session.setAttribute("Referer", referUrl);
             }
         }
@@ -198,8 +198,7 @@ public class UserController {
         Result result = new Result();
         result.setSuccess(false);
         if (!"".equals(email)) {
-            User user = userService.getUser(email);
-            if (user == null) {
+            if (Objects.nonNull(userService.getUser(email))) {
                 result.setSuccess(true);
             }
         }
@@ -225,10 +224,7 @@ public class UserController {
     public Result checkPassword(@RequestParam("password") String password) {
         Result result = new Result();
         result.setSuccess(true);
-        if (password.length() < 6 || password.length() > 16) {
-            result.setSuccess(false);
-            result.setMsg("密码长度必须介于6-16个字符");
-        }
+        result=userService.isPasswordLegal(password);
         return result;
     }
 
@@ -288,7 +284,6 @@ public class UserController {
     @RequestMapping(value = "/logout")
     public Result logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        //session.removeAttribute("user");
         if(session!=null){
             session.invalidate();
         }

@@ -1,12 +1,14 @@
 package org.easyblog.service.impl;
 
 import org.easyblog.bean.User;
+import org.easyblog.config.Result;
 import org.easyblog.enumHelper.UserFreeze;
 import org.easyblog.enumHelper.UserLock;
 import org.easyblog.enumHelper.UserPower;
 import org.easyblog.handler.exception.NullUserException;
 import org.easyblog.mapper.UserMapper;
 import org.easyblog.service.IUserService;
+import org.easyblog.utils.EncryptUtil;
 import org.easyblog.utils.FileUploadUtils;
 import org.easyblog.utils.RegexUtil;
 import org.springframework.cache.annotation.CacheConfig;
@@ -30,7 +32,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "user",unless = "#result==null")
+    @Cacheable(cacheNames = "user", unless = "#result==null")
     @Override
     public User checkUser(String username, String password) {
         User user = null;
@@ -46,7 +48,46 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "user",condition = "#result!=null")
+    public Result isAuthorized(User user, String inputOldPWD) {
+        User var0 = getUser(user.getUserId());
+        Result result = new Result();
+        result.setSuccess(false);
+        if (var0 != null) {
+            if (EncryptUtil.getInstance().DESEncode(inputOldPWD, "user").equals(var0.getUserPassword())) {
+                result.setSuccess(true);
+            }else{
+                result.setMsg("旧密码输入错误");
+            }
+        }else{
+            result.setMsg("用户未登录");
+        }
+        return result;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public Result isNewPasswordSameOldPassword(String inputOldPWD, String newPWD) {
+        Result result = new Result();
+        result.setSuccess(false);
+        if (inputOldPWD.equals(newPWD)) {
+            result.setSuccess(true);
+            result.setMsg("新旧密码不能一样");
+        }
+        return result;
+    }
+
+
+    public Result isPasswordLegal(String password) {
+        Result result = new Result();
+        result.setSuccess(true);
+        if (password.length() < 11 || password.length() > 20) {
+            result.setSuccess(false);
+            result.setMsg("密码长度必须介于11-20个字符");
+        }
+        return result;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Cacheable(cacheNames = "user", condition = "#result!=null")
     @Override
     public User getUser(String queryStr) {
         User user = null;
@@ -68,18 +109,17 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @CachePut(cacheNames = "user",condition = "#result==true")
+    @CachePut(cacheNames = "user", condition = "#result==true")
     @Override
     public boolean register(String nickname, String password, String account, String ipInfo) {
-        String headUrl= FileUploadUtils.defaultAvatar();
+        String headUrl = FileUploadUtils.defaultAvatar();
         try {
             User user = null;
             if (RegexUtil.isEmail(account)) {
-                user = new User(nickname, password, null, null, null, null, null, account, null, 0, 100000, headUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(),0,0);
+                user = new User(nickname, password, null, null, null, null, null, account, null, 0, 100000, headUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
             } else if (RegexUtil.isMobile(account)) {
-                user = new User(nickname, password, null, null, null, null, null, null, account, 0, 100000, headUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(),0,0);
+                user = new User(nickname, password, null, null, null, null, null, null, account, 0, 100000, headUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
             }
             if (user != null) {
                 return userMapper.save(user) > 0;
@@ -93,15 +133,15 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-    @CachePut(cacheNames = "user",condition = "#result>0")
+    @CachePut(cacheNames = "user", condition = "#result>0")
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
-    public int updateUserInfo(String account,String newPassword) {
+    public int updateUserInfo(String account, String newPassword) {
         try {
             User user = new User();
-            if(RegexUtil.isEmail(account)){
+            if (RegexUtil.isEmail(account)) {
                 user.setUserMail(account);
-            }else if(RegexUtil.isPhone(account)){
+            } else if (RegexUtil.isPhone(account)) {
                 user.setUserPhone(account);
             }
             user.setUserPassword(newPassword);
@@ -112,14 +152,14 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-    @CachePut(cacheNames = "user",condition = "#result>0")
+    @CachePut(cacheNames = "user", condition = "#result>0")
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public int updateUserInfo(User user) {
-        if(Objects.nonNull(user)){
+        if (Objects.nonNull(user)) {
             try {
                 return userMapper.updateByPrimaryKeySelective(user);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 return 0;
             }

@@ -31,7 +31,7 @@
                         <span style="color: red">温馨提示：如果发现异常登录，请尽快修改密码</span><br/>
                     </div>
                     <br/>
-                    <table class="ui striped padded  stackable table" style="margin-top: 0 !important;">
+                    <table class="ui striped padded  stackable table border-none" style="margin-top: 0 !important;">
                         <tbody>
                         <tr th:each="info:${infos}">
                             <td th:text="${#dates.format(info.getLoginTime(),'yyyy-MM-dd  HH:mm:ss')}">2019-10-07 19:09:09</td>
@@ -94,7 +94,10 @@
     });
 
 </script>
-
+<script>
+    $('#account4').css("background",'#ca0c16');
+    $('#account4').css('color','#ffffff')
+</script>
 <script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');

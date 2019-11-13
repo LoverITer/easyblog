@@ -11,34 +11,34 @@
 <!--左侧菜单栏-->
 <div th:fragment="sidebar" class="three wide column">
     <div class="ui segments ">
-        <div class="ui segment border-bt-none m-a-bg-hover">
+        <div id="account1" class="ui segment border-bt-none m-a-bg-hover">
             <a href="#" th:href="@{/manage/account//reset/password}" target="" class="m-black m-text-thin m-text-spaced"
-               style="font-size: 14px !important;padding-left: 20% !important;"><i
+               style="color: inherit !important;font-size: 14px !important;padding-left: 20% !important;"><i
                     class="cogs  icon"></i>修改密码</a>
         </div>
         <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
 
-        <div class="ui segment border-bt-none m-a-bg-hover">
+        <div id="account2" class="ui segment border-bt-none m-a-bg-hover">
             <a href="#" th:href="@{/manage/account/reset/phone}" target="" class="m-black m-text-thin m-text-spaced"
-               style="font-size: 14px !important;padding-left: 20% !important;"><i
+               style="color: inherit !important;font-size: 14px !important;padding-left: 20% !important;"><i
                     class="mobile alternate icon"></i>修改手机</a>
         </div>
         <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
-        <div class="ui segment border-bt-none m-a-bg-hover">
-            <a href="#" th:href="@{/manage/account/reset/email}" target="_blank" class="m-black m-text-thin m-text-spaced"
-               style="font-size: 14px !important;padding-left: 20% !important;"><i
+        <div id="account3" class="ui segment border-bt-none m-a-bg-hover">
+            <a href="#" th:href="@{/manage/account/reset/email}" target="" class="m-black m-text-thin m-text-spaced"
+               style="color: inherit !important;font-size: 14px !important;padding-left: 20% !important;"><i
                     class="envelope outline icon"></i>修改邮箱</a>
         </div>
         <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
-        <div class="ui segment border-bt-none m-a-bg-hover">
+        <div id="account4" class="ui segment border-bt-none m-a-bg-hover">
             <a href="#" th:href="@{/manage/account/logs}" target="" class="m-black m-text-thin m-text-spaced"
-               style="font-size: 14px !important;padding-left: 20% !important;"><i
+               style="color: inherit !important;font-size: 14px !important;padding-left: 20% !important;"><i
                     class="book icon"></i>登录日志</a>
         </div>
         <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;"></div>
-        <div class="ui segment border-bt-none m-a-bg-hover">
+        <div id="account5" class="ui segment border-bt-none m-a-bg-hover">
             <a href="#" th:href="@{/manage/account/accountDestruction}" target="_blnk" class="m-black m-text-thin m-text-spaced"
-               style="font-size: 14px !important;padding-left: 20% !important;"><i class="power off icon"></i>账号注销</a>
+               style="color: inherit !important;font-size: 14px !important;padding-left: 20% !important;"><i class="power off icon"></i>账号注销</a>
         </div>
     </div>
 </div>

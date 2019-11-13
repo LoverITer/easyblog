@@ -27,14 +27,14 @@
                     style="font-size: 20px !important;color: #3d3d3d !important;">
                     修改邮箱</h3>
                 <div class="ui divider"></div>
-                <div class="m-margin-left-large">
-                    <div>
-                        <span>验证码将会被发送到<span>24****邮箱</span></span><br/>
+                <div th:if="${user.getUserMail()!=null}" class="m-margin-left-large">
+                    <div style="color: grey">
+                        <span>验证码将会被发送到<span>[[${user.getUserMail()}]]邮箱</span></span><br/>
                     </div>
                     <br/>
                     <div class="ui action  fluid input" style="width: 60% !important;">
                         <span class="m-margin-top">填写验证码：</span>
-                        <input id="oldpwd" type="password" >
+                        <input id="mail" type="password" >
                         <button class="ui mini button">获取验证码</button>
                     </div>
                     <br/>
@@ -43,6 +43,12 @@
                         下一步
                     </button>
 
+                </div>
+                <div class="m-margin-left-large" th:if="${user.getUserMail()==null}">
+                    <div style="margin:5em 5em 5em 10em">
+                        <div style="margin-bottom: 2.5em !important;color: grey !important;font-size: 14px !important;">你还没有绑定邮箱</div>
+                        <a href="#" th:href="@{/}"><button class="red  ui button">立即绑定邮箱</button></a>
+                    </div>
                 </div>
                 <div style="padding-bottom: 12em !important;"></div>
             </div>
@@ -98,11 +104,15 @@
     });
 
 </script>
+<script>
+    $('#account3').css("background",'#ca0c16');
+    $('#account3').css('color','#ffffff')
+</script>
 <!--控制按钮的禁用和可用状态-->
 <script type="text/javascript">
     $(function () {
         function changePwd() {
-            var len1=document.getElementById("oldpwd").value.length;
+            var len1=document.getElementById("mail").value.length;
             if(len1!=0){
                 $('#firm_btn').removeClass("disabled");
                 $('#firm_btn').css("background-color","#ca0c16");
