@@ -30,14 +30,14 @@
                 <div class="m-margin-left-large">
                     <div id="phone" class="ui input m-margin-top" style="width: 62% !important;">
                         <span class="m-margin-top">输入新邮箱：</span>
-                        <input id="new_phone" type="email"/>
+                        <input id="email" type="email"/>
                         <span id="error" class="m-margin-left m-margin-top"></span>
                     </div>
                     <br/>
                     <br/>
                     <div class="ui action  fluid input" style="width: 60% !important;">
                         <span class="m-margin-top">填写验证码：</span>
-                        <input id="confirm_code" type="password" />
+                        <input id="confirm_code" type="text" />
                         <button id="code_btn" class="ui disabled mini button">获取验证码</button>
                     </div>
                     <br/>
@@ -62,6 +62,49 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script>
+    $('#firm_btn').click(function () {
+        $.ajax({
+            url: "/manage/account/reset/email/save",
+            method: 'GET',
+            sync: true,
+            data: {email: $('#email').val()},
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    alert("邮箱修改成功");
+                    window.location.href="/manage/account/reset/email";
+                } else {
+                    alert("服务异常，请重试");
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试");
+            }
+        });
+    })
+</script>
+<script th:online="javascript">
+    $('#code_btn').click(function () {
+        $.ajax({
+            url: "/manage/account/sendByEmail",
+            method: 'GET',
+            sync: true,
+            data: {email: $('#email').val()},
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    alert("邮件发送成功，请注意查收")
+                } else {
+                    alert("抱歉！邮件发送失败，请重试！")
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试");
+            }
+        });
+    });
+</script>
 <!--控制头像的显示-->
 <script type="text/javascript">
 
@@ -109,9 +152,9 @@
 <!--控制按钮的禁用和可用状态-->
 <script type="text/javascript">
 
-    $("#new_phone").click(function () {
+    $("#email").click(function () {
         function changePhone() {
-            var new_phone=document.getElementById("new_phone").value;
+            var new_phone=document.getElementById("email").value;
             var len2=document.getElementById("confirm_code").value.length;
             if(isMobileNumber(new_phone)){
                 $('#code_btn').removeClass("disabled");
