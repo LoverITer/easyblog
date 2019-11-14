@@ -10,8 +10,9 @@ import org.easyblog.service.impl.UserServiceImpl;
 import org.easyblog.service.impl.UserSigninLogServiceImpl;
 import org.easyblog.utils.EncryptUtil;
 import org.easyblog.utils.NetWorkUtil;
-import org.easyblog.utils.SendEmailUtil;
 import org.easyblog.utils.SendMessageUtil;
+import org.easyblog.utils.email.Email;
+import org.easyblog.utils.email.SendEmailUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -118,10 +119,10 @@ public class UserController {
         String code = SendMessageUtil.getRandomCode(6);
         System.out.println(option);
         if ("register".equals(option)) {
-            String content = "您正在申请邮箱注册，验证码为：" + code + "，5分钟内有效！";
+            String content = "您正在申请邮箱注册，验证码为：" + code + "，60秒内有效！";
             return sendEmail(email, content, code, session);
         } else if ("modify-pwd".equals(option)) {
-            String content = "您正在通过邮箱找回密码，验证码为：" + code + "，5分钟内有效！";
+            String content = "您正在通过邮箱找回密码，验证码为：" + code + "，60秒内有效！";
             return sendEmail(email, content, code, session);
         }
         return AJAX_SUCCESS;
@@ -134,8 +135,8 @@ public class UserController {
             }
             log.info("向" + email + "发送验证码：" + code);
             session.setAttribute("captcha-code", code);
-            session.setMaxInactiveInterval(60 * 5);
-            SendEmailUtil.Email e = new SendEmailUtil.Email("验证码", email, content, null);
+            session.setMaxInactiveInterval(60);
+            Email e = new Email("验证码", email, content, null);
             emailUtil.send(e);
             userEmailLogService.saveSendCaptchaCode2User(email, content);
         } catch (Exception e) {

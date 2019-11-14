@@ -34,20 +34,25 @@
                     <br/>
                     <div class="ui action  fluid input" style="width: 60% !important;">
                         <span class="m-margin-top">填写验证码：</span>
-                        <input id="mail" type="password" >
-                        <button class="ui mini button">获取验证码</button>
+                        <input id="code" type="text">
+                        <input id="email" type="hidden" th:value="${user.getUserMail()}">
+                        <button id="sendCode" class="ui mini button">获取验证码</button>
                     </div>
                     <br/>
                     <br/>
-                    <button id="firm_btn"  class="ui tiny disabled button m-margin-left-middle">
+                    <button id="firm_btn" class="ui medium disabled button m-margin-left-middle">
                         下一步
                     </button>
 
                 </div>
                 <div class="m-margin-left-large" th:if="${user.getUserMail()==null}">
                     <div style="margin:5em 5em 5em 10em">
-                        <div style="margin-bottom: 2.5em !important;color: grey !important;font-size: 14px !important;">你还没有绑定邮箱</div>
-                        <a href="#" th:href="@{/}"><button class="red  ui button">立即绑定邮箱</button></a>
+                        <div style="margin-bottom: 2.5em !important;color: grey !important;font-size: 14px !important;">
+                            你还没有绑定邮箱
+                        </div>
+                        <a href="#" th:href="@{/}">
+                            <button class="red  ui button">立即绑定邮箱</button>
+                        </a>
                     </div>
                 </div>
                 <div style="padding-bottom: 12em !important;"></div>
@@ -64,6 +69,48 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script>
+    $('#firm_btn').click(function () {
+        $.ajax({
+            url: "/manage/account/reset/email/next",
+            method: 'GET',
+            sync: true,
+            data: {code: $('#code').val()},
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                  window.location.href="/manage/account/reset/email/nextPage";
+                } else {
+                    alert(response.msg);
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试");
+            }
+        });
+    })
+</script>
+<script th:online="javascript">
+    $('#sendCode').click(function () {
+        $.ajax({
+            url: "/manage/account/sendByEmail",
+            method: 'GET',
+            sync: true,
+            data: {email: $('#email').val()},
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    alert("邮件发送成功，请注意查收")
+                } else {
+                    alert("抱歉！邮件发送失败，请重试！")
+                }
+            },
+            error: function () {
+                alert("服务异常，请重试");
+            }
+        });
+    });
+</script>
 <!--控制头像的显示-->
 <script type="text/javascript">
 
@@ -73,14 +120,14 @@
 
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
-        if(user!=null){
+        if (user != null) {
             $('#header-images').show();
             $('#login-btn').hide();
-        }else{
+        } else {
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus,300);
+        setTimeout(toggleStatus, 300);
     }
 
     <!--退出操作异步请求-->
@@ -94,7 +141,7 @@
             success: function (response) {
                 if (response.success) {
                     sessionStorage.removeItem("user");
-                    window.location.href="/user/loginPage";
+                    window.location.href = "/user/loginPage";
                 }
             },
             error: function () {
@@ -105,24 +152,25 @@
 
 </script>
 <script>
-    $('#account3').css("background",'#ca0c16');
-    $('#account3').css('color','#ffffff')
+    $('#account3').css("background", '#ca0c16');
+    $('#account3').css('color', '#ffffff')
 </script>
 <!--控制按钮的禁用和可用状态-->
 <script type="text/javascript">
     $(function () {
         function changePwd() {
-            var len1=document.getElementById("mail").value.length;
-            if(len1!=0){
+            var len1 = document.getElementById("code").value.length;
+            if (len1 != 0) {
                 $('#firm_btn').removeClass("disabled");
-                $('#firm_btn').css("background-color","#ca0c16");
-                $('#firm_btn').css("color","#ffffff");
-            }else{
+                $('#firm_btn').css("background-color", "#ca0c16");
+                $('#firm_btn').css("color", "#ffffff");
+            } else {
                 $('#firm_btn').addClass("disabled");
-                $('#firm_btn').css("background-color","#E0E1E2");
-                $('#firm_btn').css("color","#000000");
+                $('#firm_btn').css("background-color", "#E0E1E2");
+                $('#firm_btn').css("color", "#000000");
             }
         }
+
         setInterval(changePwd, 300);
     });
 

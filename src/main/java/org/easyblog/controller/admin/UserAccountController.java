@@ -6,7 +6,10 @@ import org.easyblog.bean.UserSigninLog;
 import org.easyblog.config.Result;
 import org.easyblog.service.impl.UserServiceImpl;
 import org.easyblog.service.impl.UserSigninLogServiceImpl;
+import org.easyblog.utils.email.Email;
 import org.easyblog.utils.EncryptUtil;
+import org.easyblog.utils.email.SendEmailUtil;
+import org.easyblog.utils.SendMessageUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,10 +33,12 @@ public class UserAccountController {
     private static final String LOGIN_PAGE = "redirect:/user/loginPage";
     private final UserSigninLogServiceImpl userSigninLogService;
     private final UserServiceImpl userService;
+    private final SendEmailUtil emailUtil;
 
-    public UserAccountController(UserSigninLogServiceImpl userSigninLogService, UserServiceImpl userService) {
+    public UserAccountController(UserSigninLogServiceImpl userSigninLogService, UserServiceImpl userService, SendEmailUtil emailUtil) {
         this.userSigninLogService = userSigninLogService;
         this.userService = userService;
+        this.emailUtil = emailUtil;
     }
 
 
@@ -106,8 +111,24 @@ public class UserAccountController {
     }
 
 
+    @ResponseBody
+    @GetMapping(value = "/sendByPhone")
+    public Result sendCaptchaCodeByPhone(HttpSession session,@RequestParam String phone){
+        Result result = new Result();
+        result.setSuccess(false);
+        String code = SendMessageUtil.getRandomCode(6);
+        session.setAttribute("code",code);
+        session.setMaxInactiveInterval(60);     //60s有效
+        String content = "您正在修改绑定的手机，验证码为：" + code + "，60s内有效！";
+        SendMessageUtil.send("loveIT", "d41d8cd98f00b204e980", phone, content);
+        result.setSuccess(true);
+        return result;
+    }
+
+
     @GetMapping(value = "/reset/email")
-    public String resetEmail(HttpSession session,Model model) { User user = (User) session.getAttribute("user");
+    public String resetEmail(HttpSession session,Model model) {
+        User user = (User) session.getAttribute("user");
         if(Objects.nonNull(user)){
             user.setUserPassword(null);
             model.addAttribute("user",user);
@@ -116,10 +137,67 @@ public class UserAccountController {
         return LOGIN_PAGE;
     }
 
-
+    @ResponseBody
     @GetMapping(value = "/reset/email/next")
-    public String resetEmailNext() {
-        return PREFIX+"/account-setting-mail-next";
+    public Result resetEmailNext(HttpSession session,@RequestParam String code) {
+        Result result = new Result();
+        result.setSuccess(false);
+        User user = (User) session.getAttribute("user");
+        if(Objects.nonNull(user)) {
+            String var0 = (String) session.getAttribute("code");
+            if (Objects.nonNull(var0)) {
+                if(code.equals(var0)) {
+                    session.removeAttribute("code");
+                    result.setSuccess(true);
+                    result.setMsg("OK");
+                }else {
+                    result.setMsg("验证码输入错误，请重新输入");
+                }
+            }else {
+                result.setMsg("验证码已超时，请重新获取");
+            }
+        }else {
+            session.removeAttribute("code");
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/reset/email/save")
+    public Result saveRestEmail(HttpSession session,String email){
+        Result result = new Result();
+        result.setSuccess(false);
+        User user = (User) session.getAttribute("user");
+        if(Objects.nonNull(user)){
+            User var0 = new User();
+            var0.setUserId(user.getUserId());
+            var0.setUserMail(email);
+            int res = userService.updateUserInfo(var0);
+            if(res>0){
+                result.setSuccess(true);
+            }
+        }
+        return result;
+    }
+
+    @GetMapping(value = "/reset/email/nextPage")
+    public String toResetEmailNextPage(){
+        return PREFIX+"account-setting-mail-next";
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/sendByEmail")
+    public Result sendCaptchaCodeByEmail(HttpSession session,@RequestParam String email){
+        Result result = new Result();
+        result.setSuccess(false);
+        String code = SendMessageUtil.getRandomCode(6);
+        session.setAttribute("code",code);
+        session.setMaxInactiveInterval(60);     //60s有效
+        String content = "您正在修改已经绑定的邮箱，验证码为：" + code + "，60秒内有效！";
+        Email e=new Email("验证码",email,content,null);
+        emailUtil.send(e);
+        result.setSuccess(true);
+        return result;
     }
 
 

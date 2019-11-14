@@ -74,5 +74,3 @@ logging:
     root: debug
     org.easyblog: debug
   file: easyblogDev.log
-cbs:
-  imagesPath: file:/E:/fileUpload/
