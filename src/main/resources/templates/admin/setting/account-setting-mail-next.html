@@ -53,7 +53,14 @@
         </div>
     </div>
 </div>
-
+<div  class="ui small modal">
+    <div class="header" id="msg_header">删除</div>
+    <div id="msg" class="content">
+    </div>
+    <div class="actions">
+        <div id="msg-btn" class="ui red button">知道了</div>
+    </div>
+</div>
 
 <div style="height: 10em"></div>
 <!--底部footer-->
@@ -63,6 +70,9 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script>
+    $('#msg-btn').click(function () {
+        $('.ui.modal').modal('hide');
+    });
     $('#firm_btn').click(function () {
         $.ajax({
             url: "/manage/account/reset/email/save",
@@ -72,19 +82,41 @@
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    alert("邮箱修改成功");
+                    $('#msg_header').html("成功");
+                    $('#msg').html("邮箱修改成功");
+                    $('.ui.modal').modal('show');
                     window.location.href="/manage/account/reset/email";
                 } else {
-                    alert("服务异常，请重试");
+                    $('#msg_header').html("错误");
+                    $('#msg').html("抱歉！服务异常，请重试！");
+                    $('.ui.modal').modal('show');
                 }
             },
             error: function () {
-                alert("服务异常，请重试");
+                $('#msg_header').html("错误");
+                $('#msg').html("抱歉！服务异常，请重试！");
+                $('.ui.modal').modal('show');
             }
         });
     })
 </script>
 <script th:online="javascript">
+
+    //60s倒计时
+    var countdown=60;        //初始值
+    function settime() {
+        if (countdown == 0) {
+            $('#code_btn').removeClass("disabled");
+            $('#code_btn').html("获取验证码");
+            countdown = 60;
+            return false;
+        } else {
+            $('#code_btn').addClass("disabled");
+            $('#code_btn').html("重新发送(" + countdown + ")");
+            countdown--;
+        }
+        setTimeout('settime()',1000);
+    };
     $('#code_btn').click(function () {
         $.ajax({
             url: "/manage/account/sendByEmail",
@@ -94,13 +126,20 @@
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    alert("邮件发送成功，请注意查收")
+                    settime();
+                    $('#msg_header').html("成功");
+                    $('#msg').html("邮件发送成功，请注意查收");
+                    $('.ui.modal').modal('show');
                 } else {
-                    alert("抱歉！邮件发送失败，请重试！")
+                    $('#msg_header').html("错误");
+                    $('#msg').html("抱歉！邮件发送失败，请重试！");
+                    $('.ui.modal').modal('show');
                 }
             },
             error: function () {
-                alert("服务异常，请重试");
+                $('#msg_header').html("错误");
+                $('#msg').html("抱歉！服务异常，请重试！");
+                $('.ui.modal').modal('show');
             }
         });
     });
@@ -121,7 +160,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus,300);
+        setTimeout('toggleStatus()',300);
     }
 
     <!--退出操作异步请求-->
@@ -139,7 +178,9 @@
                 }
             },
             error: function () {
-                alert("服务异常，请重试！")
+                $('#msg_header').html("错误");
+                $('#msg').html("抱歉！服务异常，请重试！");
+                $('.ui.modal').modal('show');
             }
         });
     });

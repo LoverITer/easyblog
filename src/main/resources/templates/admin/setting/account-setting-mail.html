@@ -28,15 +28,15 @@
                     修改邮箱</h3>
                 <div class="ui divider"></div>
                 <div th:if="${user.getUserMail()!=null}" class="m-margin-left-large">
-                    <div style="color: grey">
-                        <span>验证码将会被发送到<span>[[${user.getUserMail()}]]邮箱</span></span><br/>
+                    <div>
+                        <span>验证码将会被发送到<span style="color: grey">[[${user.getUserMail()}]]</span>邮箱</span><br/>
                     </div>
                     <br/>
                     <div class="ui action  fluid input" style="width: 60% !important;">
                         <span class="m-margin-top">填写验证码：</span>
                         <input id="code" type="text">
                         <input id="email" type="hidden" th:value="${user.getUserMail()}">
-                        <button id="sendCode" class="ui mini button">获取验证码</button>
+                        <button id="sendCode"  class="ui mini button">获取验证码</button>
                     </div>
                     <br/>
                     <br/>
@@ -60,7 +60,14 @@
         </div>
     </div>
 </div>
-
+<div  class="ui small modal">
+    <div class="header" id="msg_header">删除</div>
+    <div id="msg" class="content">
+    </div>
+    <div class="actions">
+        <div id="msg-btn" class="ui red button">知道了</div>
+    </div>
+</div>
 
 <div style="height: 10em"></div>
 <!--底部footer-->
@@ -70,6 +77,9 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script>
+    $('#msg-btn').click(function () {
+        $('.ui.modal').modal('hide');
+    });
     $('#firm_btn').click(function () {
         $.ajax({
             url: "/manage/account/reset/email/next",
@@ -81,16 +91,36 @@
                 if (response.success) {
                   window.location.href="/manage/account/reset/email/nextPage";
                 } else {
-                    alert(response.msg);
+                    $('#msg_header').html("错误");
+                    $('#msg').html(response.msg);
+                    $('.ui.modal').modal('show');
                 }
             },
             error: function () {
-                alert("服务异常，请重试");
+                $('#msg_header').html("错误");
+                $('#msg').html("服务异常，请重试");
+                $('.ui.modal').modal('show');
             }
         });
     })
 </script>
 <script th:online="javascript">
+    //60s倒计时
+    var countdown=60;        //初始值
+    function settime() {
+        if (countdown == 0) {
+            $('#sendCode').removeClass("disabled");
+            $('#sendCode').html("获取验证码");
+            countdown = 60;
+            return false;
+        } else {
+            $('#sendCode').addClass("disabled");
+            $('#sendCode').html("重新发送(" + countdown + ")");
+            countdown--;
+        }
+        setTimeout('settime()',1000);
+    };
+
     $('#sendCode').click(function () {
         $.ajax({
             url: "/manage/account/sendByEmail",
@@ -100,16 +130,24 @@
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    alert("邮件发送成功，请注意查收")
+                    settime();
+                    $('#msg_header').html("成功");
+                    $('#msg').html("邮件发送成功，请注意查收");
+                    $('.ui.modal').modal('show');
                 } else {
-                    alert("抱歉！邮件发送失败，请重试！")
+                    $('#msg_header').html("错误");
+                    $('#msg').html("抱歉！邮件发送失败，请重试！");
+                    $('.ui.modal').modal('show');
                 }
             },
             error: function () {
-                alert("服务异常，请重试");
+                $('#msg_header').html("错误");
+                $('#msg').html("服务异常，请重试");
+                $('.ui.modal').modal('show');
             }
         });
     });
+
 </script>
 <!--控制头像的显示-->
 <script type="text/javascript">

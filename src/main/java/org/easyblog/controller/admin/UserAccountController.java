@@ -212,13 +212,32 @@ public class UserAccountController {
        return LOGIN_PAGE;
     }
 
-    @GetMapping(value="/accountDestruction")
-    public String accountDestruction(HttpSession session){
+    @GetMapping(value="/accountDestroy")
+    public String accountDestroyPage(HttpSession session){
         User user = (User) session.getAttribute("user");
         if(Objects.nonNull(user)){
-
+          return PREFIX+"account-setting-destroy";
         }
         return LOGIN_PAGE;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/destroy")
+    public Result deleteAccount(HttpSession session,@RequestParam String password){
+        Result result = new Result();
+        result.setSuccess(false);
+        User user = (User) session.getAttribute("user");
+        if(Objects.nonNull(user)){
+            Result authorized = userService.isAuthorized(user, password);
+            if(authorized.isSuccess()) {
+                System.out.println("去数据库杀出用户信息");
+                result.setSuccess(true);
+                //userService. deleteUserByPK(user.getUserId());
+            }else{
+                result.setMsg("密码输入错误，请重试！");
+            }
+        }
+        return result;
     }
 
 

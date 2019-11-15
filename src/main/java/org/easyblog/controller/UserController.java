@@ -238,7 +238,6 @@ public class UserController {
                         RedirectAttributes redirectAttributes,
                         HttpServletRequest request,
                         HttpServletResponse response) {
-
         User user = userService.checkUser(username, EncryptUtil.getInstance().DESEncode(password, "user"));
         String ip = NetWorkUtil.getUserIp(request);
         String location = NetWorkUtil.getLocation(request, ip);
@@ -250,12 +249,9 @@ public class UserController {
                 session.setMaxInactiveInterval(60 * 60 * 24 * 10);   //登录信息10天有效
                 // 保存登录状态
                 Cookie ck = new Cookie("JSESSIONID", request.getSession().getId());
-                ck.setPath("/");
                 ck.setMaxAge(30);
                 response.setHeader("JSESSIONID", ck.getValue());
-                new Thread(() -> {
-                    userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功"));
-                }).start();
+                new Thread(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功"))).start();
                 //得到用户登录前的页面
                 String refererUrl = (String) session.getAttribute("Referer");
                 System.out.println(refererUrl);

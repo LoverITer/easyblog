@@ -12,6 +12,7 @@ import org.easyblog.utils.EncryptUtil;
 import org.easyblog.utils.FileUploadUtils;
 import org.easyblog.utils.RegexUtil;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -159,6 +160,20 @@ public class UserServiceImpl implements IUserService {
         if (Objects.nonNull(user)) {
             try {
                 return userMapper.updateByPrimaryKeySelective(user);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    @CacheEvict(value = "user",condition = "#result>0")
+    @Override
+    public int deleteUserByPK(int userId) {
+        if(userId>0) {
+            try {
+                userMapper.deleteByPrimaryKey((long) userId);
             } catch (Exception e) {
                 e.printStackTrace();
                 return 0;

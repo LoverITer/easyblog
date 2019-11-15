@@ -27,7 +27,7 @@
                     style="font-size: 20px !important;color: #3d3d3d !important;">
                     修改密码</h3>
                 <div class="ui divider"></div>
-                <div class="m-margin-left-large " style="padding-top: 4em !important;">
+                <div class="m-margin-left-large " style="padding-top: 3em !important;">
                     <div class="ui fluid input" style="width: 50% !important;">
                         <span class="m-margin-top">输入旧密码：</span>
                         <input id="oldpwd" name="oldPWD" type="password" placeholder="请输入旧密码"/>
@@ -52,7 +52,14 @@
         </div>
     </div>
 </div>
-
+<div  class="ui small modal">
+    <div class="header" id="msg_header">删除</div>
+    <div id="msg" class="content">
+    </div>
+    <div class="actions">
+        <div id="msg-btn" class="ui red button">知道了</div>
+    </div>
+</div>
 
 <div style="height: 10em"></div>
 <!--底部footer-->
@@ -93,13 +100,18 @@
                 }
             },
             error: function () {
-                alert("服务异常，请重试！")
+                $('#msg_header').html("错误");
+                $('#msg').html("抱歉！服务异常，请重试！");
+                $('.ui.modal').modal('show');
             }
         });
     });
 
 </script>
 <script>
+    $('#msg-btn').click(function () {
+        $('.ui.modal').modal('hide');
+    });
     $('#firm_btn').click(function () {
         $('#firm_btn').addClass("disabled");
         var oldPWD=$('#oldpwd').val();
@@ -112,25 +124,37 @@
             data:{oldPwd:oldPWD,newPwd:newPWD,newPwdConfirm:newPWDConfirm},
             dateType: "json",
             success:function (response) {
-                alert(response.msg);
                 if(response.success){
                     $.ajax({
                         url:"/user/logout",
                         method:"GET",
                         sync:true,
+                        dataType:"json",
                         success:function (response) {
                             if(response.success){
                                 window.location.href="/user/loginPage";
+                            }else{
+                                $('#msg_header').html("失败");
+                                $('#msg').html(response.msg);
+                                $('.ui.modal').modal('show');
                             }
                         },
                         error:function () {
-                            alert("服务异常，请重试！");
+                            $('#msg_header').html("错误");
+                            $('#msg').html("抱歉！服务异常，请重试！");
+                            $('.ui.modal').modal('show');
                         }
                     })
+                }else{
+                    $('#msg_header').html("失败");
+                    $('#msg').html(response.msg);
+                    $('.ui.modal').modal('show');
                 }
             },
             error:function () {
-                alert("服务异常，请重试！");
+                $('#msg_header').html("错误");
+                $('#msg').html("抱歉！服务异常，请重试！");
+                $('.ui.modal').modal('show');
             }
         })
     })

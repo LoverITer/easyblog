@@ -44,4 +44,7 @@ public interface IUserService {
 
 
     int updateUserInfo(User user);
+
+
+    int deleteUserByPK(int userId);
 }
