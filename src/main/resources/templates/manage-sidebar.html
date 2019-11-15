@@ -14,9 +14,8 @@
             <a href="#" th:href="@{/manage/blog/post}" target class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="font-size: 14px !important;padding-left: 20% !important;"><i class="pencil alternate icon"></i>MarkDown编辑器</a>
         </div>
         <div   class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;" ></div>
-
         <div id="side-bnt2"  class="ui mouse segment border-bt-none m-a-bg-hover">
-            <a  href="#" th:href="@{/article/index/}+${#session.getAttribute('user').getUserId()}" target  class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="color:inherit !important;font-size: 14px !important;padding-left: 20% !important;"><i class="home icon"></i>查看主页</a>
+            <a  href="#" th:href="@{/article/index/}+${#session.getAttribute('user').getUserId()}" target  class="m-black m-text-thin m-text-spaced m-a-bg-hover" style="color:inherit !important;font-size: 14px !important;padding-left: 20% !important;"><i class="home icon"></i>我的主页</a>
         </div>
         <div class="ui divider" style="margin-bottom: 0 !important;margin-top: 0 !important;" ></div>
         <div id="side-bnt3"  class="ui mouse segment border-bt-none m-a-bg-hover">
@@ -38,7 +37,6 @@
         <img src="../../images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image">
     </div>
 </div>
-
 
 
 </body>

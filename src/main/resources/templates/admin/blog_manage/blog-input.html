@@ -169,13 +169,22 @@
         </div>
     </div>
 </div>
-
+<div style="position: fixed !important;z-index: 99999999 !important;" id="model1" class="ui small modal">
+    <div class="header" id="msg_header">删除</div>
+    <div id="msg" class="content">
+    </div>
+    <div class="actions">
+        <div id="msg-btn" class="ui red button">知道了</div>
+    </div>
+</div>
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script type="text/javascript">
-
+    $('#msg-btn').click(function () {
+        $('.ui.modal').modal('hide');
+    });
     $(document).ready(function () {
         toggleStatus();
     });
@@ -274,7 +283,7 @@
                             "display": "block",
                             "position": "fixed",
                             "opacity": 0,
-                            "z-index": 11000,
+                            "z-index": 1000,
                             "left": 50 + "%",
                             "margin-left": -(modal_width / 2) + "px",
                             "top": o.top - 100 + "px"
@@ -363,13 +372,21 @@
          status="1";
      }
     if(title==null||title==""){
-        alert("标题是必填项");
+        $('#msg_header').html("错误");
+        $('#msg').html("标题是必填项");
+        $('.ui.modal').modal('show');
     }else if(content==null||content==""){
-        alert("文章内容是必填项")
+        $('#msg_header').html("错误");
+        $('#msg').html("文章内容是必填项");
+        $('.ui.modal').modal('show');
     }else if("请选择"==categoryName){
-        alert("文章分类是必填项")
+        $('#msg_header').html("错误");
+        $('#msg').html("文章分类是必填项");
+        $('.ui.modal').modal('show');
     }else if("-1"==articleType){
-        alert("文章类型是必填项")
+        $('#msg_header').html("错误");
+        $('#msg').html("文章类型是必填项");
+        $('.ui.modal').modal('show');
     }else {
         $.ajax({
             url: url,
@@ -391,11 +408,15 @@
                 if(response.success){
                     window.location.href="/manage/blog/success/"+articleId;
                 }else{
-                    alert("抱歉，服务异常，请重新提交！")
+                    $('#msg_header').css("color", "red").html("错误");
+                    $('#msg').css("color", "red").html("抱歉！服务异常，请重试!");
+                    $('.ui.modal').modal('show');
                 }
             },
             error: function (response) {
-                alert(response.msg);
+                $('#msg_header').css("color", "red").html("错误");
+                $('#msg').css("color", "red").html(response.msg);
+                $('.ui.modal').modal('show');
             }
         });
     }
