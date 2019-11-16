@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>分类专栏管理 - EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../../../css/me.css" th:href="@{/static/css/me.css}">
 </head>
@@ -25,52 +25,55 @@
         <div class="thirteen wide column">
             <!--header-->
             <div class="ui top attached segment " style="border-bottom: none !important;padding-bottom: 0 !important;">
-                    <div class="four column row" style="padding-bottom: 0 !important;padding-left: 1.13rem !important;">
-                        <div class="left floated column">
-                            <a style="color:#bbbbbb;font-size: 1rem !important;" href="#"
-                               th:href="@{/manage/category/list}">< 返回分类专栏</a>
+                <div class="four column row" style="padding-bottom: 0 !important;padding-left: 1.13rem !important;">
+                    <div class="left floated column">
+                        <a style="color:#bbbbbb;font-size: 1rem !important;" href="#" th:href="@{/manage/category/list}">< 返回分类专栏</a>
+                    </div>
+                </div>
+                <form class="ui form" method="Post" th:action="@{/manage/category/saveAdd}"
+                      enctype="multipart/form-data">
+                    <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
+                        <div class="ui form">
+                            <div class="inline field">
+                                <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏名称：</label>
+                                <input id="category-name" name="categoryName" type="text"
+                                       style="width: 340px !important;" placeholder="请输入分类专栏名称">
+                                <span hidden="hidden" id="category-name-msg"
+                                      style="color: #C92027 !important;margin-left: 10px !important;">不可为空</span>
+                            </div>
                         </div>
                     </div>
-                    <form class="ui form" method="Post" th:action="@{/manage/category/saveAdd}" enctype="multipart/form-data">
-                        <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
-                            <div class="ui form">
-                                <div class="inline field">
-                                    <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏名称：</label>
-                                    <input id="category-name" name="categoryName" type="text" style="width: 340px !important;" placeholder="请输入分类专栏名称">
-                                    <span hidden="hidden" id="category-name-msg" style="color: #C92027 !important;margin-left: 10px !important;">不可为空</span>
-                                </div>
+                    <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
+                        <div class="ui form">
+                            <div class="inline  field">
+                                <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏简介：</label>
+                                <textarea name="categoryDesc" style="width: 340px !important;" rows="5"
+                                          placeholder="输入分类专栏简介"></textarea>
                             </div>
                         </div>
-                        <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
-                            <div class="ui form">
-                                <div class="inline  field">
-                                    <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏简介：</label>
-                                    <textarea name="categoryDesc" style="width: 340px !important;" rows="5" placeholder="输入分类专栏简介"></textarea>
-                                </div>
+                    </div>
+                    <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
+                        <div class="ui form">
+                            <div class="inline  field">
+                                <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏配图：</label>
+                                <input id="input_file" name="categoryImg"
+                                       style="position:absolute;opacity:0;height: 120px !important;padding: 0 !important;"
+                                       onchange="show(this)" accept="image/*" type="file"/>
+                                <img id="pre-look" style="width: 338px;height: 120px;"
+                                     th:src="@{/static/images/upload.jpg}"/>
                             </div>
                         </div>
-                        <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
-                            <div class="ui form">
-                                <div class="inline  field">
-                                    <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏配图：</label>
-                                    <input id="input_file"  style="position:absolute;opacity:0;height: 120px !important;padding: 0 !important;"
-                                           onchange="show(this)" accept="image/*" type="file"/>
-                                    <img id="pre-look" style="width: 338px;height: 120px;"  th:src="@{/static/images/upload.jpg}"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
-                            <button type="submit"  class="medium  ui basic red button"
-                                    style="margin-left: 9rem !important;">
-                                提交
-                            </button>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
+                        <button type="submit" class="medium  ui basic red button" style="margin-left: 9rem !important;">
+                            提交
+                        </button>
+                    </div>
+                </form>
             </div>
             <div class="ui bottom attached segment " style="height: 30em "></div>
         </div>
     </div>
-
 </div>
 
 
