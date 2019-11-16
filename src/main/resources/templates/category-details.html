@@ -45,7 +45,7 @@
         </div>
 
         <!--右边的分类内容-->
-        <div class="twelve wide column">
+        <div class="twelve wide column" style="padding-top: 0 !important;">
             <!--分类的header-->
             <div class="ui top attached segment">
                 <div class="ui middle aligned two column grid">
@@ -84,7 +84,7 @@
             </div>
 
             <!--每个分类的文章-->
-            <div class="ui top attached teal segment" style="padding-top: 0 !important;">
+            <div class="ui top attached teal segment" style="padding-top: 0 !important;border-bottom: none !important;">
                 <div th:if="${!#lists.isEmpty(categoryArticles)}" th:each="article:${categoryArticles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none"
                      style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid">
@@ -127,7 +127,6 @@
                                 <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" alt="" class="ui rounded image">
                             </a>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -140,6 +139,15 @@
                     </div>
                     <div class="right aligned column">
                         <a href="#" class="ui mini teal basic button">下一页</a>
+                    </div>
+                </div>
+            </div>
+
+            <!--没有任何数据时候显示-->
+            <div th:if="${#lists.isEmpty(categoryArticles)}" class="ui bottom attached segment" style="border-top: none !important;">
+                <div class="ui middle aligned two column grid">
+                    <div  style="color: grey;margin: 10em auto !important;float: left !important;">
+                        该分类目前没有任何文章
                     </div>
                 </div>
             </div>

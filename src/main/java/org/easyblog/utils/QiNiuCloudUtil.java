@@ -129,7 +129,7 @@ public class QiNiuCloudUtil {
      * @param imageUrl  文件URL
      */
     public void delete(String imageUrl)  {
-        String key=imageUrl.substring(imageUrl.lastIndexOf("//"),imageUrl.length());
+        String key=imageUrl.substring(imageUrl.lastIndexOf("/")+1,imageUrl.length());
         // 实例化一个BucketManager对象
         BucketManager bucketManager = new BucketManager(auth, configuration);
         try {

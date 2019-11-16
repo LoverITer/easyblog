@@ -107,10 +107,12 @@ public class CategoryAdminController {
         if (categoryId > 0) {
             final Category category = new Category();
             category.setCategoryId(categoryId);
-            try {
-                QiNiuCloudUtil.getInstance().delete(imageUrl);
-            }catch (Exception e){
-                return "redirect:error/error";
+            if(!imageUrl.contains("static")) {
+                try {
+                    QiNiuCloudUtil.getInstance().delete(imageUrl);
+                } catch (Exception e) {
+                    return "redirect:error/error";
+                }
             }
             categoryService.deleteCategoryByCondition(category);
             return "redirect:/manage/category/dash";
@@ -220,6 +222,7 @@ public class CategoryAdminController {
     public String saveEdit(HttpSession session, @PathVariable("categoryId") int categoryId,
                            @RequestParam String categoryName,
                            @RequestParam String categoryDesc,
+                           @RequestParam String oldCategoryImg,
                            @RequestParam MultipartFile categoryImage,
                            RedirectAttributes redirectAttributes){
         User user = (User) session.getAttribute("user");
@@ -231,6 +234,10 @@ public class CategoryAdminController {
                 category.setCategoryDescription(categoryDesc);
                 if(categoryImage.getSize()>0) {
                     try {
+                        if(!oldCategoryImg.contains("static")) {
+                            //删除在七牛云上的图片
+                            QiNiuCloudUtil.getInstance().delete(oldCategoryImg);
+                        }
                         String imageUrl = QiNiuCloudUtil.getInstance().put64image(categoryImage);
                         category.setCategoryImageUrl(imageUrl);
                     } catch (Exception e) {

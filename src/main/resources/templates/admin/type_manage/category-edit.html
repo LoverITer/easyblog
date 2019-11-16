@@ -54,6 +54,7 @@
                         <div class="ui form">
                             <div class="inline  field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏配图：</label>
+                                <input type="hidden" name="oldCategoryImg" th:value="${category.getCategoryImageUrl()}">
                                 <input id="categoryImgUrl" name="categoryImage" th:value="${category.getCategoryImageUrl()}" style="position:absolute;opacity:0;height: 120px !important;padding: 0 !important;"
                                        onchange="show(this)" accept="image/*" type="file"/>
                                 <img id="pre-look" style="width: 338px;height: 120px;" src="" th:src="${category.getCategoryImageUrl()}">
