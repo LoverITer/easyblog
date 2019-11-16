@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>【 归档 】 - EasyBlog博客</title>
-
+    <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.css">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
     <style type="text/css">
@@ -110,8 +111,8 @@
                             </div>
                         </div>
                         <div class="five wide column">
-                            <a href="#" target="_blank">
-                                <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                            <a  target="_blank">
+                                <img  src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"  alt="" class="ui rounded image">
                             </a>
                         </div>
                     </div>
@@ -132,6 +133,14 @@
         </div>
     </div>
 </div>
+<div  class="ui small modal">
+    <div class="header" id="msg_header">删除</div>
+    <div id="msg" class="content">
+    </div>
+    <div class="actions">
+        <div id="msg-btn" class="ui red button">知道了</div>
+    </div>
+</div>
 
 <div style="height: 25px"></div>
 <!--底部footer-->
@@ -141,10 +150,30 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script>
+    function RandomPic(obj) {
+        $.ajax({
+            url: "https://bing.ioliu.cn/v1/rand?type=json",
+            method: "GET",
+            sync: true,
+            dataType: "json",
+            success: function (response) {
+                $(obj).attr("src", response.data.url);
+            },
+            error: function () {
+                $('#msg_header').html("错误");
+                $('#msg').html("抱歉！服务异常，请重试!");
+                $('.ui.modal').modal('show');
+            }
+        })
+    }
+</script>
+<script>
+    $('#msg-btn').click(function () {
+        $('.ui.modal').modal('hide');
+    });
     $(document).ready(function () {
         toggleStatus();
     });
-
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
         if (user != null) {

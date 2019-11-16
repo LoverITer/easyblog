@@ -1,9 +1,12 @@
 package org.easyblog.controller;
 
 import org.easyblog.config.Result;
+import org.easyblog.utils.QiNiuCloudUtil;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +19,7 @@ import java.util.Objects;
 public class FileUploadController {
 
 
-    @RequestMapping(value = "/images")
+    @RequestMapping(value = "/interface1")
     public Result fileUpload(@RequestParam(value = "file") MultipartFile multipartFile, HttpServletRequest request,@RequestParam int categoryId){
         Result result = new Result();
         result.setSuccess(false);
@@ -51,6 +54,22 @@ public class FileUploadController {
         } catch (IOException e) {
             result.setMsg("服务异常，请重试！");
             e.printStackTrace();
+            return result;
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/interface2")
+    public Result upload2QiNiuCloud(@RequestParam MultipartFile categoryImg){
+        Result result = new Result();
+        result.setSuccess(false);
+        try {
+            String imageUrl = QiNiuCloudUtil.getInstance().put64image(categoryImg);
+            result.setMsg(imageUrl);
+            result.setSuccess(true);
+        }catch (Exception e){
+            result.setMsg("抱歉！服务异常，请重试！");
             return result;
         }
         return result;

@@ -5,6 +5,7 @@ import org.easyblog.bean.User;
 import org.easyblog.config.Result;
 import org.easyblog.service.impl.CategoryServiceImpl;
 import org.easyblog.utils.FileUploadUtils;
+import org.easyblog.utils.QiNiuCloudUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -101,10 +102,18 @@ public class CategoryAdminController {
 
 
     @GetMapping(value = "/deleteComplete")
-    public String deleteComplete(@RequestParam int categoryId) {
+    public String deleteComplete(@RequestParam int categoryId,
+                                 @RequestParam String imageUrl) {
         if (categoryId > 0) {
             final Category category = new Category();
             category.setCategoryId(categoryId);
+            if(!imageUrl.contains("static")) {
+                try {
+                    QiNiuCloudUtil.getInstance().delete(imageUrl);
+                } catch (Exception e) {
+                    return "redirect:error/error";
+                }
+            }
             categoryService.deleteCategoryByCondition(category);
             return "redirect:/manage/category/dash";
         }
@@ -168,7 +177,7 @@ public class CategoryAdminController {
                           @RequestParam String categoryName,
                           @RequestParam(required = false,defaultValue = "") String categoryDesc,
                           @RequestParam(required = false) MultipartFile categoryImg,
-                          RedirectAttributes attributes){
+                          RedirectAttributes attributes)  {
         User user = (User) session.getAttribute("user");
         if(Objects.nonNull(user)){
             Category var0 = categoryService.getCategoryByUserIdAndName(user.getUserId(), categoryName);
@@ -177,12 +186,17 @@ public class CategoryAdminController {
                 return "redirect:/manage/category/add";
             }
             Category category = new Category(user.getUserId(),categoryName,"",0,0,0,"1",categoryDesc);
-            //用户新建分类的时没有上传图片，系统随机分配一张
-            if(Objects.isNull(categoryImg)){
+            if(categoryImg.getSize()==0){
+                //用户新建分类的时用户没有上传图片，系统随机分配一张
                category.setCategoryImageUrl(FileUploadUtils.defaultCategoryImage());
             }else{
-                //上传到图床的URL
-                category.setCategoryImageUrl("");
+                //上传到七牛云图床，返回图片URL
+                try {
+                    String imageUrl = QiNiuCloudUtil.getInstance().put64image(categoryImg);
+                    category.setCategoryImageUrl(imageUrl);
+                }catch (Exception e){
+                    return "/error/error";
+                }
             }
             category.setCategoryName(categoryName);
             categoryService.saveCategory(category);
@@ -204,14 +218,13 @@ public class CategoryAdminController {
     }
 
 
-    @ResponseBody
-    @RequestMapping(value = "/saveEdit/{categoryId}")
-    public Result saveEdit(HttpSession session, @PathVariable("categoryId") int categoryId,
+    @PostMapping(value = "/saveEdit/{categoryId}")
+    public String saveEdit(HttpSession session, @PathVariable("categoryId") int categoryId,
                            @RequestParam String categoryName,
                            @RequestParam String categoryDesc,
-                           @RequestParam String categoryImgUrl){
-        Result result = new Result();
-        result.setSuccess(false);
+                           @RequestParam String oldCategoryImg,
+                           @RequestParam MultipartFile categoryImage,
+                           RedirectAttributes redirectAttributes){
         User user = (User) session.getAttribute("user");
         if(Objects.nonNull(user)){
             try{
@@ -219,25 +232,30 @@ public class CategoryAdminController {
                 category.setCategoryId(categoryId);
                 category.setCategoryName(categoryName);
                 category.setCategoryDescription(categoryDesc);
-                category.setCategoryImageUrl(categoryImgUrl);
+                if(categoryImage.getSize()>0) {
+                    try {
+                        if(!oldCategoryImg.contains("static")) {
+                            //删除在七牛云上的图片
+                            QiNiuCloudUtil.getInstance().delete(oldCategoryImg);
+                        }
+                        String imageUrl = QiNiuCloudUtil.getInstance().put64image(categoryImage);
+                        category.setCategoryImageUrl(imageUrl);
+                    } catch (Exception e) {
+                        return "/error/error";
+                    }
+                }
                 int re = categoryService.updateByPKSelective(category);
                 if(re>0) {
-                    result.setSuccess(true);
-                    result.setMsg("OK");
+                    return "redirect:/manage/category/list";
+                }else{
+                    return "redirect:/error/404";
                 }
             }catch (Exception ex){
-                result.setMsg("更新失败，请重试！");
-                return result;
+                redirectAttributes.addFlashAttribute("err","抱歉！，服务异常，请重试！");
+                return "redirect:/manage/category/edit";
             }
         }
-        return result;
-    }
-
-
-    @ResponseBody
-    @GetMapping(value = "/upload")
-    public String uploadImage() {
-        return "";
+        return LOGIN_PAGE;
     }
 
 }

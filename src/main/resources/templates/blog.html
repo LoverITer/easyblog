@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>博客详情 - EasyBlog博客</title>
+    <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/static/css/typo.css}">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
@@ -52,8 +54,6 @@
                         </div>
                         <h2 class="ui left aligned header m-inline-block" th:text="${article.getArticleTopic()}">关于刻意练习的清单</h2>
                     </div>
-
-
                     <div class="ui horizontal link list">
                         <div class="item">
                             <img th:src="@{${user.getUserHeaderImgUrl()}}"  src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
@@ -75,7 +75,7 @@
                     <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui center aligned basic segment">
                         <button id="payButton" class="ui orange basic circular button" >赞赏</button>
                     </div>
-                    <div class="ui payQR flowing popup transition hidden">
+                    <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui payQR flowing popup transition hidden">
                         <div class="ui black basic label">
                             <div class="ui images" style="font-size: inherit !important;">
                                 <div class="image">
@@ -94,7 +94,7 @@
 
                 </div>
                 <!--声明信息-->
-                <div class="ui attached positive message">
+                <div th:if="${article.getArticleType()==0}" class="ui attached positive message">
                     <!--博客信息-->
                     <div class="ui middle aligned grid">
                         <div class="sixteen wide column">

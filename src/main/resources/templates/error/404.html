@@ -4,8 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>404</title>
+<link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
+<link rel="bookmark" th:href="@{/static/favicon.ico}"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
-<link rel="stylesheet" href="..//css/me.css" th:href="@{/static/css/me.css}">
+<link rel="stylesheet" href="../css/me.css" th:href="@{/static/css/me.css}">
 </head>
 <body>
 
@@ -42,14 +44,14 @@
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
         console.log(user);
-        if(user!=null){
+        if (user != null) {
             $('#header-images').show();
             $('#login-btn').hide();
-        }else{
+        } else {
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus,100);
+        setTimeout(toggleStatus, 100);
     }
 
     <!--退出操作异步请求-->
@@ -75,9 +77,9 @@
 
 </script>
 <script type="text/javascript">
-  $('.ui.dropdown').dropdown({
-    on: 'hover'
-  });
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
 </script>
 </body>
 </html>
