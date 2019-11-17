@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人资料 - EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
 </head>
@@ -32,8 +32,11 @@
                         个人资料</h3>
                 </div>
                 <div class="three wide column">
-                    <img class="ui medium circular image image-122x122" th:src="@{${user.getUserHeaderImgUrl()}}" src="http://hbimg.b0.upaiyun.com/1f20743f57decb129f4563314eafca4f83f7a18d105ac-xpHDBI_fw658">
-                    <a href="#" style="color: #3399ea !important;font-size: 14px !important;display: block !important;margin-left: 2.4em !important;" class="m-margin-top">修改头像</a>
+                    <img class="ui medium circular image image-122x122" th:src="@{${user.getUserHeaderImgUrl()}}"
+                         src="http://hbimg.b0.upaiyun.com/1f20743f57decb129f4563314eafca4f83f7a18d105ac-xpHDBI_fw658">
+                    <a href="#"
+                       style="color: #3399ea !important;font-size: 14px !important;display: block !important;margin-left: 2.4em !important;"
+                       class="m-margin-top">修改头像</a>
                 </div>
                 <div class="thirteen wide column" style="padding-left: 0 !important;">
                     <div class="row m-padded-no m-line-height">
@@ -67,7 +70,8 @@
                     </span>
                     </div>
                     <div class="row m-padded-no m-line-height">
-                        <label>生日：</label><span id="birthday" th:text="${#dates.format(user.getUserBirthday(),'yyyy-MM-dd')}">1970-01-01</span>
+                        <label>生日：</label><span id="birthday"
+                                                th:text="${#dates.format(user.getUserBirthday(),'yyyy-MM-dd')}">1970-01-01</span>
                     </div>
                     <div class="row m-padded-no m-line-height">
                         <label>地区：</label><span id="address" th:text="${user.getUserAddress()}">中国-西安</span>
@@ -109,7 +113,8 @@
                     <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
                         <div class="ui field">
                             <div class="ui input">
-                                <input name="userNickname" type="text" placeholder="请填写" th:value="${user.getUserNickname()}">
+                                <input name="userNickname" type="text" placeholder="请填写"
+                                       th:value="${user.getUserNickname()}">
                             </div>
                         </div>
                     </div>
@@ -125,7 +130,8 @@
                                  style="margin-top: 5px !important;padding-left: 0 !important;">
                                 <div class="ui field">
                                     <div class="ui input">
-                                        <input name="userName" type="text" placeholder="请填写" th:value="${user.getUserName()}">
+                                        <input name="userName" type="text" placeholder="请填写"
+                                               th:value="${user.getUserName()}">
                                     </div>
                                 </div>
                             </div>
@@ -143,7 +149,8 @@
                                  style="margin-top: 5px !important;padding-left: 0 !important;">
                                 <div class="ui field">
                                     <div class="ui input">
-                                        <input name="userJobPosition" type="text" placeholder="请填写" th:value="${user.getUserJobPosition()}">
+                                        <input name="userJobPosition" type="text" placeholder="请填写"
+                                               th:value="${user.getUserJobPosition()}">
                                     </div>
                                 </div>
                             </div>
@@ -175,7 +182,8 @@
                                  style="margin-top: 5px !important;padding-left: 0 !important;">
                                 <div class="ui field">
                                     <div class="ui input">
-                                        <input name="birthday" type="date"  th:value="${#dates.format(user.getUserBirthday(),'yyyy-MM-dd')}">
+                                        <input name="birthday" type="date"
+                                               th:value="${#dates.format(user.getUserBirthday(),'yyyy-MM-dd')}">
                                     </div>
                                 </div>
                             </div>
@@ -190,51 +198,141 @@
                     <div class="thirteen wide column" style="padding-left: 0 !important;">
                         <div class="field">
                             <select id="prefession" name="userPrefession" class="ui dropdown">
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),null)}" value="000000">请选择</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'电子·微电子')}" value="000001">电子·微电子</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'通信(设备·运营·增值服务)')}" value="000010">通信(设备·运营·增值服务)</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'批发·零售')}" value="000011">批发·零售</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'贸易·进出口')}" value="000100">贸易·进出口</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'广告·会展·公关')}" value="000101">广告·会展·公关</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'专业服务(咨询·财会·法律等)')}" value="000110">专业服务(咨询·财会·法律等)</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'房地产开发·建筑与工程')}" value="000111">房地产开发·建筑与工程</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'娱乐·运动·休闲')}" value="001000">娱乐·运动·休闲</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'快速消费品(食品·饮料·日化·烟酒等)')}" value="001001">快速消费品(食品·饮料·日化·烟酒等)</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'家电业')}" value="001010">家电业</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'家居·室内设计·装潢')}" value="001011">家居·室内设计·装潢</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'旅游·酒店·餐饮服务')}" value="001100">旅游·酒店·餐饮服务</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'交通·运输·物流')}" value="001101">交通·运输·物流</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'办公设备·用品')}" value="001110">办公设备·用品</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'医疗设备·器械')}" value="001111">医疗设备·器械</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'汽车·摩托车(制造·维护·配件·销售·服务)')}" value="010000">汽车·摩托车(制造·维护·配件·销售·服务)</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'制药·生物工程')}" value="010001">制药·生物工程</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'环保')}" value="010010">环保</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'印刷·包装·造纸')}" value="010011">印刷·包装·造纸</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'中介服务(人才·商标专利)')}" value="010100">中介服务(人才·商标专利)</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'教育·培训·科研·院校')}" value="010101">教育·培训·科研·院校</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'医疗·保健·美容·卫生服务')}" value="010110">医疗·保健·美容·卫生服务</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'互联网·电子商务')}" value="010111">互联网·电子商务</option>
-                                <option th:selected="${#strings.equals(#strings.trim(user.getUserPrefession()),'仪器·仪表·工业自动化·电气')}" value="011000">仪器·仪表·工业自动化·电气</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'计算机软件')}" value="011001">计算机软件</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'计算机硬件·网络设备')}" value="011010">计算机硬件·网络设备</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'IT服务·系统集成')}" value="011011">IT服务·系统集成</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'银行')}" value="011100">银行</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'保险')}" value="011101">保险</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'基金·证券·期货·投资')}" value="011110">基金·证券·期货·投资</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'耐用消费品(服饰·纺织·家具）')}" value="011111">耐用消费品(服饰·纺织·家具）</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'机械制造·机电·重工')}" value="100000">机械制造·机电·重工</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'原材料及加工（金属·木材·橡胶·塑料·玻璃·陶瓷·建材）')}" value="100001">原材料及加工（金属·木材·橡胶·塑料·玻璃·陶瓷·建材）</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'政府·非营利机构')}" value="100010">政府·非营利机构</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'房地产服务(中介·物业管理·监理、设计院)')}" value="100011">房地产服务(中介·物业管理·监理、设计院)</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'媒体·出版·文化传播')}" value="100100">媒体·出版·文化传播</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'化工')}" value="100101">化工</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'采掘·冶炼')}" value="100110">采掘·冶炼</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'能源（电力·石油）·水利')}" value="100111">能源（电力·石油）·水利</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'软件外包')}" value="101000">软件外包</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'网络游戏')}" value="101001">网络游戏</option>
-                                <option th:selected="${#strings.equals(user.getUserPrefession(),'嵌入式')}" value="101010">嵌入式</option>
-                                <option th:selected="${#strings.equals(#strings.trim(user.getUserPrefession()),'国防/军队')}" value="101011">国防/军队</option>
-                                <option th:selected="${#strings.equals('其他',#strings.trim(user.getUserPrefession()))}" value="101100">其他</option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),null)}" value="000000">
+                                    请选择
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'电子·微电子')}"
+                                        value="000001">电子·微电子
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'通信(设备·运营·增值服务)')}"
+                                        value="000010">通信(设备·运营·增值服务)
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'批发·零售')}"
+                                        value="000011">批发·零售
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'贸易·进出口')}"
+                                        value="000100">贸易·进出口
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'广告·会展·公关')}"
+                                        value="000101">广告·会展·公关
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'专业服务(咨询·财会·法律等)')}"
+                                        value="000110">专业服务(咨询·财会·法律等)
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'房地产开发·建筑与工程')}"
+                                        value="000111">房地产开发·建筑与工程
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'娱乐·运动·休闲')}"
+                                        value="001000">娱乐·运动·休闲
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'快速消费品(食品·饮料·日化·烟酒等)')}"
+                                        value="001001">快速消费品(食品·饮料·日化·烟酒等)
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'家电业')}" value="001010">
+                                    家电业
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'家居·室内设计·装潢')}"
+                                        value="001011">家居·室内设计·装潢
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'旅游·酒店·餐饮服务')}"
+                                        value="001100">旅游·酒店·餐饮服务
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'交通·运输·物流')}"
+                                        value="001101">交通·运输·物流
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'办公设备·用品')}"
+                                        value="001110">办公设备·用品
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'医疗设备·器械')}"
+                                        value="001111">医疗设备·器械
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'汽车·摩托车(制造·维护·配件·销售·服务)')}"
+                                        value="010000">汽车·摩托车(制造·维护·配件·销售·服务)
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'制药·生物工程')}"
+                                        value="010001">制药·生物工程
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'环保')}" value="010010">
+                                    环保
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'印刷·包装·造纸')}"
+                                        value="010011">印刷·包装·造纸
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'中介服务(人才·商标专利)')}"
+                                        value="010100">中介服务(人才·商标专利)
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'教育·培训·科研·院校')}"
+                                        value="010101">教育·培训·科研·院校
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'医疗·保健·美容·卫生服务')}"
+                                        value="010110">医疗·保健·美容·卫生服务
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'互联网·电子商务')}"
+                                        value="010111">互联网·电子商务
+                                </option>
+                                <option th:selected="${#strings.equals(#strings.trim(user.getUserPrefession()),'仪器·仪表·工业自动化·电气')}"
+                                        value="011000">仪器·仪表·工业自动化·电气
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'计算机软件')}"
+                                        value="011001">计算机软件
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'计算机硬件·网络设备')}"
+                                        value="011010">计算机硬件·网络设备
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'IT服务·系统集成')}"
+                                        value="011011">IT服务·系统集成
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'银行')}" value="011100">
+                                    银行
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'保险')}" value="011101">
+                                    保险
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'基金·证券·期货·投资')}"
+                                        value="011110">基金·证券·期货·投资
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'耐用消费品(服饰·纺织·家具）')}"
+                                        value="011111">耐用消费品(服饰·纺织·家具）
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'机械制造·机电·重工')}"
+                                        value="100000">机械制造·机电·重工
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'原材料及加工（金属·木材·橡胶·塑料·玻璃·陶瓷·建材）')}"
+                                        value="100001">原材料及加工（金属·木材·橡胶·塑料·玻璃·陶瓷·建材）
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'政府·非营利机构')}"
+                                        value="100010">政府·非营利机构
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'房地产服务(中介·物业管理·监理、设计院)')}"
+                                        value="100011">房地产服务(中介·物业管理·监理、设计院)
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'媒体·出版·文化传播')}"
+                                        value="100100">媒体·出版·文化传播
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'化工')}" value="100101">
+                                    化工
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'采掘·冶炼')}"
+                                        value="100110">采掘·冶炼
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'能源（电力·石油）·水利')}"
+                                        value="100111">能源（电力·石油）·水利
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'软件外包')}"
+                                        value="101000">软件外包
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'网络游戏')}"
+                                        value="101001">网络游戏
+                                </option>
+                                <option th:selected="${#strings.equals(user.getUserPrefession(),'嵌入式')}" value="101010">
+                                    嵌入式
+                                </option>
+                                <option th:selected="${#strings.equals(#strings.trim(user.getUserPrefession()),'国防/军队')}"
+                                        value="101011">国防/军队
+                                </option>
+                                <option th:selected="${#strings.equals('其他',#strings.trim(user.getUserPrefession()))}"
+                                        value="101100">其他
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -245,31 +343,21 @@
                         地区
                     </div>
                     <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
-                        <div class="ui field">
                             <div class="thirteen wide column"
-                                 style="margin-top: 5px !important;padding-left: 0 !important;">
-                                <div class="ui field" style="min-width: 0 !important;">
-                                    <select name="country" class="ui compact dropdown" style="min-width: 0 !important;">
-                                        <option value="">请选择</option>
-                                        <option th:selected="${#strings.equals(country,'中国')}" value="中国"> 中国</option>
-                                    </select>
-                                    <select name="city"  class="ui compact dropdown" style="min-width: 0px !important;">
-                                        <option value="">请选择</option>
-                                        <option th:selected="${#strings.equals(city,'北京市')}" value="北京市" checked="">北京市</option>
-                                        <option th:selected="${#strings.equals(city,'陕西省')}" value="陕西省" checked="">陕西省</option>
-                                    </select>
-                                    <select name="county" class="ui  dropdown" style="min-width: 0 !important;">
-                                        <option value="">请选择</option>
-                                        <option th:selected="${#strings.equals(county,'西安市')}" value="西安市" >西安市</option>
-                                        <option th:selected="${#strings.equals(county,'汉中市')}" value="汉中市" >汉中市</option>
-                                        <option th:selected="${#strings.equals(county,'安康市')}" value="安康市" >安康市</option>
-                                        <option th:selected="${#strings.equals(county,'宝鸡市')}" value="宝鸡市" >宝鸡市</option>
-                                        <option th:selected="${#strings.equals(county,'渭南市')}" value="渭南市" >渭南市</option>
-                                        <option th:selected="${#strings.equals(county,'延安市')}" value="延安市" >延安市</option>
-                                    </select>
-                                </div>
+                                 style="border-radius: .28571429rem; margin-top: 5px !important;padding-left: 0 !important;">
+                                    <div data-toggle="distpicker">
+                                        <select style="border-radius: .28571429rem;border: 1px solid rgba(34,36,38,.15);padding: .67861429em 1em;line-height: 1em;min-width: 130px !important;" id="province" data-province="---- 选择省 ----" name="country" >
+                                            <option selected th:text="${country}"></option>
+                                        </select>
+                                        <select  style="border-radius: .28571429rem;border: 1px solid rgba(34,36,38,.15);padding: .67861429em 1em;line-height: 1em;" id="city" data-city="---- 选择市 ----" name="city">
+                                            <option selected th:text="${city}"></option>
+                                        </select>
+                                        <select style="border-radius: .28571429rem;border: 1px solid rgba(34,36,38,.15);padding: .67861429em 1em;line-height: 1em;min-width: 130px !important;" id="district" data-district="---- 选择区 ----" name="county" >
+                                            <option selected th:text="${county}"></option>
+                                        </select>
+                                    </div>
+
                             </div>
-                        </div>
                     </div>
                 </div>
                 <!--简介-->
@@ -283,8 +371,9 @@
                                  style="margin-top: 5px !important;padding-left: 0 !important;">
                                 <div class="ui form">
                                     <div class="comment">
-                                        <textarea name="userDescription" id="input-desc"  rows="2"
-                                                  placeholder="300字以内" th:text="${user.getUserDescription()}"></textarea>
+                                        <textarea name="userDescription" id="input-desc" rows="2"
+                                                  placeholder="300字以内"
+                                                  th:text="${user.getUserDescription()}"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -314,6 +403,20 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script src="js/distpicker.data.js" th:src="@{/static/js/distpicker.data.js}"></script>
+<script src="js/distpicker.js" th:src="@{/static/js/distpicker.js}"></script>
+<script src="js/distpicker.main.js" th:src="@{/static/js/distpicker.main.js}"></script>
+<script th:ononline="javascript">
+    var province="[[${country}]]";
+    var city="[[${city}]]";
+    var district="[[${county}]]";
+    $("#distpicker").distpicker({
+        province: province,
+        city: city,
+        district: district
+    });
+    $(".ui.dropdown.selection").css("width","11em");
+</script>
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -322,14 +425,14 @@
 
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
-        if(user!=null){
+        if (user != null) {
             $('#header-images').show();
             $('#login-btn').hide();
-        }else{
+        } else {
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus,300);
+        setTimeout(toggleStatus, 300);
     }
 
     <!--退出操作异步请求-->
@@ -343,7 +446,7 @@
             success: function (response) {
                 if (response.success) {
                     sessionStorage.removeItem("user");
-                    window.location.href="/user/loginPage";
+                    window.location.href = "/user/loginPage";
                 }
             },
             error: function () {
@@ -358,7 +461,7 @@
         $('a[rel*=leanModal]').leanModal({top: 200, closeButton: ".modal_close"});
     });
     $('#cancel-btn').click(function () {
-      $('#signup').css("display","none");
+        $('#signup').css("display", "none");
     });
 </script>
 <!--弹出框js-->
@@ -430,10 +533,10 @@
 </script>
 <script type="text/javascript">
     $('#input-desc').focus(function () {
-        $('#input-desc').attr("rows","4");
+        $('#input-desc').attr("rows", "4");
     });
     $('#input-desc').blur(function () {
-        $('#input-desc').attr("rows","2");
+        $('#input-desc').attr("rows", "2");
     });
     $('.length.example form')
         .form({
@@ -452,7 +555,7 @@
         });
 </script>
 <script>
-    $('#side-profile').css("background","#ca0c16");
-    $('#side-profile').css("color","#ffffff")
+    $('#side-profile').css("background", "#ca0c16");
+    $('#side-profile').css("color", "#ffffff")
 </script>
 </html>
