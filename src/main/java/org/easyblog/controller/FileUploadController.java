@@ -65,7 +65,7 @@ public class FileUploadController {
         Result result = new Result();
         result.setSuccess(false);
         try {
-            String imageUrl = QiNiuCloudUtil.getInstance().put64image(categoryImg);
+            String imageUrl = QiNiuCloudUtil.getInstance().putMultipartImage(categoryImg);
             result.setMsg(imageUrl);
             result.setSuccess(true);
         }catch (Exception e){

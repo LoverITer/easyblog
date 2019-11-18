@@ -37,7 +37,7 @@ public class QiNiuCloudUtil {
 
     //构造一个带指定Zone对象的配置类
     private Configuration configuration = new Configuration(Zone.huanan());
-   private  UploadManager uploadManager = new UploadManager(configuration);
+    private UploadManager uploadManager = new UploadManager(configuration);
 
     private QiNiuCloudUtil() {
     }
@@ -68,7 +68,7 @@ public class QiNiuCloudUtil {
             if (res.isOK()) {
                 Ret ret = res.jsonToObject(Ret.class);
                 //如果不需要对图片进行样式处理，则使用以下方式即可
-                return "http://"+DOMAIN +"/"+ ret.key ;
+                return "http://" + DOMAIN + "/" + ret.key;
                 //return "http://" + DOMAIN + "/" + ret.key + "?" + style;
             }
         } catch (QiniuException e) {
@@ -85,51 +85,67 @@ public class QiNiuCloudUtil {
 
 
     /**
-     * 以字节数组(byte[])的形式上传
-     * @param multipartFile  前端提交过来的文件数据
-     * @return  返回图片直接可访问的URL
+     * 以MultipartFile的形式上传
+     *
+     * @param multipartFile 前端提交过来的文件数据
+     * @return 返回图片直接可访问的URL
      */
-    public String put64image(MultipartFile multipartFile){
+    public String putMultipartImage(MultipartFile multipartFile) {
         //解析文件后缀名
         String originalFilename = multipartFile.getOriginalFilename();
         assert originalFilename != null;
         String suffix = originalFilename.substring(originalFilename.lastIndexOf("."), originalFilename.length());
-        String key = System.currentTimeMillis() + UUID.randomUUID().toString()+suffix;
+        String key = System.currentTimeMillis() + UUID.randomUUID().toString() + suffix;
         try {
             byte[] uploadBytes = multipartFile.getBytes();
-            Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
-            String upToken = getUpToken();
-
-            try {
-                Response response = uploadManager.put(uploadBytes, key, upToken);
-                //解析上传成功的结果
-                DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-                System.out.println(putRet.key);
-                System.out.println(putRet.hash);
-            } catch (QiniuException ex) {
-                Response r = ex.response;
-                System.err.println(r.toString());
-                try {
-                    System.err.println(r.bodyString());
-                } catch (QiniuException ex2) {
-                    throw new RuntimeException("上传图片失败");
-                }
-            }
-        }catch (IOException e){
-           throw new RuntimeException("上传图片失败");
+            putBase64Image(uploadBytes, key);
+        } catch (IOException e) {
+            throw new RuntimeException("上传图片失败");
         }
         //如果不需要添加图片样式，使用以下方式
-        return "http://"+DOMAIN +"/"+ key ;
+        return "http://" + DOMAIN + "/" + key;
+        //return "http://" + DOMAIN + "/" + key + "?" + style;
+    }
+
+    /**
+     * 以字节数组(byte[])的形式上传
+     * @param bytes  字节数组，图片数据
+     * @param key   图片的名字 如果为null，将会把图片的hashcode作为名字
+     * @return 返回图片直接可访问的URL
+     */
+    public String putBase64Image(byte[] bytes, String key) {
+        Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
+        String upToken = getUpToken();
+        DefaultPutRet putRet=null;
+        try {
+            Response response = uploadManager.put(bytes, key, upToken);
+            //解析上传成功的结果
+            putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+            System.out.println(putRet.key);
+            System.out.println(putRet.hash);
+        } catch (QiniuException ex) {
+            Response r = ex.response;
+            System.err.println(r.toString());
+            try {
+                System.err.println(r.bodyString());
+            } catch (QiniuException ex2) {
+                throw new RuntimeException("上传图片失败");
+            }
+        }
+        //如果不需要添加图片样式，使用以下方式
+        assert putRet != null;
+        return null==key?("http://" + DOMAIN + "/" +putRet.key):("http://" + DOMAIN + "/" +key);
         //return "http://" + DOMAIN + "/" + key + "?" + style;
     }
 
 
     /**
      * 删除在七牛云上的文件
-     * @param imageUrl  文件URL
+     *
+     * @param imageUrl 文件URL
      */
-    public void delete(String imageUrl)  {
-        String key=imageUrl.substring(imageUrl.lastIndexOf("/")+1,imageUrl.length());
+    public void delete(String imageUrl) {
+        String key = imageUrl.substring(imageUrl.lastIndexOf("/") + 1, imageUrl.length());
         // 实例化一个BucketManager对象
         BucketManager bucketManager = new BucketManager(auth, configuration);
         try {
@@ -139,7 +155,6 @@ public class QiNiuCloudUtil {
             // 捕获异常信息
             Response r = e.response;
             log.error(r.toString());
-            throw new RuntimeException("删除图片失败");
         }
     }
 
@@ -149,5 +164,9 @@ public class QiNiuCloudUtil {
         public String hash;
         public int width;
         public int height;
+    }
+
+    public static void main(String[] args) {
+        QiNiuCloudUtil.getInstance().delete("http://q0hiemlhp.bkt.clouddn.com/Fkm739RtjMdHh4aZUs0ZG2V0wwvY");
     }
 }

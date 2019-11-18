@@ -192,7 +192,7 @@ public class CategoryAdminController {
             }else{
                 //上传到七牛云图床，返回图片URL
                 try {
-                    String imageUrl = QiNiuCloudUtil.getInstance().put64image(categoryImg);
+                    String imageUrl = QiNiuCloudUtil.getInstance().putMultipartImage(categoryImg);
                     category.setCategoryImageUrl(imageUrl);
                 }catch (Exception e){
                     return "/error/error";
@@ -238,7 +238,7 @@ public class CategoryAdminController {
                             //删除在七牛云上的图片
                             QiNiuCloudUtil.getInstance().delete(oldCategoryImg);
                         }
-                        String imageUrl = QiNiuCloudUtil.getInstance().put64image(categoryImage);
+                        String imageUrl = QiNiuCloudUtil.getInstance().putMultipartImage(categoryImage);
                         category.setCategoryImageUrl(imageUrl);
                     } catch (Exception e) {
                         return "/error/error";
