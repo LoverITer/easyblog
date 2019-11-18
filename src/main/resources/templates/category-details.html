@@ -130,7 +130,7 @@
                     </div>
                 </div>
             </div>
-
+            <div th:if="${!#lists.isEmpty(categoryArticles)&&#lists.size(categoryArticles)<10}" class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
             <!--分页按钮-->
             <div th:if="${!#lists.isEmpty(categoryArticles)&&#lists.size(categoryArticles)>10}" class="ui bottom attached segment">
                 <div class="ui middle aligned two column grid">

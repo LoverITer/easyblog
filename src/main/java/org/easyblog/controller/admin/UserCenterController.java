@@ -1,11 +1,13 @@
 package org.easyblog.controller.admin;
 
+import org.apache.commons.codec.binary.Base64;
 import org.easyblog.bean.User;
 import org.easyblog.bean.UserAttention;
 import org.easyblog.config.Result;
 import org.easyblog.service.impl.UserAttentionImpl;
 import org.easyblog.service.impl.UserServiceImpl;
 import org.easyblog.utils.CalendarUtil;
+import org.easyblog.utils.QiNiuCloudUtil;
 import org.easyblog.utils.UserProfessionUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -38,7 +41,7 @@ public class UserCenterController {
             model.addAttribute("country", address[0]);
             model.addAttribute("city", address[1]);
             model.addAttribute("county", address[2]);
-            model.addAttribute("profile",1);
+            model.addAttribute("profile", 1);
             return PREFIX + "/personal-center";
         }
         return LOGIN_PAGE;
@@ -59,7 +62,7 @@ public class UserCenterController {
                 String address = country + "," + city + "," + county;
                 user.setUserAddress(address);
                 user.setUserId(user1.getUserId());
-                //页面提交过来的是用户的职业代码，具体实啥职业需要转码
+                //页面提交过来的是用户的职业的代号，具体实啥职业需要转码
                 user.setUserPrefession(UserProfessionUtil.getUserProfession(user.getUserPrefession()));
                 userService.updateUserInfo(user);
             }
@@ -72,12 +75,12 @@ public class UserCenterController {
     @GetMapping(value = "/follow-list")
     public String care(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        if(Objects.nonNull(user)){
+        if (Objects.nonNull(user)) {
             UserAttention var0 = new UserAttention();
             var0.setAttentionId(user.getUserId());
             List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var0);
-            model.addAttribute("attentionInfo",attentionInfo);
-            model.addAttribute("follow-list",1);
+            model.addAttribute("attentionInfo", attentionInfo);
+            model.addAttribute("follow-list", 1);
             return PREFIX + "/personal-care";
         }
         return LOGIN_PAGE;
@@ -85,16 +88,16 @@ public class UserCenterController {
 
     @ResponseBody
     @RequestMapping(value = "/cancelAttention")
-    public Result cancelAttention(HttpSession session,@RequestParam(value = "attentionId") int attentionId){
+    public Result cancelAttention(HttpSession session, @RequestParam(value = "attentionId") int attentionId) {
         User user = (User) session.getAttribute("user");
         Result result = new Result();
         result.setSuccess(false);
-        if(Objects.nonNull(user)){
+        if (Objects.nonNull(user)) {
             int res = userAttentionService.deleteByPK(attentionId);
-            if(res>0){
+            if (res > 0) {
                 result.setSuccess(true);
                 result.setMsg("OK");
-            }else{
+            } else {
                 result.setMsg("服务异常，请重试！");
             }
         }
@@ -105,16 +108,50 @@ public class UserCenterController {
     @GetMapping(value = "/fans-list")
     public String fans(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        if(Objects.nonNull(user)){
+        if (Objects.nonNull(user)) {
             UserAttention var1 = new UserAttention();
             var1.setUserId(user.getUserId());
             final List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var1);
-            model.addAttribute("attentionInfo",attentionInfo);
-            model.addAttribute("fans-list",1);
+            model.addAttribute("attentionInfo", attentionInfo);
+            model.addAttribute("fans-list", 1);
             return PREFIX + "/personal-follower";
         }
         return LOGIN_PAGE;
     }
 
+    @ResponseBody
+    @PostMapping(value = "/uploadImg",produces = "application/json;charset=UTF-8")
+    public Result changeHeaderImage(@RequestBody Map<String,String> map, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        Result result = new Result();
+        result.setSuccess(false);
+        if (Objects.nonNull(user)) {
+            try {
+                String image=map.get("image");
+                String imageBytes = image.substring(image.indexOf(",") + 1, image.length());
+                Base64 base64Decoder=new Base64();
+                //转码得到base64的字节码
+                byte[] bytes = base64Decoder.decode(imageBytes);
+                //把图片保存到七牛云上，并返回图片的URL
+                String imageUrl = QiNiuCloudUtil.getInstance().putBase64Image(bytes, null);
+                //把图片的URL保存到数据库中
+                User var0 = new User();
+                var0.setUserId(user.getUserId());
+                var0.setUserHeaderImgUrl(imageUrl);
+                userService.updateUserInfo(var0);
+                System.out.println(user.getUserHeaderImgUrl());
+                if(!user.getUserHeaderImgUrl().contains("static")){
+                    QiNiuCloudUtil.getInstance().delete(user.getUserHeaderImgUrl());
+                    user.setUserHeaderImgUrl(imageUrl);
+                }
+                result.setSuccess(true);
+                result.setMsg("头像上传成功");
+            }catch (Exception e){
+                e.printStackTrace();
+                result.setMsg("服务异常，请重试！");
+            }
+        }
+        return result;
+    }
 
 }
