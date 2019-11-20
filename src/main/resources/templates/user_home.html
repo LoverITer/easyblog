@@ -135,12 +135,23 @@
 </div>
 
 <div style="height: 10em"></div>
+<div  class="ui small modal">
+    <div class="header" id="msg_header">删除</div>
+    <div id="msg" class="content">
+    </div>
+    <div class="actions">
+        <div id="msg-btn" class="ui red button">知道了</div>
+    </div>
+</div>
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script>
+    $('#msg-btn').click(function () {
+        $('.ui.modal').modal('hide');
+    });
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
@@ -201,5 +212,4 @@
         }
     })
 </script>
-
 </html>

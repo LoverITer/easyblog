@@ -115,6 +115,14 @@
         </where>
     </select>
 
+    <select id="getUsersArticleByQueryString" resultType="org.easyblog.bean.Article">
+        select article_id,article_topic,article_publish_time,article_content,
+               article_click,article_category,article_comment_num,
+               user.user_name AS authorName,user.user_headerImg_url AS userHeaderImageUrl
+        from article,user where article_topic like #{query}
+                            AND article_user=user_id ORDER BY article_click DESC
+    </select>
+
     <select id="countByUserId" resultType="integer">
         select count(*) from article where article_user=#{userId}
     </select>

@@ -172,6 +172,21 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Cacheable(cacheNames = "articles",condition = "#result!=null&&result.size()>0")
+    @Override
+    public List<Article> getArticleByTopic(String query) {
+        if(null!=query){
+            try{
+                return articleMapper.getUsersArticleByQueryString("%"+query+"%");
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return null;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @CacheEvict(cacheNames = "article")
     @Override
     public void deleteByUserIdAndTitle(int userId, String title) {
