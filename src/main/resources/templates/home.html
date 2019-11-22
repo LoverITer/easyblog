@@ -50,7 +50,7 @@
                     </div>
                     <div class="right aligned column">
                         共 <h2 class="ui header m-inline-block m-text-thin" style="color: #ca0c16 !important;">
-                        <em th:text="${#lists.size(articles)}">14</em></h2> 篇
+                        <em th:text="${articleSize}">14</em></h2> 篇
                     </div>
                 </div>
             </div>
@@ -164,7 +164,6 @@
 
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
-        console.log(user);
         if(user!=null){
             $('#header-images').show();
             $('#login-btn').hide();
@@ -182,9 +181,9 @@
             method: "GET",
             sync: true,
             data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
                     sessionStorage.removeItem("user");
                     $("#login-btn").show();
                     $('#header-images').hide();

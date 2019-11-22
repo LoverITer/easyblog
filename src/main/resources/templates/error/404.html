@@ -23,7 +23,7 @@
         <div class="ui contianer">
             <h2>404</h2>
             <p>对不起，你访问的资源不见啦~！</p>
-            <a th:href="@{/}">返回首页</a>
+            <a  href="javascript:void(0)" onclick="goBack()">返回到上一页</a>
         </div>
     </div>
 </div>
@@ -36,6 +36,10 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script type="text/javascript">
+
+    function goBack(){
+        window.history.go(-1);
+    }
 
     $(document).ready(function () {
         toggleStatus();

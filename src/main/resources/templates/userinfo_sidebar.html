@@ -50,19 +50,19 @@
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column">
                     <a href="#" class="m-black">原创
-                        <span><strong>200</strong></span></a>
+                        <div><strong th:text="${originalArticleNum}">200</strong></div></a>
                 </div>
                 <div class="column">
                     粉丝
-                    <span><strong>2003</strong></span>
+                    <div><strong>2003</strong></div>
                 </div>
                 <div class="column">
                     喜欢
-                    <span> <strong>3444</strong></span>
+                    <div> <strong>3444</strong></div>
                 </div>
                 <div class="column">
                     评论
-                    <span><strong>345</strong></span>
+                    <div><strong>345</strong></div>
                 </div>
             </div>
 
@@ -70,18 +70,18 @@
 
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column m-txt-align-left ">
-                    等级：<span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserLevel()}"></span>
+                    等级：<span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserLevel()==null?0:user.getUserLevel()}"></span>
                 </div>
                 <div class="column m-txt-align-left">
-                    访问：<span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserVisit()}"></span>
+                    访问：<span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserVisit()==null?0:user.getUserVisit()}"></span>
                 </div>
             </div>
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column m-txt-align-left">
-                    积分：<span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserScore()}"></span>
+                    积分：<span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserScore()==null?0:user.getUserScore()}"></span>
                 </div>
                 <div class="column m-txt-align-left">
-                    排名：<span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserRank()}">7</span>
+                    排名：<span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserRank()==null?0:user.getUserRank()}">7</span>
                 </div>
             </div>
             <!--            <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">-->
@@ -92,7 +92,7 @@
         </div>
     </div>
     <!--分类专栏-->
-    <div class="ui segments m-margin-top-large" th:fragment="sidebar_category">
+    <div th:if="${categories!=null&&!#lists.isEmpty(categories)}" class="ui segments m-margin-top-large" th:fragment="sidebar_category">
         <div class="ui secondary segment">
             <div class="ui two column grid">
                 <div class="column">
@@ -113,7 +113,7 @@
 
     </div>
     <!--最新文章-->
-    <div class="ui segments m-margin-top-large" th:fragment="sidebar_newest_article">
+    <div th:if="${newestArticles!=null&&!#lists.isEmpty(newestArticles)}" class="ui segments m-margin-top-large" th:fragment="sidebar_newest_article">
         <div class="ui secondary segment ">
             <i class="bookmark icon"></i><strong>最新文章</strong>
         </div>
@@ -122,7 +122,7 @@
         </div>
     </div>
     <!--归档-->
-    <div class="ui segments m-margin-top-large" th:fragment="sidebar_archives">
+    <div th:if="${archives!=null&&!#lists.isEmpty(archives)}" class="ui segments m-margin-top-large" th:fragment="sidebar_archives">
         <div class="ui secondary segment ">
             <i class="bookmark icon"></i><strong>归档</strong>
         </div>

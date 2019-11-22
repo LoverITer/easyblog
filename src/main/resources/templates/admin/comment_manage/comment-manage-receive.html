@@ -64,7 +64,7 @@
                             <span  style="min-height: 22px;color: grey !important;font-size: 15px !important;"
                                    class="ui m-inline-block m-margin-top-small m-margin-bottom-small">
                                 <span style="color: black !important;" th:text="${comment.getInfo().get('userName')}">ABC</span> 在 <span style="color: black !important;" th:text="${#dates.format(comment.getCommentTime(),'yyyy年MM月dd日 hh:mm:ss')}">时间</span> 评论了
-                                我的的文章 <a href="#" th:text="${comment.getInfo().get('article')}">你真的理解什么是财富自由吗？</a>
+                                我的的文章 <a href="#" th:href="@{/article/details/}+${comment.getArticleId()}" th:text="${comment.getInfo().get('article')}">你真的理解什么是财富自由吗？</a>
                             </span>
                                 </div>
                                 <div  class="right aligned five wide column">

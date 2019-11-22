@@ -93,7 +93,7 @@
                     </div>
                 </div>
                 <!--声明信息-->
-                <div th:if="${article.getArticleType()=='0'}" class="ui attached positive message">
+                <div  th:if="${article.getArticleType()=='0'}" class="ui attached positive message">
                     <!--博客信息-->
                     <div class="ui middle aligned grid">
                         <div class="sixteen wide column">
@@ -106,21 +106,27 @@
                         </div>
                     </div>
                 </div>
+                <div class="divider"></div>
                 <!--留言信息-->
-                <div id="comment-container" class="ui bottom attached segment">
+                <div style="margin-top: 0.2em !important;" id="comment-container" class="ui bottom attached segment">
                     <!--留言区域列表-->
-                    <div class="ui form">
+                    <div id="commentForm" class="ui form" style="padding-bottom: 15px !important;">
+                        <!--默认存放文章作者的ID,评论默认发送给文章的作者-->
+                        <input id="sendCommentTo" type="hidden" th:value="${user.getUserId()}">
+                        <input id="articleId" type="hidden" th:value="${article.getArticleId()}">
+                        <input id="pid" type="hidden" value="0">
                         <div class="comment">
-                            <textarea id="commentInput" rows="2" name="content" placeholder="想对作者说点什么"></textarea>
+                            <textarea id="commentInput" rows="2" name="content" placeholder="给作者留言"></textarea>
                         </div>
                         <div id="commentBtn" class="ui grid" style="display:none !important;">
-                            <div class="five column row">
+                            <div class="five column row" style="padding-bottom: 0 !important;">
                                 <div class="right floated column">
                                     <div class="right floated column">
                                         <span style="color: #999999 !important;">还能输入<em id="num_txt">500</em>个字符</span>
                                     </div>
                                     <div class="m-inline-block  m-margin-bottom-small m-mobile-wide">
-                                        <button class="ui red button m-mobile-wide"><i class="edit icon"></i>发布评论
+                                        <button id="publish-comment-btn" class="ui  button m-mobile-wide" style="background-color: #ca0c16 !important;color: #FFFFFF !important;"><i class="edit icon"></i>
+                                            发布评论
                                         </button>
                                     </div>
                                 </div>
@@ -128,81 +134,44 @@
                         </div>
                     </div>
                     <!--留言信息-->
-                    <div class="ui teal segment">
-                        <div class="ui threaded comments">
-                            <h3 class="ui dividing header">留言区</h3>
-                            <div class="comment">
-                                <a class="avatar">
-                                    <img src="https://unsplash.it/100/100?image=1005">
+                        <div th:if="${articleComments!=null&&!#lists.isEmpty(articleComments)}" class="ui threaded comments" style="max-width: none !important;">
+                            <div th:each="comment:${articleComments}"  class="comment">
+                                <a th:href="@{/article/home/}+${comment.getCommentSend()}" class="avatar">
+                                    <img th:src="@{${comment.getSendUserNicknameHeadImgUrl()}}" src="https://unsplash.it/100/100?image=1005">
                                 </a>
                                 <div class="content">
-                                    <a class="author">Matt</a>
+                                    <a th:href="@{/article/home/}+${comment.getCommentSend()}" class="author" th:text="${comment.getSendUserNickname()}">Elliot Fu</a>
                                     <div class="metadata">
-                                        <span class="date">Today at 5:42PM</span>
+                                        <span class="date" th:text="${#dates.format(comment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
                                     </div>
                                     <div class="text">
-                                        How artistic!
+                                        <p th:text="${comment.getCommentContent()}">This has been very useful for my research. Thanks as well!</p>
                                     </div>
-                                    <div class="actions">
-                                        <a class="reply">回复</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="comment">
-                                <a class="avatar">
-                                    <img src="https://unsplash.it/100/100?image=1005">
-                                </a>
-                                <div class="content">
-                                    <a class="author">Elliot Fu</a>
-                                    <div class="metadata">
-                                        <span class="date">Yesterday at 12:30AM</span>
-                                    </div>
-                                    <div class="text">
-                                        <p>This has been very useful for my research. Thanks as well!</p>
-                                    </div>
-                                    <div class="actions">
-                                        <a class="reply">回复</a>
+                                    <div th:if="${user!=null&&user.getUserId()!=comment.getCommentSend()}" class="actions">
+                                        <a style="color: #0e90d2 !important;font-size: 14px !important;" class="reply" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}" onclick="changeInfo(this)" >回复</a>
                                     </div>
                                 </div>
-                                <div class="comments">
-                                    <div class="comment">
-                                        <a class="avatar">
-                                            <img src="https://unsplash.it/100/100?image=1005">
+                                <div th:if="${comment.getChildComment()!=null&&!#lists.isEmpty(comment.getChildComment())}"  class="comments" style="padding-bottom: 10px !important;">
+                                    <div class="comment" th:each="childComment:${comment.getChildComment()}">
+                                        <a th:href="@{/article/home/}+${childComment.getCommentSend()}" class="avatar">
+                                            <img th:src="@{${childComment.getSendUserNicknameHeadImgUrl()}}" src="https://unsplash.it/100/100?image=1005">
                                         </a>
                                         <div class="content">
-                                            <a class="author">Jenny Hess</a>
+                                            <a th:href="@{/article/home/}+${childComment.getCommentSend()}" class="author" th:text="${childComment.getSendUserNickname()}">Jenny Hess</a> <span style="color: grey">回复</span> <span th:text="${childComment.getReceivedUserNickname()}"></span>
                                             <div class="metadata">
-                                                <span class="date">Just now</span>
+                                                <span class="date" th:text="${#dates.format(childComment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
                                             </div>
                                             <div class="text">
-                                                Elliot you are always so right :)
+                                                <p th:text="${childComment.getCommentContent()}">This has been very useful for my research. Thanks as well!</p>
                                             </div>
-                                            <div class="actions">
-                                                <a class="reply">回复</a>
+                                            <div th:if="${user!=null&&user.getUserId()!=childComment.getCommentSend()}"  class="actions">
+                                                <a th:value="${childComment.getCommentSend()}+@{/}+${childComment.getSendUserNickname()}+@{/}+${childComment.getCommentId()}" onclick="changeInfo(this)" class="reply" style="color: #0e90d2 !important;font-size: 14px !important;">回复</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="comment">
-                                <a class="avatar">
-                                    <img src="https://unsplash.it/100/100?image=1005">
-                                </a>
-                                <div class="content">
-                                    <a class="author">Joe Henderson</a>
-                                    <div class="metadata">
-                                        <span class="date">5 days ago</span>
-                                    </div>
-                                    <div class="text">
-                                        Dude, this is awesome. Thanks so much
-                                    </div>
-                                    <div class="actions">
-                                        <a class="reply">回复</a>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -225,11 +194,7 @@
 <div style="height: 10em"></div>
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>
-
-
 </body>
-
-
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="../static/js/prism.js" th:src="@{/static/js/prism.js}"></script>
@@ -272,32 +237,78 @@
     });
 
 </script>
-
 <!--实现评论框的各种效果-->
 <script type="text/javascript">
-
+    var commentContent=""; //输入的评论内容
     /**评论输入框被点击的时候变大为10行**/
     $('#commentInput').click(function () {
         $('#commentInput').attr("rows", "10");
         $('#commentBtn').show();
     });
     /**评论输入框时区焦点后变小为初始大小2行**/
-    $('#commentInput').blur(function () {
-        $('#commentInput').attr("rows", "2");
+    $('#commentForm').mouseleave(function () {
+        $('#commentInput').attr("rows", "3");
         $('#commentBtn').hide();
     });
     $(function () {
         $('#commentInput').on('keyup', function () {
-            var txtval = $('#commentInput').val().length;
+            commentContent=$('#commentInput').val();
+            var txtval = commentContent.length;
             var str = parseInt(500 - txtval);
             if (str > 0) {
+                //显示还可以在输入的字数
                 $('#num_txt').html(str);
             } else {
                 $('#num_txt').html(0);
-                $('#commentInput').val($('#text_txt').val().substring(0, 500)); //这里意思是当里面的文字小于等于0的时候，那么字数不能再增加，只能是500个字
+                commentContent=commentContent.substring(0,500);
+                $('#commentInput').val(commentContent);
             }
         });
-    })
+    });
+    $('#publish-comment-btn').click(function () {
+        var user = sessionStorage.getItem("user");
+        if(user!=null) {
+            if (commentContent == null || commentContent == '') {
+                alert("请输入评论内容");
+            } else {
+                var sendCommentTo = $('#sendCommentTo').val();
+                var articleId = $('#articleId').val();
+                var pid = $('#pid').val();
+                $.ajax({
+                    url: "/comment/publish",
+                    method: "POST",
+                    sync: "true",
+                    contentType: "application/json;charset=UTF-8",
+                    data: JSON.stringify({
+                        commentContent: commentContent,
+                        commentReceived: sendCommentTo,
+                        articleId: articleId,
+                        pid: pid
+                    }),
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.reload();
+                        }
+                    },
+                    error: function () {
+                        alert("抱歉！服务异常，请重试");
+                    }
+                })
+            }
+        } else
+            {
+                alert("请先登录后再发表评论！");
+            }
+
+    });
+    function changeInfo(obj) {
+        var values=$(obj).attr('value');
+        var array=values.split('/');
+        $('#commentInput').attr('placeholder','回复 '+array[1]);
+        $('#sendCommentTo').val(array[0]);
+        $('#pid').val(array[2]);
+    }
 </script>
 
 <script type="text/javascript">

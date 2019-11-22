@@ -4,24 +4,83 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0">
-    <title>EasyBlog搜索</title>
+    <title>[[${{query}}]] - EasyBlog搜索</title>
+    <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/me.css">
     <style type="text/css">
         a:hover {
             color: #ca0c16 !important;
         }
-        .highlight {background-color: #ca0c16; }
     </style>
 </head>
-<body onload="initFont()">
+<body>
 
 <!--导航-->
-<div th:replace="~{nav :: navbar}"></div>
+<nav th:fragment="navbar" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+    <!--用户信息-->
+    <div class="ui m-container">
+        <div class="ui inverted secondary stackable menu">
+            <h2 class="ui teal header item">EasyBlog</h2>
+            <div style="margin: 0 auto !important;float: right"></div>
+
+            <div class="right m-item m-mobile-hide menu " style="margin: 1.4rem 0 auto 0 !important;">
+                <i class="teal paint brush icon"></i>
+                <a href="#" th:unless="${session.user!=null}" th:href="@{/manage/blog/post}"
+                   style="color :rgb(0,183,173);font-size: 17px">写博客</a>
+                <a href="#" th:unless="${session.user==null}"
+                   th:href="@{/manage/blog/post}+@{/(userId=${#session.getAttribute('user').getUserId()})}"
+                   style="color :rgb(0,183,173);font-size: 17px">写博客</a>
+            </div>
+
+            <!--我的头像-->
+            <div th:if="${session.user!=null}" id="header-images" th:hidden="hidden"
+                 class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
+                <div class="ui dropdown  item ">
+                    <div class="text">
+                        <img class="ui medium circular image image-42x42" style="max-height: none !important;"
+                             src="" th:src="@{${#session.getAttribute('user').getUserHeaderImgUrl()}}"/>
+                    </div>
+                    <div class="menu">
+                        <a href="#" th:href="@{/manage/uc/follow-list}" class="item"><i
+                                class="bookmark icon"></i>我的关注</a>
+                        <a href="#" th:href="@{/manage/uc/profile}" class="item"><i class="user icon"></i>个人中心</a>
+                        <a href="#" th:href="@{/manage/account/reset/password}" class="item"><i class="cogs icon"></i>账号设置</a>
+                        <div class="divider"></div>
+                        <a href="#" th:href="@{/article/index/}+${#session.getAttribute('user').getUserId()}"
+                           class="item"><i class="archive icon"></i>我的博客</a>
+                        <a href="#" th:href="@{/manage/blog/}" class="item"><i class="edit icon"></i>管理博客</a>
+                        <div class="divider"></div>
+                        <a href="#" th:href="@{/manage/account/help}" class="item"><i
+                                class="basic question  circle icon"></i>帮助</a>
+                        <a id="logout" class="item"><i class="power offs icon"></i>退出</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="login-btn" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
+                <a href="#" th:href="@{/user/loginPage}" class="m-item item m-mobile-hide"><i class="mini  icon"></i>登录/注册</a>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+    <input id="userId" hidden="hidden" th:if="${session.user!=null}" th:value="${#session.getAttribute('user').getUserId()}">
+</nav>
 
 <!--中间内容-->
 <div class="m-container-middle m-padded-tb-big">
     <div class="ui container">
+        <form name="search" th:action="@{/search/details}" target="_blank" method="get" >
+            <div class="ui large icon input" style="width: 100% !important;">
+                <input th:if="${query==null}" name="query" class="prompt" type="text" placeholder="Search....">
+                <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt" type="text" placeholder="Search....">
+                <i onclick="document.forms['search'].submit()" class="red search link icon"></i>
+            </div>
+        </form>
+
         <!--header-->
         <div th:if="${articles!=null}" class="ui top attached segment">
             <div class="ui middle aligned two column grid">
@@ -40,8 +99,11 @@
                  class="ui padded vertical segment m-padded-tb-large">
                 <div class="ui middle aligned mobile reversed stackable grid">
                     <div class="eleven wide column">
-                        <h3 class="ui header"><a  href="#" target="_blank" class="m-black topic"
-                                                 th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗?</a></h3>
+                        <h3 class="ui header">
+                            <a  href="#" th:href="@{/article/details/}+${article.getArticleId()}" target="_blank" class="m-black topic" th:text="${article.getArticleTopic()}">
+                                你真的理解什么是财富自由吗?
+                            </a>
+                        </h3>
                         <p class="m-text" th:text="${#strings.abbreviate(article.getArticleContent(),100)}">
                             正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
                         <div class="ui grid">
@@ -51,42 +113,41 @@
                                         <img th:src="${article.getUserHeaderImageUrl()}"
                                              src="https://unsplash.it/100/100?image=1005" alt=""
                                              class="ui avatar image">
-                                        <div class="content"><a href="#" class="header"
-                                                                th:text="${article.getAuthorName()}">李仁密</a></div>
+                                        <div class="content">
+                                            <a href="#" class="header" th:text="${article.getAuthorName()}">李仁密</a>
+                                        </div>
                                     </div>
                                     <div class="item">
-                                        <i class="calendar icon"></i><span
-                                            th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2017-10-01</span>
+                                        <i class="calendar icon"></i>
+                                        <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2017-10-01</span>
                                     </div>
                                     <div class="item">
-                                        <i class="eye icon"></i> <span
-                                            th:text="${article.getArticleClick()}">2342</span>
+                                        <i class="eye icon"></i>
+                                        <span th:text="${article.getArticleClick()}">2342</span>
                                     </div>
                                     <div class="item">
                                         <i class="comment alternate icon"></i>[[${article.getArticleCommentNum()}]]
                                     </div>
                                 </div>
                             </div>
-                            <div class="right aligned five wide column">
+                            <div th:if="${article.getArticleCategory()!=null&&article.getArticleCategory()!=''}" class="right aligned five wide column">
                                 <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin"
                                    th:text="${article.getArticleCategory()}">认知升级</a>
                             </div>
                         </div>
                     </div>
-
                     <div class="five wide column">
                         <a href="#" target="_blank">
-                            <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                         <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
                                  alt="" class="ui rounded image">
                         </a>
                     </div>
-
                 </div>
             </div>
         </div>
-
+        <div th:if="${!#lists.isEmpty(articles)&&#lists.size(articles)<20}" class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
         <!--footer-->
-        <div class="ui bottom attached segment">
+        <div th:if="${#lists.size(articles)>20}" class="ui bottom attached segment">
             <div class="ui middle aligned two column grid">
                 <div class="column">
                     <a href="#" class="ui mini teal basic button">上一页</a>
@@ -97,6 +158,13 @@
             </div>
         </div>
 
+        <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment" style="border-top: none !important;">
+            <div class="ui middle aligned two column grid">
+                <div  style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
+                    抱歉，没有搜索的到任何信息
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -115,27 +183,18 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
-
 <script>
-    function initFont() {
-        var array = $('query').val();
-        $(".topic").each(function () {
-            //取得标签的文本
-            var t = $(this).text();
-            //开始用关键字遍历标签文本
-            for (var i = 0; i < array.length; i++) {
-                //判断标签是否包含关键字
-                if (t.indexOf(array[i]) > -1) {
-                    //定义正则表达式对象  array[i]是关键字   "g"是指全局范围
-                    var a = new RegExp(array[i], "g");
-                    //对标签文本进行全局替换，包含关键字的位置替换为加红字span对象
-                    t = t.replace(a, ("<span style='color:#d0393f'>" + array[i] + "</span>"));
-                    //将替换完的文本对象赋给此对象中A标签对象的html值中
-                    $(this).find("a").html(t);
-                }
-            }
-        });
-    }
+    $(".topic").each(function () {
+        var str=$(this).text();
+        var key = $('#query').val();
+        console.log(key);
+        var reg = new RegExp("("+key+")","ig");
+        var replaceStr=str.replace(reg,"<span style='color:#c00;font-weight:bold'>"+key+"</span>");
+        console.log(replaceStr);
+        $(this).html(replaceStr);
+    });
+
+
 
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
@@ -147,7 +206,6 @@
 </script>
 
 <script type="text/javascript">
-
     $(document).ready(function () {
         toggleStatus();
     });
@@ -186,7 +244,6 @@
             }
         });
     });
-
 </script>
 </body>
 </html>

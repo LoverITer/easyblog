@@ -32,4 +32,19 @@ public interface UserCommentMapper extends BaseMapper<UserComment> {
      */
     List<UserComment> getSendComment(@Param("sendUser") int receiveUser);
 
+    /**
+     * 获得关于一篇文章的所有父级评论
+     * @param articleId
+     * @return
+     */
+    List<UserComment> getTopCommentsByArticleId(int articleId);
+
+    /**
+     *根据PID和主键获得评论
+     * @param articleId
+     * @param id
+     * @return
+     */
+    List<UserComment> getByPidAndPrimaryKey(int articleId,int id);
+
 }

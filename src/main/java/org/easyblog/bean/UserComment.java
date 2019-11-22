@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserComment implements Serializable {
@@ -13,23 +14,20 @@ public class UserComment implements Serializable {
 
     @Id
     private Integer commentId;
-
     private Integer commentSend;
-
     private Integer commentReceived;
-
     private Long articleId;
-
     private Date commentTime;
-
     private Integer likeNum;
-
     private Integer pid;
-
     private Integer level;
-
     private String commentContent;
 
+    /*****下面非数据库字段******/
+    private String sendUserNickname;   //发送评论的用户的昵称
+    private String receivedUserNickname;   //接收到评论的用户的昵称
+    private String sendUserNicknameHeadImgUrl;   //发送评论的用户的头像URL
+    private List<UserComment> childComment;    //存放所有的子评论
     private Map<String,String> info=new HashMap<>();
 
     public UserComment() {
@@ -44,6 +42,38 @@ public class UserComment implements Serializable {
         this.pid = pid;
         this.level = level;
         this.commentContent = commentContent;
+    }
+
+    public String getSendUserNickname() {
+        return sendUserNickname;
+    }
+
+    public void setSendUserNickname(String sendUserNickname) {
+        this.sendUserNickname = sendUserNickname;
+    }
+
+    public String getReceivedUserNickname() {
+        return receivedUserNickname;
+    }
+
+    public void setReceivedUserNickname(String receivedUserNickname) {
+        this.receivedUserNickname = receivedUserNickname;
+    }
+
+    public String getSendUserNicknameHeadImgUrl() {
+        return sendUserNicknameHeadImgUrl;
+    }
+
+    public void setSendUserNicknameHeadImgUrl(String sendUserNicknameHeadImgUrl) {
+        this.sendUserNicknameHeadImgUrl = sendUserNicknameHeadImgUrl;
+    }
+
+    public List<UserComment> getChildComment() {
+        return childComment;
+    }
+
+    public void setChildComment(List<UserComment> childComment) {
+        this.childComment = childComment;
     }
 
     public Map<String, String> getInfo() {
