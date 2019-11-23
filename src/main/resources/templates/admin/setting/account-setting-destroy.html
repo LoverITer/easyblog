@@ -11,11 +11,8 @@
     <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
 </head>
 <body>
-
 <!--导航-->
 <div th:replace="~{nav :: navbar}"></div>
-
-
 <!--中间内容-->
 <div class="ui m-container m-padded-tb-big stackable">
     <div class="ui stackable grid">
@@ -51,6 +48,7 @@
         </div>
     </div>
 </div>
+<!--提示框-->
 <div id="model1" class="ui small modal">
     <div class="header" id="msg_header">删除</div>
     <div id="msg" class="content">
@@ -59,8 +57,6 @@
         <div id="msg-btn" class="ui red button">知道了</div>
     </div>
 </div>
-
-
 <div style="height: 10em"></div>
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>
@@ -69,6 +65,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script>
+    //初始化提示框
     $('#msg-btn').click(function () {
         $('.ui.modal').modal('hide');
     });
@@ -98,11 +95,9 @@
 </script>
 <!--控制头像的显示-->
 <script type="text/javascript">
-
     $(document).ready(function () {
         toggleStatus();
     });
-
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
         if (user != null) {
@@ -160,7 +155,6 @@
     });
 
 </script>
-
 <script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');

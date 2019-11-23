@@ -117,6 +117,8 @@ public  interface ArticleMapper extends BaseMapper<Article> {
     List<Article> getByCategoryAndUserId(@Param("userId") int userId,@Param("categoryId") int categoryId);
 
 
+    List<Article> getUsersArticleByQueryString(@Param("query") String query);
+
 
     /**
      * 删除用户的草稿文件

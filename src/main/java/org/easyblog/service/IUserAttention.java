@@ -21,4 +21,12 @@ public interface IUserAttention {
     */
    int deleteByPK(int id);
 
+
+   /**
+    * 统计我的好友数
+    * @param userId
+    * @return
+    */
+   int countAttentionNumOfMe(int userId);
+
 }

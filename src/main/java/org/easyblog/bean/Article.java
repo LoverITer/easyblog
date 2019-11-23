@@ -11,28 +11,20 @@ public class Article implements Serializable {
 
     @Id
     private Long articleId;
-
     private Integer articleUser;
-
     private String articleTopic;
-
     private Date articlePublishTime;
-
     private Integer articleClick;
-
     private String articleCategory;
-
     private String articleStatus;
-
     private String articleTop;
-
     private String articleType;
-
     private String articleTags;
-
     private String articleContent;
     private Integer articleCommentNum;
     private String articleAppreciate;
+    private String authorName;
+    private String userHeaderImageUrl;
 
     public Article() {
     }
@@ -50,6 +42,22 @@ public class Article implements Serializable {
         this.articleTags = articleTags;
         this.articleContent = articleContent;
         this.articleCommentNum=articleCommentNum;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public String getUserHeaderImageUrl() {
+        return userHeaderImageUrl;
+    }
+
+    public void setUserHeaderImageUrl(String userHeaderImageUrl) {
+        this.userHeaderImageUrl = userHeaderImageUrl;
     }
 
     public String getArticleTop() {

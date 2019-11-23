@@ -6,10 +6,7 @@ import org.easyblog.bean.CategoryCare;
 import org.easyblog.bean.User;
 import org.easyblog.enumHelper.ArticleType;
 import org.easyblog.config.Result;
-import org.easyblog.service.impl.ArticleServiceImpl;
-import org.easyblog.service.impl.CategoryCareServiceImpl;
-import org.easyblog.service.impl.CategoryServiceImpl;
-import org.easyblog.service.impl.UserServiceImpl;
+import org.easyblog.service.impl.*;
 import org.easyblog.utils.HtmlParserUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,17 +25,21 @@ public class CategoryController {
     private final CategoryCareServiceImpl categoryCareService;
     private final ArticleServiceImpl articleService;
     private final UserServiceImpl userService;
+    private final CommentServiceImpl commentService;
+    private final UserAttentionImpl userAttention;
 
-    public CategoryController(CategoryServiceImpl categoryServiceImpl, CategoryCareServiceImpl categoryCareService, ArticleServiceImpl articleService, UserServiceImpl userService) {
+    public CategoryController(CategoryServiceImpl categoryServiceImpl, CategoryCareServiceImpl categoryCareService, ArticleServiceImpl articleService, UserServiceImpl userService, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
         this.categoryServiceImpl = categoryServiceImpl;
         this.categoryCareService = categoryCareService;
         this.articleService = articleService;
         this.userService = userService;
+        this.commentService = commentService;
+        this.userAttention = userAttention;
     }
 
     @GetMapping(value = "/{categoryId}/{userId}")
     public String categoryDetailsPage(HttpSession session,@PathVariable(value = "categoryId") int categoryId, @PathVariable("userId") int userId, Model model){
-        new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
+        new ControllerUtils(categoryServiceImpl,articleService,commentService,userAttention).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
         final Category category = categoryServiceImpl.getCategory(categoryId);
         final List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);
         final List<Article> categoryArticles = articleService.getByCategoryAndUserId(userId, categoryId);

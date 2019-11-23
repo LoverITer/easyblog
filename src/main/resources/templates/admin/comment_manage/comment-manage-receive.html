@@ -55,7 +55,7 @@
 
             <!--content-->
             <div style="padding-top: 0 !important;" class="ui attached segment border-bt-none">
-                <div th:each="comment:${comments}" id="comment-msg" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed"
+                <div th:each="comment:${comments}"  onmouseenter="showDeleteBtn(this)" onmouseleave="hideDeleteBtn(this)"  class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed"
                      style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid" style="border-bottom: grey dot-dash !important;">
                         <div class="sixteen wide column">
@@ -64,12 +64,12 @@
                             <span  style="min-height: 22px;color: grey !important;font-size: 15px !important;"
                                    class="ui m-inline-block m-margin-top-small m-margin-bottom-small">
                                 <span style="color: black !important;" th:text="${comment.getInfo().get('userName')}">ABC</span> 在 <span style="color: black !important;" th:text="${#dates.format(comment.getCommentTime(),'yyyy年MM月dd日 hh:mm:ss')}">时间</span> 评论了
-                                我的的文章 <a href="#" th:text="${comment.getInfo().get('article')}">你真的理解什么是财富自由吗？</a>
+                                我的文章 <a href="#" th:href="@{/article/details/}+${comment.getArticleId()}" th:text="${comment.getInfo().get('article')}">你真的理解什么是财富自由吗？</a>
                             </span>
                                 </div>
                                 <div  class="right aligned five wide column">
                                     <div class="five  wide  column" style="padding-bottom:  5px !important;">
-                                        <div id="del-btn" class="ui horizontal list">
+                                        <div id="del-btn"  style="display: none" class="ui horizontal list hide">
                                             <div class="item"><a href="#" style="color: #CA0C16" th:value="${comment.getCommentId()}" onclick="deleteComment(this)">删除</a></div>
                                         </div>
                                     </div>
@@ -116,23 +116,26 @@
             </div>
         </div>
     </div>
-
 </div>
-
-
 <div style="height: 10em"></div>
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>
-
+<!--提示框-->
+<div id="model1" class="ui small modal">
+    <div class="header" id="msg_header">删除</div>
+    <div id="msg" class="content">
+    </div>
+    <div class="actions">
+        <div id="msg-btn" class="ui red button">知道了</div>
+    </div>
+</div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script type="text/javascript">
-
     $(document).ready(function () {
         toggleStatus();
     });
-
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
         if(user!=null){
@@ -160,14 +163,20 @@
                 }
             },
             error: function () {
-                alert("服务异常，请重试！")
+                $('#msg_header').html("提示");
+                $('#msg').html("抱歉！服务异常，请重试");
+                $('.ui.modal').modal('show');
             }
         });
     });
 
 </script>
-<script>
+<script type="text/javascript">
     function deleteComment(obj) {
+        //初始化提示框
+        $('#msg-btn').click(function () {
+            $('.ui.modal').modal('hide');
+        });
         var commentId=$(obj).attr("value");
         $.ajax({
             url:"/manage/comment/delete",
@@ -177,32 +186,39 @@
             dataType:"json",
             success:function (response) {
                 if(response.success){
-                    alert("删除成功");
-                    window.location.href="/manage/comment/receive"
+                    $('#msg_header').html("提示");
+                    $('#msg').html("删除成功");
+                    $('.ui.modal').modal('show');
+                    /*window.location.href="/manage/comment/receive"*/
+                    setTimeout("window.location.reload()",1000);
                 }else{
                     if("未登录"==response.msg){
-                        window.location.href="/user/loginPage";
+                        $('#msg_header').html("错误");
+                        $('#msg').html("请先登录后再操作");
+                        $('.ui.modal').modal('show');
+                        setTimeout('window.location.href="/user/loginPage"',1000);
                     }else{
-                        alert("服务异常，请重试！");
+                        $('#msg_header').html("错误");
+                        $('#msg').css("color", "red").html("抱歉！服务异常，请重试!");
+                        $('.ui.modal').modal('show');
                     }
                 }
             },
             error:function () {
-                alert("服务异常，请重试！");
+                $('#msg_header').html("错误");
+                $('#msg').css("color", "red").html("抱歉！服务异常，请重试!");
+                $('.ui.modal').modal('show');
             }
         })
     }
 </script>
 <script>
-    $('#del-btn').ready(function () {
-        $('#del-btn').hide();
-    });
-    $('#comment-msg').mouseenter(function () {
-        $('#del-btn').show();
-    });
-    $('#comment-msg').mouseleave(function () {
-        $('#del-btn').hide();
-    });
+    function showDeleteBtn(obj){
+       $(obj).find('#del-btn').show();
+    };
+    function hideDeleteBtn(obj){
+        $(obj).find('#del-btn').hide();
+    };
 </script>
 <script>
     $('.menu.toggle').click(function () {

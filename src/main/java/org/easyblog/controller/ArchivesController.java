@@ -3,9 +3,7 @@ package org.easyblog.controller;
 import org.easyblog.bean.Article;
 import org.easyblog.bean.User;
 import org.easyblog.enumHelper.ArticleType;
-import org.easyblog.service.impl.ArticleServiceImpl;
-import org.easyblog.service.impl.CategoryServiceImpl;
-import org.easyblog.service.impl.UserServiceImpl;
+import org.easyblog.service.impl.*;
 import org.easyblog.utils.HtmlParserUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,18 +21,22 @@ public class ArchivesController {
     private final ArticleServiceImpl articleService;
     private final UserServiceImpl userService;
     private final CategoryServiceImpl categoryServiceImpl;
+    private final CommentServiceImpl commentService;
+    private final UserAttentionImpl userAttention;
 
-    public ArchivesController(ArticleServiceImpl articleService, UserServiceImpl userService, CategoryServiceImpl categoryServiceImpl) {
+    public ArchivesController(ArticleServiceImpl articleService, UserServiceImpl userService, CategoryServiceImpl categoryServiceImpl, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
         this.articleService = articleService;
         this.userService = userService;
         this.categoryServiceImpl = categoryServiceImpl;
+        this.commentService = commentService;
+        this.userAttention = userAttention;
     }
 
     @RequestMapping(value = "/{userId}/{date}")
     public String archivesPage(@PathVariable("date") String date,
                                @PathVariable(value = "userId") int userId,
                                Model model){
-        new ControllerUtils(categoryServiceImpl,articleService).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
+        new ControllerUtils(categoryServiceImpl,articleService,commentService,userAttention).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
         final List<Article> articles = articleService.getUserArticlesMonthly(userId, date.substring(0,4), date.substring(5,7));
         final User user = userService.getUser(userId);
         model.addAttribute("date", date);
@@ -57,7 +59,7 @@ public class ArchivesController {
                                   @PathVariable("date") String date,
                                   Model model){
         try {
-            new ControllerUtils(categoryServiceImpl, articleService).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
+            new ControllerUtils(categoryServiceImpl, articleService,commentService,userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
             final List<Article> articles = articleService.getUserArticlesMonthlyOrderByClickNum(userId, date.substring(0, 4), date.substring(5, 7));
             articles.forEach(article -> {
                 article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
