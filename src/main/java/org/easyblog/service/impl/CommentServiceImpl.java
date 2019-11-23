@@ -31,6 +31,7 @@ public class CommentServiceImpl implements ICommentService {
         this.articleService = articleService;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public int save(UserComment comment) {
         if (Objects.nonNull(comment)) {
@@ -51,27 +52,18 @@ public class CommentServiceImpl implements ICommentService {
         if (userId > 0) {
             try {
                 List<UserComment> comments = null;
-                HashMap<String, String> map = new HashMap<>();
                 if ("receive".equals(flag)) {
                     comments = commentMapper.getReceiveComment(userId);
                     if (Objects.nonNull(comments)) {
                         comments.forEach(ele -> {
-                            Article article = articleService.getByPrimaryKey(ele.getArticleId());
-                            map.put("article", article.getArticleTopic());
-                            User user = userMapper.getByPrimaryKey(Long.valueOf(ele.getCommentSend()));
-                            map.put("userName", user.getUserNickname());
-                            ele.setInfo(map);
+                            mapInfo(ele, ele.getCommentSend());
                         });
                     }
                 } else if ("send".equals(flag)) {
                     comments = commentMapper.getSendComment(userId);
                     if (Objects.nonNull(comments)) {
                         comments.forEach(ele -> {
-                            Article article = articleService.getByPrimaryKey(ele.getArticleId());
-                            map.put("article", article.getArticleTopic());
-                            User user = userMapper.getByPrimaryKey(Long.valueOf(ele.getCommentReceived()));
-                            map.put("userName", user.getUserNickname());
-                            ele.setInfo(map);
+                            mapInfo(ele, ele.getCommentReceived());
                         });
                     }
                 }
@@ -82,6 +74,21 @@ public class CommentServiceImpl implements ICommentService {
             }
         }
         return null;
+    }
+
+
+    private void mapInfo(UserComment userComment, Integer commentReceived) {
+        try {
+            HashMap<String, String> map = new HashMap<>();
+            Article article = articleService.getByPrimaryKey(userComment.getArticleId());
+            map.put("article", article.getArticleTopic());
+            User user = userMapper.getByPrimaryKey(Long.valueOf(commentReceived));
+            map.put("userName", user.getUserNickname());
+            userComment.setInfo(map);
+            map = null;
+        }catch (Exception e){
+            throw new RuntimeException("发生未知异常@CommentService-line 80-90");
+        }
     }
 
 
@@ -179,5 +186,15 @@ public class CommentServiceImpl implements ICommentService {
         }
     }
 
-
+    @Override
+    public int getReceiveCommentNum(int receivedUserId) {
+        if(receivedUserId>0){
+            try {
+                return commentMapper.countReceivedComment(receivedUserId);
+            }catch (Exception e){
+                return 0;
+            }
+        }
+        return 0;
+    }
 }

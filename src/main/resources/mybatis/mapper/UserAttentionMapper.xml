@@ -53,12 +53,19 @@
     where id = #{id,jdbcType=SMALLINT}
   </select>
 
-  <select id="getAll" resultType="list">
-    select * from secret_message
-  </select>
 
-  <select id="count" resultType="integer">
-    select count(*) from secret_message
+  <select id="countAttentionNumSelective" resultType="integer">
+    select count(*) from user_attention
+    <where>
+      <choose>
+        <when test="userAttention.userId!=null">
+          user_id=#{userAttention.userId}
+        </when>
+        <when test="userAttention.attentionId!=null">
+          attention_id=#{userAttention.attentionId}
+        </when>
+      </choose>
+    </where>
   </select>
 
   <select id="getUserAllAttentionInfoSelective" resultType="org.easyblog.bean.UserAttention">

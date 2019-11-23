@@ -16,4 +16,6 @@ public interface UserAttentionMapper extends BaseMapper<UserAttention> {
 
     List<UserAttention> getUserAllAttentionInfoSelective(@Param("userAttention") UserAttention userAttention);
 
+    int countAttentionNumSelective(@Param("userAttention") UserAttention attention);
+
 }

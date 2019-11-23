@@ -4,10 +4,7 @@ import org.easyblog.bean.Article;
 import org.easyblog.bean.User;
 import org.easyblog.bean.UserComment;
 import org.easyblog.enumHelper.ArticleType;
-import org.easyblog.service.impl.ArticleServiceImpl;
-import org.easyblog.service.impl.CategoryServiceImpl;
-import org.easyblog.service.impl.CommentServiceImpl;
-import org.easyblog.service.impl.UserServiceImpl;
+import org.easyblog.service.impl.*;
 import org.easyblog.utils.HtmlParserUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,20 +25,22 @@ public class ArticleController {
     private final CategoryServiceImpl categoryServiceImpl;
     private final ArticleServiceImpl articleServiceImpl;
     private final CommentServiceImpl commentService;
+    private final UserAttentionImpl userAttention;
     private final String PAGE404="/error/404";
 
-    public ArticleController(CategoryServiceImpl categoryServiceImpl, UserServiceImpl userService, ArticleServiceImpl articleServiceImpl, CommentServiceImpl commentService) {
+    public ArticleController(CategoryServiceImpl categoryServiceImpl, UserServiceImpl userService, ArticleServiceImpl articleServiceImpl, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
         this.categoryServiceImpl = categoryServiceImpl;
         this.userService = userService;
         this.articleServiceImpl = articleServiceImpl;
         this.commentService = commentService;
+        this.userAttention = userAttention;
     }
 
     @RequestMapping(value = "/index/{userId}")
     public String index(@PathVariable("userId") int userId,
                         @RequestParam(value = "articleType", defaultValue = "3") int articleType,
                         Model model) {
-        new ControllerUtils(categoryServiceImpl, articleServiceImpl).getArticleUserInfo(model, userId, articleType + "");
+        new ControllerUtils(categoryServiceImpl, articleServiceImpl,commentService,userAttention).getArticleUserInfo(model, userId, articleType + "");
         final User user = userService.getUser(userId);
         List<Article> articles = articleServiceImpl.getUserArticles(userId, articleType + "");
         if (Objects.nonNull(articles)) {
@@ -98,7 +97,7 @@ public class ArticleController {
                 var0.setUserVisit(user.getUserVisit() + 1);
                 userService.updateUserInfo(var0);
                 user.setUserPassword(null);
-                new ControllerUtils(categoryServiceImpl, articleServiceImpl).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
+                new ControllerUtils(categoryServiceImpl, articleServiceImpl,commentService,userAttention).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
                 return "blog";
             }
         }

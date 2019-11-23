@@ -154,13 +154,9 @@
 <div style="height: 16em"></div>
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>
-
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script>
-    $('')
-</script>
 <script>
     function changeDisplayOrNot(obj) {
         var categoryId=$(obj).val();
@@ -247,14 +243,6 @@
             }
         });
     });
-
-</script>
-<script>
-    $(document).ready(function () {
-        var url = window.location.pathname;
-        console.log("location:" + url);
-    })
-
 </script>
 <script>
     $('.menu.toggle').click(function () {

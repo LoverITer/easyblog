@@ -13,6 +13,9 @@ public interface ICommentService {
      */
     int save(UserComment comment);
 
+
+    int getReceiveCommentNum(int receivedUserId);
+
     /**
      * 获得评论
      * @param userId  用户id

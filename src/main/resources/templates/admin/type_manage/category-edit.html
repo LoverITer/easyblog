@@ -84,13 +84,12 @@
 <script>
     $('#add-btn').mouseenter(function () {
         $('#add-btn').removeClass("basic");
-    })
+    });
     $('#add-btn').mouseleave(function () {
         $('#add-btn').addClass("basic");
-    })
+    });
 </script>
 <script type="text/javascript">
-
     $(document).ready(function () {
         toggleStatus();
     });
@@ -106,7 +105,6 @@
         }
         setTimeout(toggleStatus, 500);
     }
-
     <!--退出操作异步请求-->
     $('#logout').click(function () {
         $.ajax({
@@ -131,15 +129,12 @@
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
-
     $('.ui.dropdown').dropdown({
         on: 'hover'
     });
-
     $('#searchBar').click(function () {
         $('#reloadSearchBar').css("display", "block");  //显示div
     });
-
 </script>
 <script>
     $('#add-btn').mouseenter(function () {

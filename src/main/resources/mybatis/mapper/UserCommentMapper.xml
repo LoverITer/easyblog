@@ -30,13 +30,12 @@
     select * from user_comment where article_id=#{articleId} AND pid is NULL
   </select>
 
-
   <select id="getAll" resultType="list">
     select * from user_comment
   </select>
 
-  <select id="count" resultType="int">
-    select count(*) from user_comment
+  <select id="countReceivedComment" resultType="integer">
+    select count(*) from user_comment where  comment_received=#{receivedUser}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="long">

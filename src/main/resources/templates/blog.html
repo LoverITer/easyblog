@@ -247,9 +247,10 @@
     });
     /**评论输入框时区焦点后变小为初始大小2行**/
     $('#commentForm').mouseleave(function () {
-        $('#commentInput').attr("rows", "3");
+        $('#commentInput').attr("rows", "2");
         $('#commentBtn').hide();
     });
+    <!--控制-->
     $(function () {
         $('#commentInput').on('keyup', function () {
             commentContent=$('#commentInput').val();
@@ -265,10 +266,11 @@
             }
         });
     });
+    <!--评论提交按钮ajax请求-->
     $('#publish-comment-btn').click(function () {
         var user = sessionStorage.getItem("user");
         if(user!=null) {
-            if (commentContent == null || commentContent == '') {
+            if (commentContent == null || commentContent === '') {
                 alert("请输入评论内容");
             } else {
                 var sendCommentTo = $('#sendCommentTo').val();
@@ -296,12 +298,12 @@
                     }
                 })
             }
-        } else
-            {
+        } else{
                 alert("请先登录后再发表评论！");
             }
 
     });
+    <!--点击 回复 按钮后评论回复栏中的对应显示变化-->
     function changeInfo(obj) {
         var values=$(obj).attr('value');
         var array=values.split('/');
@@ -310,7 +312,6 @@
         $('#pid').val(array[2]);
     }
 </script>
-
 <script type="text/javascript">
 
     $("code").addClass("language-css");

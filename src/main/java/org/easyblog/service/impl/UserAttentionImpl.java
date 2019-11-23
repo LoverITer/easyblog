@@ -34,18 +34,18 @@ public class UserAttentionImpl implements IUserAttention {
         if (Objects.nonNull(userAttention)) {
             try {
                 List<UserAttention> userAttentionInfos = userAttentionMapper.getUserAllAttentionInfoSelective(userAttention);
-                if(userAttention.getUserId()!=null) {
+                if (userAttention.getUserId() != null) {
                     userAttentionInfos.forEach(ele -> {
                         HashMap<String, User> map = new HashMap<>();
                         User user = userService.getUser(ele.getAttentionId());
-                        map.put("user",user);
+                        map.put("user", user);
                         ele.setUserInfo(map);
                     });
-                }else if (userAttention.getAttentionId()!=null){
+                } else if (userAttention.getAttentionId() != null) {
                     userAttentionInfos.forEach(ele -> {
                         HashMap<String, User> map = new HashMap<>();
                         User user = userService.getUser(ele.getUserId());
-                        map.put("user",user);
+                        map.put("user", user);
                         ele.setUserInfo(map);
                     });
                 }
@@ -58,14 +58,30 @@ public class UserAttentionImpl implements IUserAttention {
         return null;
     }
 
-
+    @Transactional
     @Override
     public int deleteByPK(int id) {
-        if(id>0){
-            try{
-               return userAttentionMapper.deleteByPrimaryKey((long) id);
-            }catch (Exception ex){
+        if (id > 0) {
+            try {
+                return userAttentionMapper.deleteByPrimaryKey((long) id);
+            } catch (Exception ex) {
                 ex.printStackTrace();
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Cacheable(cacheNames = "userAttention",key = "#userId",condition = "#result>0")
+    @Override
+    public int countAttentionNumOfMe(int userId) {
+        if (userId > 0) {
+            try {
+                UserAttention userAttention = new UserAttention();
+                userAttention.setUserId(userId);
+                return userAttentionMapper.countAttentionNumSelective(userAttention);
+            } catch (Exception e) {
                 return 0;
             }
         }

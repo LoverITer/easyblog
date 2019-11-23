@@ -15,8 +15,7 @@
         <div class="ui equal width center aligned padded grid">
             <div class="row" style="padding-bottom: 0 !important;">
                 <div class="four wide column" style="padding-right: 0 !important;">
-                    <a href="#" th:if="${user!=null}" th:href="@{/article/index/}+${user.getUserId()}"
-                       class="m-black">
+                    <a href="#" th:if="${user!=null}" th:href="@{/article/index/}+${user.getUserId()}" class="m-black">
                         <img class="ui top avatar aligned tiny image medium circular"
                              style="width: 55px !important;height: 55px !important;"
                              src="../static/images/header.jpg"
@@ -26,48 +25,43 @@
                 </div>
                 <div class="twelve wide column grid" style="padding-left: 0!important;">
                     <div class=" m-margin-bottom">
-                            <div  style="float: left !important;font-size: 16px" th:text="${user.getUserNickname()}"></div>
+                        <div  style="float: left !important;font-size: 16px" th:text="${user.getUserNickname()}"></div>
                     </div>
                     <div style="clear: both !important;"></div>
                     <div class=" m-margin-bottom"></div>
                     <div  class="row" >
                         <button  class="ui left floated  mini yellow basic button">
-                            <a href="#"
-                               style="color: orange;font-size: 12px;">私信</a>
+                            <a href="#" style="color: orange;font-size: 12px;">私信</a>
                         </button>
                         <button class="ui left floated  mini red basic button">
-                            <a href="#"
-                               style="color: red;font-size: 12px;">关注</a>
+                            <a href="#" style="color: red;font-size: 12px;">关注</a>
                         </button>
-                        <a href="#" th:if="${user!=null}" th:href="@{/article/home/}+${user.getUserId()}"
-                           class="float-right" style="color: #3399ea;font-size: 12px !important;">TA的个人主页&nbsp;></a>
+                        <a href="#" th:if="${user!=null}" th:href="@{/article/home/}+${user.getUserId()}" class="float-right" style="color: #3399ea;font-size: 12px !important;">TA的个人主页&nbsp;></a>
                     </div>
                 </div>
             </div>
-
             <div class="ui divider" style="margin-bottom: 5px !important;margin-top: 5px !important;"></div>
-
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column">
-                    <a href="#" class="m-black">原创
-                        <div><strong th:text="${originalArticleNum}">200</strong></div></a>
+                    <a href="#" th:href="@{/article/index/}+${user.getUserId()}" th:alt="originalArticleNum" class="m-black">
+                        原创
+                        <div><strong th:text="${originalArticleNum}">200</strong></div>
+                    </a>
                 </div>
                 <div class="column">
                     粉丝
-                    <div><strong>2003</strong></div>
+                    <div><strong th:text="${attentionNumOfMe}">0</strong></div>
                 </div>
                 <div class="column">
                     喜欢
-                    <div> <strong>3444</strong></div>
+                    <div> <strong>0</strong></div>
                 </div>
                 <div class="column">
                     评论
-                    <div><strong>345</strong></div>
+                    <div><strong th:text="${receiveCommentNum}">0</strong></div>
                 </div>
             </div>
-
             <div class="ui divider" style="margin-bottom: 5px !important;margin-top: 5px !important;"></div>
-
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column m-txt-align-left ">
                     等级：<span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserLevel()==null?0:user.getUserLevel()}"></span>
@@ -84,11 +78,6 @@
                     排名：<span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserRank()==null?0:user.getUserRank()}">7</span>
                 </div>
             </div>
-            <!--            <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">-->
-            <!--                <div class="column m-txt-align-left">-->
-            <!--                    勋章：<span class="m-margin-left"><span th:text="${}">7</span>级</span>-->
-            <!--                </div>-->
-            <!--            </div  >-->
         </div>
     </div>
     <!--分类专栏-->
@@ -110,7 +99,6 @@
                 [[${categoty.categoryArticleNum}]]篇
             </span>
         </div>
-
     </div>
     <!--最新文章-->
     <div th:if="${newestArticles!=null&&!#lists.isEmpty(newestArticles)}" class="ui segments m-margin-top-large" th:fragment="sidebar_newest_article">
@@ -132,64 +120,6 @@
             <span class="count float-right" th:text="${archive.count}">14篇</span>
         </div>
     </div>
-
-    <!--标签-->
-    <!-- <div class="ui segments m-margin-top-large">
-         <div class="ui secondary segment">
-             <div class="ui two column grid">
-                 <div class="column">
-                     <i class="tags icon"></i><strong>标签</strong>
-                 </div>
-                 <div class="right aligned column">
-                     <a href="#" target="_blank">more <i class="angle double right icon"></i></a>
-                 </div>
-             </div>
-         </div>
-         <div class="ui teal segment">
-             <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
-                 方法论
-                 <div class="detail">23</div>
-             </a>
-             <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
-                 论
-                 <div class="detail">23</div>
-             </a>
-             <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
-                 论
-                 <div class="detail">23</div>
-             </a>
-             <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
-                 方法论
-                 <div class="detail">23</div>
-             </a>
-             <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
-                 方法论
-                 <div class="detail">23</div>
-             </a>
-             <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
-                 方法论
-                 <div class="detail">23</div>
-             </a>
-             <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
-                 方法论
-                 <div class="detail">23</div>
-             </a>
-             <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
-                 方法论
-                 <div class="detail">23</div>
-             </a>
-             <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
-                 方法论
-                 <div class="detail">23</div>
-             </a>
-             <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
-                 方法论
-                 <div class="detail">23</div>
-             </a>
-         </div>
-     </div>-->
 </div>
-
-
 </body>
 </html>

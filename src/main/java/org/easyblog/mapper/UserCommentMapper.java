@@ -13,6 +13,13 @@ public interface UserCommentMapper extends BaseMapper<UserComment> {
 
     int saveSelective(UserComment record);
 
+    /**
+     * 统计接收到的评论数
+     * @param receivedId
+     * @return
+     */
+    int countReceivedComment(@Param("receivedUser") int receivedId);
+
     int updateByPrimaryKeySelective(UserComment record);
 
     int updateByPrimaryKeyWithContent(UserComment record);
