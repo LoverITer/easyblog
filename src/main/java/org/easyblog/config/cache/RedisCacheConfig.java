@@ -1,4 +1,4 @@
-package org.easyblog.config;
+package org.easyblog.config.cache;
 
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;

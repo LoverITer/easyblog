@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.easyblog.mapper.PowerMapper">
+  <cache type="org.easyblog.config.cache.MyBatisRedisCache">
+    <property name="eviction" value="LRU" />
+    <property name="flushInterval" value="6000000" />
+    <property name="size" value="1024" />
+    <property name="readOnly" value="false" />
+  </cache>
   <resultMap id="BaseResultMap" type="org.easyblog.bean.Power">
     <id column="power_id" jdbcType="TINYINT" property="powerId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -25,12 +31,12 @@
     where power_id = #{powerId,jdbcType=TINYINT}
   </delete>
 
-  <insert id="save" parameterType="org.easyblog.bean.Power" useGeneratedKeys="true" keyColumn="power_id">
+  <insert id="save" parameterType="org.easyblog.bean.Power" flushCache="false" useGeneratedKeys="true" keyColumn="power_id">
     insert into power (power_id, name)
     values (#{powerId,jdbcType=TINYINT}, #{name,jdbcType=VARCHAR})
   </insert>
 
-  <insert id="saveSelective" parameterType="org.easyblog.bean.Power" useGeneratedKeys="true" keyColumn="power_id">
+  <insert id="saveSelective" flushCache="false" parameterType="org.easyblog.bean.Power" useGeneratedKeys="true" keyColumn="power_id">
     insert into power
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="powerId != null">
@@ -50,13 +56,13 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Power">
+  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Power" flushCache="false">
     update power
     set name = #{name,jdbcType=VARCHAR}
     where power_id = #{powerId,jdbcType=TINYINT}
   </update>
 
-  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Power">
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Power" flushCache="false">
     update power
     <set>
       <if test="name != null">

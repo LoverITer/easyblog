@@ -3,7 +3,7 @@ package org.easyblog.controller;
 
 import org.easyblog.bean.User;
 import org.easyblog.bean.UserComment;
-import org.easyblog.config.Result;
+import org.easyblog.config.web.Result;
 import org.easyblog.service.impl.CommentServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -22,10 +22,10 @@
 <div th:replace="~{nav :: navbar}"></div>
 
 <!--中间内容-->
-<div class="m-container m-padded-tb-big">
+<div class="m-padded-tb-big" style="max-width: 96em!important;margin: auto !important;">
     <div class="ui stackable grid">
         <!--左边的卡片-->
-        <div class="four wide column" style="padding-top: 0 !important;">
+        <div class="four wide column" style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
             <!--用户信息-->
             <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
 
@@ -84,7 +84,7 @@
             </div>
 
             <!--每个分类的文章-->
-            <div class="ui top attached teal segment" style="padding-top: 0 !important;border-bottom: none !important;">
+            <div class="ui top attached  segment" style="padding-top: 0 !important;border-bottom: none !important;margin-top: 0.1em !important;">
                 <div th:if="${!#lists.isEmpty(categoryArticles)}" th:each="article:${categoryArticles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none"
                      style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid">

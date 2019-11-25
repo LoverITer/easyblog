@@ -1,7 +1,7 @@
 package org.easyblog.service.impl;
 
 import org.easyblog.bean.User;
-import org.easyblog.config.Result;
+import org.easyblog.config.web.Result;
 import org.easyblog.enumHelper.UserFreeze;
 import org.easyblog.enumHelper.UserLock;
 import org.easyblog.enumHelper.UserPower;
@@ -11,17 +11,12 @@ import org.easyblog.service.IUserService;
 import org.easyblog.utils.EncryptUtil;
 import org.easyblog.utils.FileUploadUtils;
 import org.easyblog.utils.RegexUtil;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
-@CacheConfig(keyGenerator = "keyGenerator", cacheManager = "cacheManager")
 @Service
 public class UserServiceImpl implements IUserService {
 
@@ -33,7 +28,6 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "user", unless = "#result==null")
     @Override
     public User checkUser(String username, String password) {
         User user = null;
@@ -88,7 +82,6 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "user", condition = "#result!=null")
     @Override
     public User getUser(String queryStr) {
         User user = null;
@@ -103,7 +96,6 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "user", condition = "#result!=null")
     @Override
     public User getUser(long uid) {
         return userMapper.getByPrimaryKey(uid);
@@ -111,7 +103,6 @@ public class UserServiceImpl implements IUserService {
 
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @CachePut(cacheNames = "user", condition = "#result==true")
     @Override
     public boolean register(String nickname, String password, String account, String ipInfo) {
         String headUrl = FileUploadUtils.defaultAvatar();
@@ -133,8 +124,6 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-
-    @CachePut(cacheNames = "user", condition = "#result>0")
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public int updateUserInfo(String account, String newPassword) {
@@ -153,7 +142,6 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-    @CachePut(cacheNames = "user", condition = "#result>0")
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public int updateUserInfo(User user) {
@@ -168,7 +156,7 @@ public class UserServiceImpl implements IUserService {
         return 0;
     }
 
-    @CacheEvict(value = "user",condition = "#result>0")
+    @Transactional
     @Override
     public int deleteUserByPK(int userId) {
         if(userId>0) {

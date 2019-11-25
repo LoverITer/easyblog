@@ -18,17 +18,14 @@
     </style>
 </head>
 <body>
-
-
 <!--导航-->
 <div th:replace="~{nav :: navbar}"></div>
-
 <!--中间内容-->
 <div id="waypoint" class="m-padded-tb-big animated fadeIn" >
-    <div class="ui m-container">
+    <div class="ui" style="max-width: 96em!important;margin: auto !important;">
         <div class="ui stackable grid">
             <!--左边的卡片-->
-            <div class="four wide column" style="padding-top: 0 !important;">
+            <div class="four wide column" style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
                 <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
                 <!--最新文章-->
                 <div th:replace="~{userinfo_sidebar::sidebar_newest_article}"></div>
@@ -108,7 +105,7 @@
                 </div>
                 <div class="divider"></div>
                 <!--留言信息-->
-                <div style="margin-top: 0.2em !important;" id="comment-container" class="ui bottom attached segment">
+                <div style="margin-top: 0.1em !important;" id="comment-container" class="ui bottom attached segment">
                     <!--留言区域列表-->
                     <div id="commentForm" class="ui form" style="padding-bottom: 15px !important;">
                         <!--默认存放文章作者的ID,评论默认发送给文章的作者-->
@@ -116,7 +113,7 @@
                         <input id="articleId" type="hidden" th:value="${article.getArticleId()}">
                         <input id="pid" type="hidden" value="0">
                         <div class="comment">
-                            <textarea id="commentInput" rows="2" name="content" placeholder="给作者留言"></textarea>
+                            <textarea id="commentInput" rows="2" name="content" placeholder="给作者留言..."></textarea>
                         </div>
                         <div id="commentBtn" class="ui grid" style="display:none !important;">
                             <div class="five column row" style="padding-bottom: 0 !important;">
@@ -175,21 +172,17 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
-
 <div class="ui toc-container flowing popup transition hidden" style="width: 250px!important;">
     <ol class="js-toc">
-
     </ol>
 </div>
 
 <div id="qrcode" class="ui wechat-qr flowing popup transition hidden " style="width: 130px !important;">
     <!--<img src="./static/images/wechat.jpg" alt="" class="ui rounded image" style="width: 120px !important;">-->
 </div>
-
 
 <div style="height: 10em"></div>
 <!--底部footer-->

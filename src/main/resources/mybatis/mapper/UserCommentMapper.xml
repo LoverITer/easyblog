@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.easyblog.mapper.UserCommentMapper">
+  <cache type="org.easyblog.config.cache.MyBatisRedisCache">
+    <property name="eviction" value="LRU" />
+    <property name="flushInterval" value="6000000" />
+    <property name="size" value="1024" />
+    <property name="readOnly" value="false" />
+  </cache>
   <resultMap id="BaseResultMap" type="org.easyblog.bean.UserComment">
     <id column="comment_id" jdbcType="INTEGER" property="commentId" />
     <result column="comment_send" jdbcType="INTEGER" property="commentSend" />
@@ -50,7 +56,7 @@
     select * from user_comment where comment_received=#{receiveUser}
   </select>
 
-  <insert id="save" parameterType="org.easyblog.bean.UserComment">
+  <insert id="save" parameterType="org.easyblog.bean.UserComment" flushCache="false">
     insert into user_comment (comment_send, comment_received,
       article_id, comment_time, like_num, 
       pid, level, comment_content)
@@ -58,7 +64,7 @@
       #{articleId,jdbcType=BIGINT}, now(), 0, #{pid,jdbcType=INTEGER}, #{level,jdbcType=INTEGER}, #{commentContent,jdbcType=LONGVARCHAR})
   </insert>
 
-  <insert id="saveSelective" parameterType="org.easyblog.bean.UserComment">
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserComment" flushCache="false">
     insert into user_comment
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="commentId != null">
@@ -120,7 +126,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserComment">
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserComment" flushCache="false">
     update user_comment
     <set>
       <if test="commentSend != null">
@@ -151,7 +157,7 @@
     where comment_id = #{commentId,jdbcType=INTEGER}
   </update>
 
-  <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.UserComment">
+  <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.UserComment" flushCache="false">
     update user_comment
     set comment_send = #{commentSend,jdbcType=INTEGER},
       comment_received = #{commentReceived,jdbcType=INTEGER},
@@ -164,7 +170,7 @@
     where comment_id = #{commentId,jdbcType=INTEGER}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserComment">
+  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserComment" flushCache="false">
     update user_comment
     set comment_send = #{commentSend,jdbcType=INTEGER},
       comment_received = #{commentReceived,jdbcType=INTEGER},

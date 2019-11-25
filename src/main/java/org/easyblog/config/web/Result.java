@@ -1,4 +1,4 @@
-package org.easyblog.config;
+package org.easyblog.config.web;
 
 
 /**

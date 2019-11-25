@@ -1,4 +1,4 @@
-package org.easyblog.config;
+package org.easyblog.config.db;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;

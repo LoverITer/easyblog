@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.easyblog.mapper.ArticleMapper">
+    <cache type="org.easyblog.config.cache.MyBatisRedisCache">
+        <property name="eviction" value="LRU" />
+        <property name="flushInterval" value="6000000" />
+        <property name="size" value="1024" />
+        <property name="readOnly" value="false" />
+    </cache>
     <resultMap id="BaseResultMap" type="org.easyblog.bean.Article">
         <id column="article_id" jdbcType="BIGINT" property="articleId"/>
         <result column="article_user" jdbcType="INTEGER" property="articleUser"/>
@@ -17,7 +23,7 @@
         <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent"/>
     </resultMap>
 
-    <insert id="save" useGeneratedKeys="true" keyProperty="articleId" keyColumn="article_id" parameterType="org.easyblog.bean.Article">
+    <insert id="save" useGeneratedKeys="true" keyProperty="articleId" keyColumn="article_id" parameterType="org.easyblog.bean.Article" flushCache="false">
         insert into article (article_user, article_topic,article_publish_time,
                      article_click, article_category,article_status,
                      article_top, article_type,article_tags,
@@ -166,7 +172,7 @@
         delete from article where article_id = #{articleId,jdbcType=BIGINT}
     </delete>
 
-    <insert id="saveSelective" parameterType="org.easyblog.bean.Article">
+    <insert id="saveSelective" parameterType="org.easyblog.bean.Article" flushCache="false">
         insert into article
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="articleId != null">
@@ -252,7 +258,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Article">
+    <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Article" flushCache="false">
         update article
         <set>
             <if test="articleUser != null">
@@ -295,7 +301,7 @@
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
-    <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.Article">
+    <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.Article" flushCache="false">
         update article
         set article_user         = #{articleUser,jdbcType=INTEGER},
             article_topic        = #{articleTopic,jdbcType=VARCHAR},
@@ -311,7 +317,7 @@
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
-    <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Article">
+    <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Article" flushCache="false">
         update article
         set article_user         = #{articleUser,jdbcType=INTEGER},
             article_topic        = #{articleTopic,jdbcType=VARCHAR},
