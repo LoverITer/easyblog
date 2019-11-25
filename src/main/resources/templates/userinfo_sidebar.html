@@ -11,7 +11,7 @@
 <div class="four wide column">
     <input id="userId" hidden="hidden" th:if="${#session.getAttribute('user')}!=null" th:value="${#session.getAttribute('user').getUserId()}">
     <!--用户信息区域-->
-    <div class="ui segments" th:fragment="sidebar_userinfo">
+    <div class="ui segments" th:fragment="sidebar_userinfo" style="padding-right: 0 !important;">
         <div class="ui equal width center aligned padded grid">
             <div class="row" style="padding-bottom: 0 !important;">
                 <div class="four wide column" style="padding-right: 0 !important;">
@@ -81,7 +81,7 @@
         </div>
     </div>
     <!--分类专栏-->
-    <div th:if="${categories!=null&&!#lists.isEmpty(categories)}" class="ui segments m-margin-top-large" th:fragment="sidebar_category">
+    <div th:if="${categories!=null&&!#lists.isEmpty(categories)}" class="ui segments" th:fragment="sidebar_category">
         <div class="ui secondary segment">
             <div class="ui two column grid">
                 <div class="column">
@@ -101,7 +101,7 @@
         </div>
     </div>
     <!--最新文章-->
-    <div th:if="${newestArticles!=null&&!#lists.isEmpty(newestArticles)}" class="ui segments m-margin-top-large" th:fragment="sidebar_newest_article">
+    <div th:if="${newestArticles!=null&&!#lists.isEmpty(newestArticles)}" class="ui segments" th:fragment="sidebar_newest_article">
         <div class="ui secondary segment ">
             <i class="bookmark icon"></i><strong>最新文章</strong>
         </div>
@@ -110,7 +110,7 @@
         </div>
     </div>
     <!--归档-->
-    <div th:if="${archives!=null&&!#lists.isEmpty(archives)}" class="ui segments m-margin-top-large" th:fragment="sidebar_archives">
+    <div th:if="${archives!=null&&!#lists.isEmpty(archives)}" class="ui segments" th:fragment="sidebar_archives">
         <div class="ui secondary segment ">
             <i class="bookmark icon"></i><strong>归档</strong>
         </div>

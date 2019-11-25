@@ -331,8 +331,13 @@ body {
 
 /*-----container*/
 
+.m-container-large{
+    max-width: 89em !important;
+    margin: auto !important;
+}
+
 .m-container {
-    max-width: 92em !important;
+    max-width: 88em !important;
     margin: auto !important;
 }
 

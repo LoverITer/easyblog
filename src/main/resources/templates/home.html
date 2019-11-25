@@ -18,19 +18,19 @@
 
 <!--中间内容-->
 <div class="m-container m-padded-tb-big">
-    <div class="ui container stackable grid">
-        <div class="eleven wide column" style="padding-top: 0 !important;">
+    <div class="ui  stackable grid">
+        <div class="twelve wide column" style="padding-top: 0 !important;">
             <div class="ui stackable grid segment m-margin-top m-margin-bottom">
-                <div class="three wide column">
+                <div class="three wide column" style="max-width: 130px !important;padding-right: 0 !important;">
                     <img th:src="${user.getUserHeaderImgUrl()}" src="https://img-blog.csdnimg.cn/20190927151132530.png" class="ui fluid top aligned  medium circular image image-100x100" alt="">
                 </div>
                 <div class="thirteen wide column" style="padding-left: 0 !important;">
                     <div class="row">
                         <span style="font-size: 26px"><strong>LoveITer</strong></span>
-                        <button id="secret-btn" class="ui right floated  mini yellow basic button">
+                        <button id="secret-btn" class="ui right floated  small yellow basic button">
                             <a  href="#" style="color: inherit;font-size: 12px;">私信</a>
                         </button>
-                        <button id="care-btn" class="ui right floated  mini red basic button">
+                        <button id="care-btn" class="ui right floated  small red basic button">
                             <a href="#"  style="color: inherit;font-size: 12px;">关注</a>
                         </button>
                     </div>
@@ -111,7 +111,7 @@
             </div>
         </div>
         <!--关于我面板-->
-        <div class="five wide column m-mobile-hide">
+        <div class="four wide column m-mobile-hide">
             <div class="ui attached segment">
                 <div class="ui header">关于我</div>
                 <p class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环. 希望结识可以共同成长的小伙伴.</p>

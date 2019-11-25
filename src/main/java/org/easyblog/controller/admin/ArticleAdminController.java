@@ -5,7 +5,7 @@ import org.easyblog.bean.Article;
 import org.easyblog.bean.Category;
 import org.easyblog.bean.User;
 import org.easyblog.enumHelper.ArticleType;
-import org.easyblog.config.Result;
+import org.easyblog.config.web.Result;
 import org.easyblog.service.impl.ArticleServiceImpl;
 import org.easyblog.service.impl.CategoryServiceImpl;
 import org.easyblog.service.impl.UserServiceImpl;

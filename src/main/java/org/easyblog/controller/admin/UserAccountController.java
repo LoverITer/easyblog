@@ -3,7 +3,7 @@ package org.easyblog.controller.admin;
 
 import org.easyblog.bean.User;
 import org.easyblog.bean.UserSigninLog;
-import org.easyblog.config.Result;
+import org.easyblog.config.web.Result;
 import org.easyblog.service.impl.UserServiceImpl;
 import org.easyblog.service.impl.UserSigninLogServiceImpl;
 import org.easyblog.utils.email.Email;

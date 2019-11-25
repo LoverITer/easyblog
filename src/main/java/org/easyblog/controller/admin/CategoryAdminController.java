@@ -2,7 +2,7 @@ package org.easyblog.controller.admin;
 
 import org.easyblog.bean.Category;
 import org.easyblog.bean.User;
-import org.easyblog.config.Result;
+import org.easyblog.config.web.Result;
 import org.easyblog.service.impl.CategoryServiceImpl;
 import org.easyblog.utils.FileUploadUtils;
 import org.easyblog.utils.QiNiuCloudUtil;

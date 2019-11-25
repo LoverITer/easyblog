@@ -3,7 +3,7 @@ package org.easyblog.controller.admin;
 import org.apache.commons.codec.binary.Base64;
 import org.easyblog.bean.User;
 import org.easyblog.bean.UserAttention;
-import org.easyblog.config.Result;
+import org.easyblog.config.web.Result;
 import org.easyblog.service.impl.UserAttentionImpl;
 import org.easyblog.service.impl.UserServiceImpl;
 import org.easyblog.utils.CalendarUtil;

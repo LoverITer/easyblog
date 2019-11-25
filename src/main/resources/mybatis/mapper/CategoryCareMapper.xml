@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.easyblog.mapper.CategoryCareMapper">
-
-    <insert id="save" useGeneratedKeys="true" keyColumn="category_care_id">
+    <cache type="org.easyblog.config.cache.MyBatisRedisCache">
+        <property name="eviction" value="LRU" />
+        <property name="flushInterval" value="6000000" />
+        <property name="size" value="1024" />
+        <property name="readOnly" value="false" />
+    </cache>
+    <insert id="save" useGeneratedKeys="true" keyColumn="category_care_id" flushCache="false">
         insert into category_care(category_id, category_care_user_id) value
         (#{categoryId},#{categoryCareUserId})
     </insert>

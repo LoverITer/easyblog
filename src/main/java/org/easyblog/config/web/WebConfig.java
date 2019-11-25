@@ -1,4 +1,4 @@
-package org.easyblog.config;
+package org.easyblog.config.web;
 
 import org.easyblog.handler.interceptor.LoginInterceptor;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;

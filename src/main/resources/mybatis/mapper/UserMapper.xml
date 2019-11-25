@@ -3,7 +3,7 @@
 <mapper namespace="org.easyblog.mapper.UserMapper">
 
     <!--添加一条记录-->
-    <insert id="save" useGeneratedKeys="true" keyColumn="user_id">
+    <insert id="save" useGeneratedKeys="true" keyColumn="user_id" flushCache="false">
         insert into user (user_nickname, user_password, user_name, user_gender, user_birthday, user_qq, user_phone,
                           user_mail, user_address, user_score, user_rank, user_headerImg_url,
                           user_description, user_register_time, user_register_ip,
@@ -18,28 +18,7 @@
         #{userFreeze}, #{userPower},#{userLevel},#{userVisit})
     </insert>
 
-    <!--批量插入数据-->
-    <insert id="saveBatch" parameterType="list">
-        insert into user (user_nickname, user_password, user_name, user_gender, user_birthday, user_qq, user_phone,
-        user_mail, user_address, user_score, user_rank, user_headerImg_url,
-        user_description, user_register_time, user_register_ip, user_last_login_ip,
-        user_last_update_time, user_lock, user_freeze, user_power)
-        values
-        <foreach collection="list" item="list" index="index" separator=",">
-            (#{list.userNickname}, #{list.userPassword},
-            #{list.userName}, #{list.userGender},
-            #{list.userBirthday}, #{list.userQQ},
-            #{list.userPhone}, #{list.userMail},
-            #{list.userAddress}, #{list.userScore},
-            #{list.userRank}, #{list.userHeaderImgUrl},
-            #{list.userDescription}, now(),
-            #{list.userRegisterIp}, #{list.userLastLoginIp},
-            #{list.userLastUpdateTime}, #{list.userLock},
-            #{list.userFreeze}, #{list.userPower})
-        </foreach>
-    </insert>
-
-    <update id="updateByPrimaryKeySelective">
+    <update id="updateByPrimaryKeySelective" flushCache="false">
         update user
         <set>
             <if test="user.userNickname!=null">
@@ -110,7 +89,7 @@
     </update>
 
     <!--根据邮件修改用户信息-->
-    <update id="updateUserSelective">
+    <update id="updateUserSelective" flushCache="false">
         update user
         <set>
             <if test="userNickname!=null">

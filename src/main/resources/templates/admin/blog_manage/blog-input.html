@@ -18,8 +18,7 @@
 <div style="margin-top: 5px !important;">
     <input id="publish-url" type="hidden" th:if="${session.user!=null}" th:value="@{/manage/blog/saveArticle/}+${session.user.getUserId()}">
     <form id="blog" action="" th:if="${session.user!=null}" th:action="@{/manage/blog/saveAsDraft/}+${session.user.getUserId()}" method="post" class="ui form">
-        <div class="ui row fluid  stackable centered grid"
-             style="margin-left: 0.5rem !important;margin-right: 0.5em !important;">
+        <div class="ui row fluid  stackable centered grid" style="margin-left: 0.5rem !important;margin-right: 0.5em !important;">
             <div class="left float  right aligned  two wide centered column">
                 <div class="ui segment"
                      style="background: none !important;border: none !important;box-shadow: none !important;padding-left: 0 !important;padding-right: 0 !important;">
@@ -171,6 +170,7 @@
         </div>
     </div>
 </div>
+<!--信息提示框-->
 <div style="position: fixed !important;z-index: 99999999 !important;" id="model1" class="ui small modal">
     <div class="header" id="msg_header">删除</div>
     <div id="msg" class="content">
@@ -232,8 +232,9 @@
     $(function () {
         contentEditor = editormd("md-content", {
             width: "100%",
-            height: 635,
-            syncScrolling: "single",
+            height: 660,
+            syncScrolling: true,
+            placeholder: "Enjoy Markdown! Writing now...",
             path: "../../../static/lib/lib/"
         });
     });
