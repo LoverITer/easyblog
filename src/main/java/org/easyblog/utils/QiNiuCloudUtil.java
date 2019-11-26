@@ -166,7 +166,7 @@ public class QiNiuCloudUtil {
         public int height;
     }
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         QiNiuCloudUtil.getInstance().delete("http://q0hiemlhp.bkt.clouddn.com/Fkm739RtjMdHh4aZUs0ZG2V0wwvY");
-    }
+    }*/
 }

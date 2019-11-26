@@ -34,13 +34,13 @@
   </delete>
 
   <!--插入一条日志记录-->
-  <insert id="save" parameterType="org.easyblog.bean.UserMailLog" flushCache="false">
+  <insert id="save" parameterType="org.easyblog.bean.UserMailLog">
     insert into user_mail_log (email, log_time, context)
     values
     ( #{email,jdbcType=INTEGER}, now() ,#{context,jdbcType=LONGVARCHAR})
   </insert>
 
-  <insert id="saveSelective" parameterType="org.easyblog.bean.UserMailLog" flushCache="false">
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserMailLog">
     insert into user_mail_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="logId != null">
@@ -72,7 +72,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserMailLog" flushCache="false">
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserMailLog" >
     update user_mail_log
     <set>
       <if test="userId != null">
@@ -88,7 +88,7 @@
     where log_id = #{logId,jdbcType=BIGINT}
   </update>
 
-  <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.UserMailLog" flushCache="false">
+  <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.UserMailLog">
     update user_mail_log
     set email = #{email,jdbcType=INTEGER},
       log_time = #{logTime,jdbcType=TIMESTAMP},

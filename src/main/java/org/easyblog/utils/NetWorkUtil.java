@@ -59,7 +59,7 @@ public final class NetWorkUtil {
                         log.debug(e.getMessage());
                         //do noting
                     }
-                    ip = inept.getHostAddress();
+                    ip = null==inept?null:inept.getHostAddress();
                 }
             }
 

@@ -172,7 +172,7 @@
         delete from article where article_id = #{articleId,jdbcType=BIGINT}
     </delete>
 
-    <insert id="saveSelective" parameterType="org.easyblog.bean.Article" flushCache="false">
+    <insert id="saveSelective" parameterType="org.easyblog.bean.Article">
         insert into article
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="articleId != null">
@@ -258,7 +258,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Article" flushCache="false">
+    <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Article">
         update article
         <set>
             <if test="articleUser != null">
@@ -292,16 +292,16 @@
                 article_content = #{articleContent,jdbcType=LONGVARCHAR},
             </if>
             <if test="articleCommentNum != null">
-                #{articleCommentNum,jdbcType=INTEGER}
+                article_comment_num=article_comment_num+#{articleCommentNum,jdbcType=INTEGER}
             </if>
             <if test="articleAppreciate!=null">
-                #{articleAppreciate}
+                article_appreciate=#{articleAppreciate}
             </if>
         </set>
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
-    <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.Article" flushCache="false">
+    <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.Article">
         update article
         set article_user         = #{articleUser,jdbcType=INTEGER},
             article_topic        = #{articleTopic,jdbcType=VARCHAR},
@@ -317,7 +317,7 @@
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
-    <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Article" flushCache="false">
+    <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Article">
         update article
         set article_user         = #{articleUser,jdbcType=INTEGER},
             article_topic        = #{articleTopic,jdbcType=VARCHAR},

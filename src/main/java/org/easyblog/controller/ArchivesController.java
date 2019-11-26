@@ -5,6 +5,7 @@ import org.easyblog.bean.User;
 import org.easyblog.enumHelper.ArticleType;
 import org.easyblog.service.impl.*;
 import org.easyblog.utils.HtmlParserUtil;
+import org.easyblog.utils.MarkdownUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,54 +36,65 @@ public class ArchivesController {
     @RequestMapping(value = "/{userId}/{date}")
     public String archivesPage(@PathVariable("date") String date,
                                @PathVariable(value = "userId") int userId,
-                               Model model){
-        new ControllerUtils(categoryServiceImpl,articleService,commentService,userAttention).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
-        final List<Article> articles = articleService.getUserArticlesMonthly(userId, date.substring(0,4), date.substring(5,7));
-        final User user = userService.getUser(userId);
-        model.addAttribute("date", date);
-        if(Objects.nonNull(articles)) {
-            articles.forEach(article -> {
-                //把HTML文本转化为人可以直接看懂的纯文本
-                article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
-            });
-            model.addAttribute("articles", articles);
-        }
-        if(Objects.nonNull(user)){
-            model.addAttribute("user",user);
-        }
-        return "archives";
+                               Model model) {
+        model.addAttribute("defaultOrderFlag", true);
+        new ControllerUtils(categoryServiceImpl, articleService, commentService, userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
+        List<Article> articles = articleService.getUserArticlesMonthly(userId, date.substring(0, 4), date.substring(5, 7));
+        String page=orderArticles(model,userId,date,articles);
+        return page==null?"archives":page;
     }
 
 
     @GetMapping(value = "orderByClickNum/{userId}/{date}")
     public String orderByClickNum(@PathVariable("userId") int userId,
                                   @PathVariable("date") String date,
-                                  Model model){
-        try {
-            new ControllerUtils(categoryServiceImpl, articleService,commentService,userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
-            final List<Article> articles = articleService.getUserArticlesMonthlyOrderByClickNum(userId, date.substring(0, 4), date.substring(5, 7));
-            articles.forEach(article -> {
-                article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
-            });
-            model.addAttribute("articles", articles);
-            model.addAttribute("date", date);
-            final User user = userService.getUser(userId);
-            if (Objects.isNull(user)) {
-                return "redirect:/error/404";
-            }
-            model.addAttribute("user", user);
-        }catch (Exception ex){
-            return "redirect:/error/error";
-        }
-        return "archives";
+                                  Model model) {
+        model.addAttribute("orderByClickNumFlag", true);
+        List<Article> articles = articleService.getUserArticlesMonthlyOrderByClickNum(userId, date.substring(0, 4), date.substring(5, 7));
+        String page=orderArticles(model,userId,date,articles);
+        return page==null?"archives":page;
     }
 
     @GetMapping(value = "orderByUpdateTime/{userId}/{date}")
     public String orderByUpdateTime(@PathVariable("userId") int userId,
-                                    @PathVariable("date") String date){
-       return "forward:/archives/details/"+userId+"/"+date;
+                                    @PathVariable("date") String date,
+                                    Model model) {
+        model.addAttribute("orderByUpdateTimeFlag", true);
+        final List<Article> articles = articleService.getUserArticlesMonthly(userId, date.substring(0, 4), date.substring(5, 7));
+        String page=orderArticles(model,userId,date,articles);
+        return page==null?"archives":page;
     }
 
-
+    /**
+     * 控制文章按指定规则排序
+     * @param model   ModelAndView对象
+     * @param userId  文章的用户的Id
+     * @param date    年月
+     * @param articles   查询出来的文章
+     * @return
+     */
+    private String orderArticles(Model model,int userId,String date,List<Article> articles){
+        try{
+            new ControllerUtils(categoryServiceImpl, articleService, commentService, userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
+            model.addAttribute("date", date);
+            if (Objects.nonNull(articles)) {
+                articles.forEach(article -> {
+                    String htmlContent = MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent());
+                    String textContent = HtmlParserUtil.HTML2Text(htmlContent);
+                    article.setArticleContent(textContent);
+                });
+                model.addAttribute("articles", articles);
+            }
+            User user = userService.getUser(userId);
+            if (Objects.nonNull(user)) {
+                model.addAttribute("user", user);
+            }else{
+                return "redirect:/error/error";
+            }
+        }catch (Exception e){
+            return "redirect:/error/error";
+        }
+        return null;
+    }
 
 }

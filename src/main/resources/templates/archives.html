@@ -53,13 +53,16 @@
                             </div>
                             <div class="m-margin-left-massive "><span style="color: #888888">排序：</span>
                                 <span class="m-margin-right-bigger m-margin-left">
-                                    <a href="#" th:href="@{/archives/details/}+${user.getUserId()}+@{/}+${date}" class="m-black">默认排序</a>
+                                    <a href="#" th:if="${defaultOrderFlag==true}" style="color: #b52a1d" th:href="@{/archives/details/}+${user.getUserId()}+@{/}+${date}" >默认排序</a>
+                                    <a href="#" th:if="${defaultOrderFlag==null}"  th:href="@{/archives/details/}+${user.getUserId()}+@{/}+${date}" class="m-black">默认排序</a>
                                 </span>
                                 <span class="m-margin-right-bigger">
-                                    <a href="#" th:href="@{/archives/details/orderByUpdateTime/}+${user.getUserId()}+@{/}+${date}" class="m-black">按更新时间</a>
+                                    <a href="#" th:if="${orderByUpdateTimeFlag==true}" style="color: #b52a1d" th:href="@{/archives/details/orderByUpdateTime/}+${user.getUserId()}+@{/}+${date}">按更新时间</a>
+                                    <a href="#" th:if="${orderByUpdateTimeFlag==null}" th:href="@{/archives/details/orderByUpdateTime/}+${user.getUserId()}+@{/}+${date}" class="m-black">按更新时间</a>
                                 </span>
                                 <span class="m-margin-right-bigger">
-                                    <a href="#" th:href="@{/archives/details/orderByClickNum/}+${user.getUserId()}+@{/}+${date}"  class="m-black">按访问量</a>
+                                    <a href="#" th:if="${orderByClickNumFlag==true}" style="color: #b52a1d" th:href="@{/archives/details/orderByClickNum/}+${user.getUserId()}+@{/}+${date}">按访问量</a>
+                                    <a href="#" th:if="${orderByClickNumFlag==null}" th:href="@{/archives/details/orderByClickNum/}+${user.getUserId()}+@{/}+${date}"  class="m-black">按访问量</a>
                                 </span>
                             </div>
                         </div>

@@ -78,6 +78,7 @@ public class MyBatisRedisCache implements Cache {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void clear() {
         RedisTemplate<String, Object> redisTemplate = getRedisTemplate();
         redisTemplate.execute((RedisCallback) connection -> {
@@ -106,7 +107,6 @@ public class MyBatisRedisCache implements Cache {
         if (Objects.isNull(redisTemplate)) {
             synchronized (MyBatisRedisCache.class) {
                 redisTemplate = ApplicationContextHolder.getBean("redisTemplate");
-                System.out.println(redisTemplate.toString());
             }
         }
         return redisTemplate;

@@ -8,6 +8,7 @@ import org.easyblog.enumHelper.ArticleType;
 import org.easyblog.config.web.Result;
 import org.easyblog.service.impl.*;
 import org.easyblog.utils.HtmlParserUtil;
+import org.easyblog.utils.MarkdownUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -47,11 +48,12 @@ public class CategoryController {
         model.addAttribute("care","false");
 
         categoryArticles.forEach(article -> {
-            article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
+            String htmlContent= MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent());
+            String textContent= HtmlParserUtil.HTML2Text(htmlContent);
+            article.setArticleContent(textContent);
         });
         if(Objects.nonNull(categoryCare)) {
             categoryCare.forEach(ele -> {
-                //待优化
                 if (userId == ele.getCategoryCareUserId()) {
                     model.addAttribute("care", "true");
                 }

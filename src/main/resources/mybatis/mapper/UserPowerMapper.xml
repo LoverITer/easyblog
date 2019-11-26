@@ -57,7 +57,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserPower" flushCache="false">
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserPower" >
     update user_power
     <set>
       <if test="powerName != null">
@@ -67,7 +67,7 @@
     where power_id = #{powerId,jdbcType=TINYINT}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserPower" flushCache="false">
+  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserPower">
     update user_power
     set power_name = #{powerName,jdbcType=VARCHAR}
     where power_id = #{powerId,jdbcType=TINYINT}
