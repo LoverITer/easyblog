@@ -37,13 +37,13 @@
   </delete>
 
   <!--update、insert、delete默认会清缓存-->
-  <insert id="save" parameterType="org.easyblog.bean.UserSigninLog" flushCache="false">
+  <insert id="save" parameterType="org.easyblog.bean.UserSigninLog">
     insert into user_signIn_log (user_id, login_ip,login_location, login_time,login_result)
     values (#{userId}, #{loginIp}, #{loginLocation},now(),#{loginResult})
   </insert>
 
 
-  <insert id="saveSelective" parameterType="org.easyblog.bean.UserSigninLog" flushCache="false">
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserSigninLog">
     insert into user_signIn_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -71,7 +71,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserSigninLog" flushCache="false">
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserSigninLog">
     update user_signIn_log
     <set>
       <if test="userId != null">

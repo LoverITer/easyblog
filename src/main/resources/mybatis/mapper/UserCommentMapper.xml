@@ -56,7 +56,7 @@
     select * from user_comment where comment_received=#{receiveUser}
   </select>
 
-  <insert id="save" parameterType="org.easyblog.bean.UserComment" flushCache="false">
+  <insert id="save" parameterType="org.easyblog.bean.UserComment">
     insert into user_comment (comment_send, comment_received,
       article_id, comment_time, like_num, 
       pid, level, comment_content)
@@ -64,7 +64,7 @@
       #{articleId,jdbcType=BIGINT}, now(), 0, #{pid,jdbcType=INTEGER}, #{level,jdbcType=INTEGER}, #{commentContent,jdbcType=LONGVARCHAR})
   </insert>
 
-  <insert id="saveSelective" parameterType="org.easyblog.bean.UserComment" flushCache="false">
+  <insert id="saveSelective" parameterType="org.easyblog.bean.UserComment">
     insert into user_comment
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="commentId != null">
@@ -126,7 +126,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserComment" flushCache="false">
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserComment">
     update user_comment
     <set>
       <if test="commentSend != null">
@@ -157,7 +157,7 @@
     where comment_id = #{commentId,jdbcType=INTEGER}
   </update>
 
-  <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.UserComment" flushCache="false">
+  <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.UserComment">
     update user_comment
     set comment_send = #{commentSend,jdbcType=INTEGER},
       comment_received = #{commentReceived,jdbcType=INTEGER},
@@ -170,7 +170,7 @@
     where comment_id = #{commentId,jdbcType=INTEGER}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserComment" flushCache="false">
+  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserComment">
     update user_comment
     set comment_send = #{commentSend,jdbcType=INTEGER},
       comment_received = #{commentReceived,jdbcType=INTEGER},

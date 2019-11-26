@@ -31,12 +31,12 @@
     where power_id = #{powerId,jdbcType=TINYINT}
   </delete>
 
-  <insert id="save" parameterType="org.easyblog.bean.Power" flushCache="false" useGeneratedKeys="true" keyColumn="power_id">
+  <insert id="save" parameterType="org.easyblog.bean.Power"  useGeneratedKeys="true" keyColumn="power_id">
     insert into power (power_id, name)
     values (#{powerId,jdbcType=TINYINT}, #{name,jdbcType=VARCHAR})
   </insert>
 
-  <insert id="saveSelective" flushCache="false" parameterType="org.easyblog.bean.Power" useGeneratedKeys="true" keyColumn="power_id">
+  <insert id="saveSelective"  parameterType="org.easyblog.bean.Power" useGeneratedKeys="true" keyColumn="power_id">
     insert into power
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="powerId != null">
@@ -56,13 +56,13 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Power" flushCache="false">
+  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Power" >
     update power
     set name = #{name,jdbcType=VARCHAR}
     where power_id = #{powerId,jdbcType=TINYINT}
   </update>
 
-  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Power" flushCache="false">
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Power" >
     update power
     <set>
       <if test="name != null">

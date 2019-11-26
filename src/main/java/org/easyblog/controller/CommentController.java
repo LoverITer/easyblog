@@ -1,9 +1,11 @@
 package org.easyblog.controller;
 
 
+import org.easyblog.bean.Article;
 import org.easyblog.bean.User;
 import org.easyblog.bean.UserComment;
 import org.easyblog.config.web.Result;
+import org.easyblog.service.impl.ArticleServiceImpl;
 import org.easyblog.service.impl.CommentServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,25 +21,34 @@ import java.util.Objects;
 public class CommentController {
 
     private final CommentServiceImpl commentService;
+    private final ArticleServiceImpl articleService;
 
-    public CommentController(CommentServiceImpl commentService) {
+    public CommentController(CommentServiceImpl commentService, ArticleServiceImpl articleService) {
         this.commentService = commentService;
+        this.articleService = articleService;
     }
 
     @ResponseBody
-    @PostMapping(value = "/publish",produces = "application/json;charset=UTF-8")
-    public Result publishComment(@RequestBody UserComment comment, HttpSession session){
+    @PostMapping(value = "/publish", produces = "application/json;charset=UTF-8")
+    public Result publishComment(@RequestBody UserComment comment, HttpSession session) {
         Result result = new Result();
         result.setSuccess(false);
         //登录用户就是发评论者，如果没有登录不可以发评论
         User user = (User) session.getAttribute("user");
-        if(Objects.nonNull(user)&&Objects.nonNull(comment)){
-           comment.setCommentSend(user.getUserId());
-           if(comment.getPid()==0){
-               comment.setPid(null);
-           }
+        if (Objects.nonNull(user) && Objects.nonNull(comment)) {
+            comment.setCommentSend(user.getUserId());
+            if (comment.getPid() == 0) {
+                comment.setPid(null);
+            }
+            //更新文章的评论数
+            new Thread(()->{
+                Article article = new Article();
+                article.setArticleId(comment.getArticleId());
+                article.setArticleCommentNum(1);
+                articleService.updateSelective(article);
+            }).start();
             int re = commentService.save(comment);
-            if (re>0){
+            if (re > 0) {
                 result.setSuccess(true);
                 result.setMsg("OK");
             }

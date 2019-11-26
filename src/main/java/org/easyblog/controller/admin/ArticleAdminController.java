@@ -4,8 +4,8 @@ package org.easyblog.controller.admin;
 import org.easyblog.bean.Article;
 import org.easyblog.bean.Category;
 import org.easyblog.bean.User;
-import org.easyblog.enumHelper.ArticleType;
 import org.easyblog.config.web.Result;
+import org.easyblog.enumHelper.ArticleType;
 import org.easyblog.service.impl.ArticleServiceImpl;
 import org.easyblog.service.impl.CategoryServiceImpl;
 import org.easyblog.service.impl.UserServiceImpl;
@@ -152,46 +152,53 @@ public class ArticleAdminController {
 
     @ResponseBody
     @PostMapping(value = "/saveArticle/{userId}")
-    public Result saveArticle(@RequestBody Article article0,
+    public Result saveArticle(@RequestBody Article article,
                               @PathVariable(value = "userId") Integer userId,
                               HttpSession session) {
         User user = (User) session.getAttribute("user");
         Result result = new Result();
         result.setSuccess(false);
         if (Objects.nonNull(user)) {
-            String htmlContent = MarkdownUtil.markdownToHtmlExtensions(article0.getArticleContent());
-            
-            final Article article = new Article(userId, article0.getArticleTopic(), new Date(), 0, article0.getArticleCategory(), article0.getArticleStatus(), "0", article0.getArticleType(), "", htmlContent, 0, article0.getArticleAppreciate());
             //根据分类名查用户的分类
             Category category = null;
-            if (Objects.nonNull(article0.getArticleCategory())) {
-                category = categoryService.getCategoryByUserIdAndName(userId, article0.getArticleCategory());
+            if (Objects.nonNull(article.getArticleCategory())) {
+                category = categoryService.getCategoryByUserIdAndName(userId, article.getArticleCategory());
+                //处理用户文章分类
+                if (Objects.isNull(category)) {
+                    category = new Category(userId, article.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1", "");
+                    categoryService.saveCategory(category);
+                } else {
+                    Category category0 = new Category();
+                    category0.setCategoryId(category.getCategoryId());
+                    int num = articleService.countUserArticleInCategory(userId, article.getArticleCategory());
+                    category0.setCategoryArticleNum(num + 1);
+                    categoryService.updateByPKSelective(category0);
+                }
             } else {
-                result.setSuccess(false);
                 result.setMsg("文章分类名不可为空");
                 return result;
             }
-            //处理用户文章分类
-            if (Objects.isNull(category)) {
-                category = new Category(userId, article0.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1", "");
-                categoryService.saveCategory(category);
-            } else {
-                Category category0 = new Category();
-                category0.setCategoryId(category.getCategoryId());
-                int num = articleService.countUserArticleInCategory(userId, article0.getArticleCategory());
-                category0.setCategoryArticleNum(num + 1);
-                categoryService.updateByPKSelective(category0);
+            //-1标志这是一篇新文章
+            if(article.getArticleId()==-1){
+                article.setArticleId(null);
             }
 
             //用户之前的可能把文章已经保存为草稿了，再次提交发布就更新
-            int res = articleService.updateSelective(article);
-            if(res<=0) {
+            int affected  = articleService.updateSelective(article);
+            if(affected<=0) {
+                article.setArticleUser(userId);
+                article.setArticleTags("");
+                article.setArticleCommentNum(0);
+                article.setArticlePublishTime(new Date());
                 //如果更新影响的行数是0，那就直接保存文章
                 articleService.saveArticle(article);
             }
-            user.setUserScore(article0.getArticleType());
-            user.setUserRank();
-            userService.updateUserInfo(user);
+            new Thread(()->{
+                //根据文章不同的分类给用户加对应的积分
+                user.setUserScore(article.getArticleType());
+                user.setUserRank();
+                userService.updateUserInfo(user);
+            }).start();
             result.setSuccess(true);
             result.setMsg(article.getArticleId() + "");  //把文章的ID返回给页面
             return result;
@@ -203,7 +210,9 @@ public class ArticleAdminController {
     public String articlePublishSuccess(@PathVariable(value = "articleId") int articleId,
                                         Model model) {
         Article article = articleService.getArticleById(articleId);
-        article.setArticleContent(HtmlParserUtil.HTML2Text(article.getArticleContent()));
+        String htmlContent=MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent());
+        String textContent= HtmlParserUtil.HTML2Text(htmlContent);
+        article.setArticleContent(textContent);
         model.addAttribute("article", article);
         return PREFIX + "/blog-input-success";
     }
@@ -233,32 +242,65 @@ public class ArticleAdminController {
 
     @GetMapping(value = "/edit")
     public String editArticle(Model model, HttpServletRequest request, @RequestParam("articleId") int articleId) {
-        if (articleId < 0) {
-            String Referer = request.getHeader("Referer");
-            return "redirect:" + Referer;
+        User user = (User) request.getSession().getAttribute("user");
+        if(Objects.nonNull(user)) {
+            if (articleId < 0) {
+                String Referer = request.getHeader("Referer");
+                return "redirect:" + Referer;
+            }
+            try {
+                Article article = articleService.getArticleById(articleId);
+                model.addAttribute("article", article);
+                final List<Category> categories = categoryService.getUserAllCategories(article.getArticleUser());
+                model.addAttribute("categories", categories);
+                model.addAttribute("userId", article.getArticleUser());
+            } catch (Exception ex) {
+                return "/error/error";
+            }
+            return PREFIX + "/blog-input";
         }
-        try {
-            Article article = articleService.getArticleById(articleId);
-            model.addAttribute("content", article.getArticleContent());
-            model.addAttribute("title", article.getArticleTopic());
-            final List<Category> categories = categoryService.getUserAllCategories(article.getArticleUser());
-            model.addAttribute("categories", categories);
-            model.addAttribute("userId", article.getArticleUser());
-        } catch (Exception ex) {
-            return "/error/error";
-        }
-        return PREFIX + "/blog-input";
+        return "redirect:/user/loginPage";
     }
 
 
     @GetMapping(value = "/delete")
     public String deleteArticle(@RequestParam("articleId") int articleId) {
         try {
+            //删除的文章暂时放进垃圾桶
             updateArticle(articleId, "3");
         } catch (Exception e) {
             return "redirect:/error/error";
         }
         return "redirect:/manage/blog/";
+    }
+
+
+    @GetMapping(value = "/deleteDraft")
+    public String deleteDraft(@RequestParam("articleId") int articleId) {
+        String updateStatus=updateArticleStatusTo3(articleId);
+        return null==updateStatus?"redirect:/manage/blog/draft":updateStatus;
+    }
+
+    @GetMapping(value = "/deletePrivateArticle")
+    public String deletePrivateArticle(@RequestParam("articleId") int articleId) {
+        String updateStatus=updateArticleStatusTo3(articleId);
+        return null==updateStatus?"redirect:/manage/blog/private":updateStatus;
+    }
+
+    @GetMapping(value = "/deletePublicArticle")
+    public String deletePublicArticle(@RequestParam("articleId") int articleId) {
+        String updateStatus=updateArticleStatusTo3(articleId);
+        return null==updateStatus?"redirect:/manage/blog/public":updateStatus;
+    }
+
+    private String updateArticleStatusTo3(int articleId){
+        try {
+            //删除的文章暂时放进垃圾桶
+            updateArticle(articleId, "3");
+        } catch (Exception e) {
+            return "redirect:/error/error";
+        }
+        return null;
     }
 
     @GetMapping(value = "/recycleToDraft")
@@ -268,7 +310,7 @@ public class ArticleAdminController {
         } catch (Exception e) {
             return "redirect:/error/error";
         }
-        return "redirect:/manage/blog/";
+        return "redirect:/manage/blog/dash";
     }
 
     private void updateArticle(int articleId, String destArticleStatus) {
@@ -285,7 +327,7 @@ public class ArticleAdminController {
         } catch (Exception e) {
             return "redirect:/error/error";
         }
-        return "redirect:/manage/blog/";
+        return "redirect:/manage/blog/dash";
     }
 
 

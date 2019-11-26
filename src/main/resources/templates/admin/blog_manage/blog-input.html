@@ -18,6 +18,8 @@
 <div style="margin-top: 5px !important;">
     <input id="publish-url" type="hidden" th:if="${session.user!=null}" th:value="@{/manage/blog/saveArticle/}+${session.user.getUserId()}">
     <form id="blog" action="" th:if="${session.user!=null}" th:action="@{/manage/blog/saveAsDraft/}+${session.user.getUserId()}" method="post" class="ui form">
+        <!--这些属性是在编辑文章用的-->
+        <input type="hidden" id="articleId" th:if="${article!=null}" th:value="${article.getArticleId()}">
         <div class="ui row fluid  stackable centered grid" style="margin-left: 0.5rem !important;margin-right: 0.5em !important;">
             <div class="left float  right aligned  two wide centered column">
                 <div class="ui segment"
@@ -31,8 +33,8 @@
             <div  class="ten wide centered column">
                 <div class="field" style="margin-bottom: 0.5em !important;">
                     <div  class="ui left large  input">
-                        <input  th:if="${title==null}" id="title" type="text" name="title" placeholder="文章标题">
-                        <input th:if="${title!=null}" th:value="${title}" id="title" type="text" name="title" placeholder="文章标题">
+                        <input  th:if="${article==null}" id="title" type="text" name="title" placeholder="文章标题">
+                        <input th:if="${article!=null}" th:value="${article.getArticleTopic()}" id="title" type="text" name="title" placeholder="文章标题">
                     </div>
                 </div>
             </div>
@@ -52,8 +54,8 @@
         </div>
         <div class="field" style="margin-top: 1px !important;">
             <div id="md-content" style="z-index: 1 !important;">
-              <textarea th:if="${content==null}"  id="content" name="content" style="display: none"></textarea>
-              <textarea th:if="${content!=null}" th:text="${content}" id="content"  name="content" style="display: none"></textarea>
+              <textarea th:if="${article==null}"  id="content" name="content" style="display: none"></textarea>
+              <textarea th:if="${article!=null}" th:text="${article.getArticleContent()}" id="content"  name="content" style="display: none"></textarea>
             </div>
         </div>
     </form>
@@ -77,9 +79,10 @@
                     </div>
                     <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
                         <div class="ui field">
-                            <select  id="types" name="maxCount" multiple="" class="ui dropdown type">
+                            <select  id="types" name="maxCount"  class="ui dropdown type">
                                 <option value="" selected="">请选择</option>
-                                <option th:each="category:${categories}" value="1" th:value="${category.getCategoryId()}">[[${category.getCategoryName()}]]</option>
+                                <option th:if="${article!=null}" th:each="category:${categories}" th:selected="${article.getArticleCategory()==category.getCategoryName()}" value="1" th:value="${category.getCategoryId()}">[[${category.getCategoryName()}]]</option>
+                                <option th:if="${article==null}" th:each="category:${categories}"  value="1" th:value="${category.getCategoryId()}">[[${category.getCategoryName()}]]</option>
                             </select>
                         </div>
                         <div class="ui fluid icon input">
@@ -104,9 +107,12 @@
                         <div class="field">
                             <select id="article_type" name="minCount" class="ui dropdown">
                                 <option value="-1">请选择</option>
-                                <option value="0">原创</option>
-                                <option value="1">转载</option>
-                                <option value="2">翻译</option>
+                                <option th:if="${article!=null}" th:selected="${article.getArticleType()=='0'}" value="0">原创</option>
+                                <option th:if="${article==null}"  value="0">原创</option>
+                                <option th:if="${article!=null}" th:selected="${article.getArticleType()=='1'}" value="1">转载</option>
+                                <option th:if="${article==null}"  value="1">转载</option>
+                                <option th:if="${article!=null}" th:selected="${article.getArticleType()=='2'}" value="2">翻译</option>
+                                <option th:if="${article==null}"  value="2">翻译</option>
                             </select>
                         </div>
                     </div>
@@ -120,8 +126,10 @@
                        <div class="ui field">
                            <select id="appreciate" name="maxCount" class="ui dropdown tags">
                                <option value="-1" selected="">请选择</option>
-                               <option value="0">否</option>
-                               <option value="1">是</option>
+                               <option th:if="${article==null}"  value="0">否</option>
+                               <option th:if="${article==null}"  value="1">是</option>
+                               <option th:if="${article!=null}" th:selected="${article.getArticleAppreciate()=='0'}" value="0">否</option>
+                               <option th:if="${article!=null}" th:selected="${article.getArticleAppreciate()=='1'}" value="1">是</option>
                            </select>
                        </div>
                    </div>
@@ -137,13 +145,15 @@
                             <div class="inline fields">
                                 <div class="field">
                                     <div class="ui radio checkbox">
-                                        <input id="public" type="radio" name="frequency" checked="checked">
-                                        <label>公开</label>
+                                        <input id="public" type="radio" name="frequency" th:if="${article!=null}" th:selected="${article.getArticleStatus()=='0'}">
+                                        <input id="public" type="radio" name="frequency" th:if="${article==null}"  checked="checked">
+                                        <label >公开</label>
                                     </div>
                                 </div>
                                 <div class="field">
                                     <div class="ui radio checkbox">
-                                        <input id="private"  type="radio" name="frequency">
+                                        <input id="private"  type="radio" th:if="${article!=null}" th:selected="${article.getArticleStatus()=='0'}"  name="frequency">
+                                        <input id="private"  type="radio" th:if="${article==null}" name="frequency">
                                         <label>私有</label>
                                     </div>
                                 </div>
@@ -358,12 +368,16 @@
 
  //发布按钮按下后的操作
  $('#publish-btn').click(function () {
+     var articleId=$('#articleId').val();
      var url=$('#publish-url').val();
      var title=$('#title').val();
      var content=$('#content').val();
      var categoryName=$('#types').find("option:selected").text();
      var articleType=$('#article_type').val();
      var appreciate=$('#appreciate').find("option:selected").text();
+     if("undefined"===articleId||null==articleId){
+         articleId=-1;
+     }
      if("是"==appreciate){
          appreciate="1";
      }else{
@@ -397,6 +411,7 @@
             sync: true,
             contentType: "application/json",
             data: JSON.stringify({
+                articleId:articleId,
                 articleTopic: title,
                 articleCategory: categoryName,
                 articleType: articleType,
@@ -411,14 +426,14 @@
                 if(response.success){
                     window.location.href="/manage/blog/success/"+articleId;
                 }else{
-                    $('#msg_header').css("color", "red").html("错误");
+                    $('#msg_header').html("错误");
                     $('#msg').css("color", "red").html("抱歉！服务异常，请重试!");
                     $('.ui.modal').modal('show');
                 }
             },
             error: function (response) {
-                $('#msg_header').css("color", "red").html("错误");
-                $('#msg').css("color", "red").html(response.msg);
+                $('#msg_header').html("错误");
+                $('#msg').css("color", "red").html("抱歉！服务异常，请重试!");
                 $('.ui.modal').modal('show');
             }
         });

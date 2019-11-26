@@ -3,7 +3,7 @@
 <mapper namespace="org.easyblog.mapper.UserMapper">
 
     <!--添加一条记录-->
-    <insert id="save" useGeneratedKeys="true" keyColumn="user_id" flushCache="false">
+    <insert id="save" useGeneratedKeys="true" keyColumn="user_id">
         insert into user (user_nickname, user_password, user_name, user_gender, user_birthday, user_qq, user_phone,
                           user_mail, user_address, user_score, user_rank, user_headerImg_url,
                           user_description, user_register_time, user_register_ip,
@@ -18,7 +18,7 @@
         #{userFreeze}, #{userPower},#{userLevel},#{userVisit})
     </insert>
 
-    <update id="updateByPrimaryKeySelective" flushCache="false">
+    <update id="updateByPrimaryKeySelective">
         update user
         <set>
             <if test="user.userNickname!=null">
@@ -89,7 +89,7 @@
     </update>
 
     <!--根据邮件修改用户信息-->
-    <update id="updateUserSelective" flushCache="false">
+    <update id="updateUserSelective">
         update user
         <set>
             <if test="userNickname!=null">

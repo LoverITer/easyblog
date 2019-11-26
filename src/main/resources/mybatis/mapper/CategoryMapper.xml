@@ -117,7 +117,7 @@
 
 
 
-  <insert id="insertSelective" parameterType="org.easyblog.bean.Category" flushCache="false">
+  <insert id="insertSelective" parameterType="org.easyblog.bean.Category">
     insert into category
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="categoryId != null">
@@ -175,7 +175,7 @@
   </insert>
 
 
-  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Category" flushCache="false">
+  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Category">
     update category
     <set>
       <if test="categoryName != null">
@@ -205,7 +205,7 @@
 
 
 
-  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Category" flushCache="false">
+  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Category">
     update category
     set category_user = #{categoryUser,jdbcType=INTEGER},
       category_name = #{categoryName,jdbcType=VARCHAR},
