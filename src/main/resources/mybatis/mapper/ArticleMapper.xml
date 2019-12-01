@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.easyblog.mapper.ArticleMapper">
-    <cache type="org.easyblog.config.cache.MyBatisRedisCache">
+<mapper namespace="top.easyblog.mapper.ArticleMapper">
+    <cache type="top.easyblog.config.cache.MyBatisRedisCache">
         <property name="eviction" value="LRU" />
         <property name="flushInterval" value="6000000" />
         <property name="size" value="1024" />
         <property name="readOnly" value="false" />
     </cache>
-    <resultMap id="BaseResultMap" type="org.easyblog.bean.Article">
+    <resultMap id="BaseResultMap" type="top.easyblog.bean.Article">
         <id column="article_id" jdbcType="BIGINT" property="articleId"/>
         <result column="article_user" jdbcType="INTEGER" property="articleUser"/>
         <result column="article_topic" jdbcType="VARCHAR" property="articleTopic"/>
@@ -19,11 +19,11 @@
         <result column="article_type" jdbcType="CHAR" property="articleType"/>
         <result column="article_tags" jdbcType="VARCHAR" property="articleTags"/>
     </resultMap>
-    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.easyblog.bean.Article">
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.easyblog.bean.Article">
         <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent"/>
     </resultMap>
 
-    <insert id="save" useGeneratedKeys="true" keyProperty="articleId" keyColumn="article_id" parameterType="org.easyblog.bean.Article" flushCache="false">
+    <insert id="save" useGeneratedKeys="true" keyProperty="articleId" keyColumn="article_id" parameterType="top.easyblog.bean.Article" flushCache="false">
         insert into article (article_user, article_topic,article_publish_time,
                      article_click, article_category,article_status,
                      article_top, article_type,article_tags,
@@ -46,42 +46,42 @@
         select count(*) from article where article_user=#{userId} AND article_category=#{categoryName}
     </select>
 
-    <select id="getUserArticlesSelective" resultType="org.easyblog.bean.Article">
+    <select id="getUserArticlesSelective" resultType="top.easyblog.bean.Article">
         select * from article where article_user=#{userId} AND article_type=#{articleType} AND article_status='0' order by article_publish_time DESC
     </select>
 
-    <select id="getUserAllArticles" resultType="org.easyblog.bean.Article">
+    <select id="getUserAllArticles" resultType="top.easyblog.bean.Article">
         select * from article where article_user=#{userId} AND article_status='0' order by article_publish_time DESC
     </select>
 
-    <select id="getNewestArticles" resultType="org.easyblog.bean.Article">
+    <select id="getNewestArticles" resultType="top.easyblog.bean.Article">
         select * from article where article_user=#{userId} AND article_status='0' order by article_publish_time DESC limit #{limit}
     </select>
 
-    <select id="getHotArticles" resultType="org.easyblog.bean.Article">
+    <select id="getHotArticles" resultType="top.easyblog.bean.Article">
         select * from article where article_user=#{userId} AND article_status='0' order by article_click DESC limit #{limit}
     </select>
 
-    <select id="countByUserIdMonthly" resultType="org.easyblog.bean.ArticleCount">
+    <select id="countByUserIdMonthly" resultType="top.easyblog.bean.ArticleCount">
         SELECT DATE_FORMAT(article_publish_time,"%Y年%m月") AS date,COUNT(*) AS count FROM article where article_user=#{userId} AND article_status='0' GROUP BY DATE_FORMAT(article_publish_time,"%Y年%m月")
         ORDER BY DATE_FORMAT(article_publish_time,"%Y年%m月") DESC
     </select>
 
-    <select id="getByUserIdMonthly" resultType="org.easyblog.bean.Article">
+    <select id="getByUserIdMonthly" resultType="top.easyblog.bean.Article">
         SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} AND article_status='0' ORDER BY article_publish_time DESC
     </select>
 
-    <select id="getByUserIdMonthlyOrderByClickNum" resultType="org.easyblog.bean.Article">
+    <select id="getByUserIdMonthlyOrderByClickNum" resultType="top.easyblog.bean.Article">
         SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} AND article_status='0' ORDER BY article_click DESC
     </select>
 
-    <select id="getByCategoryAndUserId" resultType="org.easyblog.bean.Article">
+    <select id="getByCategoryAndUserId" resultType="top.easyblog.bean.Article">
         select * from article where article_user=#{userId} AND article_status='0' AND article_category
             in (select category_name from category where category_id=#{categoryId}) ORDER BY article_publish_time DESC
     </select>
 
 
-    <select id="getArticlesSelective" resultType="org.easyblog.bean.Article">
+    <select id="getArticlesSelective" resultType="top.easyblog.bean.Article">
         select * from article
         <where>
             <if test="article.articleTopic != null">
@@ -121,7 +121,7 @@
         </where>
     </select>
 
-    <select id="getUsersArticleByQueryString" resultType="org.easyblog.bean.Article">
+    <select id="getUsersArticleByQueryString" resultType="top.easyblog.bean.Article">
         select article_id,article_topic,article_publish_time,article_content,
                article_click,article_category,article_comment_num,
                user.user_nickname AS authorName,user.user_headerImg_url AS userHeaderImageUrl
@@ -172,12 +172,9 @@
         delete from article where article_id = #{articleId,jdbcType=BIGINT}
     </delete>
 
-    <insert id="saveSelective" parameterType="org.easyblog.bean.Article">
+    <insert id="saveSelective" parameterType="top.easyblog.bean.Article">
         insert into article
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="articleId != null">
-                article_id,
-            </if>
             <if test="articleUser != null">
                 article_user,
             </if>
@@ -216,9 +213,6 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="articleId != null">
-                #{articleId,jdbcType=BIGINT},
-            </if>
             <if test="articleUser != null">
                 #{articleUser,jdbcType=INTEGER},
             </if>
@@ -258,7 +252,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.Article">
+    <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.bean.Article">
         update article
         <set>
             <if test="articleUser != null">
@@ -301,7 +295,7 @@
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
-    <update id="updateByPrimaryKeyWithContent" parameterType="org.easyblog.bean.Article">
+    <update id="updateByPrimaryKeyWithContent" parameterType="top.easyblog.bean.Article">
         update article
         set article_user         = #{articleUser,jdbcType=INTEGER},
             article_topic        = #{articleTopic,jdbcType=VARCHAR},
@@ -317,7 +311,7 @@
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
-    <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.Article">
+    <update id="updateByPrimaryKey" parameterType="top.easyblog.bean.Article">
         update article
         set article_user         = #{articleUser,jdbcType=INTEGER},
             article_topic        = #{articleTopic,jdbcType=VARCHAR},

@@ -1,0 +1,11 @@
+#   基于JAVA的镜像
+FROM java:8
+#  Linux上面的挂载点为/tmp
+VOLUME /tmp
+#  添加一个jar为本项目的jar,第一个是打包的Jar 第二个是别名
+ADD target/*.jar app.jar
+#  暴露的端口号和application.yml的端口号一直
+EXPOSE 80
+ENV TZ=PRC
+#  入口点 执行JAVA Jvm命令： 加快随机数产生过程，运行这个Jar包
+ENTRYPOINT ["java","-jar","/app.jar"]
