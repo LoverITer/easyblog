@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.easyblog.mapper.UserPowerMapper">
-  <cache type="org.easyblog.config.cache.MyBatisRedisCache">
+<mapper namespace="top.easyblog.mapper.UserPowerMapper">
+  <cache type="top.easyblog.config.cache.MyBatisRedisCache">
     <property name="eviction" value="LRU" />
     <property name="flushInterval" value="6000000" />
     <property name="size" value="1024" />
     <property name="readOnly" value="false" />
   </cache>
-  <resultMap id="BaseResultMap" type="org.easyblog.bean.UserPower">
+  <resultMap id="BaseResultMap" type="top.easyblog.bean.UserPower">
     <id column="power_id" jdbcType="TINYINT" property="powerId" />
     <result column="power_name" jdbcType="VARCHAR" property="powerName" />
   </resultMap>
@@ -31,13 +31,13 @@
     where power_id = #{powerId,jdbcType=TINYINT}
   </delete>
 
-  <insert id="save" parameterType="org.easyblog.bean.UserPower" flushCache="false">
+  <insert id="save" parameterType="top.easyblog.bean.UserPower" flushCache="false">
     insert into user_power (power_id, power_name)
     values
     (#{powerId,jdbcType=TINYINT}, #{powerName,jdbcType=VARCHAR})
   </insert>
 
-  <insert id="saveSelective" parameterType="org.easyblog.bean.UserPower" flushCache="false">
+  <insert id="saveSelective" parameterType="top.easyblog.bean.UserPower" flushCache="false">
     insert into user_power
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="powerId != null">
@@ -57,7 +57,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserPower" >
+  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.bean.UserPower" >
     update user_power
     <set>
       <if test="powerName != null">
@@ -67,7 +67,7 @@
     where power_id = #{powerId,jdbcType=TINYINT}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserPower">
+  <update id="updateByPrimaryKey" parameterType="top.easyblog.bean.UserPower">
     update user_power
     set power_name = #{powerName,jdbcType=VARCHAR}
     where power_id = #{powerId,jdbcType=TINYINT}

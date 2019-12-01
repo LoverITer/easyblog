@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.easyblog.mapper.UserSigninLogMapper">
-  <cache type="org.easyblog.config.cache.MyBatisRedisCache">
+<mapper namespace="top.easyblog.mapper.UserSigninLogMapper">
+  <cache type="top.easyblog.config.cache.MyBatisRedisCache">
     <property name="eviction" value="LRU" />
     <property name="flushInterval" value="6000000" />
     <property name="size" value="1024" />
     <property name="readOnly" value="false" />
   </cache>
-  <resultMap id="BaseResultMap" type="org.easyblog.bean.UserSigninLog">
+  <resultMap id="BaseResultMap" type="top.easyblog.bean.UserSigninLog">
     <id column="log_id" jdbcType="BIGINT" property="logId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
@@ -15,7 +15,7 @@
     <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
   </resultMap>
 
-  <select id="getByPrimaryKey" parameterType="java.lang.Long" resultType="org.easyblog.bean.UserSigninLog">
+  <select id="getByPrimaryKey" parameterType="java.lang.Long" resultType="top.easyblog.bean.UserSigninLog">
     select * from user_signIn_log where log_id = #{id}
   </select>
 
@@ -27,7 +27,7 @@
     select count(*) from user_signIn_log
   </select>
 
-  <select id="getUserLoginInfo" resultType="org.easyblog.bean.UserSigninLog">
+  <select id="getUserLoginInfo" resultType="top.easyblog.bean.UserSigninLog">
     select * from user_signIn_log where user_id=#{userId} ORDER BY login_time DESC limit ${num}
   </select>
 
@@ -37,13 +37,13 @@
   </delete>
 
   <!--update、insert、delete默认会清缓存-->
-  <insert id="save" parameterType="org.easyblog.bean.UserSigninLog">
+  <insert id="save" parameterType="top.easyblog.bean.UserSigninLog">
     insert into user_signIn_log (user_id, login_ip,login_location, login_time,login_result)
     values (#{userId}, #{loginIp}, #{loginLocation},now(),#{loginResult})
   </insert>
 
 
-  <insert id="saveSelective" parameterType="org.easyblog.bean.UserSigninLog">
+  <insert id="saveSelective" parameterType="top.easyblog.bean.UserSigninLog">
     insert into user_signIn_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -71,7 +71,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="org.easyblog.bean.UserSigninLog">
+  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.bean.UserSigninLog">
     update user_signIn_log
     <set>
       <if test="userId != null">
@@ -90,7 +90,7 @@
     where log_id = #{logId,jdbcType=BIGINT}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="org.easyblog.bean.UserSigninLog">
+  <update id="updateByPrimaryKey" parameterType="top.easyblog.bean.UserSigninLog">
     update user_signIn_log
     set user_id = #{userId,jdbcType=INTEGER},
       login_ip = #{loginIp,jdbcType=VARCHAR},
