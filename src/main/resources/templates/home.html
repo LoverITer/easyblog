@@ -104,10 +104,18 @@
             </div>
 
             <!--查看更多-->
-            <div class="ui attached segment bottom " style="border-top: none !important;">
+            <div th:if="${#lists.size(articles)>15}" class="ui attached segment bottom " style="border-top: none !important;">
                 <a href="#" th:href="@{/article/index/}+${user.getUserId()}">
                     <button id="more-btn" class="ui negative basic button" style="margin-left: 40% !important;">查看更多</button>
                 </a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment" style="border-top: none !important;">
+                <div class="ui middle aligned two column grid">
+                    <div  style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
+                        没有任何文章
+                    </div>
+                </div>
             </div>
         </div>
         <!--关于我面板-->

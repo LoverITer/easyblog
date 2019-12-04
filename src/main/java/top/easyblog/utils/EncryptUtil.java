@@ -199,9 +199,9 @@ public class EncryptUtil {
      * @param key 秘钥
      * @return
      */
-    public String DESEncode(String info, String key) {
+    /*public String DESEncode(String info, String key) {
         return keyGeneratorES(info, DES, key, keysizeDES, true);
-    }
+    }*/
 
     /**
      * 对使用DES加密算法的密文进行解密（可逆）
@@ -288,6 +288,5 @@ public class EncryptUtil {
     public String Base64Decode(String res) {
         return new String(Base64.decode(res));
     }
-
 
 }

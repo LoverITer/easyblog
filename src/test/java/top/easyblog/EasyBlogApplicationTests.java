@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class PersonalBlogApplicationTests {
+public class EasyBlogApplicationTests {
 
     @Autowired
     ArticleMapper articleMapper;

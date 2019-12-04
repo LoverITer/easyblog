@@ -7,10 +7,10 @@ spring:
   datasource:
     #指定使用Druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.92.128:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://121.36.49.86:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
     username: root
-    password: 123456
+    password: huangxin@95162437
     druid:
       stat-view-servlet:
         enabled: true
@@ -53,9 +53,11 @@ spring:
     restart:
       additional-paths: src/main/java
   redis:
-    host: 192.168.92.128
-    port: 6379
+    host: 121.36.49.86
+    password: CySynWsw5NLzbzHne3XcXaRGPWKpJxSKsHikLYvQ6VI0dNKjScuyYPjt
+    port: 63790
     database: 0
+    timeout: 10000
     #springBoot 2.x应该配置lettuce作为Redis客户端  Spring1.x配置jedis
     lettuce:
       pool:

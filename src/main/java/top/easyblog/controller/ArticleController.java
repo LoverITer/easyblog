@@ -27,7 +27,7 @@ public class ArticleController {
     private final ArticleServiceImpl articleServiceImpl;
     private final CommentServiceImpl commentService;
     private final UserAttentionImpl userAttention;
-    private final String PAGE404 = "/error/404";
+    private final String PAGE404 = "redirect:/error/404";
 
     public ArticleController(CategoryServiceImpl categoryServiceImpl, UserServiceImpl userService, ArticleServiceImpl articleServiceImpl, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
         this.categoryServiceImpl = categoryServiceImpl;
@@ -97,15 +97,21 @@ public class ArticleController {
             article.setArticleContent(htmlContent);
             model.addAttribute("article", article);
             User user = userService.getUser(article.getArticleUser());
-            model.addAttribute("user", user);
             List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
             model.addAttribute("articleComments", articleComments);
             if (Objects.nonNull(user)) {
-                User var0 = new User();
-                var0.setUserId(user.getUserId());
-                var0.setUserVisit(user.getUserVisit() + 1);
-                userService.updateUserInfo(var0);
                 user.setUserPassword(null);
+                model.addAttribute("user", user);
+                //更新用户的访问量
+                User user1 = new User();
+                user1.setUserId(user.getUserId());
+                user1.setUserVisit(user.getUserVisit() + 1);
+                userService.updateUserInfo(user1);
+                //更新文章的访问量
+                Article article1 = new Article();
+                article1.setArticleId(article.getArticleId());
+                article1.setArticleClick(article.getArticleClick()+1);
+                articleServiceImpl.updateSelective(article1);
                 new ControllerUtils(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
                 return "blog";
             }

@@ -1,6 +1,9 @@
 package top.easyblog.controller.admin;
 
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserAttention;
 import top.easyblog.config.web.Result;
@@ -9,9 +12,6 @@ import top.easyblog.service.impl.UserServiceImpl;
 import top.easyblog.utils.CalendarUtil;
 import top.easyblog.utils.QiNiuCloudUtil;
 import top.easyblog.utils.UserProfessionUtil;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -37,10 +37,13 @@ public class UserCenterController {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
             model.addAttribute("user", userService.getUser(user.getUserId()));
-            String[] address = user.getUserAddress().split(",");
-            model.addAttribute("country", address[0]);
-            model.addAttribute("city", address[1]);
-            model.addAttribute("county", address[2]);
+            String str = user.getUserAddress();
+            if(Objects.nonNull(str)&&!"".equals(str)) {
+                String[] address=str.split(",");
+                model.addAttribute("country", address[0]);
+                model.addAttribute("city", address[1]);
+                model.addAttribute("county", address[2]);
+            }
             model.addAttribute("profile", 1);
             return PREFIX + "/personal-center";
         }

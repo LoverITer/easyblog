@@ -11,18 +11,13 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 @MapperScan(value = "top.easyblog.mapper")
 @SpringBootApplication
-public class PersonalBlogApplication extends SpringBootServletInitializer {
+public class EasyBlogApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
-        SpringApplication.run(PersonalBlogApplication.class, args);
+        SpringApplication.run(EasyBlogApplication.class, args);
     }
 
-    /**
-     * 重写SpringBootServletInitializer中的configure方法
-     * @param builder
-     * @return
-     */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(PersonalBlogApplication.class);
+        return builder.sources(EasyBlogApplication.class);
     }
 }
