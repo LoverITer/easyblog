@@ -172,7 +172,7 @@ public class UserController {
         } else if (!captcha.equals(captchaCode)) {
             result.setMsg("验证码不正确");
         } else {
-            userService.register(nickname, EncryptUtil.getInstance().DESEncode(password, "user"), account, ip + " " + ipInfo);
+            userService.register(nickname, EncryptUtil.getInstance().SHA1(password, "user"), account, ip + " " + ipInfo);
             result.setSuccess(true);
             result.setMsg("注册成功");
         }
@@ -199,7 +199,7 @@ public class UserController {
         Result result = new Result();
         result.setSuccess(false);
         if (!"".equals(email)) {
-            if (Objects.nonNull(userService.getUser(email))) {
+            if (Objects.isNull(userService.getUser(email))) {
                 result.setSuccess(true);
             }
         }
@@ -210,11 +210,11 @@ public class UserController {
     @GetMapping(value = "/checkPhone")
     public Result checkUserPhone(@RequestParam(value = "phone", defaultValue = "") String phone) {
         Result result = new Result();
-        result.setSuccess(true);
+        result.setSuccess(false);
         if (!"".equals(phone)) {
             User user = userService.getUser(phone);
-            if (user != null) {
-                result.setSuccess(false);
+            if (user == null) {
+                result.setSuccess(true);
             }
         }
         return result;
@@ -233,28 +233,29 @@ public class UserController {
     @RequestMapping(value = "/login")
     public String login(@RequestParam(value = "username", defaultValue = "") String username,
                         @RequestParam(value = "password", defaultValue = "") String password,
-                        @RequestParam(value = "remember", defaultValue = "") String remember,
+                        @RequestParam(value = "remember-me", defaultValue = "") String remember,
                         HttpSession session,
                         RedirectAttributes redirectAttributes,
                         HttpServletRequest request,
                         HttpServletResponse response) {
-        User user = userService.checkUser(username, EncryptUtil.getInstance().DESEncode(password, "user"));
+        User user = userService.checkUser(username, EncryptUtil.getInstance().SHA1(password, "user"));
         String ip = NetWorkUtil.getUserIp(request);
         String location = NetWorkUtil.getLocation(request, ip);
         try {
             if (user != null) {
-                user.setUserPassword(null);   //不要把用户密码带到前端页面
-                user.setUserPower(null);
+                user.setUserPassword(null);
                 session.setAttribute("user", user);
                 session.setMaxInactiveInterval(60 * 60 * 24 * 10);   //登录信息10天有效
-                // 保存登录状态
-                Cookie ck = new Cookie("JSESSIONID", request.getSession().getId());
-                ck.setMaxAge(30);
-                response.setHeader("JSESSIONID", ck.getValue());
+                // 保存登录状态一个月
+                if("on".equals(remember)) {
+                    Cookie ck = new Cookie("USER-COOKIE", username+"-"+password);
+                    ck.setMaxAge(30 * 24 * 60 * 60);
+                    ck.setPath("/");
+                    response.addCookie(ck);
+                }
                 new Thread(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功"))).start();
-                //得到用户登录前的页面
+                // 得到用户登录前的页面
                 String refererUrl = (String) session.getAttribute("Referer");
-                System.out.println(refererUrl);
                 if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
                     session.removeAttribute("Referer");
                     return "redirect:" + refererUrl;
@@ -318,7 +319,7 @@ public class UserController {
                 Objects.nonNull(account)) {
             try {
                 new Thread(() -> {
-                    userService.updateUserInfo(account, EncryptUtil.getInstance().DESEncode(newPassword, "user"));
+                    userService.updateUserInfo(account, EncryptUtil.getInstance().SHA1(newPassword, "user"));
                 }).start();
                 result.setSuccess(true);
                 result.setMsg("密码修改成功，正在跳转到登录页面...");
@@ -335,5 +336,6 @@ public class UserController {
         result.setMsg("验证码不正确");
         return result;
     }
+
 
 }

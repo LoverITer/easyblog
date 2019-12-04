@@ -63,8 +63,8 @@
                 </div>
 
                 <!--content   分页 每页显示20条数据-->
-                <div class="ui attached segment">
-                    <div th:if="${!#lists.isEmpty(articles)}" th:each="article:${articles}"
+                <div th:if="${!#lists.isEmpty(articles)}" class="ui attached segment">
+                    <div  th:each="article:${articles}"
                          class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear"
                          style="padding-bottom: 20px !important;padding-top: 10px !important;">
                         <div class="ui mobile reversed stackable grid">
@@ -113,6 +113,14 @@
                                 </a>
                             </div>
 
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment" style="border-top: none !important;">
+                    <div class="ui middle aligned two column grid">
+                        <div  style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
+                            没有任何文章
                         </div>
                     </div>
                 </div>

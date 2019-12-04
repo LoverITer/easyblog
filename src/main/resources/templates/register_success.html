@@ -21,7 +21,7 @@
     <div class="ui success message m-padded-tb-huge">
         <div class="ui contianer">
             <h2>注册成功</h2>
-            <p>恭喜您注册成功，页面将于<em id="time"></em>秒后跳转到登录页面.<a href="" th:href="@{/toLoginPage}">立即登录</a></p>
+            <p>恭喜您注册成功，页面将于<span id="time"></span>秒后跳转到登录页面.<a href="" th:href="@{/user/loginPage}">立即登录</a></p>
         </div>
     </div>
 </div>
@@ -41,7 +41,7 @@
         on: 'hover'
     });
     var t = 5;
-    setInterval("timer()", 1000);
+    setTimeout("timer()", 1000);
 
     function timer() {
         if (t > 0) {

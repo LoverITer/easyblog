@@ -48,7 +48,7 @@ public class UserServiceImpl implements IUserService {
         Result result = new Result();
         result.setSuccess(false);
         if (var0 != null) {
-            if (EncryptUtil.getInstance().DESEncode(inputOldPWD, "user").equals(var0.getUserPassword())) {
+            if (EncryptUtil.getInstance().SHA1(inputOldPWD, "user").equals(var0.getUserPassword())) {
                 result.setSuccess(true);
             }else{
                 result.setMsg("旧密码输入错误");

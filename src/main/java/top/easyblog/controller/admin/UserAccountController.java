@@ -69,7 +69,7 @@ public class UserAccountController {
                     if (passwordLegal.isSuccess()) {
                         if (newPwd.equals(newPwdConfirm)) {
                             User var0 = new User();
-                            var0.setUserPassword(EncryptUtil.getInstance().DESEncode(newPwdConfirm, "user"));
+                            var0.setUserPassword(EncryptUtil.getInstance().SHA1(newPwdConfirm, "user"));
                             var0.setUserId(user.getUserId());
                             userService.updateUserInfo(var0);
                             result.setMsg("密码修改成功！");

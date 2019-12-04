@@ -11,13 +11,13 @@
       "description": "Description for spring.datasource.initial-size."
     },
     {
-      "name": "cbs.imagesPath= file:/E:/fileUpload/",
-      "type": "java.lang.String",
-      "description": "Description for cbs.imagesPath= file:/E:/fileUpload/."
-    },
-    {
       "name": "qiniu.accessKey",
       "type": "java.lang.String",
       "description": "Description for qiniu.accessKey."
+    },
+    {
+      "name": "spring.profiles",
+      "type": "java.lang.String",
+      "description": "Description for spring.profiles."
     }
   ] }
