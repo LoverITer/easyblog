@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
     <link rel="stylesheet" href="../../../static/lib/css/editormd.css" th:href="@{/static/lib/css/editormd.css}">
     <link rel="stylesheet" href="../../../static/css/semantic-specifc.css" th:href="@{/static/css/semantic-specifc.css}">
+    <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
+    <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
 </head>
 <body>
 
@@ -61,7 +63,6 @@
         </div>
     </form>
 </div>
-
 
 <!--弹出框-->
 <div id="signup">
@@ -229,7 +230,12 @@
                 }
             },
             error: function () {
-                alert("服务异常，请重试！")
+                spop({
+                    template: '服务异常，请重试！',
+                    autoclose: 4000,
+                    position: "top-center",
+                    style: 'error',
+                });
             }
         });
     });

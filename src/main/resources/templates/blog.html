@@ -8,26 +8,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>博客详情 - EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/static/css/typo.css}">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
     <link rel="stylesheet" href="../static/css/prism.css" th:href="@{/static/css/prism.css}">
     <style type="text/css">
-        a:hover{
-            color:#ca0c16 !important;
+        a:hover {
+            color: #ca0c16 !important;
         }
     </style>
+    <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
+    <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
 </head>
 <body>
 <!--导航-->
 <div th:replace="~{nav :: navbar}"></div>
 <!--中间内容-->
-<div id="waypoint" class="m-padded-tb-big animated fadeIn" >
+<div id="waypoint" class="m-padded-tb-big animated fadeIn">
     <div class="ui" style="max-width: 96em!important;margin: auto !important;">
         <div class="ui stackable grid">
             <!--左边的卡片-->
-            <div class="four wide column" style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
+            <div class="four wide column"
+                 style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
                 <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
                 <!--最新文章-->
                 <div th:replace="~{userinfo_sidebar::sidebar_newest_article}"></div>
@@ -37,7 +40,8 @@
                 <div th:replace="~{userinfo_sidebar::sidebar_archives}"></div>
                 <h4 class="ui horizontal divider header m-margin-top-large">联系开发者</h4>
                 <div class="ui centered card" style="width: 11em">
-                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image">
+                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt=""
+                         class="ui rounded image">
                 </div>
             </div>
 
@@ -45,21 +49,27 @@
             <div class="twelve wide column" style="padding-top: 0 !important;">
                 <div class="ui top attached segment" style="padding-top: 5px !important;">
                     <!--内容-->
-                    <div class="ui left aligned basic segment"  style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
-                        <div th:switch="${article.getArticleType()}" class="ui red basic label m-inline-block" style="margin-right: 10px">
+                    <div class="ui left aligned basic segment"
+                         style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
+                        <div th:switch="${article.getArticleType()}" class="ui red basic label m-inline-block"
+                             style="margin-right: 10px">
                             <span th:case="0">原创</span>
                             <span th:case="1">转载</span>
                             <span th:case="2">翻译</span>
                         </div>
-                        <h2 class="ui left aligned header m-inline-block" th:text="${article.getArticleTopic()}">关于刻意练习的清单</h2>
+                        <h2 class="ui left aligned header m-inline-block" th:text="${article.getArticleTopic()}">
+                            关于刻意练习的清单</h2>
                     </div>
                     <div class="ui horizontal link list">
                         <div class="item">
-                            <img th:src="@{${user.getUserHeaderImgUrl()}}"  src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
-                            <div class="content"><a href="#" class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
+                            <img th:src="@{${user.getUserHeaderImgUrl()}}" src="https://unsplash.it/100/100?image=1005"
+                                 alt="" class="ui avatar image">
+                            <div class="content"><a href="#" class="header" th:text="${user.getUserNickname()}">黄鑫</a>
+                            </div>
                         </div>
                         <div class="item">
-                            <i class="calendar icon" ></i> [[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd hh:mm:ss')}]]
+                            <i class="calendar icon"></i> [[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd
+                            hh:mm:ss')}]]
                         </div>
                         <div class="item">
                             <i class="eye icon"></i> [[${article.getArticleClick()}]]
@@ -68,13 +78,17 @@
                 </div>
 
                 <div class="ui  attached padded segment" style="padding:auto 10px 0 10px !important;">
-                    <div th:utext="${article.getArticleContent()}" style="padding:0 10px 0 10px !important;" id="content" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large">
+                    <div th:utext="${article.getArticleContent()}" style="padding:0 10px 0 10px !important;"
+                         id="content"
+                         class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large">
                     </div>
                     <!--赞赏-->
-                    <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui center aligned basic segment">
-                        <button id="payButton" class="ui orange basic circular button" >赞赏</button>
+                    <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}"
+                         class="ui center aligned basic segment">
+                        <button id="payButton" class="ui orange basic circular button">赞赏</button>
                     </div>
-                    <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui payQR flowing popup transition hidden">
+                    <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}"
+                         class="ui payQR flowing popup transition hidden">
                         <div class="ui black basic label">
                             <div class="ui images" style="font-size: inherit !important;">
                                 <div class="image">
@@ -92,15 +106,20 @@
                     </div>
                 </div>
                 <!--声明信息-->
-                <div  th:if="${article.getArticleType()=='0'}" class="ui attached positive message">
+                <div th:if="${article.getArticleType()=='0'}" class="ui attached positive message">
                     <!--博客信息-->
                     <div class="ui middle aligned grid">
                         <div class="sixteen wide column">
                             <ul class="list">
                                 <li>作者：[[${user.getUserNickname()}]]</li>
-                                <li>发表时间：[[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd hh:mm:ss')}]]</li>
-                                <li>版权声明：本文为博主原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接和本声明。</li>
-                                <li>原文链接：<a th:href="${#httpServletRequest.getRequestURL()}" th:text="${#httpServletRequest.getRequestURL()}"></a></li>
+                                <li>发表时间：[[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd hh:mm:ss')}]]
+                                </li>
+                                <li>版权声明：本文为博主原创文章，遵循<a target="_blank"
+                                                        href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+                                                        style="font-size: 16px"> CC 4.0 BY-SA</a> 版权协议，转载请附上原文出处链接和本声明。
+                                </li>
+                                <li>原文链接：<a th:href="${#httpServletRequest.getRequestURL()}"
+                                            th:text="${#httpServletRequest.getRequestURL()}"></a></li>
                             </ul>
                         </div>
                     </div>
@@ -124,7 +143,9 @@
                                         <span style="color: #999999 !important;">还能输入<em id="num_txt">500</em>个字符</span>
                                     </div>
                                     <div class="m-inline-block  m-margin-bottom-small m-mobile-wide">
-                                        <button id="publish-comment-btn" class="ui  button m-mobile-wide" style="background-color: #ca0c16 !important;color: #FFFFFF !important;"><i class="edit icon"></i>
+                                        <button id="publish-comment-btn" class="ui  button m-mobile-wide"
+                                                style="background-color: #ca0c16 !important;color: #FFFFFF !important;">
+                                            <i class="edit icon"></i>
                                             发布评论
                                         </button>
                                     </div>
@@ -133,44 +154,61 @@
                         </div>
                     </div>
                     <!--留言信息-->
-                        <div th:if="${articleComments!=null&&!#lists.isEmpty(articleComments)}" class="ui threaded comments" style="max-width: none !important;">
-                            <div th:each="comment:${articleComments}"  class="comment">
-                                <a th:href="@{/article/home/}+${comment.getCommentSend()}" class="avatar">
-                                    <img th:src="@{${comment.getSendUserNicknameHeadImgUrl()}}" src="https://unsplash.it/100/100?image=1005">
-                                </a>
-                                <div class="content">
-                                    <a th:href="@{/article/home/}+${comment.getCommentSend()}" class="author" th:text="${comment.getSendUserNickname()}">Elliot Fu</a>
-                                    <div class="metadata">
-                                        <span class="date" th:text="${#dates.format(comment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
-                                    </div>
-                                    <div class="text">
-                                        <p th:text="${comment.getCommentContent()}">This has been very useful for my research. Thanks as well!</p>
-                                    </div>
-                                    <div th:if="${user!=null&&user.getUserId()!=comment.getCommentSend()}" class="actions">
-                                        <a style="color: #0e90d2 !important;font-size: 14px !important;" class="reply" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}" onclick="changeInfo(this)" >回复</a>
-                                    </div>
+                    <div th:if="${articleComments!=null&&!#lists.isEmpty(articleComments)}" class="ui threaded comments"
+                         style="max-width: none !important;">
+                        <div th:each="comment:${articleComments}" class="comment">
+                            <a th:href="@{/article/home/}+${comment.getCommentSend()}" class="avatar">
+                                <img th:src="@{${comment.getSendUserNicknameHeadImgUrl()}}"
+                                     src="https://unsplash.it/100/100?image=1005">
+                            </a>
+                            <div class="content">
+                                <a th:href="@{/article/home/}+${comment.getCommentSend()}" class="author"
+                                   th:text="${comment.getSendUserNickname()}">Elliot Fu</a>
+                                <div class="metadata">
+                                    <span class="date"
+                                          th:text="${#dates.format(comment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
                                 </div>
-                                <div th:if="${comment.getChildComment()!=null&&!#lists.isEmpty(comment.getChildComment())}"  class="comments" style="padding-bottom: 10px !important;">
-                                    <div class="comment" th:each="childComment:${comment.getChildComment()}">
-                                        <a th:href="@{/article/home/}+${childComment.getCommentSend()}" class="avatar">
-                                            <img th:src="@{${childComment.getSendUserNicknameHeadImgUrl()}}" src="https://unsplash.it/100/100?image=1005">
-                                        </a>
-                                        <div class="content">
-                                            <a th:href="@{/article/home/}+${childComment.getCommentSend()}" class="author" th:text="${childComment.getSendUserNickname()}">Jenny Hess</a> <span style="color: grey">回复</span> <span th:text="${childComment.getReceivedUserNickname()}"></span>
-                                            <div class="metadata">
-                                                <span class="date" th:text="${#dates.format(childComment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
-                                            </div>
-                                            <div class="text">
-                                                <p th:text="${childComment.getCommentContent()}">This has been very useful for my research. Thanks as well!</p>
-                                            </div>
-                                            <div th:if="${user!=null&&user.getUserId()!=childComment.getCommentSend()}"  class="actions">
-                                                <a th:value="${childComment.getCommentSend()}+@{/}+${childComment.getSendUserNickname()}+@{/}+${childComment.getCommentId()}" onclick="changeInfo(this)" class="reply" style="color: #0e90d2 !important;font-size: 14px !important;">回复</a>
-                                            </div>
+                                <div class="text">
+                                    <p th:text="${comment.getCommentContent()}">This has been very useful for my
+                                        research. Thanks as well!</p>
+                                </div>
+                                <div th:if="${user!=null&&user.getUserId()!=comment.getCommentSend()}" class="actions">
+                                    <a style="color: #0e90d2 !important;font-size: 14px !important;" class="reply"
+                                       th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
+                                       onclick="changeInfo(this)">回复</a>
+                                </div>
+                            </div>
+                            <div th:if="${comment.getChildComment()!=null&&!#lists.isEmpty(comment.getChildComment())}"
+                                 class="comments" style="padding-bottom: 10px !important;">
+                                <div class="comment" th:each="childComment:${comment.getChildComment()}">
+                                    <a th:href="@{/article/home/}+${childComment.getCommentSend()}" class="avatar">
+                                        <img th:src="@{${childComment.getSendUserNicknameHeadImgUrl()}}"
+                                             src="https://unsplash.it/100/100?image=1005">
+                                    </a>
+                                    <div class="content">
+                                        <a th:href="@{/article/home/}+${childComment.getCommentSend()}" class="author"
+                                           th:text="${childComment.getSendUserNickname()}">Jenny Hess</a> <span
+                                            style="color: grey">回复</span> <span
+                                            th:text="${childComment.getReceivedUserNickname()}"></span>
+                                        <div class="metadata">
+                                            <span class="date"
+                                                  th:text="${#dates.format(childComment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
+                                        </div>
+                                        <div class="text">
+                                            <p th:text="${childComment.getCommentContent()}">This has been very useful
+                                                for my research. Thanks as well!</p>
+                                        </div>
+                                        <div th:if="${user!=null&&user.getUserId()!=childComment.getCommentSend()}"
+                                             class="actions">
+                                            <a th:value="${childComment.getCommentSend()}+@{/}+${childComment.getSendUserNickname()}+@{/}+${childComment.getCommentId()}"
+                                               onclick="changeInfo(this)" class="reply"
+                                               style="color: #0e90d2 !important;font-size: 14px !important;">回复</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -192,7 +230,20 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script src="../static/js/prism.js" th:src="@{/static/js/prism.js}"></script>
+<script src="../static/js/prism.js" th:src="@{/static/js/alert.js}"></script>
+<script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
+<script>
+    $(document).ready(function () {
+        if (detectZoom() != 125) {
+            spop({
+                template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
+                autoclose: 4000,
+                position: "top-center",
+                style: 'info',
+            });
+        }
+    });
+</script>
 <script type="text/javascript">
     //图像/登录注册按钮显示控制
     $(document).ready(function () {
@@ -226,7 +277,12 @@
                 }
             },
             error: function () {
-                alert("服务异常，请重试！")
+                spop({
+                    template: '服务异常，请重试！',
+                    autoclose: 4000,
+                    position: "top-center",
+                    style: 'error',
+                });
             }
         });
     });
@@ -234,7 +290,7 @@
 </script>
 <!--实现评论框的各种效果-->
 <script type="text/javascript">
-    var commentContent=""; //输入的评论内容
+    var commentContent = ""; //输入的评论内容
     /**评论输入框被点击的时候变大为10行**/
     $('#commentInput').click(function () {
         $('#commentInput').attr("rows", "10");
@@ -248,7 +304,7 @@
     <!--控制-->
     $(function () {
         $('#commentInput').on('keyup', function () {
-            commentContent=$('#commentInput').val();
+            commentContent = $('#commentInput').val();
             var txtval = commentContent.length;
             var str = parseInt(500 - txtval);
             if (str > 0) {
@@ -256,7 +312,7 @@
                 $('#num_txt').html(str);
             } else {
                 $('#num_txt').html(0);
-                commentContent=commentContent.substring(0,500);
+                commentContent = commentContent.substring(0, 500);
                 $('#commentInput').val(commentContent);
             }
         });
@@ -264,7 +320,7 @@
     <!--评论提交按钮ajax请求-->
     $('#publish-comment-btn').click(function () {
         var user = sessionStorage.getItem("user");
-        if(user!=null) {
+        if (user != null) {
             if (commentContent == null || commentContent === '') {
                 alert("请输入评论内容");
             } else {
@@ -289,20 +345,31 @@
                         }
                     },
                     error: function () {
-                        alert("抱歉！服务异常，请重试");
+                        spop({
+                            template: '服务异常，请重试！',
+                            autoclose: 4000,
+                            position: "top-center",
+                            style: 'error',
+                        });
                     }
                 })
             }
-        } else{
-                alert("请先登录后再发表评论！");
-            }
+        } else {
+            spop({
+                template: '服务异常，请重试！',
+                autoclose: 4000,
+                position: "top-center",
+                style: 'error',
+            });
+        }
 
     });
+
     <!--点击 回复 按钮后评论回复栏中的对应显示变化-->
     function changeInfo(obj) {
-        var values=$(obj).attr('value');
-        var array=values.split('/');
-        $('#commentInput').attr('placeholder','回复 '+array[1]);
+        var values = $(obj).attr('value');
+        var array = values.split('/');
+        $('#commentInput').attr('placeholder', '回复 ' + array[1]);
         $('#sendCommentTo').val(array[0]);
         $('#pid').val(array[2]);
     }

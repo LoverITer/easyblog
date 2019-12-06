@@ -11,6 +11,8 @@
     <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../../../css/me.css" th:href="@{/static/css/me.css}">
+    <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
+    <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
 </head>
 <body>
 
@@ -83,6 +85,19 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery.form/4.2.2/jquery.form.js"></script>
+<script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
+<script>
+    $(document).ready(function () {
+        if (detectZoom() != 125) {
+            spop({
+                template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
+                autoclose: 4000,
+                position: "top-center",
+                style: 'info',
+            });
+        }
+    });
+</script>
 <script>
     $('#add-btn').mouseenter(function () {
         $('#add-btn').removeClass("basic");
@@ -122,7 +137,12 @@
                 }
             },
             error: function () {
-                alert("服务异常，请重试！")
+                spop({
+                    template: '服务异常，请重试！',
+                    autoclose: 4000,
+                    position: "top-center",
+                    style: 'error',
+                });
             }
         });
     });
