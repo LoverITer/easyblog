@@ -27,11 +27,11 @@ public class QiNiuCloudUtil {
     private static final String ACCESS_KEY = "vRxHtqsnLfzK2h2DTGcEfFlLLDDNgqAvoZf0H08D";
     private static final String SECRET_KEY = "5No0lIzPOv2pYDX9wPkFFh_kE99lvpPia0nA0ZPH";
     // 要上传的空间
-    private static final String bucketname = "huangxin981230";
+    private static final String bucketname = "easyblog-pro";
     // 密钥
     private static final Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
     //外链默认域名
-    private static final String DOMAIN = "q0hiemlhp.bkt.clouddn.com";
+    private static final String DOMAIN = "q20mxxt4a.bkt.clouddn.com";
     //自定义图片样式
     private static final String style = "imageView2/1/w/200/h/200/format/jpg/q/100|imageslim";
 

@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport"/>
     <title>EasyBlog - EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
     <style type="text/css">
@@ -14,6 +17,9 @@
             color: #ca0c16 !important;
         }
     </style>
+    <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
+    <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+
 </head>
 <body>
 <!--导航-->
@@ -24,7 +30,8 @@
     <div class="ui" style="max-width: 96em!important;margin: auto !important;">
         <div class="ui stackable grid">
             <!--左边的卡片-->
-            <div class="four wide column" style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
+            <div class="four wide column"
+                 style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
                 <!--用户信息-->
                 <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
                 <!--最新文章-->
@@ -35,7 +42,8 @@
                 <div th:replace="~{userinfo_sidebar::sidebar_archives}"></div>
                 <h4 class="ui horizontal divider header m-margin-top-large">联系开发者</h4>
                 <div class="ui centered card" style="width: 11em">
-                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image">
+                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt=""
+                         class="ui rounded image">
                 </div>
             </div>
 
@@ -48,7 +56,7 @@
                             <h3 class="ui teal header m-inline-block">TA的博客</h3>
                             <div class="ui checked checkbox m-inline-block m-margin-left">
                                 <input id="checkbox" type="checkbox" checked th:if="${displayOnlyOriginal=='1'}">
-                                <input id="checkbox" type="checkbox"  th:if="${displayOnlyOriginal=='0'}">
+                                <input id="checkbox" type="checkbox" th:if="${displayOnlyOriginal=='0'}">
                                 <label>只看原创</label>
                                 <a id="display1" style="color: #0a001f" hidden
                                    th:href="@{/article/index/}+${user.getUserId()}+@{?articleType=0}">只看原创</a>
@@ -64,7 +72,7 @@
 
                 <!--content   分页 每页显示20条数据-->
                 <div th:if="${!#lists.isEmpty(articles)}" class="ui attached segment">
-                    <div  th:each="article:${articles}"
+                    <div th:each="article:${articles}"
                          class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear"
                          style="padding-bottom: 20px !important;padding-top: 10px !important;">
                         <div class="ui mobile reversed stackable grid">
@@ -75,7 +83,8 @@
                                     <span th:case="1">转载</span>
                                     <span th:case="2">翻译</span>
                                 </button>
-                                <a href="#" th:href="@{/article/details/}+${article.getArticleId()}"  th:text="${article.getArticleTopic()}"
+                                <a href="#" th:href="@{/article/details/}+${article.getArticleId()}"
+                                   th:text="${article.getArticleTopic()}"
                                    class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
                                 <p class="m-text"
                                    style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;"
@@ -109,7 +118,8 @@
 
                             <div class="five wide column">
                                 <a href="#" target="_blank">
-                                    <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" alt="" class="ui rounded image">
+                                    <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                         alt="" class="ui rounded image">
                                 </a>
                             </div>
 
@@ -117,9 +127,10 @@
                     </div>
                 </div>
 
-                <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment" style="border-top: none !important;">
+                <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment"
+                     style="border-top: none !important;">
                     <div class="ui middle aligned two column grid">
-                        <div  style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
+                        <div style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
                             没有任何文章
                         </div>
                     </div>
@@ -143,7 +154,7 @@
 </div>
 
 <div style="height: 10em"></div>
-<div  class="ui small modal">
+<div class="ui small modal">
     <div class="header" id="msg_header">删除</div>
     <div id="msg" class="content">
     </div>
@@ -156,6 +167,19 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
+<script>
+    $(document).ready(function () {
+        if (detectZoom() != 125) {
+            spop({
+                template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
+                autoclose: 4000,
+                position: "top-center",
+                style: 'info',
+            });
+        }
+    });
+</script>
 <script>
     $('#msg-btn').click(function () {
         $('.ui.modal').modal('hide');
@@ -205,13 +229,19 @@
                 }
             },
             error: function () {
-                alert("服务异常，请重试！")
+                spop({
+                    template: '服务异常，请重试！',
+                    autoclose: 4000,
+                    position: "top-center",
+                    style: 'error',
+                });
             }
         });
     });
 
 </script>
 <script>
+    //只看原创按钮是否按下
     $('#checkbox').click(function () {
         if ($('#checkbox').is(":checked")) {
             window.location.href = $('#display1').attr("href");

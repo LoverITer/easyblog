@@ -4291,7 +4291,7 @@
         var defaults = {
             name : "",
             width : 420,
-            height: 240,
+            height: auto,
             title : "",
             drag  : true,
             closed : true,
