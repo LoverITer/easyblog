@@ -1,13 +1,14 @@
 package top.easyblog.controller;
 
-import top.easyblog.config.web.Result;
-import top.easyblog.utils.QiNiuCloudUtil;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import top.easyblog.config.web.Result;
+import top.easyblog.utils.QiNiuCloudUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -61,11 +62,12 @@ public class FileUploadController {
 
     @ResponseBody
     @PostMapping(value = "/interface2")
-    public Result upload2QiNiuCloud(@RequestParam MultipartFile categoryImg){
+    public Result upload2QiNiuCloud(@RequestParam MultipartFile multipartFile){
         Result result = new Result();
         result.setSuccess(false);
         try {
-            String imageUrl = QiNiuCloudUtil.getInstance().putMultipartImage(categoryImg);
+            String imageUrl = QiNiuCloudUtil.getInstance().putMultipartImage(multipartFile);
+            //上传成功后把图片的URL带回页面
             result.setMsg(imageUrl);
             result.setSuccess(true);
         }catch (Exception e){
@@ -73,6 +75,37 @@ public class FileUploadController {
             return result;
         }
         return result;
+    }
+
+
+    /**
+     * 把图片上传到七牛云
+     * editor.md期望得到一个json格式的上传后的返回值，格式是这样的：
+     *
+     *    {
+     *         success : 0 | 1,           // 0 表示上传失败，1 表示上传成功
+     *         message : "提示的信息，上传成功或上传失败及错误信息等。",
+     *         url     : "图片地址"        // 上传成功时才返回
+     *      }
+     *
+     * @param multipartFile
+     * @return 将会返回图片的URL地址
+     */
+    @ResponseBody
+    @PostMapping(value = "/interface3")
+    public JSONObject saveArticlesImage(@RequestParam(value = "editormd-image-file") MultipartFile multipartFile){
+        JSONObject resultJs=new JSONObject();
+        try {
+            String imageUrl = QiNiuCloudUtil.getInstance().putMultipartImage(multipartFile);
+            //上传成功后把图片的URL带回页面
+            resultJs.put("success", 1);
+            resultJs.put("message", "上传成功");
+            resultJs.put("url",imageUrl);
+        }catch (Exception e){
+            resultJs.put("success", 0);
+            resultJs.put("message", "上传失败");
+        }
+        return resultJs;
     }
 
 

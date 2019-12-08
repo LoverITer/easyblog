@@ -73,7 +73,6 @@
 <div th:replace="~{footer :: footbar}"></div>
 
 </body>
-
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
@@ -82,7 +81,7 @@
         if (detectZoom() != 125) {
             spop({
                 template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
-                autoclose: 4000,
+                autoclose: 3000,
                 position: "top-center",
                 style: 'info',
             });
@@ -124,22 +123,16 @@
             error: function () {
                 spop({
                     template: '服务异常，请重试！',
-                    autoclose: 4000,
+                    autoclose: 3000,
                     position: "top-center",
                     style: 'error',
                 });
             }
         });
     });
-
-</script>
-<script>
-    $('#account2').css("background",'#ca0c16');
-    $('#account2').css('color','#ffffff')
 </script>
 <!--控制按钮的禁用和可用状态-->
 <script type="text/javascript">
-
     $("#new_phone").click(function () {
         function changePhone() {
             var new_phone=document.getElementById("new_phone").value;
@@ -178,9 +171,12 @@
             flag = true;
         }
         if (message != "") {
-            $('#error').html(message);
-            $('#error').css("color","#ca0c16");
-            $('#phone').css("width","83%");
+            spop({
+                template: message,
+                autoclose: 3000,
+                position: "top-center",
+                style: 'info',
+            });
         }
         return flag;
     }
@@ -188,22 +184,19 @@
 </script>
 
 <script>
-    $('.menu.toggle').click(function () {
-        $('.m-item').toggleClass('m-mobile-hide');
-    });
-
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
-    });
-
-    $('#searchBar').click(function () {
-        $('#reloadSearchBar').css("display", "block");  //显示div
-    })
-
-</script>
-<script>
     $('#msg-btn').click(function () {
         $('.ui.modal').modal('hide');
     });
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('#searchBar').click(function () {
+        $('#reloadSearchBar').css("display", "block");  //显示div
+    });
+    $('#account2').css("background",'#ca0c16');
+    $('#account2').css('color','#ffffff');
 </script>
 </html>

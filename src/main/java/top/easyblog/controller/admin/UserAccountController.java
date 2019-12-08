@@ -105,8 +105,26 @@ public class UserAccountController {
         return LOGIN_PAGE;
     }
 
+    @ResponseBody
     @GetMapping(value = "/reset/phone/next")
-    public String resetPhoneNext(HttpSession session,Model model) {
+    public Result resetPhoneNext(HttpSession session,@RequestParam String code) {
+        User user = (User) session.getAttribute("user");
+        Result result = new Result();
+        result.setSuccess(false);
+        if(Objects.nonNull(user)){
+            if(code.equals(session.getAttribute("code"))){
+                result.setSuccess(true);
+            }else{
+                result.setMsg("验证码输入错误！");
+            }
+        }else{
+            result.setMsg("请登录后再操作！");
+        }
+        return result;
+    }
+
+    @GetMapping(value = "/reset/phone/nextPage")
+    public String resetPhoneNextPage(){
         return PREFIX+"account-setting-phone-next";
     }
 
@@ -122,6 +140,45 @@ public class UserAccountController {
         String content = "您正在修改绑定的手机，验证码为：" + code + "，60s内有效！";
         SendMessageUtil.send("loveIT", "d41d8cd98f00b204e980", phone, content);
         result.setSuccess(true);
+        return result;
+    }
+
+    @GetMapping(value = "/bindPhonePage")
+    public String bindPhonePage(HttpSession session){
+        if(Objects.nonNull(session.getAttribute("user"))){
+            return PREFIX+"account-setting-phone-add";
+        }
+        return LOGIN_PAGE;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/bindPhone")
+    public Result saveBindPhone(HttpSession session,@RequestParam String phone,@RequestParam String code){
+        Result result = new Result();
+        result.setSuccess(false);
+        User user = (User) session.getAttribute("user");
+        String code1 = (String) session.getAttribute("code");
+        if(Objects.nonNull(user)){
+            if(code.equals(code1)) {
+                try {
+                    user.setUserPhone(phone);
+                    int res = userService.updateUserInfo(user);
+                    if (res <= 0) {
+                        result.setMsg("服务异常，请重试！");
+                        return result;
+                    }
+                    result.setMsg("手机号绑定成功!");
+                    result.setSuccess(true);
+                    return result;
+                } catch (Exception e) {
+                    result.setMsg("服务异常，请重试！");
+                }
+            }else{
+                result.setMsg("验证码输入不正确");
+            }
+        }else{
+            result.setMsg("请登录后再操作");
+        }
         return result;
     }
 
@@ -230,9 +287,8 @@ public class UserAccountController {
         if(Objects.nonNull(user)){
             Result authorized = userService.isAuthorized(user, password);
             if(authorized.isSuccess()) {
-                System.out.println("去数据库杀出用户信息");
                 result.setSuccess(true);
-                //userService. deleteUserByPK(user.getUserId());
+                userService. deleteUserByPK(user.getUserId());
             }else{
                 result.setMsg("密码输入错误，请重试！");
             }
