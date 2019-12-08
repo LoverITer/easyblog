@@ -19,3 +19,16 @@ function detectZoom() {
     }
     return ratio;
 }
+
+var  t=60;
+function disableButton60sAndDisplayCountDown(obj) {
+    $(obj).addClass('disabled');
+    var timer=setTimeout('disableButton60sAndDisplayCountDown()',1000);
+    if(t>0){
+        t--;
+    }else{
+        $(obj).removeClass('disabled');
+        clearTimeout(timer);   //清除定时器
+        t=60;
+    }
+}

@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>账号设置-修改手机 - EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
@@ -41,20 +41,23 @@
                     <br/>
                     <div class="ui action  fluid input" style="width: 60% !important;">
                         <span class="m-margin-top">填写验证码：</span>
-                        <input onchange="changeBtn()" id="code" name="code" type="text">
-                        <button id="getCode_btn" class="ui mini button">获取验证码</button>
+                        <input  id="code" name="code" type="text">
+                        <button id="getCode_btn" class="ui blue mini button">获取验证码</button>
                     </div>
                     <br/>
                     <br/>
                     <button id="firm_btn" class="ui medium disabled button m-margin-left-middle">
                         下一步
                     </button>
-
                 </div>
                 <div class="m-margin-left-large" th:if="${user.getUserPhone()==null}">
                     <div style="margin:5em 5em 5em 10em">
-                        <div style="margin-bottom: 2.5em !important;color: grey !important;font-size: 14px !important;">你还没有绑定手机号</div>
-                        <a href="#" th:href="@{/}"><button class="red  ui button">立即绑定手机号</button></a>
+                        <div style="margin-bottom: 2.5em !important;color: grey !important;font-size: 14px !important;">
+                            你还没有绑定手机号
+                        </div>
+                        <a href="#" th:href="@{/manage/account/bindPhonePage}">
+                            <button class="red  ui button">立即绑定手机号</button>
+                        </a>
                     </div>
                 </div>
                 <div style="height: 10em"></div>
@@ -62,7 +65,7 @@
         </div>
     </div>
 </div>
-<div  class="ui small modal">
+<div class="ui small modal">
     <div class="header" id="msg_header">删除</div>
     <div id="msg" class="content">
     </div>
@@ -82,7 +85,7 @@
         if (detectZoom() != 125) {
             spop({
                 template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
-                autoclose: 4000,
+                autoclose: 3000,
                 position: "top-center",
                 style: 'info',
             });
@@ -125,7 +128,7 @@
             error: function () {
                 spop({
                     template: '服务异常，请重试！',
-                    autoclose: 4000,
+                    autoclose: 3000,
                     position: "top-center",
                     style: 'error',
                 });
@@ -133,10 +136,6 @@
         });
     });
 
-</script>
-<script type="text/javascript">
-    $('#account2').css("background", '#ca0c16');
-    $('#account2').css('color', '#ffffff')
 </script>
 <!--控制按钮的禁用和可用状态-->
 <script type="text/javascript">
@@ -159,29 +158,30 @@
 
 </script>
 <!--获取验证码-->
-<script>
-    $('#msg-btn').click(function () {
-        $('.ui.modal').modal('hide');
-    });
+<script th:ononline="javascript">
+    var phone = [[${user.getUserPhone()}]];
     $('#getCode_btn').click(function () {
         $.ajax({
-            url:"",
-            method:'GET',
-            sync:true,
-            success:function (response) {
-                if(response.success){
+            url: "/manage/account/sendByPhone",
+            method: 'GET',
+            sync: true,
+            data: {phone: phone},
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
                     spop({
                         template: '验证码发送成功，请注意查收！',
-                        autoclose: 4000,
+                        autoclose: 3000,
                         position: "top-right",
                         style: 'success',
                     });
+                    disableButton60sAndDisplayCountDown($('#getCode_btn'));
                 }
             },
-            error:function () {
+            error: function () {
                 spop({
                     template: '服务异常，请重试！',
-                    autoclose: 4000,
+                    autoclose: 3000,
                     position: "top-center",
                     style: 'error',
                 });
@@ -189,33 +189,45 @@
         })
     })
 </script>
-<!--修改密码下一步-->
-<script>
+
+<script type="text/javascript">
     $('#firm_btn').click(function () {
-        var code=$('#code').val();
+        var code = $('#code').val();
+        console.log(code);
         $.ajax({
-            url:"",
-            method:"GET",
-            sync:true,
-            data:{code:code},
+            url: "/manage/account/reset/phone/next",
+            method: "GET",
+            sync: true,
+            data: {code: code},
             dataType: "json",
-            success:function (response) {
-                if(response.success){
-                    window.location.href="/manage/account/reset/phone/next";
-                }else{
-                    alert(response.msg);
+            success: function (response) {
+                if (response.success) {
+                    window.location.href="/manage/account/reset/phone/nextPage";
+                } else {
+                    spop({
+                        template: response.msg,
+                        autoclose: 3000,
+                        position: "top-center",
+                        style: 'error',
+                    });
                 }
             },
-            error:function () {
-                $('#msg_header').html("错误");
-                $('#msg').html("抱歉！服务异常，请重试！");
-                $('.ui.modal').modal('show');
+            error: function () {
+                spop({
+                    template: '服务异常，请重试！',
+                    autoclose: 3000,
+                    position: "top-center",
+                    style: 'error',
+                });
             }
         })
     })
 </script>
 
 <script>
+    $('#msg-btn').click(function () {
+        $('.ui.modal').modal('hide');
+    });
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
@@ -226,7 +238,8 @@
 
     $('#searchBar').click(function () {
         $('#reloadSearchBar').css("display", "block");  //显示div
-    })
-
+    });
+    $('#account2').css("background", '#ca0c16');
+    $('#account2').css('color', '#ffffff');
 </script>
 </html>
