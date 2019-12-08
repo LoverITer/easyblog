@@ -49,7 +49,7 @@
                         <input id="newpwdconfirm" name="newPWDConfirm" type="password" placeholder="请确认新密码"/>
                     </div>
                     <br/>
-                    <button type="button" id="firm_btn"  class="ui medium disabled button m-margin-left-middle">
+                    <button type="button" id="firm_btn"  class="ui red medium disabled button m-margin-left-middle">
                         确认
                     </button>
                 </div>
@@ -206,12 +206,8 @@
             var len3=document.getElementById("newpwdconfirm").value.length;
             if(len1!=0&&len2!=0&&len3!=0){
                 $('#firm_btn').removeClass("disabled");
-                $('#firm_btn').css("background-color","#ca0c16");
-                $('#firm_btn').css("color","#ffffff");
             }else{
                 $('#firm_btn').addClass("disabled");
-                $('#firm_btn').css("background-color","#E0E1E2");
-                $('#firm_btn').css("color","#000000");
             }
         }
         setInterval(changePwd, 300);
@@ -223,14 +219,11 @@
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
-
     $('.ui.dropdown').dropdown({
         on: 'hover'
     });
-
     $('#searchBar').click(function () {
         $('#reloadSearchBar').css("display", "block");  //显示div
     })
-
 </script>
 </html>

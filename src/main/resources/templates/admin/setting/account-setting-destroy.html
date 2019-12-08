@@ -96,9 +96,12 @@
                 if (response.success) {
                     window.location.href = "/user/loginPage";
                 } else {
-                    $('#msg_header').html("删除账户");
-                    $('#msg').html(response.msg);
-                    $('.ui.modal').modal('show');
+                    spop({
+                        template: response.msg,
+                        autoclose: 3000,
+                        position: "top-center",
+                        style: 'error',
+                    });
                 }
             },
             error: function () {
@@ -166,12 +169,8 @@
             var len1 = document.getElementById("code").value.length;
             if (len1 != 0) {
                 $('#firm_btn').removeClass("disabled");
-                $('#firm_btn').css("background-color", "#ca0c16");
-                $('#firm_btn').css("color", "#ffffff");
             } else {
                 $('#firm_btn').addClass("disabled");
-                $('#firm_btn').css("background-color", "#E0E1E2");
-                $('#firm_btn').css("color", "#000000");
             }
         }
 
