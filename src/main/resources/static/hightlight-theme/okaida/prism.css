@@ -9,16 +9,15 @@ https://prismjs.com/download.html#themes=prism-okaidia&languages=markup+css+clik
 code[class*="language-"],
 pre[class*="language-"] {
 	color: #f8f8f2;
-	background: none;
 	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
-	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-family: "Source Code Pro","DejaVu Sans Mono","Ubuntu Mono","Anonymous Pro","Droid Sans Mono",Menlo,Monaco,Consolas,Inconsolata,Courier,monospace,"PingFang SC","Microsoft YaHei",sans-serif;
 	font-size: 1em;
 	text-align: left;
 	white-space: pre;
 	word-spacing: normal;
 	word-break: normal;
 	word-wrap: normal;
-	line-height: 1.5;
+	line-height: 30px;
 
 	-moz-tab-size: 4;
 	-o-tab-size: 4;
@@ -40,13 +39,17 @@ pre[class*="language-"] {
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-	background: #272822;
+	background: #c92c2c;
 }
 
 /* Inline code */
 :not(pre) > code[class*="language-"] {
-	padding: .1em;
-	border-radius: .3em;
+	position: relative;
+	padding: .2em;
+	border-radius: 0.3em;
+	color: #c92c2c;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	display: inline;
 	white-space: normal;
 }
 
