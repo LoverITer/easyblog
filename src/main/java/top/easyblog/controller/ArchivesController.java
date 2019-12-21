@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
-import top.easyblog.commons.ArticleType;
+import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.service.impl.*;
 import top.easyblog.commons.utils.HtmlParserUtil;
 import top.easyblog.commons.utils.MarkdownUtil;
@@ -38,7 +38,7 @@ public class ArchivesController {
                                @PathVariable(value = "userId") int userId,
                                Model model) {
         model.addAttribute("defaultOrderFlag", true);
-        new ControllerUtils(categoryServiceImpl, articleService, commentService, userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
+        ControllerUtils.getInstance(categoryServiceImpl, articleService, commentService, userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
         List<Article> articles = articleService.getUserArticlesMonthly(userId, date.substring(0, 4), date.substring(5, 7));
         String page=orderArticles(model,userId,date,articles);
         return page==null?"archives":page;
@@ -75,7 +75,7 @@ public class ArchivesController {
      */
     private String orderArticles(Model model,int userId,String date,List<Article> articles){
         try{
-            new ControllerUtils(categoryServiceImpl, articleService, commentService, userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
+            ControllerUtils.getInstance(categoryServiceImpl, articleService, commentService, userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
             model.addAttribute("date", date);
             if (Objects.nonNull(articles)) {
                 articles.forEach(article -> {

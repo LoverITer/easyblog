@@ -59,20 +59,21 @@
                                 <input id="checkbox" type="checkbox" th:if="${displayOnlyOriginal=='0'}">
                                 <label>只看原创</label>
                                 <a id="display1" style="color: #0a001f" hidden
-                                   th:href="@{/article/index/}+${user.getUserId()}+@{?articleType=0}">只看原创</a>
+                                   th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0)}">只看原创</a>
                                 <a id="display2" style="color: #0a001f" hidden
-                                   th:href="@{/article/index/}+${user.getUserId()}">查看全部</a>
+                                   th:href="@{/article/index/{id}(id=${user.getUserId()})}">查看全部</a>
                             </div>
                         </div>
                         <div class="right aligned column">
-                            共 <h2 class="ui orange header m-inline-block m-text-thin"> [[${articleNum}]] </h2> 篇
+                            共 <h2 class="ui orange header m-inline-block m-text-thin"> [[${articlePages.total}]] </h2> 篇
                         </div>
                     </div>
                 </div>
 
                 <!--content   分页 每页显示20条数据-->
-                <div th:if="${!#lists.isEmpty(articles)}" class="ui attached segment">
-                    <div th:each="article:${articles}"
+                <div th:if="${!#lists.isEmpty(articlePages)&&!#lists.isEmpty(articlePages.getList())}"
+                     class="ui attached segment">
+                    <div th:each="article:${articlePages.getList()}"
                          class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear"
                          style="padding-bottom: 20px !important;padding-top: 10px !important;">
                         <div class="ui mobile reversed stackable grid">
@@ -83,7 +84,7 @@
                                     <span th:case="1">转载</span>
                                     <span th:case="2">翻译</span>
                                 </button>
-                                <a href="#" th:href="@{/article/details/}+${article.getArticleId()}"
+                                <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
                                    th:text="${article.getArticleTopic()}"
                                    class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
                                 <p class="m-text"
@@ -127,7 +128,7 @@
                     </div>
                 </div>
 
-                <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment"
+                <div th:if="${#lists.isEmpty(articlePages.getList())}" class="ui bottom attached segment"
                      style="border-top: none !important;">
                     <div class="ui middle aligned two column grid">
                         <div style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
@@ -136,14 +137,40 @@
                     </div>
                 </div>
 
-                <!--content footer-->
-                <div th:if="${!#lists.isEmpty(articles)&&#lists.size(articles)>10}" class="ui bottom attached segment">
+                <!--content footer ,每页默认显示15条-->
+                <div th:if="${articlePages.getTotal()>15}" class="ui bottom attached segment">
                     <div class="ui middle aligned two column grid">
-                        <div class="column">
-                            <a href="#" class="ui mini teal basic button">上一页</a>
-                        </div>
-                        <div class="right aligned column">
-                            <a href="#" class="ui mini teal basic button">下一页</a>
+                        <div class="column" style="margin: 5px auto;float: left !important;">
+                            <div class="ui buttons">
+                                <a th:if="${displayOnlyOriginal=='1'}" th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${articlePages.getPrePage()})}">
+                                    <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                    </button>
+                                </a>
+                                <a th:if="${displayOnlyOriginal=='0'}" th:href="@{/article/index/{id}(id=${user.getUserId()},page=${articlePages.getPrePage()})}">
+                                    <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                    </button>
+                                </a>
+                                <a th:if="${displayOnlyOriginal=='1'}" th:each="pageNo:${articlePages.getNavigatepageNums()}" th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${pageNo})}">
+                                    <button  class="ui button" th:if="${pageNo!=articlePages.getPageNum()+''}" style="background: white !important;font-weight: 100 !important;">
+                                        [[${pageNo}]]
+                                    </button>
+                                </a>
+                                <a th:if="${displayOnlyOriginal=='0'}" th:each="pageNo:${articlePages.getNavigatepageNums()}" th:href="@{/article/index/{id}(id=${user.getUserId()},page=${pageNo})}">
+                                    <button  class="ui button pages" th:if="${pageNo!=articlePages.getPageNum()+''}" style="background: white !important;font-weight: 100 !important;">
+                                        [[${pageNo}]]
+                                    </button>
+                                </a>
+                                <a th:if="${displayOnlyOriginal=='1'}" th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${articlePages.getNextPage()})}">
+                                    <button class="ui right labeled icon button"
+                                            style="background: white !important;font-weight: 100 !important;"> 下一页
+                                    </button>
+                                </a>
+                                <a th:if="${displayOnlyOriginal=='0'}" th:href="@{/article/index/{id}(id=${user.getUserId()},page=${articlePages.getNextPage()})}">
+                                    <button class="ui right labeled icon button"
+                                            style="background: white !important;font-weight: 100 !important;"> 下一页
+                                    </button>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -176,7 +203,7 @@
                 position: "top-center",
                 style: 'info',
             });
-        }
+        };
     });
 </script>
 <script>
@@ -192,11 +219,23 @@
     });
 </script>
 
-<script type="text/javascript">
+<script type="text/javascript" th:online="javascript">
 
     $(document).ready(function () {
         toggleStatus();
+        showCurrentPageNum();
     });
+
+    function showCurrentPageNum() {
+        var obj=document.getElementsByClassName('pages');
+        var page=[[${articlePages.pageNum}]];
+        console.log(obj,page);
+        for(var i=0;i<obj.length;i++){
+            if(obj[i].textContent==page){
+                $(obj[i]).css('background','#eee');
+            }
+        }
+    }
 
     /**
      * 不断检查用户的登录情况
@@ -239,7 +278,7 @@
     });
 
 </script>
-<script>
+<script th:online="javascript">
     //只看原创按钮是否按下
     $('#checkbox').click(function () {
         if ($('#checkbox').is(":checked")) {
@@ -247,6 +286,7 @@
         } else {
             window.location.href = $('#display2').attr("href");
         }
-    })
+    });
+
 </script>
 </html>

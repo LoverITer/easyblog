@@ -20,6 +20,35 @@ function detectZoom() {
     return ratio;
 }
 
+/**
+ * 高亮显示当前的页码，条件是将需要高亮显示的元素中加入pages类
+ */
+function showCurrentPageNum() {
+    var obj=document.getElementsByClassName('pages');
+    var page=[[${articlePages.pageNum}]];
+    console.log(obj,page);
+    for(var i=0;i<obj.length;i++){
+        if(obj[i].textContent==page){
+            $(obj[i]).css('background','#eee');
+        }
+    }
+}
+
+/**
+ * 不断检查用户的登录情况
+ */
+function toggleStatus() {
+    var user = sessionStorage.getItem("user");
+    if (user != null) {
+        $('#header-images').show();
+        $('#login-btn').hide();
+    } else {
+        $('#header-images').hide();
+        $('#login-btn').show();
+    }
+    setTimeout(toggleStatus, 500);
+}
+
 var  t=60;
 function disableButton60sAndDisplayCountDown(obj) {
     $(obj).addClass('disabled');

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
-import top.easyblog.commons.ArticleType;
+import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.commons.utils.FileUploadUtils;
 import top.easyblog.commons.utils.HtmlParserUtil;
 import top.easyblog.commons.utils.MarkdownUtil;

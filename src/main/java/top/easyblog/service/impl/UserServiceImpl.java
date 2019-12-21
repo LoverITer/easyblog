@@ -2,9 +2,9 @@ package top.easyblog.service.impl;
 
 import top.easyblog.bean.User;
 import top.easyblog.config.web.Result;
-import top.easyblog.commons.UserFreeze;
-import top.easyblog.commons.UserLock;
-import top.easyblog.commons.UserPower;
+import top.easyblog.commons.enums.UserFreeze;
+import top.easyblog.commons.enums.UserLock;
+import top.easyblog.commons.enums.UserPower;
 import top.easyblog.handler.exception.NullUserException;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.service.IUserService;

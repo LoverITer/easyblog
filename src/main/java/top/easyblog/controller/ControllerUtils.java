@@ -3,7 +3,7 @@ package top.easyblog.controller;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.ArticleCount;
 import top.easyblog.bean.Category;
-import top.easyblog.commons.ArticleType;
+import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
@@ -11,6 +11,7 @@ import top.easyblog.service.impl.UserAttentionImpl;
 import org.springframework.ui.Model;
 
 import java.util.List;
+import java.util.Objects;
 
 
 class ControllerUtils {
@@ -19,12 +20,24 @@ class ControllerUtils {
     private final ArticleServiceImpl articleService;
     private final CommentServiceImpl commentService;
     private final UserAttentionImpl userAttention;
+    volatile private static ControllerUtils controllerUtils;
 
-    ControllerUtils(CategoryServiceImpl categoryService, ArticleServiceImpl articleService, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
+    private ControllerUtils(CategoryServiceImpl categoryService, ArticleServiceImpl articleService, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
         this.categoryService = categoryService;
         this.articleService = articleService;
         this.commentService = commentService;
         this.userAttention = userAttention;
+    }
+
+    public static ControllerUtils getInstance(CategoryServiceImpl categoryService, ArticleServiceImpl articleService, CommentServiceImpl commentService, UserAttentionImpl userAttention){
+        if(Objects.isNull(controllerUtils)){
+            synchronized (ControllerUtils.class){
+                if (Objects.isNull(controllerUtils)) {
+                    controllerUtils=new ControllerUtils(categoryService,articleService,commentService,userAttention);
+                }
+            }
+        }
+        return controllerUtils;
     }
 
     /***

@@ -1,9 +1,14 @@
 package top.easyblog.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.ArticleCount;
 import top.easyblog.bean.UserComment;
-import top.easyblog.commons.ArticleType;
+import top.easyblog.commons.enums.ArticleType;
+import top.easyblog.commons.pagehelper.PageParam;
+import top.easyblog.commons.utils.HtmlParserUtil;
+import top.easyblog.commons.utils.MarkdownUtil;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserCommentMapper;
 import top.easyblog.service.IArticleService;
@@ -101,18 +106,59 @@ public class ArticleServiceImpl implements IArticleService {
         if (userId > 0) {
             try {
                 if (ArticleType.Unlimited.getArticleType().equals(articleType)) {
-                    return articleMapper.getUserAllArticles(userId);  //得到用户的所有文章
+                    return parseMarkdown2Text(articleMapper.getUserAllArticles(userId));  //得到用户的所有文章
                 } else {
-                    return articleMapper.getUserArticlesSelective(userId,articleType);  //根据option
+                    return parseMarkdown2Text(articleMapper.getUserArticlesSelective(userId,articleType));  //根据option
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+                throw new RuntimeException("分页参数异常");
             }
         }
         return null;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public PageInfo getUserArticlesPage(int userId, String articleType, PageParam pageParam) {
+        PageInfo<Article> pageInfo=null;
+        if(userId>0){
+            try{
+                if(Objects.nonNull(pageParam)){
+                    if (ArticleType.Unlimited.getArticleType().equals(articleType)) {
+                        //这里特别注意，pageHelper只会对紧跟的第一条语句起作用
+                        PageHelper.startPage(pageParam.getPage(),pageParam.getPageSize());
+                        List<Article> articles = articleMapper.getUserAllArticles(userId);  //得到用户的所有文章
+                        pageInfo=new PageInfo<>(parseMarkdown2Text(articles));
+                    } else {
+                        PageHelper.startPage(pageParam.getPage(),pageParam.getPageSize());
+                        List<Article> articles = articleMapper.getUserArticlesSelective(userId, articleType);//根据option
+                        pageInfo=new PageInfo<>(parseMarkdown2Text(articles));
+                    }
+                }else{
+                    throw new RuntimeException("分页参数异常");
+                }
+            }catch (Exception ex){
+               throw new RuntimeException("分页查询异常");
+            }
+        }
+        return pageInfo;
+    }
+
+    /**
+     * 把Markdown转化为text文本
+     * @param articles
+     * @return
+     */
+    private List<Article> parseMarkdown2Text(List<Article> articles){
+        if(Objects.nonNull(articles)) {
+            articles.forEach(article -> {
+                String htmlContent = MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent());
+                String textContent = HtmlParserUtil.HTML2Text(htmlContent);
+                article.setArticleContent(textContent);
+            });
+        }
+        return articles;
+    }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
@@ -128,6 +174,9 @@ public class ArticleServiceImpl implements IArticleService {
         }
         return null;
     }
+
+
+
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "articles", condition = "#result!=null&&result.size()>0")

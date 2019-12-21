@@ -8,7 +8,7 @@ import top.easyblog.bean.Category;
 import top.easyblog.bean.CategoryCare;
 import top.easyblog.bean.User;
 import top.easyblog.config.web.Result;
-import top.easyblog.commons.ArticleType;
+import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.service.impl.*;
 import top.easyblog.commons.utils.HtmlParserUtil;
 import top.easyblog.commons.utils.MarkdownUtil;
@@ -40,7 +40,7 @@ public class CategoryController {
 
     @GetMapping(value = "/{categoryId}/{userId}")
     public String categoryDetailsPage(HttpSession session,@PathVariable(value = "categoryId") int categoryId, @PathVariable("userId") int userId, Model model){
-        new ControllerUtils(categoryServiceImpl,articleService,commentService,userAttention).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
+        ControllerUtils.getInstance(categoryServiceImpl,articleService,commentService,userAttention).getArticleUserInfo(model,userId, ArticleType.Original.getArticleType());
         final Category category = categoryServiceImpl.getCategory(categoryId);
         final List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);
         final List<Article> categoryArticles = articleService.getByCategoryAndUserId(userId, categoryId);

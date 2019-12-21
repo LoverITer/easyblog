@@ -1,23 +1,19 @@
-package top.easyblog.commons;
+package top.easyblog.commons.enums;
 
-public enum UserFreeze {
-
+public enum UserLock {
+    /**
+     * 不锁定账户
+     */
+    UNLOCK(0),
 
     /**
-     * 不冻结账户
+     * 锁定账户
      */
-    UNFREEZE(0),
-
-    /**
-     * 冻结账户
-     */
-    FREEZE(1);
-
-
+    LOCK(1);
 
     private int status;
 
-    UserFreeze(int status) {
+    UserLock(int status) {
         this.status = status;
     }
 
