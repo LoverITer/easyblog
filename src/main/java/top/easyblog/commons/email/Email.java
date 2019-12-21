@@ -1,4 +1,4 @@
-package top.easyblog.utils.email;
+package top.easyblog.commons.email;
 
 public class Email {
 

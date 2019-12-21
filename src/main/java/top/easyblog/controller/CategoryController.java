@@ -8,10 +8,10 @@ import top.easyblog.bean.Category;
 import top.easyblog.bean.CategoryCare;
 import top.easyblog.bean.User;
 import top.easyblog.config.web.Result;
-import top.easyblog.enumHelper.ArticleType;
+import top.easyblog.commons.ArticleType;
 import top.easyblog.service.impl.*;
-import top.easyblog.utils.HtmlParserUtil;
-import top.easyblog.utils.MarkdownUtil;
+import top.easyblog.commons.utils.HtmlParserUtil;
+import top.easyblog.commons.utils.MarkdownUtil;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;

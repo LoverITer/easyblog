@@ -1,18 +1,21 @@
 package top.easyblog.controller.admin;
 
 
-import org.springframework.web.bind.annotation.*;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserSigninLog;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.UserServiceImpl;
 import top.easyblog.service.impl.UserSigninLogServiceImpl;
-import top.easyblog.utils.email.Email;
-import top.easyblog.utils.EncryptUtil;
-import top.easyblog.utils.email.SendEmailUtil;
-import top.easyblog.utils.SendMessageUtil;
+import top.easyblog.commons.email.Email;
+import top.easyblog.commons.utils.EncryptUtil;
+import top.easyblog.commons.email.SendEmailUtil;
+import top.easyblog.commons.utils.SendMessageUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -218,65 +221,24 @@ public class UserAccountController {
 
     @ResponseBody
     @GetMapping(value = "/reset/email/save")
-    public Result saveRestEmail(HttpSession session,@RequestParam String email,@RequestParam String code){
+    public Result saveRestEmail(HttpSession session,String email){
         Result result = new Result();
         result.setSuccess(false);
         User user = (User) session.getAttribute("user");
         if(Objects.nonNull(user)){
-            if(code.equals(session.getAttribute("code"))) {
-                user.setUserMail(email);
-                int res = userService.updateUserInfo(user);
-                if (res > 0) {
-                    result.setMsg("邮箱更改成功！");
-                    result.setSuccess(true);
-                    return result;
-                }
-                result.setMsg("服务异常，请重试！");
-            }else{
-                result.setMsg("验证码错误！");
-            }
-        }else{
-            result.setMsg("请登录后再操作！");
-        }
-        return result;
-    }
-
-    @GetMapping(value = "/bindEmailPage")
-    public String bindEmailPage(HttpSession session){
-        if(Objects.nonNull(session.getAttribute("user"))){
-            return PREFIX+"account-setting-mail-add";
-        }
-        return LOGIN_PAGE;
-    }
-
-    @ResponseBody
-    @GetMapping(value = "/saveBindEmail")
-    public Result saveBindEmail(HttpSession session,@RequestParam String email,@RequestParam String code){
-        Result result = new Result();
-        result.setSuccess(false);
-        String code1 = (String) session.getAttribute("code");
-        User user = (User) session.getAttribute("user");
-        if(Objects.nonNull(user)) {
-            if (code.equals(code1)) {
-                user.setUserMail(email);
-                int info = userService.updateUserInfo(user);
-                if(info<=0){
-                    result.setMsg("服务异常，请重试！");
-                    return result;
-                }
-                result.setMsg("邮箱绑定成功！");
+            User var0 = new User();
+            var0.setUserId(user.getUserId());
+            var0.setUserMail(email);
+            int res = userService.updateUserInfo(var0);
+            if(res>0){
                 result.setSuccess(true);
-            }else{
-                result.setMsg("验证码输入错误！");
             }
-        }else{
-            result.setMsg("请登录后再操作！");
         }
         return result;
     }
 
     @GetMapping(value = "/reset/email/nextPage")
-    public String resetEmailNextPage(){
+    public String toResetEmailNextPage(){
         return PREFIX+"account-setting-mail-next";
     }
 

@@ -3,7 +3,7 @@ package top.easyblog.controller;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.ArticleCount;
 import top.easyblog.bean.Category;
-import top.easyblog.enumHelper.ArticleType;
+import top.easyblog.commons.ArticleType;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;

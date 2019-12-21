@@ -52,6 +52,6 @@ public interface UserCommentMapper extends BaseMapper<UserComment> {
      * @param id
      * @return
      */
-    List<UserComment> getByPidAndPrimaryKey(int articleId,int id);
+    List<UserComment> getByPidAndPrimaryKey(int articleId, int id);
 
 }

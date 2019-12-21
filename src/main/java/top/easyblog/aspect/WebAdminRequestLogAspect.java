@@ -3,7 +3,7 @@ package top.easyblog.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
-import top.easyblog.utils.NetWorkUtil;
+import top.easyblog.commons.utils.NetWorkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/static/css/typo.css}">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
-    <link rel="stylesheet" href="../static/hightlight-theme/okaida/prism.css" th:href="@{/static/hightlight-theme/coy/prism.css}">
+    <link rel="stylesheet" href="../static/css/prism.css" th:href="@{/static/css/prism.css}">
     <style type="text/css">
         a:hover {
             color: #ca0c16 !important;
@@ -221,7 +221,7 @@
 </div>
 
 <div id="qrcode" class="ui wechat-qr flowing popup transition hidden " style="width: 130px !important;">
-    <img src="./static/images/wechat.jpg" alt="" class="ui rounded image" style="width: 120px !important;">
+    <!--<img src="./static/images/wechat.jpg" alt="" class="ui rounded image" style="width: 120px !important;">-->
 </div>
 
 <div style="height: 10em"></div>
@@ -230,14 +230,14 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script src="../static/hightlight-theme/okaida/prism.js" th:src="@{/static/hightlight-theme/coy/prism.js}"></script>
+<script src="../static/js/prism.js" th:src="@{/static/js/alert.js}"></script>
 <script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
 <script>
     $(document).ready(function () {
         if (detectZoom() != 125) {
             spop({
                 template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
-                autoclose: 3000,
+                autoclose: 4000,
                 position: "top-center",
                 style: 'info',
             });
@@ -286,6 +286,7 @@
             }
         });
     });
+
 </script>
 <!--实现评论框的各种效果-->
 <script type="text/javascript">
@@ -300,7 +301,7 @@
         $('#commentInput').attr("rows", "2");
         $('#commentBtn').hide();
     });
-    <!--控制评论输入的字数-->
+    <!--控制-->
     $(function () {
         $('#commentInput').on('keyup', function () {
             commentContent = $('#commentInput').val();
@@ -311,7 +312,8 @@
                 $('#num_txt').html(str);
             } else {
                 $('#num_txt').html(0);
-                $('#commentInput').val(commentContent.substring(0, 500));
+                commentContent = commentContent.substring(0, 500);
+                $('#commentInput').val(commentContent);
             }
         });
     });
@@ -320,12 +322,7 @@
         var user = sessionStorage.getItem("user");
         if (user != null) {
             if (commentContent == null || commentContent === '') {
-                spop({
-                    template: '请输入评论内容',
-                    autoclose: 3000,
-                    position: "top-center",
-                    style: 'info',
-                });
+                alert("请输入评论内容");
             } else {
                 var sendCommentTo = $('#sendCommentTo').val();
                 var articleId = $('#articleId').val();
@@ -350,7 +347,7 @@
                     error: function () {
                         spop({
                             template: '服务异常，请重试！',
-                            autoclose: 3000,
+                            autoclose: 4000,
                             position: "top-center",
                             style: 'error',
                         });
@@ -360,7 +357,7 @@
         } else {
             spop({
                 template: '服务异常，请重试！',
-                autoclose: 3000,
+                autoclose: 4000,
                 position: "top-center",
                 style: 'error',
             });
@@ -378,6 +375,7 @@
     }
 </script>
 <script type="text/javascript">
+
     $("code").addClass("language-css");
     $("pre").addClass("line-numbers");
     $("pre").addClass("data-line");

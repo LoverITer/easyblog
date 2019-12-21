@@ -15,7 +15,7 @@ public interface ICategoryCareService {
      * @param categoryId   关注的分类Id
      * @return
      */
-    int saveCareInfo(int careUserId,int categoryId);
+    int saveCareInfo(int careUserId, int categoryId);
 
 
     /**
@@ -24,5 +24,5 @@ public interface ICategoryCareService {
      * @param categoryId
      * @return
      */
-    boolean deleteCareInfo(int userId,int categoryId);
+    boolean deleteCareInfo(int userId, int categoryId);
 }

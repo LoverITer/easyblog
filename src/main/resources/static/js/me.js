@@ -18,24 +18,17 @@ function detectZoom() {
         ratio = Math.round(ratio * 100);
     }
     return ratio;
-};
+}
 
-//60s倒计时
-var countdown=60;        //初始值
-function settime(obj) {
-    if (countdown == 0) {
-        /*$('#getCode_btn').removeClass("disabled");
-        $('#getCode_btn').html("获取验证码");*/
-        $(obj).removeClass("disabled");
-        $(obj).html("获取验证码");
-        countdown = 60;
-        return false;
-    } else {
-        /* $('#getCode_btn').addClass("disabled");
-         $('#getCode_btn').html("重新获取(" + countdown + ")");*/
-        $(obj).addClass("disabled");
-        $(obj).html("重新获取(" + countdown + ")");
-        countdown--;
+var  t=60;
+function disableButton60sAndDisplayCountDown(obj) {
+    $(obj).addClass('disabled');
+    var timer=setTimeout('disableButton60sAndDisplayCountDown()',1000);
+    if(t>0){
+        t--;
+    }else{
+        $(obj).removeClass('disabled');
+        clearTimeout(timer);   //清除定时器
+        t=60;
     }
-    setTimeout('settime()',1000);
-};
+}

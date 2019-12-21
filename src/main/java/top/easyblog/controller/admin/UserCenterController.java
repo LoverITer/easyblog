@@ -9,9 +9,9 @@ import top.easyblog.bean.UserAttention;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.UserAttentionImpl;
 import top.easyblog.service.impl.UserServiceImpl;
-import top.easyblog.utils.CalendarUtil;
-import top.easyblog.utils.QiNiuCloudUtil;
-import top.easyblog.utils.UserProfessionUtil;
+import top.easyblog.commons.utils.CalendarUtil;
+import top.easyblog.commons.utils.QiNiuCloudUtil;
+import top.easyblog.commons.utils.UserProfessionUtil;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;

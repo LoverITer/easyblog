@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import top.easyblog.config.web.Result;
-import top.easyblog.utils.QiNiuCloudUtil;
+import top.easyblog.commons.utils.QiNiuCloudUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;

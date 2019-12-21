@@ -1,4 +1,4 @@
-package top.easyblog.utils.email;
+package top.easyblog.commons.email;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

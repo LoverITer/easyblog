@@ -10,6 +10,6 @@ public interface CategoryCareMapper extends BaseMapper<CategoryCare> {
 
     List<CategoryCare> getCategoryCareByCategoryId(@Param("categoryId") int categoryId);
 
-    void deleteByUserIdAndCategoryId(@Param("userId") Integer userId,@Param("categoryId") Integer categoryId);
+    void deleteByUserIdAndCategoryId(@Param("userId") Integer userId, @Param("categoryId") Integer categoryId);
 
 }

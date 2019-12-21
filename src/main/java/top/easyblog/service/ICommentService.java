@@ -22,7 +22,7 @@ public interface ICommentService {
      * @param flag   标志 当为receive时查询用户获得的评论  为send查询用户发表过的评论
      * @return
      */
-    List<UserComment> getComment(int userId,String flag);
+    List<UserComment> getComment(int userId, String flag);
 
 
     /**

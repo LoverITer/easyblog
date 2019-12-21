@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
-import top.easyblog.enumHelper.ArticleType;
+import top.easyblog.commons.ArticleType;
 import top.easyblog.service.impl.*;
-import top.easyblog.utils.HtmlParserUtil;
-import top.easyblog.utils.MarkdownUtil;
+import top.easyblog.commons.utils.HtmlParserUtil;
+import top.easyblog.commons.utils.MarkdownUtil;
 
 import java.util.List;
 import java.util.Objects;

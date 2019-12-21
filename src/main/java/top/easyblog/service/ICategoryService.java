@@ -13,7 +13,7 @@ public interface ICategoryService {
      * @param categoryName
      * @return
      */
-    int saveCategory(int userId,String categoryName);
+    int saveCategory(int userId, String categoryName);
 
 
     /**
@@ -45,7 +45,7 @@ public interface ICategoryService {
     Category getCategory(int categoryId);
 
 
-    Category getCategoryByUserIdAndName(int userId,String categoryName);
+    Category getCategoryByUserIdAndName(int userId, String categoryName);
 
 
     /**
@@ -54,7 +54,7 @@ public interface ICategoryService {
      * @param params
      * @return
      */
-    int updateCategoryInfo(int categoryId, Map<String,Object> params);
+    int updateCategoryInfo(int categoryId, Map<String, Object> params);
 
 
     /**
