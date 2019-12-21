@@ -1,7 +1,9 @@
 package top.easyblog.service;
 
+import com.github.pagehelper.PageInfo;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.ArticleCount;
+import top.easyblog.commons.pagehelper.PageParam;
 
 import java.util.List;
 
@@ -23,10 +25,19 @@ public interface IArticleService {
 
     /**
      * @param userId      用户ID
-     * @param articleType
-     * @return
+     * @param articleType  查询的文章类型
+     * @return   所有文章
      */
     List<Article> getUserArticles(int userId, String articleType);
+
+    /**
+     * 分页用户的文章
+     * @param userId   用户ID
+     * @param articleType   查询的文章类型
+     * @param pageParam   分页信息
+     * @return  pageInfo
+     */
+    PageInfo getUserArticlesPage(int userId, String articleType, PageParam pageParam);
 
     List<Article> getUserArticlesMonthly(int userId, String year, String month);
 

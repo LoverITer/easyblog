@@ -1,5 +1,6 @@
 package top.easyblog.controller;
 
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserComment;
-import top.easyblog.commons.ArticleType;
-import top.easyblog.service.impl.*;
+import top.easyblog.commons.enums.ArticleType;
+import top.easyblog.commons.pagehelper.PageParam;
+import top.easyblog.commons.pagehelper.PageSize;
 import top.easyblog.commons.utils.HtmlParserUtil;
 import top.easyblog.commons.utils.MarkdownUtil;
+import top.easyblog.service.impl.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -37,19 +40,14 @@ public class ArticleController {
         this.userAttention = userAttention;
     }
 
-    @RequestMapping(value = "/index/{userId}")
+    /*@RequestMapping(value = "/index/{userId}")
     public String index(@PathVariable("userId") int userId,
                         @RequestParam(value = "articleType", defaultValue = "3") int articleType,
                         Model model) {
-        new ControllerUtils(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, userId, articleType + "");
+        ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, userId, articleType + "");
         final User user = userService.getUser(userId);
         List<Article> articles = articleServiceImpl.getUserArticles(userId, articleType + "");
         if (Objects.nonNull(articles)) {
-            articles.forEach(article -> {
-                String htmlContent = MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent());
-                String textContent = HtmlParserUtil.HTML2Text(htmlContent);
-                article.setArticleContent(textContent);
-            });
             model.addAttribute("articles", articles);
             user.setUserPassword(null);
             model.addAttribute("user", user);
@@ -61,6 +59,30 @@ public class ArticleController {
             return "user_home";
         }
         return PAGE404;
+    }
+*/
+    @RequestMapping(value = "/index/{userId}")
+    public String index(@PathVariable("userId") int userId,
+                        @RequestParam(value = "articleType", defaultValue = "3") int articleType,
+                        Model model,
+                        @RequestParam(value = "page",defaultValue = "1") int page) {
+        try {
+            ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, userId, articleType + "");
+            final User user = userService.getUser(userId);
+            PageParam pageParam = new PageParam(page, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
+            PageInfo articlePages = articleServiceImpl.getUserArticlesPage(userId, articleType + "", pageParam);
+            model.addAttribute("articlePages", articlePages);
+            user.setUserPassword(null);
+            model.addAttribute("user", user);
+            if (ArticleType.Original.getArticleType().equals(articleType + "")) {
+                model.addAttribute("displayOnlyOriginal", "1");
+            } else if (ArticleType.Unlimited.getArticleType().equals(articleType + "")) {
+                model.addAttribute("displayOnlyOriginal", "0");
+            }
+            return "user_home";
+        }catch (Exception ex){
+            return "/error/error";
+        }
     }
 
 
@@ -112,7 +134,7 @@ public class ArticleController {
                 article1.setArticleId(article.getArticleId());
                 article1.setArticleClick(article.getArticleClick()+1);
                 articleServiceImpl.updateSelective(article1);
-                new ControllerUtils(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
+                ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
                 return "blog";
             }
         }

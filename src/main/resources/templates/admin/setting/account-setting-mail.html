@@ -42,11 +42,11 @@
                         <span class="m-margin-top">填写验证码：</span>
                         <input id="code" type="text">
                         <input id="email" type="hidden" th:value="${user.getUserMail()}">
-                        <button id="sendCode"  class="ui mini button">获取验证码</button>
+                        <button id="sendCode"  class="ui blue mini button">获取验证码</button>
                     </div>
                     <br/>
                     <br/>
-                    <button id="firm_btn" class="ui medium disabled button m-margin-left-middle">
+                    <button id="firm_btn" class="ui red medium disabled button m-margin-left-middle">
                         下一步
                     </button>
 
@@ -56,7 +56,7 @@
                         <div style="margin-bottom: 2.5em !important;color: grey !important;font-size: 14px !important;">
                             你还没有绑定邮箱
                         </div>
-                        <a href="#" th:href="@{/}">
+                        <a href="#" th:href="@{/manage/account/bindEmailPage}">
                             <button class="red  ui button">立即绑定邮箱</button>
                         </a>
                     </div>
@@ -88,7 +88,7 @@
         if (detectZoom() != 125) {
             spop({
                 template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
-                autoclose: 4000,
+                autoclose: 3000,
                 position: "top-center",
                 style: 'info',
             });
@@ -219,7 +219,7 @@
             error: function () {
                 spop({
                     template: '服务异常，请重试！',
-                    autoclose: 4000,
+                    autoclose: 3000,
                     position: "top-center",
                     style: 'error',
                 });
@@ -239,12 +239,8 @@
             var len1 = document.getElementById("code").value.length;
             if (len1 != 0) {
                 $('#firm_btn').removeClass("disabled");
-                $('#firm_btn').css("background-color", "#ca0c16");
-                $('#firm_btn').css("color", "#ffffff");
             } else {
                 $('#firm_btn').addClass("disabled");
-                $('#firm_btn').css("background-color", "#E0E1E2");
-                $('#firm_btn').css("color", "#000000");
             }
         }
 

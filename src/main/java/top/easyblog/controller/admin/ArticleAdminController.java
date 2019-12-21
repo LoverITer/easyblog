@@ -1,20 +1,21 @@
 package top.easyblog.controller.admin;
 
 
-import top.easyblog.bean.Article;
-import top.easyblog.bean.Category;
-import top.easyblog.bean.User;
-import top.easyblog.config.web.Result;
-import top.easyblog.commons.ArticleType;
-import top.easyblog.service.impl.ArticleServiceImpl;
-import top.easyblog.service.impl.CategoryServiceImpl;
-import top.easyblog.service.impl.UserServiceImpl;
-import top.easyblog.commons.utils.FileUploadUtils;
-import top.easyblog.commons.utils.HtmlParserUtil;
-import top.easyblog.commons.utils.MarkdownUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import top.easyblog.bean.Article;
+import top.easyblog.bean.Category;
+import top.easyblog.bean.User;
+import top.easyblog.commons.enums.ArticleType;
+import top.easyblog.commons.utils.FileUploadUtils;
+import top.easyblog.commons.utils.HtmlParserUtil;
+import top.easyblog.commons.utils.MarkdownUtil;
+import top.easyblog.config.web.Result;
+import top.easyblog.service.impl.ArticleServiceImpl;
+import top.easyblog.service.impl.CategoryServiceImpl;
+import top.easyblog.service.impl.CommentServiceImpl;
+import top.easyblog.service.impl.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -31,12 +32,14 @@ public class ArticleAdminController {
     private final ArticleServiceImpl articleService;
     private final CategoryServiceImpl categoryService;
     private final UserServiceImpl userService;
+    private final CommentServiceImpl commentService;
     private static final String PREFIX = "admin/blog_manage";
 
-    public ArticleAdminController(ArticleServiceImpl articleService, CategoryServiceImpl categoryService, UserServiceImpl userService, UserServiceImpl userService1) {
+    public ArticleAdminController(ArticleServiceImpl articleService, CategoryServiceImpl categoryService, UserServiceImpl userService, UserServiceImpl userService1, CommentServiceImpl commentService) {
         this.articleService = articleService;
         this.categoryService = categoryService;
         this.userService = userService1;
+        this.commentService = commentService;
     }
 
 

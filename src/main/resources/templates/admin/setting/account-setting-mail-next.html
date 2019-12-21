@@ -43,13 +43,13 @@
                     <br/>
                     <div class="ui action  fluid input" style="width: 60% !important;">
                         <span class="m-margin-top">填写验证码：</span>
-                        <input id="confirm_code" type="text" />
-                        <button id="code_btn" class="ui disabled mini button">获取验证码</button>
+                        <input id="confirm_code"  type="text" />
+                        <button id="code_btn" class="ui blue disabled mini button">获取验证码</button>
                     </div>
                     <br/>
 
                     <br/>
-                    <button id="firm_btn"  class="ui tiny disabled button m-margin-left-middle">
+                    <button id="firm_btn"  class="ui red tiny disabled button m-margin-left-middle">
                         下一步
                     </button>
 
@@ -57,14 +57,6 @@
                 <div style="padding-bottom: 12em !important;"></div>
             </div>
         </div>
-    </div>
-</div>
-<div  class="ui small modal">
-    <div class="header" id="msg_header">删除</div>
-    <div id="msg" class="content">
-    </div>
-    <div class="actions">
-        <div id="msg-btn" class="ui red button">知道了</div>
     </div>
 </div>
 
@@ -77,74 +69,50 @@
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
 <script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+
+    $('#searchBar').click(function () {
+        $('#reloadSearchBar').css("display", "block");  //显示div
+    });
+    //侧边栏状态显示
+    $('#account3').css("background",'#ca0c16');
+    $('#account3').css('color','#ffffff');
+</script>
+<script>
     $(document).ready(function () {
         if (detectZoom() != 125) {
             spop({
                 template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
-                autoclose: 4000,
+                autoclose: 3000,
                 position: "top-center",
                 style: 'info',
             });
         }
     });
 </script>
-<script>
-    $('#msg-btn').click(function () {
-        $('.ui.modal').modal('hide');
-    });
-    $('#firm_btn').click(function () {
-        $.ajax({
-            url: "/manage/account/reset/email/save",
-            method: 'GET',
-            sync: true,
-            data: {email: $('#email').val()},
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    spop({
-                        template: '邮箱修改成功',
-                        autoclose: 4000,
-                        position: "top-right",
-                        style: 'success',
-                    });
-                    window.location.href="/manage/account/reset/email";
-                } else {
-                    spop({
-                        template: '服务异常，请重试！',
-                        autoclose: 4000,
-                        position: "top-center",
-                        style: 'error',
-                    });
-                }
-            },
-            error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
-            }
-        });
-    })
-</script>
 <script th:online="javascript">
-
     //60s倒计时
     var countdown=60;        //初始值
     function settime() {
+        var timer=setTimeout('settime()',1000);
         if (countdown == 0) {
             $('#code_btn').removeClass("disabled");
             $('#code_btn').html("获取验证码");
             countdown = 60;
-            return false;
+            clearTimeout(timer);
         } else {
             $('#code_btn').addClass("disabled");
             $('#code_btn').html("重新发送(" + countdown + ")");
             countdown--;
         }
-        setTimeout('settime()',1000);
     };
+    //发送验证码
     $('#code_btn').click(function () {
         $.ajax({
             url: "/manage/account/sendByEmail",
@@ -154,23 +122,68 @@
             dataType: "json",
             success: function (response) {
                 if (response.success) {
+                    spop({
+                        template: '邮件发送成功，请注意查收',
+                        autoclose: 3000,
+                        position: "top-right",
+                        style: 'success',
+                    });
                     settime();
-                    $('#msg_header').html("成功");
-                    $('#msg').html("邮件发送成功，请注意查收");
-                    $('.ui.modal').modal('show');
                 } else {
-                    $('#msg_header').html("错误");
-                    $('#msg').html("抱歉！邮件发送失败，请重试！");
-                    $('.ui.modal').modal('show');
+                    spop({
+                        template: '抱歉！邮件发送失败，请重试！',
+                        autoclose: 3000,
+                        position: "top-center",
+                        style: 'error',
+                    });
                 }
             },
             error: function () {
-                $('#msg_header').html("错误");
-                $('#msg').html("抱歉！服务异常，请重试！");
-                $('.ui.modal').modal('show');
+                spop({
+                    template: '服务异常，请重试！',
+                    autoclose: 3000,
+                    position: "top-center",
+                    style: 'error',
+                });
             }
         });
     });
+    //提交、检验、保存
+    $('#firm_btn').click(function () {
+        $.ajax({
+            url: "/manage/account/reset/email/save",
+            method: 'GET',
+            sync: true,
+            data: {email: $('#email').val(),code:$('#confirm_code').val()},
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    spop({
+                        template: response.msg,
+                        autoclose: 3000,
+                        position: "top-right",
+                        style: 'success',
+                    });
+                    setTimeout('window.location.href="/manage/account/reset/email"',2000);
+                } else {
+                    spop({
+                        template: response.msg,
+                        autoclose: 3000,
+                        position: "top-center",
+                        style: 'error',
+                    });
+                }
+            },
+            error: function () {
+                spop({
+                    template: '服务异常，请重试！',
+                    autoclose: 3000,
+                    position: "top-center",
+                    style: 'error',
+                });
+            }
+        });
+    })
 </script>
 <!--控制头像的显示-->
 <script type="text/javascript">
@@ -206,80 +219,52 @@
                 }
             },
             error: function () {
-                $('#msg_header').html("错误");
-                $('#msg').html("抱歉！服务异常，请重试！");
-                $('.ui.modal').modal('show');
+                spop({
+                    template: '服务异常，请重试！',
+                    autoclose: 3000,
+                    position: "top-center",
+                    style: 'error',
+                });
             }
         });
     });
 
 </script>
-<script>
-    $('#account3').css("background",'#ca0c16');
-    $('#account3').css('color','#ffffff')
-</script>
-<!--控制按钮的禁用和可用状态-->
 <script type="text/javascript">
-
     $("#email").click(function () {
         function changePhone() {
-            var new_phone=document.getElementById("email").value;
+            var email=document.getElementById("email").value;
             var len2=document.getElementById("confirm_code").value.length;
-            if(isMobileNumber(new_phone)){
-                $('#code_btn').removeClass("disabled");
+            if(isEmail(email)){
+                if(countdown===60) {
+                    $('#code_btn').removeClass("disabled");
+                }
                 $('#error').html("");
                 $('#phone').css("width","62%");
-                if(len2!=0) {
+                if(len2===0) {
+                    $('#firm_btn').addClass("disabled");
+                }else{
                     $('#firm_btn').removeClass("disabled");
-                    $('#firm_btn').css("background-color", "#ca0c16");
-                    $('#firm_btn').css("color", "#ffffff");
                 }
             }else{
-                //手机号没填对就不让获得验证码
                 $('#code_btn').addClass("disabled");
-            }
-            if(len2==0) {
-                $('#firm_btn').addClass("disabled");
-                $('#firm_btn').css("background-color", "#E0E1E2");
-                $('#firm_btn').css("color", "#000000");
             }
         }
         setInterval(changePhone, 300);
     });
 
-
-
-    function isMobileNumber(mail) {
+    function isEmail(mail) {
         var flag = false;
-        var message = "";
         var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
         if (!myreg.test(mail)) {
-            message = "请输入有效的邮箱！";
+            $('#error').html("请输入有效的邮箱！");
+            $('#error').css("color","#ca0c16");
+            $('#phone').css("width","81%");
         } else {
             flag = true;
         }
-        if (message != "") {
-            $('#error').html(message);
-            $('#error').css("color","#ca0c16");
-            $('#phone').css("width","81%");
-        }
         return flag;
     }
-
-</script>
-
-<script>
-    $('.menu.toggle').click(function () {
-        $('.m-item').toggleClass('m-mobile-hide');
-    });
-
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
-    });
-
-    $('#searchBar').click(function () {
-        $('#reloadSearchBar').css("display", "block");  //显示div
-    })
 
 </script>
 </html>

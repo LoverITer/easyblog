@@ -13,6 +13,7 @@ spring:
      content-type: text/html
   application:
     name: EasyBlog
+
   #邮件相关配置
   mail:
     host: smtp.qq.com
@@ -20,14 +21,23 @@ spring:
     username: huangxin9830@qq.com  #发送邮件的账户名
     properties:      #properties的值应该是一个Map
       mail.smpt.ssl: true       #设置使用SSL安全协议
+
 mybatis:
   config-location: classpath:/mybatis/mybatis-config.xml
   mapper-locations: classpath:/mybatis/mapper/*.xml
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  pageSizeZero: true
+
 logging:
   config: classpath:logback-spring.xml
+
 #七牛云配置
 qiniu:
   accessKey: vRxHtqsnLfzK2h2DTGcEfFlLLDDNgqAvoZf0H08D
   secretKey: 5No0lIzPOv2pYDX9wPkFFh_kE99lvpPia0nA0ZPH
   bucket: blog_album
   path: http://poag7m5q9.bkt.clouddn.com
+

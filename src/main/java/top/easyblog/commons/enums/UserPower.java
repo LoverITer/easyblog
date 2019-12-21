@@ -1,4 +1,4 @@
-package top.easyblog.commons;
+package top.easyblog.commons.enums;
 
 
 /**
