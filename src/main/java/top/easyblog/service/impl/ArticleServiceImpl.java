@@ -2,8 +2,10 @@ package top.easyblog.service.impl;
 
 import top.easyblog.bean.Article;
 import top.easyblog.bean.ArticleCount;
+import top.easyblog.bean.UserComment;
 import top.easyblog.commons.ArticleType;
 import top.easyblog.mapper.ArticleMapper;
+import top.easyblog.mapper.UserCommentMapper;
 import top.easyblog.service.IArticleService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,9 +23,11 @@ import java.util.Objects;
 public class ArticleServiceImpl implements IArticleService {
 
     private final ArticleMapper articleMapper;
+    private final UserCommentMapper commentMapper;
 
-    public ArticleServiceImpl(ArticleMapper articleMapper) {
+    public ArticleServiceImpl(ArticleMapper articleMapper, UserCommentMapper commentMapper) {
         this.articleMapper = articleMapper;
+        this.commentMapper = commentMapper;
     }
 
     @Transactional(isolation =Isolation.REPEATABLE_READ)
@@ -199,12 +203,21 @@ public class ArticleServiceImpl implements IArticleService {
         }
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public void deleteByPK(int articleId) {
         if(articleId>0){
             try {
+                //删除有关这篇文章的所有评论
+                List<UserComment> articleComments = commentMapper.getTopCommentsByArticleId(articleId);
+                if(articleComments!=null&&articleComments.size()>0){
+                    articleComments.forEach(ele->{
+                        commentMapper.deleteByPrimaryKey((long)ele.getCommentId());
+                    });
+                }
                 articleMapper.deleteByPrimaryKey((long) articleId);
-            }catch (Exception ignored){
+            }catch (Exception ex){
+                ex.printStackTrace();
             }
         }
     }
