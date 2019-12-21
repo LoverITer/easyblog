@@ -30,7 +30,7 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @param article
      * @return
      */
-    int countSelective(@Param("article")Article article);
+    int countSelective(@Param("article") Article article);
 
 
     /**
@@ -39,7 +39,7 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @param categoryName
      * @return
      */
-    int countUserArticlesInCategory(@Param("userId") int userId,@Param("categoryName") String categoryName);
+    int countUserArticlesInCategory(@Param("userId") int userId, @Param("categoryName") String categoryName);
 
 
     /**
@@ -49,7 +49,7 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @param month 查询的月份  如果没有写null
      * @return
      */
-    List<Article> getArticlesSelective(@Param("article") Article article,@Param("year") String year,@Param("month") String month);
+    List<Article> getArticlesSelective(@Param("article") Article article, @Param("year") String year, @Param("month") String month);
 
     /**
      * 得到用户的所有原创文章，按时间降序排列
@@ -63,7 +63,7 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @param userId
      * @return
      */
-    List<Article> getUserArticlesSelective(@Param("userId") int userId,@Param("articleType") String articleType);
+    List<Article> getUserArticlesSelective(@Param("userId") int userId, @Param("articleType") String articleType);
 
 
     /**
@@ -72,7 +72,7 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @param limit
      * @return
      */
-    List<Article> getNewestArticles(@Param("userId") int userId,@Param("limit") int limit);
+    List<Article> getNewestArticles(@Param("userId") int userId, @Param("limit") int limit);
 
     /**
      * 得到用户limit篇访问量最高的文章
@@ -80,7 +80,7 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @param limit
      * @return
      */
-    List<Article> getHotArticles(@Param("userId") int userId,@Param("limit") int limit);
+    List<Article> getHotArticles(@Param("userId") int userId, @Param("limit") int limit);
 
     /**
      * 按照月份统计用户的userId这个月的文章数
@@ -96,7 +96,7 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @param month
      * @return
      */
-    List<Article> getByUserIdMonthly(@Param("userId") int userId,@Param("year") String year,@Param("month") String month);
+    List<Article> getByUserIdMonthly(@Param("userId") int userId, @Param("year") String year, @Param("month") String month);
 
 
     /**
@@ -106,7 +106,7 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @param month
      * @return
      */
-    List<Article> getByUserIdMonthlyOrderByClickNum(@Param("userId") int userId,@Param("year") String year,@Param("month") String month);
+    List<Article> getByUserIdMonthlyOrderByClickNum(@Param("userId") int userId, @Param("year") String year, @Param("month") String month);
 
     /**
      * 得到用户某个分类下的所有文章，按时间降序排列
@@ -114,7 +114,7 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @param categoryId
      * @return
      */
-    List<Article> getByCategoryAndUserId(@Param("userId") int userId,@Param("categoryId") int categoryId);
+    List<Article> getByCategoryAndUserId(@Param("userId") int userId, @Param("categoryId") int categoryId);
 
 
     List<Article> getUsersArticleByQueryString(@Param("query") String query);
@@ -125,5 +125,5 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @param userId
      * @param title
      */
-    void deleteArticleByUserIdAndTitle(@Param("userId") int userId,@Param("title") String title);
+    void deleteArticleByUserIdAndTitle(@Param("userId") int userId, @Param("title") String title);
 }

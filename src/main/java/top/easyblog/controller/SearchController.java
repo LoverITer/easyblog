@@ -2,7 +2,7 @@ package top.easyblog.controller;
 
 import top.easyblog.bean.Article;
 import top.easyblog.service.impl.ArticleServiceImpl;
-import top.easyblog.utils.HtmlParserUtil;
+import top.easyblog.commons.utils.HtmlParserUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

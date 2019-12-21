@@ -20,6 +20,6 @@ public interface UserSigninLogMapper extends BaseMapper<UserSigninLog> {
      * @param num
      * @return
      */
-    List<UserSigninLog> getUserLoginInfo(int userId,int num);
+    List<UserSigninLog> getUserLoginInfo(int userId, int num);
 
 }

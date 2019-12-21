@@ -1,4 +1,4 @@
-package top.easyblog.utils;
+package top.easyblog.commons.utils;
 
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.tables.TableBlock;

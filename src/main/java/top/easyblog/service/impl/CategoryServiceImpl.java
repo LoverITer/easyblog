@@ -3,7 +3,7 @@ package top.easyblog.service.impl;
 import top.easyblog.bean.Category;
 import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.service.ICategoryService;
-import top.easyblog.utils.FileUploadUtils;
+import top.easyblog.commons.utils.FileUploadUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;

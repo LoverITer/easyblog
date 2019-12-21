@@ -1,6 +1,6 @@
 package top.easyblog.bean;
 
-import top.easyblog.enumHelper.ArticleType;
+import top.easyblog.commons.ArticleType;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;

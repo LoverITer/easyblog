@@ -1,4 +1,4 @@
-package top.easyblog.utils;
+package top.easyblog.commons.utils;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;

@@ -1,4 +1,4 @@
-package top.easyblog.utils;
+package top.easyblog.commons.utils;
 
 import java.util.Map;
 import java.util.Objects;

@@ -14,7 +14,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
 
     int updateByPrimaryKeySelective(Category record);
 
-    Category getCategoryByUserIdAndName(@Param("userId") int userId,@Param("categoryName") String categoryName);
+    Category getCategoryByUserIdAndName(@Param("userId") int userId, @Param("categoryName") String categoryName);
 
     List<Category> getSelective(@Param("id") int id);
 

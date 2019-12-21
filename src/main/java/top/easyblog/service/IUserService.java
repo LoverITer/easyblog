@@ -10,7 +10,7 @@ public interface IUserService {
      * @param password
      * @return
      */
-    User checkUser(String username,String password);
+    User checkUser(String username, String password);
 
 
     /**
@@ -26,7 +26,7 @@ public interface IUserService {
      * @param uid
      * @return
      */
-    User getUser(long  uid);
+    User getUser(long uid);
 
 
     /**
@@ -40,7 +40,7 @@ public interface IUserService {
     boolean register(String nickname, String password, String account, String ipInfo);
 
 
-    int updateUserInfo(String account,String newPassword);
+    int updateUserInfo(String account, String newPassword);
 
 
     int updateUserInfo(User user);
