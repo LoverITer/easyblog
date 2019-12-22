@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>[[${{query}}]] - EasyBlog搜索</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/me.css">
     <style type="text/css">
@@ -34,7 +34,7 @@
                 <a href="#" th:unless="${session.user!=null}" th:href="@{/manage/blog/post}"
                    style="color :rgb(0,183,173);font-size: 17px">写博客</a>
                 <a href="#" th:unless="${session.user==null}"
-                   th:href="@{/manage/blog/post}+@{/(userId=${#session.getAttribute('user').getUserId()})}"
+                   th:href="@{/manage/blog/post(userId=${#session.getAttribute('user').getUserId()})}"
                    style="color :rgb(0,183,173);font-size: 17px">写博客</a>
             </div>
 
@@ -52,7 +52,7 @@
                         <a href="#" th:href="@{/manage/uc/profile}" class="item"><i class="user icon"></i>个人中心</a>
                         <a href="#" th:href="@{/manage/account/reset/password}" class="item"><i class="cogs icon"></i>账号设置</a>
                         <div class="divider"></div>
-                        <a href="#" th:href="@{/article/index/}+${#session.getAttribute('user').getUserId()}"
+                        <a href="#" th:href="@{/article/index/{uid}(uid=${#session.getAttribute('user').getUserId()})}"
                            class="item"><i class="archive icon"></i>我的博客</a>
                         <a href="#" th:href="@{/manage/blog/}" class="item"><i class="edit icon"></i>管理博客</a>
                         <div class="divider"></div>
@@ -71,44 +71,48 @@
     <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
         <i class="sidebar icon"></i>
     </a>
-    <input id="userId" hidden="hidden" th:if="${session.user!=null}" th:value="${#session.getAttribute('user').getUserId()}">
+    <input id="userId" hidden="hidden" th:if="${session.user!=null}"
+           th:value="${#session.getAttribute('user').getUserId()}">
 </nav>
 
 <!--中间内容-->
 <div class="m-container-middle m-padded-tb-big">
     <div class="ui container">
-        <form name="search" th:action="@{/search/details}" target="_blank" method="get" >
+        <form name="search" th:action="@{/search/details}" target="_blank" method="get">
             <div class="ui large icon input" style="width: 100% !important;">
                 <input th:if="${query==null}" name="query" class="prompt" type="text" placeholder="Search....">
-                <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt" type="text" placeholder="Search....">
+                <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt" type="text"
+                       placeholder="Search....">
                 <i onclick="document.forms['search'].submit()" class="red search link icon"></i>
             </div>
         </form>
 
         <!--header-->
-        <div th:if="${articles!=null}" class="ui top attached segment">
+        <div th:if="${articlePages!=null}" class="ui top attached segment">
             <div class="ui middle aligned two column grid">
                 <div class="column">
                     <h3 class="ui teal header">搜索结果</h3>
                 </div>
                 <div class="right aligned column">
-                    共 <h2 class="ui orange header m-inline-block m-text-thin" th:text="${#lists.size(articles)}">
+                    共 <h2 class="ui orange header m-inline-block m-text-thin" th:text="${articlePages.getTotal()}">
                     14 </h2>条结果
                 </div>
             </div>
         </div>
 
-        <div class="ui top attached teal segment">
-            <div th:if="${articles!=null}" th:each="article:${articles}"
+        <div class="ui top attached  segment" style="margin-top: 0.1em !important;">
+            <div th:if="${articlePages!=null&&#lists.size(articlePages.getList())>0}"
+                 th:each="article:${articlePages.getList()}"
                  class="ui padded vertical segment m-padded-tb-large">
                 <div class="ui middle aligned mobile reversed stackable grid">
                     <div class="eleven wide column">
                         <h3 class="ui header">
-                            <a  href="#" th:href="@{/article/details/}+${article.getArticleId()}" target="_blank" class="m-black topic" th:text="${article.getArticleTopic()}">
+                            <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank"
+                               class="m-black topic" th:text="${article.getArticleTopic()}">
                                 你真的理解什么是财富自由吗?
                             </a>
                         </h3>
-                        <p class="m-text" th:text="${#strings.abbreviate(article.getArticleContent(),100)}">
+                        <p class="m-text" th:text="${#strings.abbreviate(article.getArticleContent(),200)}">
                             正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
                         <div class="ui grid">
                             <div class="eleven wide column">
@@ -134,7 +138,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div th:if="${article.getArticleCategory()!=null&&article.getArticleCategory()!=''}" class="right aligned five wide column">
+                            <div th:if="${article.getArticleCategory()!=null&&article.getArticleCategory()!=''}"
+                                 class="right aligned five wide column">
                                 <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin"
                                    th:text="${article.getArticleCategory()}">认知升级</a>
                             </div>
@@ -142,30 +147,48 @@
                     </div>
                     <div class="five wide column">
                         <a href="#" target="_blank">
-                         <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                            <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
                                  alt="" class="ui rounded image">
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-        <div th:if="${!#lists.isEmpty(articles)&&#lists.size(articles)<20}" class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
-        <!--footer-->
-        <div th:if="${#lists.size(articles)>20}" class="ui bottom attached segment">
+        <!--总记录数小于20显示的页脚-->
+        <div th:if="${!#lists.isEmpty(articlePages.getTotal())&&#lists.size(articlePages.getTotal())<20}"
+             class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
+        <!--分页-->
+        <div th:if="${articlePages.getTotal()>=20}" class="ui bottom attached segment" style="border-top: 1px solid #ccc">
             <div class="ui middle aligned two column grid">
-                <div class="column">
-                    <a href="#" class="ui mini teal basic button">上一页</a>
-                </div>
-                <div class="right aligned column">
-                    <a href="#" class="ui mini teal basic button">下一页</a>
+                <div class="column" style="margin: 5px auto;float: left !important;">
+                    <div class="ui buttons">
+                        <a th:href="@{/search/details(query=${query},page=${articlePages.getPrePage()})}">
+                            <button class="ui labeled icon button"
+                                    style="background: white !important;font-weight: 100 !important;">上一页
+                            </button>
+                        </a>
+                        <a th:each="pageNo:${articlePages.getNavigatepageNums()}"
+                           th:href="@{/search/details(query=${query},page=${pageNo})}">
+                            <button class="ui button pages"
+                                    style="background: white !important;font-weight: 100 !important;">
+                                [[${pageNo}]]
+                            </button>
+                        </a>
+                        <a th:href="@{/search/details(query=${query},page=${articlePages.getNextPage()})}">
+                            <button class="ui right labeled icon button"
+                                    style="background: white !important;font-weight: 100 !important;"> 下一页
+                            </button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment" style="border-top: none !important;">
+        <div th:if="${articlePages!=null&&articlePages.getTotal()==0}" class="ui bottom attached segment"
+             style="border-top: none !important;">
             <div class="ui middle aligned two column grid">
-                <div  style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
-                    抱歉，没有搜索的到任何信息
+                <div style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
+                    抱歉!没有搜索关于<span style="color: #b52a1d" th:text="${query}"></span>的任何信息
                 </div>
             </div>
         </div>
@@ -190,7 +213,7 @@
 <script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
 <script>
     $(document).ready(function () {
-        if (detectZoom() != 125) {
+        if (detectZoom() !== 125) {
             spop({
                 template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
                 autoclose: 4000,
@@ -202,15 +225,12 @@
 </script>
 <script>
     $(".topic").each(function () {
-        var str=$(this).text();
+        var str = $(this).text();
         var key = $('#query').val();
-        console.log(key);
-        var reg = new RegExp("("+key+")","ig");
-        var replaceStr=str.replace(reg,"<span style='color:#c00;font-weight:bold'>"+key+"</span>");
-        console.log(replaceStr);
+        var reg = new RegExp("(" + key + ")", "ig");
+        var replaceStr = str.replace(reg, "<span style='color:#c00;font-weight:bold'>" + key + "</span>");
         $(this).html(replaceStr);
     });
-
 
 
     $('.menu.toggle').click(function () {
@@ -223,9 +243,21 @@
 </script>
 
 <script type="text/javascript">
+
     $(document).ready(function () {
         toggleStatus();
+        showCurrentPageNum();
     });
+
+    function showCurrentPageNum() {
+        let obj = document.getElementsByClassName('pages');
+        let page = [[${articlePages.pageNum}]];
+        for (let i = 0; i < obj.length; i++) {
+            if (obj[i].textContent == page) {
+                $(obj[i]).css('background', '#eee');
+            }
+        }
+    }
 
     /**
      * 不断检查用户的登录情况

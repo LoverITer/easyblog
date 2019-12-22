@@ -227,10 +227,9 @@
     });
 
     function showCurrentPageNum() {
-        var obj=document.getElementsByClassName('pages');
-        var page=[[${articlePages.pageNum}]];
-        //console.log(obj,page);
-        for(var i=0;i<obj.length;i++){
+        let obj=document.getElementsByClassName('pages');
+        let page=[[${articlePages.pageNum}]];
+        for(let i=0;i<obj.length;i++){
             if(obj[i].textContent==page){
                 $(obj[i]).css('background','#eee');
             }

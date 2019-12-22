@@ -1,14 +1,15 @@
 package top.easyblog.controller;
 
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.easyblog.bean.Article;
+import top.easyblog.commons.pagehelper.PageParam;
+import top.easyblog.commons.pagehelper.PageSize;
 import top.easyblog.service.impl.ArticleServiceImpl;
-
-import java.util.List;
 
 @RequestMapping(value = "/search")
 @Controller
@@ -22,10 +23,13 @@ public class SearchController {
     }
 
     @GetMapping("/details")
-    public String showSearchResult(@RequestParam String query, Model model){
-        model.addAttribute("query",query);
-        List<Article> articles = articleService.getArticleByTopic(query);
-        model.addAttribute("articles",articles);
+    public String showSearchResult(@RequestParam String query,
+                                   @RequestParam(value = "page", defaultValue = "1") int pageNo,
+                                   Model model) {
+        model.addAttribute("query", query);
+        PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
+        PageInfo<Article> articlePages = articleService.getArticleByTopicPage(query, pageParam);
+        model.addAttribute("articlePages", articlePages);
         return "search";
     }
 

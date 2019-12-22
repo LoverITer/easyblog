@@ -94,10 +94,26 @@ public interface IArticleService {
      */
     PageInfo<Article> getByCategoryAndUserIdPage(int userId,int categoryId,PageParam pageParam);
 
+    /**
+     * 可选择的查询文章
+     * @param article
+     * @param year
+     * @param month
+     * @return
+     */
     List<Article> getArticlesSelective(Article article, String year, String month);
 
+    /**
+     * 可选择的查询文章并且分页
+     * @param article
+     * @param pageParam 分页参数
+     * @return
+     */
+    PageInfo<Article> getArticlesSelectivePage(Article article, PageParam pageParam);
 
     List<Article> getArticleByTopic(String query);
+
+    PageInfo<Article> getArticleByTopicPage(String query,PageParam pageParam);
 
     void deleteByUserIdAndTitle(int userId, String title);
 
