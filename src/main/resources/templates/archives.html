@@ -51,22 +51,22 @@
                     <div th:if="${user!=null}" class="ui  grid">
                         <div class="four row">
                             <div class="ui breadcrumb m-margin-left">
-                                <a class="section" th:href="@{/article/index/}+${user.getUserId()}" style="color: black">全部文章</a>
+                                <a class="section" th:href="@{/article/index/{id}(id=${user.getUserId()})}" style="color: black">全部文章</a>
                                 <i class="right angle icon divider"></i>
                                 <span class="section" th:text="${date}">2019年6月</span>
                             </div>
                             <div class="m-margin-left-massive "><span style="color: #888888">排序：</span>
                                 <span class="m-margin-right-bigger m-margin-left">
-                                    <a href="#" th:if="${defaultOrderFlag==true}" style="color: #b52a1d" th:href="@{/archives/details/}+${user.getUserId()}+@{/}+${date}" >默认排序</a>
-                                    <a href="#" th:if="${defaultOrderFlag==null}"  th:href="@{/archives/details/}+${user.getUserId()}+@{/}+${date}" class="m-black">默认排序</a>
+                                    <a href="#" th:if="${defaultOrderFlag==true}" style="color: #b52a1d" th:href="@{/archives/details/{uid}/{date}(uid=${user.getUserId()},date=${date})}">默认排序</a>
+                                    <a href="#" th:if="${defaultOrderFlag==null}"  th:href="@{/archives/details/{uid}/{date}(uid=${user.getUserId()},date=${date})}" class="m-black">默认排序</a>
                                 </span>
                                 <span class="m-margin-right-bigger">
-                                    <a href="#" th:if="${orderByUpdateTimeFlag==true}" style="color: #b52a1d" th:href="@{/archives/details/orderByUpdateTime/}+${user.getUserId()}+@{/}+${date}">按更新时间</a>
-                                    <a href="#" th:if="${orderByUpdateTimeFlag==null}" th:href="@{/archives/details/orderByUpdateTime/}+${user.getUserId()}+@{/}+${date}" class="m-black">按更新时间</a>
+                                    <a href="#" th:if="${orderByUpdateTimeFlag==true}" style="color: #b52a1d" th:href="@{/archives/details/orderByUpdateTime/{uid}/{date}(uid=${user.getUserId()},date=${date})}">按更新时间</a>
+                                    <a href="#" th:if="${orderByUpdateTimeFlag==null}" th:href="@{/archives/details/orderByUpdateTime/{uid}/{date}(uid=${user.getUserId()},date=${date})}" class="m-black">按更新时间</a>
                                 </span>
                                 <span class="m-margin-right-bigger">
-                                    <a href="#" th:if="${orderByClickNumFlag==true}" style="color: #b52a1d" th:href="@{/archives/details/orderByClickNum/}+${user.getUserId()}+@{/}+${date}">按访问量</a>
-                                    <a href="#" th:if="${orderByClickNumFlag==null}" th:href="@{/archives/details/orderByClickNum/}+${user.getUserId()}+@{/}+${date}"  class="m-black">按访问量</a>
+                                    <a href="#" th:if="${orderByClickNumFlag==true}" style="color: #b52a1d" th:href="@{/archives/details/orderByClickNum/{uid}/{date}(uid=${user.getUserId()},date=${date})}">按访问量</a>
+                                    <a href="#" th:if="${orderByClickNumFlag==null}" th:href="@{/archives/details/orderByClickNum/{uid}/{date}(uid=${user.getUserId()},date=${date})}"  class="m-black">按访问量</a>
                                 </span>
                             </div>
                         </div>
@@ -76,7 +76,8 @@
 
             <div class="ui top attached  segment" style="margin-top: 0.1em !important;">
                 <!--每个归档的文章-->
-                <div th:if="${!#lists.isEmpty(articles)}" th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear" style="padding: 10px 5px 20px 20px !important;">
+                <div th:if="${!#lists.isEmpty(articlePages)&&!#lists.isEmpty(articlePages.getList())}"
+                     th:each="article:${articlePages.getList()}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear" style="padding: 10px 5px 20px 20px !important;">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
                             <button th:switch="${article.getArticleType()}"
@@ -85,7 +86,7 @@
                                 <span th:case="1">转载</span>
                                 <span th:case="2">翻译</span>
                             </button>
-                            <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" th:text="${article.getArticleTopic()}"
+                            <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}"
                                class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
                             <p class="m-text" style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;"
                                th:text="${#strings.abbreviate(article.getArticleContent(),150)}">
@@ -97,7 +98,7 @@
                                         <div class="item">
                                             <img src="https://unsplash.it/100/100?image=1005" th:src="@{${user.getUserHeaderImgUrl()}}" alt=""
                                                  class="ui avatar image">
-                                            <div class="content"><a href="#" th:href="@{/article/index/}+${user.getUserId()}"  class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
+                                            <div class="content"><a href="#" th:href="@{/article/index/{id}(id=${user.getUserId()})}"  class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
                                         </div>
                                         <div class="item">
                                             <i class="calendar icon"></i> <span
@@ -126,17 +127,72 @@
                 </div>
             </div>
 
-            <!--分页按钮-->
-            <div th:if="${!#lists.isEmpty(articles)&&#lists.size(articles)>10}" class="ui bottom attached segment">
+            <div th:if="${#lists.isEmpty(articlePages.getList())}" class="ui bottom attached segment"
+                 style="border-top: none !important;">
                 <div class="ui middle aligned two column grid">
-                    <div class="column">
-                        <a href="#" class="ui mini teal basic button">上一页</a>
-                    </div>
-                    <div class="right aligned column">
-                        <a href="#" class="ui mini teal basic button">下一页</a>
+                    <div style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
+                        没有任何文章
                     </div>
                 </div>
             </div>
+
+            <!--分页按钮-->
+            <div th:if="${articlePages.getTotal()>15}" class="ui bottom attached segment">
+                <div class="ui middle aligned two column grid">
+                    <div class="column" style="margin: 5px auto;float: left !important;">
+                        <div class="ui buttons">
+                            <a th:if="${defaultOrderFlag==true}" th:href="@{/archives/details/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${articlePages.getPrePage()})}" >
+                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                </button>
+                            </a>
+                            <a th:if="${orderByUpdateTimeFlag==true}" th:href="@{/archives/details/orderByUpdateTime/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${articlePages.getPrePage()})}" >
+                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                </button>
+                            </a>
+                            <a th:if="${orderByClickNumFlag==true}" th:href="@{/archives/details/orderByClickNum/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${articlePages.getPrePage()})}" >
+                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                </button>
+                            </a>
+                            <!------------------------------------------------------->
+                            <a  th:if="${defaultOrderFlag==true}" th:each="pageNo:${articlePages.getNavigatepageNums()}"
+                                th:href="@{/archives/details/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${pageNo})}">
+                                <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
+                                    [[${pageNo}]]
+                                </button>
+                            </a>
+                            <a  th:if="${orderByUpdateTimeFlag==true}" th:each="pageNo:${articlePages.getNavigatepageNums()}"
+                                th:href="@{/archives/details/orderByUpdateTime/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${pageNo})}">
+                                <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
+                                    [[${pageNo}]]
+                                </button>
+                            </a>
+                            <a  th:if="${orderByClickNumFlag==true}" th:each="pageNo:${articlePages.getNavigatepageNums()}"
+                                th:href="@{/archives/details/orderByClickNum/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${pageNo})}">
+                                <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
+                                    [[${pageNo}]]
+                                </button>
+                            </a>
+                            <!-------------------------------------------------------------->
+                            <a th:if="${defaultOrderFlag==true}" th:href="@{/archives/details/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${articlePages.getNextPage()})}">
+                                <button class="ui right labeled icon button"
+                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                </button>
+                            </a>
+                            <a th:if="${orderByUpdateTimeFlag==true}" th:href="@{/archives/details/orderByUpdateTime/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${articlePages.getNextPage()})}">
+                                <button class="ui right labeled icon button"
+                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                </button>
+                            </a>
+                            <a th:if="${orderByClickNumFlag==true}" th:href="@{/archives/details/orderByClickNum/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${articlePages.getNextPage()})}">
+                                <button class="ui right labeled icon button"
+                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -190,13 +246,26 @@
         })
     }
 </script>
-<script>
+<script th:ononline="javascript">
     $('#msg-btn').click(function () {
         $('.ui.modal').modal('hide');
     });
     $(document).ready(function () {
         toggleStatus();
+        showCurrentPageNum();
     });
+
+    function showCurrentPageNum() {
+        var obj=document.getElementsByClassName('pages');
+        var page=[[${articlePages.pageNum}]];
+        //console.log(obj,page);
+        for(var i=0;i<obj.length;i++){
+            if(obj[i].textContent==page){
+                $(obj[i]).css('background','#eee');
+            }
+        }
+    }
+
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
         if (user != null) {

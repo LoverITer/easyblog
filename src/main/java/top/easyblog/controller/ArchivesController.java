@@ -1,18 +1,19 @@
 package top.easyblog.controller;
 
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
 import top.easyblog.commons.enums.ArticleType;
+import top.easyblog.commons.pagehelper.PageParam;
+import top.easyblog.commons.pagehelper.PageSize;
 import top.easyblog.service.impl.*;
-import top.easyblog.commons.utils.HtmlParserUtil;
-import top.easyblog.commons.utils.MarkdownUtil;
 
-import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -33,34 +34,42 @@ public class ArchivesController {
         this.userAttention = userAttention;
     }
 
-    @RequestMapping(value = "/{userId}/{date}")
-    public String archivesPage(@PathVariable("date") String date,
-                               @PathVariable(value = "userId") int userId,
-                               Model model) {
+
+    @RequestMapping(value = {"/{userId}/{date}","orderByUpdateTime/{userId}/{date}"})
+    public String archivesDefaultDetailsPage(@PathVariable("date") String date,
+                                      @PathVariable(value = "userId") int userId,
+                                      @RequestParam(value = "page",defaultValue = "1") int pageNo,
+                                      Model model) {
         model.addAttribute("defaultOrderFlag", true);
-        ControllerUtils.getInstance(categoryServiceImpl, articleService, commentService, userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
-        List<Article> articles = articleService.getUserArticlesMonthly(userId, date.substring(0, 4), date.substring(5, 7));
-        String page=orderArticles(model,userId,date,articles);
-        return page==null?"archives":page;
+        PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
+        PageInfo<Article> articles = articleService.getUserArticlesMonthlyPage(userId, date.substring(0, 4), date.substring(5, 7), pageParam);
+        String page = orderArticles(model, userId, date, articles);
+        return page == null ? "archives" : page;
     }
 
 
-    @GetMapping(value = "orderByClickNum/{userId}/{date}")
-    public String orderByClickNum(@PathVariable("userId") int userId,
-                                  @PathVariable("date") String date,
-                                  Model model) {
+    @GetMapping(value = {"orderByClickNum/{userId}/{date}"})
+    public String archivesDetailsPageOrderByClickNum(@PathVariable("userId") int userId,
+                                                     @PathVariable("date") String date,
+                                                     @RequestParam(value = "page",defaultValue = "1") int pageNo,
+                                                     Model model) {
         model.addAttribute("orderByClickNumFlag", true);
-        List<Article> articles = articleService.getUserArticlesMonthlyOrderByClickNum(userId, date.substring(0, 4), date.substring(5, 7));
+        PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
+        PageInfo<Article> articles = articleService.getUserArticlesMonthlyOrderByClickNumPage(userId, date.substring(0, 4), date.substring(5, 7), pageParam);
         String page=orderArticles(model,userId,date,articles);
         return page==null?"archives":page;
     }
+
+
 
     @GetMapping(value = "orderByUpdateTime/{userId}/{date}")
-    public String orderByUpdateTime(@PathVariable("userId") int userId,
-                                    @PathVariable("date") String date,
-                                    Model model) {
+    public String archivesDetailsPageOrderByUpdateTime(@PathVariable("userId") int userId,
+                                                       @PathVariable("date") String date,
+                                                       @RequestParam(value = "page",defaultValue = "1") int pageNo,
+                                                       Model model) {
         model.addAttribute("orderByUpdateTimeFlag", true);
-        final List<Article> articles = articleService.getUserArticlesMonthly(userId, date.substring(0, 4), date.substring(5, 7));
+        PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
+        PageInfo<Article> articles = articleService.getUserArticlesMonthlyPage(userId, date.substring(0, 4), date.substring(5, 7),pageParam);
         String page=orderArticles(model,userId,date,articles);
         return page==null?"archives":page;
     }
@@ -70,26 +79,19 @@ public class ArchivesController {
      * @param model   ModelAndView对象
      * @param userId  文章的用户的Id
      * @param date    年月
-     * @param articles   查询出来的文章
-     * @return
+     * @param articles   文章分页的信息
+     * @return  正常情况下返回null（主调会根据null返回归档页面）
      */
-    private String orderArticles(Model model,int userId,String date,List<Article> articles){
+    private String orderArticles(Model model,int userId,String date,PageInfo<Article> articles){
         try{
             ControllerUtils.getInstance(categoryServiceImpl, articleService, commentService, userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
             model.addAttribute("date", date);
-            if (Objects.nonNull(articles)) {
-                articles.forEach(article -> {
-                    String htmlContent = MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent());
-                    String textContent = HtmlParserUtil.HTML2Text(htmlContent);
-                    article.setArticleContent(textContent);
-                });
-                model.addAttribute("articles", articles);
-            }
+            model.addAttribute("articlePages", articles);
             User user = userService.getUser(userId);
             if (Objects.nonNull(user)) {
                 model.addAttribute("user", user);
             }else{
-                return "redirect:/error/error";
+                return "redirect:/error/404";
             }
         }catch (Exception e){
             return "redirect:/error/error";

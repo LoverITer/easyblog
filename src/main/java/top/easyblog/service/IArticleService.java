@@ -39,9 +39,43 @@ public interface IArticleService {
      */
     PageInfo getUserArticlesPage(int userId, String articleType, PageParam pageParam);
 
+    /**
+     * 按月份分类文章
+     * @param userId
+     * @param year
+     * @param month
+     * @return
+     */
     List<Article> getUserArticlesMonthly(int userId, String year, String month);
 
+    /**
+     * 按月份分类并分页文章
+     * @param userId
+     * @param year
+     * @param month
+     * @param pageParam
+     * @return
+     */
+    PageInfo<Article> getUserArticlesMonthlyPage(int userId,String year,String month,PageParam pageParam);
+
+    /**
+     * 按月份分类用户的文章并且按访问量排序
+     * @param userId
+     * @param year
+     * @param month
+     * @return
+     */
     List<Article> getUserArticlesMonthlyOrderByClickNum(int userId, String year, String month);
+
+    /**
+     * 按月份分类用户的文章并且按访问量排序并且分页
+     * @param userId
+     * @param year
+     * @param month
+     * @return
+     */
+   PageInfo<Article> getUserArticlesMonthlyOrderByClickNumPage(int userId, String year, String month,PageParam pageParam);
+
 
     /**
      * 根据用户Id和分类Id获取全部文章
