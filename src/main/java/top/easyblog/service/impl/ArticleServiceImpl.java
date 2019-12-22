@@ -58,7 +58,7 @@ public class ArticleServiceImpl implements IArticleService {
     public Article getArticleById(int articleId) {
         if (articleId > 0) {
             try {
-                return parseMarkdown2HTML(articleMapper.getByPrimaryKey((long) articleId));
+                return parseMarkdown2Text(articleMapper.getByPrimaryKey((long) articleId));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -202,8 +202,8 @@ public class ArticleServiceImpl implements IArticleService {
                 if (Objects.nonNull(pageParam)) {
                     PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
                     List<Article> articles = articleMapper.getByUserIdMonthlyOrderByClickNum(userId, year, month);
-                    pageInfo=new PageInfo<>(parseMarkdowns2Text(articles));
-                }else{
+                    pageInfo = new PageInfo<>(parseMarkdowns2Text(articles));
+                } else {
                     throw new IllegalPageParameterException();
                 }
             } catch (Exception e) {
@@ -262,18 +262,56 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
+    @Override
+    public PageInfo<Article> getArticlesSelectivePage(Article article, PageParam pageParam) {
+        PageInfo<Article> pageInfo = null;
+        if (Objects.nonNull(article)) {
+            if (Objects.nonNull(pageParam)) {
+                try {
+                    PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
+                    List<Article> articles = articleMapper.getArticlesSelective(article, null, null);
+                    pageInfo = new PageInfo<>(articles);
+                } catch (Exception e) {
+                    throw new RuntimeException(e.getCause());
+                }
+            } else {
+                throw new IllegalPageParameterException();
+            }
+        }
+        return pageInfo;
+    }
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "articles", condition = "#result!=null&&result.size()>0")
     @Override
     public List<Article> getArticleByTopic(String query) {
-        if (null != query) {
+        if (StringUtil.isNotEmpty(query)) {
             try {
                 return parseMarkdowns2Text(articleMapper.getUsersArticleByQueryString("%" + query + "%"));
             } catch (Exception e) {
-               throw new RuntimeException(e.getCause());
+                throw new RuntimeException(e.getCause());
             }
         }
         return null;
+    }
+
+    @Override
+    public PageInfo<Article> getArticleByTopicPage(String query, PageParam pageParam) {
+        PageInfo<Article> pageInfo = null;
+        if (StringUtil.isNotEmpty(query)) {
+            if (Objects.nonNull(pageParam)) {
+                try {
+                    PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
+                    List<Article> articles = articleMapper.getUsersArticleByQueryString("%" + query + "%");
+                    pageInfo = new PageInfo<>(parseMarkdowns2Text(articles));
+                } catch (Exception e) {
+                    throw new RuntimeException(e.getCause());
+                }
+            } else {
+                throw new IllegalPageParameterException();
+            }
+        }
+        return pageInfo;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -315,7 +353,7 @@ public class ArticleServiceImpl implements IArticleService {
             try {
                 return articleMapper.countUserArticlesInCategory(userId, categoryName);
             } catch (Exception e) {
-                //
+                throw new RuntimeException(e.getCause());
             }
         }
         return 0;
@@ -328,12 +366,13 @@ public class ArticleServiceImpl implements IArticleService {
             try {
                 return articleMapper.countSelective(article);
             } catch (Exception e) {
-                //
+                throw new RuntimeException(e.getCause());
             }
         }
         return 0;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public int updateSelective(Article article) {
         if (Objects.nonNull(article)) {
@@ -348,20 +387,30 @@ public class ArticleServiceImpl implements IArticleService {
 
 
     /**
-     * 把Markdown转化为text文本
+     * 把批量的Markdown转化为text文本
      *
      * @param articles
      * @return
      */
     private List<Article> parseMarkdowns2Text(List<Article> articles) {
         if (Objects.nonNull(articles)) {
-            articles.forEach(article -> {
-                String htmlContent = parseMarkdown2HTML(article).getArticleContent();
-                String textContent = HtmlParserUtil.HTML2Text(htmlContent);
-                article.setArticleContent(textContent);
-            });
+            articles.forEach(this::parseMarkdown2Text);
         }
         return articles;
+    }
+
+    /**
+     * 把单个Markdown转化为文本
+     * @param article
+     * @return
+     */
+    private Article parseMarkdown2Text(Article article) {
+        if (Objects.nonNull(article)) {
+            String htmlContent = parseMarkdown2HTML(article).getArticleContent();
+            String textContent = HtmlParserUtil.HTML2Text(htmlContent);
+            article.setArticleContent(textContent);
+        }
+        return article;
     }
 
     /**

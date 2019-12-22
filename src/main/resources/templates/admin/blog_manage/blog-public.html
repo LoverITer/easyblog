@@ -32,7 +32,7 @@
 
             <!--content-->
             <div class="ui attached segment border-bt-none" style="padding-top: 0!important;padding-bottom: 0 !important;">
-                <div th:if="${articles!=null}" th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed"
+                <div th:if="${articlePages!=null&&#lists.size(articlePages.getList())>0}" th:each="article:${articlePages.getList()}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed"
                      style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid">
                         <div class="sixteen wide column">
@@ -43,7 +43,7 @@
                                 <span th:case="2">翻译</span>
                             </button>
                             <h3 class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">
-                                <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" title="查看" class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a>
+                                <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" title="查看" class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a>
                             </h3>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
@@ -63,35 +63,45 @@
                                 <div class="right aligned five wide column">
                                     <div class="five  wide  column">
                                         <div class="ui horizontal list">
-                                            <div class="item"><a href="#" th:href="@{/manage/blog/edit}+@{/(articleId=${article.getArticleId()})}" style="color: #349EDF">编辑</a></div>
-                                            <div class="item"><a href="#" th:href="@{/manage/blog/top}+@{/(articleId=${article.getArticleId()})}" style="color: #349EDF">置顶</a></div>
-                                            <div class="item"><a href="#" th:href="@{/manage/blog/deletePublicArticle}+@{/(articleId=${article.getArticleId()})}" style="color: #CA0C16">删除</a></div>
+                                            <div class="item"><a href="#" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}" style="color: #349EDF">编辑</a></div>
+                                            <div class="item"><a href="#" th:href="@{/manage/blog/top(articleId=${article.getArticleId()})}" style="color: #349EDF">置顶</a></div>
+                                            <div class="item"><a href="#" th:href="@{/manage/blog/deletePublicArticle(articleId=${article.getArticleId()})}" style="color: #CA0C16">删除</a></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
-            <div class="ui bottom attached segment " th:if="${#lists.size(articles)==0}" style="padding-top: 10rem !important;padding-left: 30rem !important;padding-bottom: 20rem !important;">
-                <div style="color: grey !important;font-size: 14px !important;">没有符合条件的文章</div>
+            <div class="ui bottom attached segment " th:if="${articlePages.getTotal()==0}" style="padding-top: 10rem !important;padding-left: 30rem !important;padding-bottom: 20rem !important;">
+                <div style="color: grey !important;font-size: 14px !important;">没有任何<span style="color: #00c4ff !important;">公开</span>文章</div>
             </div>
             <!--分页按钮-->
-            <div th:if="${#lists.size(articles)>15}" class="ui bottom attached segment ">
-                <div class="ui middle aligned two column grid"
-                     style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                    <div class="column" style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                        <a href="#" class="ui mini teal basic button">上一页</a>
-                    </div>
-                    <div class="right aligned column">
-                        <a href="#" class="ui mini teal basic button">下一页</a>
+            <div th:if="${articlePages.getTotal()>15}" class="ui bottom attached segment " style="border-top: 1px solid #ccc">
+                <div class="ui middle aligned two column grid">
+                    <div class="column" style="margin: 5px auto;float: left !important;">
+                        <div class="ui buttons">
+                            <a th:href="@{/manage/blog/public(page=${articlePages.getPrePage()})}">
+                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                </button>
+                            </a>
+                            <a  th:each="pageNo:${articlePages.getNavigatepageNums()}"
+                                th:href="@{/manage/blog/public(page=${pageNo})}">
+                                <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
+                                    [[${pageNo}]]
+                                </button>
+                            </a>
+                            <a  th:href="@{/manage/blog/public(page=${articlePages.getNextPage()})}">
+                                <button class="ui right labeled icon button"
+                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                </button>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div th:if="${#lists.size(articles)<15 and #lists.size(articles)!=0}" class="ui bottom attached segment" style="padding-top: 5px !important;padding-bottom: 5px !important;"></div>
+            <div th:if="${articlePages.getTotal()>0&&articlePages.getTotal()<15}" class="ui bottom attached segment" style="padding-top: 5px !important;padding-bottom: 5px !important;"></div>
         </div>
     </div>
 
@@ -122,7 +132,18 @@
 
     $(document).ready(function () {
         toggleStatus();
+        showCurrentPageNum();
     });
+
+    function showCurrentPageNum() {
+        let obj=document.getElementsByClassName('pages');
+        let page=[[${articlePages.pageNum}]];
+        for(let i=0;i<obj.length;i++){
+            if(obj[i].textContent==page){
+                $(obj[i]).css('background','#eee');
+            }
+        }
+    }
 
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
