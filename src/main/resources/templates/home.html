@@ -70,7 +70,7 @@
                                 <span th:case="1">转载</span>
                                 <span th:case="2">翻译</span>
                             </button>
-                            <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" th:text="${article.getArticleTopic()}"
+                            <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}"
                                class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
                             <p class="m-text"
                                style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;"
@@ -108,10 +108,13 @@
             </div>
 
             <!--查看更多-->
-            <div th:if="${#lists.size(articles)>15}" class="ui attached segment bottom " style="border-top: none !important;">
-                <a href="#" th:href="@{/article/index/}+${user.getUserId()}">
+            <div th:if="${articleSize>15}" class="ui attached segment bottom " style="border-top: none !important;">
+                <a href="#" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}">
                     <button id="more-btn" class="ui negative basic button" style="margin-left: 40% !important;">查看更多</button>
                 </a>
+            </div>
+
+            <div th:if="${articleSize<=15&&articleSize!=0}" class="ui attached segment bottom " style="border-top: none !important;">
             </div>
 
             <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment" style="border-top: none !important;">

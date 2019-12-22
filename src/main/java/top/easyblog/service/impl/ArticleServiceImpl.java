@@ -56,10 +56,9 @@ public class ArticleServiceImpl implements IArticleService {
     public Article getArticleById(int articleId) {
         if(articleId>0){
             try{
-                return articleMapper.getByPrimaryKey((long) articleId);
+                return parseMarkdown2HTML(articleMapper.getByPrimaryKey((long) articleId));
             }catch (Exception e){
                 e.printStackTrace();
-                return null;
             }
         }
         return null;
@@ -106,12 +105,12 @@ public class ArticleServiceImpl implements IArticleService {
         if (userId > 0) {
             try {
                 if (ArticleType.Unlimited.getArticleType().equals(articleType)) {
-                    return parseMarkdown2Text(articleMapper.getUserAllArticles(userId));  //得到用户的所有文章
+                    return parseMarkdowns2Text(articleMapper.getUserAllArticles(userId));  //得到用户的所有文章
                 } else {
-                    return parseMarkdown2Text(articleMapper.getUserArticlesSelective(userId,articleType));  //根据option
+                    return parseMarkdowns2Text(articleMapper.getUserArticlesSelective(userId,articleType));  //根据option
                 }
             } catch (Exception e) {
-                throw new RuntimeException("分页参数异常");
+                throw new RuntimeException("发生未知异常");
             }
         }
         return null;
@@ -128,11 +127,11 @@ public class ArticleServiceImpl implements IArticleService {
                         //这里特别注意，pageHelper只会对紧跟的第一条语句起作用
                         PageHelper.startPage(pageParam.getPage(),pageParam.getPageSize());
                         List<Article> articles = articleMapper.getUserAllArticles(userId);  //得到用户的所有文章
-                        pageInfo=new PageInfo<>(parseMarkdown2Text(articles));
+                        pageInfo=new PageInfo<>(parseMarkdowns2Text(articles));
                     } else {
                         PageHelper.startPage(pageParam.getPage(),pageParam.getPageSize());
                         List<Article> articles = articleMapper.getUserArticlesSelective(userId, articleType);//根据option
-                        pageInfo=new PageInfo<>(parseMarkdown2Text(articles));
+                        pageInfo=new PageInfo<>(parseMarkdowns2Text(articles));
                     }
                 }else{
                     throw new RuntimeException("分页参数异常");
@@ -142,22 +141,6 @@ public class ArticleServiceImpl implements IArticleService {
             }
         }
         return pageInfo;
-    }
-
-    /**
-     * 把Markdown转化为text文本
-     * @param articles
-     * @return
-     */
-    private List<Article> parseMarkdown2Text(List<Article> articles){
-        if(Objects.nonNull(articles)) {
-            articles.forEach(article -> {
-                String htmlContent = MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent());
-                String textContent = HtmlParserUtil.HTML2Text(htmlContent);
-                article.setArticleContent(textContent);
-            });
-        }
-        return articles;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -202,11 +185,30 @@ public class ArticleServiceImpl implements IArticleService {
             try {
                 return articleMapper.getByCategoryAndUserId(userId, categoryId);
             } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+                throw new RuntimeException("SQL异常");
             }
         }
         return null;
+    }
+
+    @Override
+    public PageInfo<Article> getByCategoryAndUserIdPage(int userId, int categoryId, PageParam pageParam) {
+        PageInfo<Article> pageInfo=null;
+       try{
+           if(userId>0&&categoryId>0){
+               if (Objects.nonNull(pageParam)) {
+                   PageHelper.startPage(pageParam.getPage(),pageParam.getPageSize());
+                   List<Article> articlesInCategory = articleMapper.getByCategoryAndUserId(userId, categoryId);
+                   pageInfo=new PageInfo<>(parseMarkdowns2Text(articlesInCategory));
+               }else{
+                   throw new RuntimeException("分页参数异常");
+               }
+           }
+       }catch (Exception e){
+           throw new RuntimeException("SQL异常");
+       }
+
+       return pageInfo;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -309,4 +311,34 @@ public class ArticleServiceImpl implements IArticleService {
         }
         return 0;
     }
+
+
+    /**
+     * 把Markdown转化为text文本
+     * @param articles
+     * @return
+     */
+    private List<Article> parseMarkdowns2Text(List<Article> articles){
+        if(Objects.nonNull(articles)) {
+            articles.forEach(article -> {
+                String htmlContent = parseMarkdown2HTML(article).getArticleContent();
+                String textContent = HtmlParserUtil.HTML2Text(htmlContent);
+                article.setArticleContent(textContent);
+            });
+        }
+        return articles;
+    }
+
+    /**
+     * 把Markdo文章内容转化为HTML内容
+     * @param article
+     * @return
+     */
+    private Article parseMarkdown2HTML(Article article){
+        if(Objects.nonNull(article)) {
+            article.setArticleContent(MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent()));
+        }
+        return article;
+    }
+
 }

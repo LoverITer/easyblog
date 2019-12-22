@@ -151,12 +151,12 @@
                                     </button>
                                 </a>
                                 <a th:if="${displayOnlyOriginal=='1'}" th:each="pageNo:${articlePages.getNavigatepageNums()}" th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${pageNo})}">
-                                    <button  class="ui button" th:if="${pageNo!=articlePages.getPageNum()+''}" style="background: white !important;font-weight: 100 !important;">
+                                    <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
                                         [[${pageNo}]]
                                     </button>
                                 </a>
                                 <a th:if="${displayOnlyOriginal=='0'}" th:each="pageNo:${articlePages.getNavigatepageNums()}" th:href="@{/article/index/{id}(id=${user.getUserId()},page=${pageNo})}">
-                                    <button  class="ui button pages" th:if="${pageNo!=articlePages.getPageNum()+''}" style="background: white !important;font-weight: 100 !important;">
+                                    <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
                                         [[${pageNo}]]
                                     </button>
                                 </a>
@@ -229,7 +229,7 @@
     function showCurrentPageNum() {
         var obj=document.getElementsByClassName('pages');
         var page=[[${articlePages.pageNum}]];
-        console.log(obj,page);
+        //console.log(obj,page);
         for(var i=0;i<obj.length;i++){
             if(obj[i].textContent==page){
                 $(obj[i]).css('background','#eee');

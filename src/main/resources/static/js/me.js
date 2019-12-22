@@ -23,9 +23,9 @@ function detectZoom() {
 /**
  * 高亮显示当前的页码，条件是将需要高亮显示的元素中加入pages类
  */
-function showCurrentPageNum() {
+function showCurrentPageNum(page) {
     var obj=document.getElementsByClassName('pages');
-    var page=[[${articlePages.pageNum}]];
+    //var page=[[${articlePages.pageNum}]];
     console.log(obj,page);
     for(var i=0;i<obj.length;i++){
         if(obj[i].textContent==page){

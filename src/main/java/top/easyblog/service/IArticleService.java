@@ -43,7 +43,22 @@ public interface IArticleService {
 
     List<Article> getUserArticlesMonthlyOrderByClickNum(int userId, String year, String month);
 
+    /**
+     * 根据用户Id和分类Id获取全部文章
+     * @param userId
+     * @param categoryId
+     * @return
+     */
     List<Article> getByCategoryAndUserId(int userId, int categoryId);
+
+    /**
+     *
+     * @param userId
+     * @param categoryId
+     * @param pageParam  分页参数
+     * @return pageInfo
+     */
+    PageInfo<Article> getByCategoryAndUserIdPage(int userId,int categoryId,PageParam pageParam);
 
     List<Article> getArticlesSelective(Article article, String year, String month);
 

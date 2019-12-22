@@ -13,8 +13,6 @@ import top.easyblog.bean.UserComment;
 import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
-import top.easyblog.commons.utils.HtmlParserUtil;
-import top.easyblog.commons.utils.MarkdownUtil;
 import top.easyblog.service.impl.*;
 
 import java.util.List;
@@ -40,27 +38,6 @@ public class ArticleController {
         this.userAttention = userAttention;
     }
 
-    /*@RequestMapping(value = "/index/{userId}")
-    public String index(@PathVariable("userId") int userId,
-                        @RequestParam(value = "articleType", defaultValue = "3") int articleType,
-                        Model model) {
-        ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, userId, articleType + "");
-        final User user = userService.getUser(userId);
-        List<Article> articles = articleServiceImpl.getUserArticles(userId, articleType + "");
-        if (Objects.nonNull(articles)) {
-            model.addAttribute("articles", articles);
-            user.setUserPassword(null);
-            model.addAttribute("user", user);
-            if (ArticleType.Original.getArticleType().equals(articleType + "")) {
-                model.addAttribute("displayOnlyOriginal", "1");
-            } else if (ArticleType.Unlimited.getArticleType().equals(articleType + "")) {
-                model.addAttribute("displayOnlyOriginal", "0");
-            }
-            return "user_home";
-        }
-        return PAGE404;
-    }
-*/
     @RequestMapping(value = "/index/{userId}")
     public String index(@PathVariable("userId") int userId,
                         @RequestParam(value = "articleType", defaultValue = "3") int articleType,
@@ -88,57 +65,61 @@ public class ArticleController {
 
     @RequestMapping(value = "/home/{userId}")
     public String homePage(@PathVariable("userId") int userId, Model model) {
-        final User user = userService.getUser(userId);
-        user.setUserPassword(null);
-        List<Article> articles = articleServiceImpl.getUserArticles(userId, ArticleType.Unlimited.getArticleType());
-        if (Objects.nonNull(articles)) {
-            articles.forEach(article -> {
-                String htmlContent = MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent());
-                String textContent = HtmlParserUtil.HTML2Text(htmlContent);
-                article.setArticleContent(textContent);
-            });
-            int articleSize = articles.size();
-            if (articleSize < 15) {
-                model.addAttribute("articles", articles);
-            } else {
-                model.addAttribute("articles", articles.subList(0, 15));
+        try {
+            User user = userService.getUser(userId);
+            user.setUserPassword(null);
+            List<Article> articles = articleServiceImpl.getUserArticles(userId, ArticleType.Unlimited.getArticleType());
+            if (Objects.nonNull(articles)) {
+                int articleSize = articles.size();
+                //默认值显示15条数据
+                if (articleSize < 15) {
+                    model.addAttribute("articles", articles);
+                } else {
+                    model.addAttribute("articles", articles.subList(0, 15));
+                }
+                model.addAttribute("articleSize", articleSize);
+                model.addAttribute("user", user);
+                return "home";
             }
-            model.addAttribute("articleSize", articleSize);
-            model.addAttribute("user", user);
-            return "home";
+            return PAGE404;
+        }catch (Exception e){
+            return "redirect:/error";
         }
-        return PAGE404;
     }
 
 
     @GetMapping(value = "/details/{articleId}")
     public String articleDetails(@PathVariable("articleId") int articleId, Model model) {
-        Article article = articleServiceImpl.getArticleById(articleId);
-        if (Objects.nonNull(article)) {
-            String htmlContent = MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent());
-            article.setArticleContent(htmlContent);
-            model.addAttribute("article", article);
-            User user = userService.getUser(article.getArticleUser());
-            List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
-            model.addAttribute("articleComments", articleComments);
-            if (Objects.nonNull(user)) {
-                user.setUserPassword(null);
-                model.addAttribute("user", user);
-                //更新用户的访问量
-                User user1 = new User();
-                user1.setUserId(user.getUserId());
-                user1.setUserVisit(user.getUserVisit() + 1);
-                userService.updateUserInfo(user1);
-                //更新文章的访问量
-                Article article1 = new Article();
-                article1.setArticleId(article.getArticleId());
-                article1.setArticleClick(article.getArticleClick()+1);
-                articleServiceImpl.updateSelective(article1);
-                ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
-                return "blog";
+        try {
+            Article article = articleServiceImpl.getArticleById(articleId);
+            if (Objects.nonNull(article)) {
+                model.addAttribute("article", article);
+                List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
+                model.addAttribute("articleComments", articleComments);
+                User user = userService.getUser(article.getArticleUser());
+                if (Objects.nonNull(user)) {
+                    user.setUserPassword(null);
+                    model.addAttribute("user", user);
+                    //更新用户的访问量
+                    User user1 = new User();
+                    user1.setUserId(user.getUserId());
+                    user1.setUserVisit(user.getUserVisit() + 1);
+                    userService.updateUserInfo(user1);
+                    user1=null;
+                    //更新文章的访问量
+                    Article article1 = new Article();
+                    article1.setArticleId(article.getArticleId());
+                    article1.setArticleClick(article.getArticleClick() + 1);
+                    articleServiceImpl.updateSelective(article1);
+                    article=null;
+                    ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
+                    return "blog";
+                }
             }
+            return PAGE404;
+        }catch (Exception e){
+            return "redirect:/error/error";
         }
-        return PAGE404;
     }
 
 
