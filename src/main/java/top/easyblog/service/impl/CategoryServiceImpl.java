@@ -1,6 +1,10 @@
 package top.easyblog.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import top.easyblog.bean.Category;
+import top.easyblog.commons.pagehelper.PageParam;
+import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.service.ICategoryService;
 import top.easyblog.commons.utils.FileUploadUtils;
@@ -93,7 +97,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
 
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "categories",condition = "#result!=null&&#reslut.size>0")
     @Override
     public List<Category> getUserAllCategories(int userId) {
@@ -107,7 +111,27 @@ public class CategoryServiceImpl implements ICategoryService {
         return null;
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public PageInfo<Category> getUserAllCategoriesPage(int userId, PageParam pageParam) {
+        PageInfo<Category> pageInfo=null;
+        if(userId>0){
+            if(Objects.nonNull(pageParam)){
+                try {
+                    PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
+                    List<Category> categories = categoryMapper.getUserAllCategory(userId);
+                    pageInfo = new PageInfo<>(categories);
+                }catch (Exception e){
+                    throw new RuntimeException(e.getCause());
+                }
+            }else{
+                throw new IllegalPageParameterException();
+            }
+        }
+        return pageInfo;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "categories",condition = "#result!=null&&#reslut.size>0")
     @Override
     public List<Category> getUserAllDeletedCategory(int userId) {
@@ -120,6 +144,26 @@ public class CategoryServiceImpl implements ICategoryService {
             }
         }
         return null;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public PageInfo<Category> getUserAllDeletedCategoryPage(int userId, PageParam pageParam) {
+        PageInfo<Category> pageInfo=null;
+        if(userId>0){
+            if (Objects.nonNull(pageParam)) {
+                try{
+                    PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
+                    List<Category> categories = categoryMapper.getUserAllDeletedCategory(userId);
+                    pageInfo = new PageInfo<>(categories);
+                }catch (Exception e){
+                    throw new RuntimeException(e.getCause());
+                }
+            }else{
+                throw new IllegalPageParameterException();
+            }
+        }
+        return pageInfo;
     }
 
     @Transactional(isolation=Isolation.REPEATABLE_READ)

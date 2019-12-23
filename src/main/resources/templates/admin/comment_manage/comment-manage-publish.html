@@ -56,14 +56,14 @@
 
             <!--content-->
             <div style="padding-top: 0 !important;" class="ui attached segment border-bt-none">
-                <div th:each="comment:${comments}" onmouseenter="showDeleteBtn(this)" onmouseleave="hideDeleteBtn(this)" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed" style="padding-bottom: 20px !important;padding-top: 10px !important;">
+                <div th:if="${commentsPage!=null&&#lists.size(commentsPage.getList())>0}" th:each="comment:${commentsPage.getList()}" onmouseenter="showDeleteBtn(this)" onmouseleave="hideDeleteBtn(this)" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed" style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid" style="border-bottom: grey dot-dash !important;">
                         <div class="sixteen wide column">
                             <div class="ui stackable grid">
                                 <div class="eleven wide column" style="padding-bottom:  10px !important;">
                             <span  style="min-height: 22px;color: grey !important;font-size: 15px !important;" class="ui m-inline-block m-margin-top-small m-margin-bottom-small">
                                 我在 <span style="color: black !important;" th:text="${#dates.format(comment.getCommentTime(),'yyyy年MM月dd日 hh:mm:ss')}">时间</span> 评论了
-                                <span style="color: black !important;" th:text="${comment.getInfo().get('userName')}">ABC</span> 的文章 <a href="#" th:href="@{/article/details/}+${comment.getArticleId()}" th:text="${comment.getInfo().get('article')}">你真的理解什么是财富自由吗？</a>
+                                <span style="color: black !important;" th:text="${comment.getInfo().get('userName')}">ABC</span> 的文章 <a href="#" th:href="@{/article/details/{id}(id=${comment.getArticleId()})}" th:text="${comment.getInfo().get('article')}">你真的理解什么是财富自由吗？</a>
                             </span>
                                 </div>
                                 <div  class="right aligned five wide column">
@@ -85,25 +85,38 @@
                     </div>
                 </div>
             </div>
-            <div th:if="${#lists.size(comments)<15 and #lists.size(comments)!=0}" class="ui bottom attached segment " >
+            <div th:if="${commentsPage.getTotal()>0&&commentsPage.getTotal()<=20}" class="ui bottom attached segment " >
                 <div class="ui middle aligned two column grid" style="padding-top: 0 !important;padding-bottom: 0 !important;">
                 </div>
             </div>
 
-            <div style="height: 30em !important;" th:if="${#lists.size(comments)==0}" class="ui bottom attached segment " >
+            <div style="height: 30em !important;" th:if="${commentsPage.getTotal()==0}" class="ui bottom attached segment " >
                 <div class="ui middle aligned two column grid" style="padding-top: 0 !important;padding-bottom: 0 !important;">
                     <div style="margin: 10em auto !important;float: left !important;"><span style="color: grey !important;">当前没有任何评论</span></div>
                 </div>
             </div>
 
             <!--分页按钮-->
-            <div th:if="${#lists.size(comments)>15}" class="ui bottom attached segment ">
-                <div class="ui middle aligned two column grid" style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                    <div class="column" style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                        <a href="#" class="ui mini teal basic button">上一页</a>
-                    </div>
-                    <div class="right aligned column">
-                        <a href="#" class="ui mini teal basic button">下一页</a>
+            <div th:if="${commentsPage.getTotal()>20}" class="ui bottom attached segment ">
+                <div class="ui middle aligned two column grid">
+                    <div class="column" style="margin: 5px auto;float: left !important;">
+                        <div class="ui buttons">
+                            <a th:href="@{/manage/comment/publish(page=${commentsPage.getPrePage()})}">
+                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                </button>
+                            </a>
+                            <a  th:each="pageNo:${commentsPage.getNavigatepageNums()}"
+                                th:href="@{/manage/comment/publish(page=${pageNo})}">
+                                <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
+                                    [[${pageNo}]]
+                                </button>
+                            </a>
+                            <a  th:href="@{/manage/comment/publish(page=${commentsPage.getNextPage()})}">
+                                <button class="ui right labeled icon button"
+                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                </button>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -142,7 +155,20 @@
 <script type="text/javascript">
     $(document).ready(function () {
         toggleStatus();
+        showCurrentPageNum();
     });
+
+
+    function showCurrentPageNum() {
+        let obj=document.getElementsByClassName('pages');
+        let page=[[${commentsPage.pageNum}]];
+        for(let i=0;i<obj.length;i++){
+            if(obj[i].textContent==page){
+                $(obj[i]).css('background','#eee');
+            }
+        }
+    }
+
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
         if(user!=null){

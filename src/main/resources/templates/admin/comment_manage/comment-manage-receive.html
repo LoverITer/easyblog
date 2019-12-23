@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>评论管理 - EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../../../css/me.css" th:href="@{/static/css/me.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
@@ -59,28 +59,36 @@
 
             <!--content-->
             <div style="padding-top: 0 !important;" class="ui attached segment border-bt-none">
-                <div th:each="comment:${comments}"  onmouseenter="showDeleteBtn(this)" onmouseleave="hideDeleteBtn(this)"  class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed"
+                <div th:if="${commentsPage!=null&&#lists.size(commentsPage.getList())>0}"
+                     th:each="comment:${commentsPage.getList()}" onmouseenter="showDeleteBtn(this)"
+                     onmouseleave="hideDeleteBtn(this)"
+                     class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed"
                      style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid" style="border-bottom: grey dot-dash !important;">
                         <div class="sixteen wide column">
                             <div class="ui stackable grid">
                                 <div class="eleven wide column" style="padding-bottom:  10px !important;">
-                            <span  style="min-height: 22px;color: grey !important;font-size: 15px !important;"
-                                   class="ui m-inline-block m-margin-top-small m-margin-bottom-small">
-                                <span style="color: black !important;" th:text="${comment.getInfo().get('userName')}">ABC</span> 在 <span style="color: black !important;" th:text="${#dates.format(comment.getCommentTime(),'yyyy年MM月dd日 hh:mm:ss')}">时间</span> 评论了
-                                我的文章 <a href="#" th:href="@{/article/details/}+${comment.getArticleId()}" th:text="${comment.getInfo().get('article')}">你真的理解什么是财富自由吗？</a>
+                            <span style="min-height: 22px;color: grey !important;font-size: 15px !important;"
+                                  class="ui m-inline-block m-margin-top-small m-margin-bottom-small">
+                                <span style="color: black !important;" th:text="${comment.getInfo().get('userName')}">ABC</span> 在 <span
+                                    style="color: black !important;"
+                                    th:text="${#dates.format(comment.getCommentTime(),'yyyy年MM月dd日 hh:mm:ss')}">时间</span> 评论了
+                                我的文章 <a href="#" th:href="@{/article/details/{id}(id=${comment.getArticleId()})}"
+                                        th:text="${comment.getInfo().get('article')}">你真的理解什么是财富自由吗？</a>
                             </span>
                                 </div>
-                                <div  class="right aligned five wide column">
+                                <div class="right aligned five wide column">
                                     <div class="five  wide  column" style="padding-bottom:  5px !important;">
-                                        <div id="del-btn"  style="display: none" class="ui horizontal list hide">
-                                            <div class="item"><a href="#" style="color: #CA0C16" th:value="${comment.getCommentId()}" onclick="deleteComment(this)">删除</a></div>
+                                        <div id="del-btn" style="display: none" class="ui horizontal list hide">
+                                            <div class="item"><a href="#" style="color: #CA0C16"
+                                                                 th:value="${comment.getCommentId()}"
+                                                                 onclick="deleteComment(this)">删除</a></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="ui stackable grid" >
+                            <div class="ui stackable grid">
                                 <div class="sixteen wide column" style="padding-top:  0 !important;">
                                     <i class="quote grey left icon"></i>
                                     <span style="margin: auto 5px !important;" th:text="${comment.getCommentContent()}">有时候我们避免不了多表联查，这样带来的问题是返回的结果类型中的一个字段在resultType中的不存在，这就会造成问题。MyBatis中使用resultMap来解决这个问题。 resultMap 元素有很多子元素和一个值得讨论的结构。 下面是 resultMap 标签中可以使用的属性如下：</span>
@@ -93,28 +101,44 @@
 
             </div>
 
-            <div th:if="${#lists.size(comments)<15 and #lists.size(comments)!=0}" class="ui bottom attached segment " >
+            <div th:if="${commentsPage.getTotal()>0&&commentsPage.getTotal()<=20}" class="ui bottom attached segment ">
                 <div class="ui middle aligned two column grid"
                      style="padding-top: 0 !important;padding-bottom: 0 !important;">
-
                 </div>
             </div>
 
-            <div style="height: 30em !important;" th:if="${#lists.size(comments)==0}" class="ui bottom attached segment " >
+            <div style="height: 30em !important;" th:if="${commentsPage.getTotal()==0}"
+                 class="ui bottom attached segment ">
                 <div class="ui middle aligned two column grid"
                      style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                    <div style="margin: 10em auto !important;float: left !important;"><span style="color: grey !important;">当前没有任何评论</span></div>
+                    <div style="margin: 10em auto !important;float: left !important;"><span
+                            style="color: grey !important;">当前没有任何评论</span></div>
                 </div>
             </div>
+
             <!--分页按钮-->
-            <div th:if="${#lists.size(comments)>15}" class="ui bottom attached segment ">
-                <div class="ui middle aligned two column grid"
-                     style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                    <div class="column" style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                        <a href="#" class="ui mini teal basic button">上一页</a>
-                    </div>
-                    <div class="right aligned column">
-                        <a href="#" class="ui mini teal basic button">下一页</a>
+            <div th:if="${commentsPage.getTotal()>20}" class="ui bottom attached segment ">
+                <div class="ui middle aligned two column grid">
+                    <div class="column" style="margin: 5px auto;float: left !important;">
+                        <div class="ui buttons">
+                            <a th:href="@{/manage/comment/receive(page=${commentsPage.getPrePage()})}">
+                                <button class="ui labeled icon button"
+                                        style="background: white !important;font-weight: 100 !important;">上一页
+                                </button>
+                            </a>
+                            <a th:each="pageNo:${commentsPage.getNavigatepageNums()}"
+                               th:href="@{/manage/comment/receive(page=${pageNo})}">
+                                <button class="ui button pages"
+                                        style="background: white !important;font-weight: 100 !important;">
+                                    [[${pageNo}]]
+                                </button>
+                            </a>
+                            <a th:href="@{/manage/comment/receive(page=${commentsPage.getNextPage()})}">
+                                <button class="ui right labeled icon button"
+                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                </button>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -152,17 +176,29 @@
 <script type="text/javascript">
     $(document).ready(function () {
         toggleStatus();
+        showCurrentPageNum();
     });
+
+    function showCurrentPageNum() {
+        let obj = document.getElementsByClassName('pages');
+        let page = [[${commentsPage.pageNum}]];
+        for (let i = 0; i < obj.length; i++) {
+            if (obj[i].textContent == page) {
+                $(obj[i]).css('background', '#eee');
+            }
+        }
+    }
+
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
-        if(user!=null){
+        if (user != null) {
             $('#header-images').show();
             $('#login-btn').hide();
-        }else{
+        } else {
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus,300);
+        setTimeout(toggleStatus, 300);
     }
 
     <!--退出操作异步请求-->
@@ -176,7 +212,7 @@
             success: function (response) {
                 if (response.success) {
                     sessionStorage.removeItem("user");
-                    window.location.href="/user/loginPage";
+                    window.location.href = "/user/loginPage";
                 }
             },
             error: function () {
@@ -197,27 +233,27 @@
         $('#msg-btn').click(function () {
             $('.ui.modal').modal('hide');
         });
-        var commentId=$(obj).attr("value");
+        var commentId = $(obj).attr("value");
         $.ajax({
-            url:"/manage/comment/delete",
-            method:"GET",
-            data:{commentId:commentId},
-            sync:true,
-            dataType:"json",
-            success:function (response) {
-                if(response.success){
+            url: "/manage/comment/delete",
+            method: "GET",
+            data: {commentId: commentId},
+            sync: true,
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
                     $('#msg_header').html("提示");
                     $('#msg').html("删除成功");
                     $('.ui.modal').modal('show');
                     /*window.location.href="/manage/comment/receive"*/
-                    setTimeout("window.location.reload()",1000);
-                }else{
-                    if("未登录"==response.msg){
+                    setTimeout("window.location.reload()", 1000);
+                } else {
+                    if ("未登录" == response.msg) {
                         $('#msg_header').html("错误");
                         $('#msg').html("请先登录后再操作");
                         $('.ui.modal').modal('show');
-                        setTimeout('window.location.href="/user/loginPage"',1000);
-                    }else{
+                        setTimeout('window.location.href="/user/loginPage"', 1000);
+                    } else {
                         spop({
                             template: '服务异常，请重试！',
                             autoclose: 4000,
@@ -227,7 +263,7 @@
                     }
                 }
             },
-            error:function () {
+            error: function () {
                 spop({
                     template: '服务异常，请重试！',
                     autoclose: 4000,
@@ -239,10 +275,11 @@
     }
 </script>
 <script>
-    function showDeleteBtn(obj){
-       $(obj).find('#del-btn').show();
+    function showDeleteBtn(obj) {
+        $(obj).find('#del-btn').show();
     };
-    function hideDeleteBtn(obj){
+
+    function hideDeleteBtn(obj) {
         $(obj).find('#del-btn').hide();
     };
 </script>

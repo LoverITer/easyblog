@@ -1,21 +1,23 @@
 package top.easyblog.controller.admin;
 
-import top.easyblog.bean.User;
-import top.easyblog.bean.UserComment;
-import top.easyblog.config.web.Result;
-import top.easyblog.service.impl.ArticleServiceImpl;
-import top.easyblog.service.impl.CommentServiceImpl;
-import top.easyblog.service.impl.UserServiceImpl;
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.easyblog.bean.User;
+import top.easyblog.bean.UserComment;
+import top.easyblog.commons.pagehelper.PageParam;
+import top.easyblog.commons.pagehelper.PageSize;
+import top.easyblog.config.web.Result;
+import top.easyblog.service.impl.ArticleServiceImpl;
+import top.easyblog.service.impl.CommentServiceImpl;
+import top.easyblog.service.impl.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -25,16 +27,13 @@ public class CommentAdminController {
     private static final String PREFIX="/admin/comment_manage/";
     private static final String LOGIN_PAGE="redirect:/user/loginPage";
     private final CommentServiceImpl commentService;
-    private final ArticleServiceImpl articleService;
-    private final UserServiceImpl userService;
+
 
     public CommentAdminController(CommentServiceImpl commentService, ArticleServiceImpl articleService, UserServiceImpl userService) {
         this.commentService = commentService;
-        this.articleService = articleService;
-        this.userService = userService;
     }
 
-    @GetMapping(value = "/publish")
+   /* @GetMapping(value = "/publish")
     public String commentPublishListPage(HttpSession session, Model model){
         User user = (User) session.getAttribute("user");
         if(Objects.nonNull(user)){
@@ -56,6 +55,39 @@ public class CommentAdminController {
         }
         return LOGIN_PAGE;
     }
+
+*/
+
+    @GetMapping(value = "/publish")
+    public String commentPublishListPage(HttpSession session,
+                                         Model model,
+                                         @RequestParam(value = "page",defaultValue = "1") int pageNo){
+        User user = (User) session.getAttribute("user");
+        if(Objects.nonNull(user)){
+            PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
+            PageInfo<UserComment> commentsPage = commentService.getCommentPage(user.getUserId(), "send", pageParam);
+            model.addAttribute("commentsPage",commentsPage);
+            return PREFIX+"comment-manage-publish";
+        }
+        return LOGIN_PAGE;
+    }
+
+
+    @GetMapping(value = "/receive")
+    public String commentReceiveListPage(HttpSession session,
+                                         Model model,
+                                         @RequestParam(value = "page",defaultValue = "1") int pageNo){
+        User user = (User) session.getAttribute("user");
+        if(Objects.nonNull(user)){
+            PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
+            PageInfo<UserComment> commentsPage = commentService.getCommentPage(user.getUserId(), "receive", pageParam);
+            model.addAttribute("commentsPage",commentsPage);
+            return PREFIX+"comment-manage-receive";
+        }
+        return LOGIN_PAGE;
+    }
+
+
 
 
     @ResponseBody

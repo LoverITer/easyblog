@@ -1,8 +1,13 @@
 package top.easyblog.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.util.StringUtil;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserComment;
+import top.easyblog.commons.pagehelper.PageParam;
+import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserCommentMapper;
 import top.easyblog.mapper.UserMapper;
@@ -76,6 +81,36 @@ public class CommentServiceImpl implements ICommentService {
         return null;
     }
 
+    @Override
+    public PageInfo<UserComment> getCommentPage(int userId, String flag, PageParam pageParam) {
+        PageInfo<UserComment> pageInfo=null;
+        if(userId>0&& StringUtil.isNotEmpty(flag)){
+            if(Objects.nonNull(pageParam)){
+                try {
+                    if ("receive".equals(flag)) {
+                        PageHelper.startPage(pageParam.getPage(),pageParam.getPageSize());
+                        List<UserComment> comments = commentMapper.getReceiveComment(userId);
+                        if (Objects.nonNull(comments)) {
+                            comments.forEach(ele -> mapInfo(ele, ele.getCommentSend()));
+                        }
+                        pageInfo=new PageInfo<>(comments);
+                    } else if ("send".equals(flag)) {
+                        PageHelper.startPage(pageParam.getPage(),pageParam.getPageSize());
+                        List<UserComment>  comments = commentMapper.getSendComment(userId);
+                        if (Objects.nonNull(comments)) {
+                            comments.forEach(ele -> mapInfo(ele, ele.getCommentReceived()));
+                        }
+                        pageInfo=new PageInfo<>(comments);
+                    }
+                } catch (Exception e) {
+                   throw new RuntimeException(e.getCause());
+                }
+            }else{
+                throw new IllegalPageParameterException();
+            }
+        }
+        return pageInfo;
+    }
 
     private void mapInfo(UserComment userComment, Integer commentReceived) {
         try {

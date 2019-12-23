@@ -1,6 +1,8 @@
 package top.easyblog.service;
 
+import com.github.pagehelper.PageInfo;
 import top.easyblog.bean.UserComment;
+import top.easyblog.commons.pagehelper.PageParam;
 
 import java.util.List;
 
@@ -23,6 +25,15 @@ public interface ICommentService {
      * @return
      */
     List<UserComment> getComment(int userId, String flag);
+
+    /**
+     * 获得评论并且分页
+     * @param userId
+     * @param flag
+     * @param pageParam
+     * @return
+     */
+    PageInfo<UserComment> getCommentPage(int userId, String flag, PageParam pageParam);
 
 
     /**
