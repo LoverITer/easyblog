@@ -82,9 +82,9 @@
                 </div>
             </div>
             <!--content-->
-            <div class="ui attached segment  stackable" style="border-bottom: none !important;">
+            <div class="ui attached segment  stackable bottom" style="border-bottom: none !important;">
                 <div class="ui grid">
-                    <div th:if="${!#lists.isEmpty(categories)}" th:each="category:${categories}" class="ui row attached segment bottom"  style="border-top: none !important;border-right:none !important;padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
+                    <div th:if="${categoriesPage!=null&&#lists.size(categoriesPage.getList())>0}" th:each="category:${categoriesPage.getList()}" class="ui row attached segment bottom"  style="border-top: none !important;border-right:none !important;padding-top: 1.5rem !important;padding-bottom: 1.5rem !important;">
                         <div class="four wide column">
                             <img class="ui middle aligned image image-50x50" style="max-height: none !important;"
                                  th:src="${category.getCategoryImageUrl()}"
@@ -93,7 +93,7 @@
                         </div>
                         <div class="six wide column right aligned" style="padding-right: 0 !important;">
                             <div style="padding-top: 15px !important;">
-                              <a href="#" th:href="@{/category/details/}+${category.getCategoryId()}+@{/}+${userId}" style="color:#349EDF !important;">查看</a>
+                              <a href="#" th:href="@{/category/details/{id}/{uid}(id=${category.getCategoryId()},uid=${userId})}" style="color:#349EDF !important;">查看</a>
                             </div>
                         </div>
                         <div class="one wide column center aligned" style="padding-left: 0 !important;padding-right: 0 !important;">
@@ -125,10 +125,10 @@
                 </div>
             </div>
 
-            <div class="ui bottom attached segment " th:if="${#lists.size(categories)==0}"
+            <div class="ui bottom attached segment " th:if="${categoriesPage.getTotal()==0}"
                  style="margin: 0 auto !important;">
-                <div style="padding: 5em 29rem 10em 29rem!important;">
-                    <div style="padding-bottom: 1em !important;padding-left: 2.9898em !important;color: grey !important;font-size: 14px !important;">
+                <div style="padding: 8em 29rem 12em 29rem!important;">
+                    <div style="padding-bottom: 1em !important;padding-left: 1.8em !important;color: grey !important;font-size: 14px !important;">
                         您没有还任何分类
                     </div>
                     <a th:href="@{/manage/category/add}" target style="color: #FFFFFF !important;">
@@ -137,17 +137,30 @@
                 </div>
             </div>
             <!--分页按钮-->
-            <div th:if="${#lists.size(categories)>10}" class="ui bottom attached segment ">
-                <div class="ui middle aligned two column grid"
-                     style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                    <div class="column" style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                        <a href="#" class="ui mini teal basic button">上一页</a>
-                    </div>
-                    <div class="right aligned column">
-                        <a href="#" class="ui mini teal basic button">下一页</a>
+            <div th:if="${categoriesPage.getTotal()>10}" class="ui bottom attached segment ">
+                <div class="ui middle aligned two column grid">
+                    <div class="column" style="margin: 5px auto;float: left !important;">
+                        <div class="ui buttons">
+                            <a th:href="@{/manage/category/list(page=${categoriesPage.getPrePage()})}">
+                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                </button>
+                            </a>
+                            <a  th:each="pageNo:${categoriesPage.getNavigatepageNums()}"
+                                th:href="@{/manage/category/list(page=${pageNo})}">
+                                <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
+                                    [[${pageNo}]]
+                                </button>
+                            </a>
+                            <a  th:href="@{/manage/category/list(page=${categoriesPage.getNextPage()})}">
+                                <button class="ui right labeled icon button"
+                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                </button>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -247,7 +260,18 @@
 
     $(document).ready(function () {
         toggleStatus();
+        showCurrentPageNum();
     });
+
+    function showCurrentPageNum() {
+        let obj=document.getElementsByClassName('pages');
+        let page=[[${categoriesPage.pageNum}]];
+        for(let i=0;i<obj.length;i++){
+            if(obj[i].textContent==page){
+                $(obj[i]).css('background','#eee');
+            }
+        }
+    }
 
     function toggleStatus() {
         var user = sessionStorage.getItem("user");

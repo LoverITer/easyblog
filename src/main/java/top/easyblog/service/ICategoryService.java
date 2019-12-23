@@ -1,6 +1,8 @@
 package top.easyblog.service;
 
+import com.github.pagehelper.PageInfo;
 import top.easyblog.bean.Category;
+import top.easyblog.commons.pagehelper.PageParam;
 
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,14 @@ public interface ICategoryService {
     List<Category> getUserAllCategories(int userId);
 
     /**
+     * 得到用户的所有分类并且分页
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    PageInfo<Category> getUserAllCategoriesPage(int userId, PageParam pageParam);
+
+    /**
      * 根据分类ID获得一个分类记录
      * @param categoryId
      * @return
@@ -64,7 +74,20 @@ public interface ICategoryService {
     int  updateByPKSelective(Category category);
 
 
+    /**
+     * 获得用户所有已经删除的分类
+     * @param userId
+     * @return
+     */
     List<Category> getUserAllDeletedCategory(int userId);
+
+    /**
+     * 获得用户所有已经删除的分类并且分类
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    PageInfo<Category> getUserAllDeletedCategoryPage(int userId,PageParam pageParam);
 
     /**
      * 选择性的删除
