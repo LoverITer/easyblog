@@ -296,9 +296,4 @@ public class UserAccountController {
         return result;
     }
 
-
-    @GetMapping(value = "/help")
-    public String help() {
-        return "help";
-    }
 }

@@ -262,14 +262,20 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public PageInfo<Article> getArticlesSelectivePage(Article article, PageParam pageParam) {
+       return getArticlesSelectivePage(article,null, null,pageParam);
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public PageInfo<Article> getArticlesSelectivePage(Article article, String year, String month,PageParam pageParam){
         PageInfo<Article> pageInfo = null;
         if (Objects.nonNull(article)) {
             if (Objects.nonNull(pageParam)) {
                 try {
                     PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
-                    List<Article> articles = articleMapper.getArticlesSelective(article, null, null);
+                    List<Article> articles = articleMapper.getArticlesSelective(article, year, month);
                     pageInfo = new PageInfo<>(articles);
                 } catch (Exception e) {
                     throw new RuntimeException(e.getCause());

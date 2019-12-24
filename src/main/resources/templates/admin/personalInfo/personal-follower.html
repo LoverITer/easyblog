@@ -29,7 +29,7 @@
         <!--博客内容-->
         <div class="twelve wide column">
             <div class="ui top attached segment stackable">
-                <div th:if="${#lists.size(attentionInfo)<=0}" class="ui attached segment border-none "  style="padding-bottom: 0 !important;border-bottom: 1px solid grey !important;" >
+                <div th:if="${attentionInfo!=null&&#lists.size(attentionInfo)<=0}" class="ui attached segment border-none "  style="padding-bottom: 0 !important;border-bottom: 1px solid grey !important;" >
                     <h3 class="m-margin-top m-margin-bottom m-margin-left m-inline-block" style="font-weight: bold !important;font-size: 20px !important;color: #3d3d3d !important;">
                         我的粉丝</h3>
                     <div class="right aligned column m-inline-block m-mobile-margin-left">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <div th:if="${#lists.size(attentionInfo)>0}" class="ui attached segment border-none "  style="padding-bottom: 0 !important;" >
+                <div th:if="${attentionInfo!=null&&#lists.size(attentionInfo)>0}" class="ui attached segment border-none "  style="padding-bottom: 0 !important;" >
                     <h3 class="m-margin-top m-margin-bottom m-margin-left m-inline-block" style="font-weight: bold !important;font-size: 20px !important;color: #3d3d3d !important;">
                         我的粉丝</h3>
                     <div class="right aligned column m-inline-block m-mobile-margin-left">

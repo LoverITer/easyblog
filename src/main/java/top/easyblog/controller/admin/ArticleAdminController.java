@@ -54,7 +54,7 @@ public class ArticleAdminController {
                 article.setArticleUser(user.getUserId());
                 PageInfo articlePages = articleService.getArticlesSelectivePage(article, pageParam);
                 model.addAttribute("articlePages", articlePages);
-                getShareInfo(model, user);
+                getShareInfo(model, user,"年","月","文章类型","分类专栏");
                 putArticleNumToModel(user, model);
                 return PREFIX + "/blog-manage";
             } catch (Exception ex) {
@@ -65,29 +65,9 @@ public class ArticleAdminController {
         }
     }
 
-    private void getShareInfo(Model model, User user) {
-        try {
-            model.addAttribute("user", user);
-            List<Category> categories = categoryService.getUserAllCategories(user.getUserId());
-            model.addAttribute("categories", categories);
-            Date registerTime = user.getUserRegisterTime();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(registerTime);
-            int year = calendar.get(Calendar.YEAR);
-            calendar.setTime(new Date());
-            List<Integer> years = new ArrayList<>();
-            for (int i = year; i <= calendar.get(Calendar.YEAR); i++) {
-                years.add(i);
-            }
-            model.addAttribute("years", years);
-            model.addAttribute("months", new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
-        } catch (Exception e) {
-            //
-        }
-    }
 
 
-    @GetMapping(value = "/search")
+   /* @GetMapping(value = "/search")
     public String searchByCondition(HttpSession session,
                                     @RequestParam(defaultValue = "不限") String year,
                                     @RequestParam(defaultValue = "不限") String month,
@@ -118,11 +98,57 @@ public class ArticleAdminController {
                 List<Article> articles = articleService.getArticlesSelective(article, year, month);
                 model.addAttribute("articles", articles);
                 getShareInfo(model, user);
-                System.out.println(year + " " + month + " " + articleType + " " + categoryName);
+                //System.out.println(year + " " + month + " " + articleType + " " + categoryName);
                 model.addAttribute("currentMonth", month + "");
                 model.addAttribute("currentYear", year + "");
                 model.addAttribute("currentType", articleType);
                 model.addAttribute("currentCategory", categoryName);
+                //统计各种状态文章的数量
+                putArticleNumToModel(user, model);
+                return PREFIX + "/blog-manage";
+            } catch (Exception ex) {
+                return "redirect:/error/error";
+            }
+        }
+        return "redirect:/user/loginPage";
+    }*/
+
+    @GetMapping(value = "/search")
+    public String searchByCondition(HttpSession session,
+                                    @RequestParam(defaultValue = "不限") String year,
+                                    @RequestParam(defaultValue = "不限") String month,
+                                    @RequestParam(defaultValue = "不限") String articleType,
+                                    @RequestParam(defaultValue = "不限") String categoryName,
+                                    @RequestParam(defaultValue = "") String articleTopic,
+                                    @RequestParam(value = "page",defaultValue = "1") int pageNo,
+                                    Model model) {
+        User user = (User) session.getAttribute("user");
+        if (Objects.nonNull(user)) {
+            try {
+                Article article = new Article();
+                article.setArticleUser(user.getUserId());  //把userId传给service
+                if ("不限".equals(year)) {
+                    year = null;
+                }
+                if ("不限".equals(month)) {
+                    month = null;
+                }
+                if (!"不限".equals(articleType)) {
+                    article.setArticleType(articleType);
+                }
+                if (!"不限".equals(categoryName)) {
+                    article.setArticleCategory(categoryName);
+                }
+                if (!"".equals(articleTopic)) {
+                    article.setArticleTopic(articleTopic);
+                }
+                PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
+                PageInfo<Article> articlePages = articleService.getArticlesSelectivePage(article, year, month, pageParam);
+                model.addAttribute("articlePages", articlePages);
+                model.addAttribute("articleTopic",articleTopic);
+                model.addAttribute("showSearchCondition",true);
+                getShareInfo(model, user,year,month,articleType,categoryName);
+                //System.out.println(year + " " + month + " " + articleType + " " + categoryName);
                 //统计各种状态文章的数量
                 putArticleNumToModel(user, model);
                 return PREFIX + "/blog-manage";
@@ -322,6 +348,35 @@ public class ArticleAdminController {
         article.setArticleId((long) articleId);
         article.setArticleStatus(destArticleStatus);
         articleService.updateSelective(article);
+    }
+
+    private void getShareInfo(Model model, User user,String currentYear,String month,String type,String category) {
+        try {
+            //文章作者信息
+            model.addAttribute("user", user);
+            //文章作者的所有分类
+            List<Category> categories = categoryService.getUserAllCategories(user.getUserId());
+            model.addAttribute("categories", categories);
+            //计算文章作者注册距今的时间
+            Date registerTime = user.getUserRegisterTime();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(registerTime);
+            int year = calendar.get(Calendar.YEAR);
+            calendar.setTime(new Date());
+            List<Integer> years = new ArrayList<>();
+            for (int i = year; i <= calendar.get(Calendar.YEAR); i++) {
+                years.add(i);
+            }
+            model.addAttribute("years", years);
+            model.addAttribute("months", new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
+            //下面的信息用户控制查询
+            model.addAttribute("currentMonth", month);
+            model.addAttribute("currentYear", currentYear);
+            model.addAttribute("currentType", type);
+            model.addAttribute("currentCategory", category);
+        } catch (Exception e) {
+            //
+        }
     }
 
     @GetMapping(value = "/deleteComplete")

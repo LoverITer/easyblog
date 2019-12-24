@@ -38,8 +38,8 @@ public class UserCenterController {
         if (Objects.nonNull(user)) {
             model.addAttribute("user", userService.getUser(user.getUserId()));
             String str = user.getUserAddress();
-            if(Objects.nonNull(str)&&!"".equals(str)) {
-                String[] address=str.split(",");
+            if (Objects.nonNull(str) && !"".equals(str)) {
+                String[] address = str.split(",");
                 model.addAttribute("country", address[0]);
                 model.addAttribute("city", address[1]);
                 model.addAttribute("county", address[2]);
@@ -114,7 +114,7 @@ public class UserCenterController {
         if (Objects.nonNull(user)) {
             UserAttention var1 = new UserAttention();
             var1.setUserId(user.getUserId());
-            final List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var1);
+            List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var1);
             model.addAttribute("attentionInfo", attentionInfo);
             model.addAttribute("fans-list", 1);
             return PREFIX + "/personal-follower";
@@ -123,16 +123,16 @@ public class UserCenterController {
     }
 
     @ResponseBody
-    @PostMapping(value = "/uploadImg",produces = "application/json;charset=UTF-8")
-    public Result changeHeaderImage(@RequestBody Map<String,String> map, HttpSession session) {
+    @PostMapping(value = "/uploadImg", produces = "application/json;charset=UTF-8")
+    public Result changeHeaderImage(@RequestBody Map<String, String> map, HttpSession session) {
         User user = (User) session.getAttribute("user");
         Result result = new Result();
         result.setSuccess(false);
         if (Objects.nonNull(user)) {
             try {
-                String image=map.get("image");
+                String image = map.get("image");
                 String imageBytes = image.substring(image.indexOf(",") + 1, image.length());
-                Base64 base64Decoder=new Base64();
+                Base64 base64Decoder = new Base64();
                 //转码得到base64的字节码
                 byte[] bytes = base64Decoder.decode(imageBytes);
                 //把图片保存到七牛云上，并返回图片的URL
@@ -143,13 +143,13 @@ public class UserCenterController {
                 var0.setUserHeaderImgUrl(imageUrl);
                 userService.updateUserInfo(var0);
                 System.out.println(user.getUserHeaderImgUrl());
-                if(!user.getUserHeaderImgUrl().contains("static")){
+                if (!user.getUserHeaderImgUrl().contains("static")) {
                     QiNiuCloudUtil.getInstance().delete(user.getUserHeaderImgUrl());
                     user.setUserHeaderImgUrl(imageUrl);
                 }
                 result.setSuccess(true);
                 result.setMsg("头像上传成功");
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 result.setMsg("服务异常，请重试！");
             }

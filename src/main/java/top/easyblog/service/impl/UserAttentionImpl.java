@@ -28,7 +28,6 @@ public class UserAttentionImpl implements IUserAttention {
 
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "attentionInfos", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<UserAttention> getAllUserAttentionInfo(UserAttention userAttention) {
         if (Objects.nonNull(userAttention)) {
@@ -58,7 +57,7 @@ public class UserAttentionImpl implements IUserAttention {
         return null;
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public int deleteByPK(int id) {
         if (id > 0) {
