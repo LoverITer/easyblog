@@ -66,53 +66,6 @@ public class ArticleAdminController {
     }
 
 
-
-   /* @GetMapping(value = "/search")
-    public String searchByCondition(HttpSession session,
-                                    @RequestParam(defaultValue = "不限") String year,
-                                    @RequestParam(defaultValue = "不限") String month,
-                                    @RequestParam(defaultValue = "不限") String articleType,
-                                    @RequestParam(defaultValue = "不限") String categoryName,
-                                    @RequestParam(defaultValue = "") String articleTopic,
-                                    Model model) {
-        User user = (User) session.getAttribute("user");
-        if (Objects.nonNull(user)) {
-            try {
-                Article article = new Article();
-                article.setArticleUser(user.getUserId());  //把userId传给service
-                if ("不限".equals(year)) {
-                    year = null;
-                }
-                if ("不限".equals(month)) {
-                    month = null;
-                }
-                if (!"不限".equals(articleType)) {
-                    article.setArticleType(articleType);
-                }
-                if (!"不限".equals(categoryName)) {
-                    article.setArticleCategory(categoryName);
-                }
-                if (!"".equals(articleTopic)) {
-                    article.setArticleTopic(articleTopic);
-                }
-                List<Article> articles = articleService.getArticlesSelective(article, year, month);
-                model.addAttribute("articles", articles);
-                getShareInfo(model, user);
-                //System.out.println(year + " " + month + " " + articleType + " " + categoryName);
-                model.addAttribute("currentMonth", month + "");
-                model.addAttribute("currentYear", year + "");
-                model.addAttribute("currentType", articleType);
-                model.addAttribute("currentCategory", categoryName);
-                //统计各种状态文章的数量
-                putArticleNumToModel(user, model);
-                return PREFIX + "/blog-manage";
-            } catch (Exception ex) {
-                return "redirect:/error/error";
-            }
-        }
-        return "redirect:/user/loginPage";
-    }*/
-
     @GetMapping(value = "/search")
     public String searchByCondition(HttpSession session,
                                     @RequestParam(defaultValue = "不限") String year,
@@ -399,7 +352,7 @@ public class ArticleAdminController {
     }
 
     @GetMapping(value = "/private")
-    public String privateBlog(Model model,
+    public String privateBlogPage(Model model,
                               HttpSession session,
                               @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
@@ -415,7 +368,7 @@ public class ArticleAdminController {
     }
 
     @GetMapping(value = "/dash")
-    public String dashBlog(Model model,
+    public String dashBlogPage(Model model,
                            HttpSession session,
                            @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());

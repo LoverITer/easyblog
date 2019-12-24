@@ -26,18 +26,18 @@
         <div th:replace="~{manage-sidebar::manage}"></div>
         <!--博客内容-->
         <div class="thirteen wide column">
-
             <!--header-->
             <div th:replace="~{blog-manage-header::header}"></div>
-
             <!--条件查询表单-->
-            <form  th:action="@{/manage/blog/search}" method="GET" class="ui attached segment form" style="background-color: #f2f5f7">
+            <form th:action="@{/manage/blog/search}" method="GET" class="ui attached segment form"
+                  style="background-color: #f2f5f7">
                 <div class="inline fields stackable">
                     <span class="m-black m-inline-block m-mobile-hide">筛选：</span>
                     <!--年-->
                     <div class="field">
                         <div class="ui selection dropdown compact m-mobile-wide-selectBar-calender year">
-                            <input type="hidden" name="year" th:value="${currentYear}">
+                            <input type="hidden" name="year" th:if="${currentYear!=null and currentYear!='年'}" th:value="${currentYear}">
+                            <input type="hidden" name="year" th:if="${currentYear==null or currentYear=='' or currentYear=='年'}">
                             <i class="dropdown icon"></i>
                             <div class="default text" th:if="${currentYear==null or currentYear=='' or currentYear=='年'}">年</div>
                             <div class="text" th:if="${currentYear!=null and currentYear!='年'}" th:text="${currentYear}"></div>
@@ -50,15 +50,14 @@
                     <!--月-->
                     <div class="field">
                         <div class="ui selection dropdown compact m-mobile-wide-selectBar-calender month">
-                            <input type="hidden" name="month" th:value="${currentMonth}">
+                            <input type="hidden" name="month" th:if="${currentMonth!=null and currentMonth!='月'}" th:value="${currentMonth}">
+                            <input type="hidden" name="month" th:if="${currentMonth==null||currentMonth=='' or currentMonth=='月'}" >
                             <i class="dropdown icon"></i>
                             <div class="default text" th:if="${currentMonth==null||currentMonth=='' or currentMonth=='月'}">月</div>
                             <div class="text" th:if="${currentMonth!=null and currentMonth!='月'}" th:text="${currentMonth}">月</div>
                             <div class="menu compact">
-                                <div class="text item" data-value="不限">不限</div>
-                                <div class="item" th:each="month:${months}" th:data-value="${month}" th:text="${month}">
-                                    9
-                                </div>
+                                <div class="item" data-value="不限">不限</div>
+                                <div class="item" th:each="month:${months}" th:data-value="${month}" th:text="${month}">9</div>
                             </div>
                         </div>
                     </div>
@@ -66,10 +65,12 @@
                     <div class="field">
                         <div class="ui selection dropdown category m-mobile-wide-selectBar type"
                              style="max-width: 30px !important;">
-                            <input type="hidden" name="articleType" th:value="${currentType}">
+                            <input type="hidden" name="articleType" th:if="${currentType!=null and  currentType!='文章类型'}" th:value="${currentType}">
+                            <input type="hidden" name="articleType" th:if="${currentType==null or currentType=='' or currentType=='文章类型'}">
                             <i class="dropdown icon"></i>
                             <div class="default text" th:if="${currentType==null or currentType=='' or currentType=='文章类型'}">文章类型</div>
-                            <div class="text" th:if="${currentType!=null and  currentType!='文章类型'}" th:text="${currentType}">文章类型</div>
+                            <div class="text" th:if="${currentType!=null and  currentType!='文章类型'}" th:text="${currentType}">文章类型
+                            </div>
                             <div class="menu">
                                 <div class="item" data-value="不限">不限</div>
                                 <div class="item" data-value="原创">原创</div>
@@ -82,13 +83,15 @@
                     <div class="field">
                         <div class="ui selection dropdown m-mobile-wide-selectBar category"
                              style="max-width: 30px !important;">
-                            <input type="hidden" name="categoryName" th:value="${currentCategory}">
+                            <input type="hidden" name="categoryName" th:value="${currentCategory}" th:if="${currentCategory!=null and currentCategory!='分类专栏'}">
+                            <input type="hidden" name="categoryName" th:if="${currentCategory==null or currentCategory=='' or currentCategory=='分类专栏'}">
                             <i class="dropdown icon"></i>
                             <div class="default text" th:if="${currentCategory==null or currentCategory=='' or currentCategory=='分类专栏'}">分类专栏</div>
                             <div class="text" th:if="${currentCategory!=null and currentCategory!='分类专栏'}" th:text="${currentCategory}">分类专栏</div>
                             <div class="menu">
-                                <div class="item"  data-value="不限">不限</div>
-                                <div class="item"  th:each="category:${categories}" th:data-value="${category.getCategoryName()}"
+                                <div class="item" data-value="不限">不限</div>
+                                <div class="item" th:each="category:${categories}"
+                                     th:data-value="${category.getCategoryName()}"
                                      th:text="${category.getCategoryName()}">
                                     SpringBoot
                                 </div>
@@ -97,15 +100,17 @@
                     </div>
                     <!--文章标题-->
                     <div class="field">
-                        <input class="m-mobile-wide-selectBar" th:if="${articleTopic!=null and articleTopic!=''}" type="text" name="articleTopic" th:value="${articleTopic}">
-                        <input class="m-mobile-wide-selectBar" th:if="${articleTopic==null or articleTopic==''}" type="text" name="articleTopic" placeholder="标题">
+                        <input class="m-mobile-wide-selectBar topic" th:if="${articleTopic!=null and articleTopic!=''}"
+                               type="text" name="articleTopic" th:value="${articleTopic}">
+                        <input class="m-mobile-wide-selectBar topic" th:if="${articleTopic==null or articleTopic==''}"
+                               type="text" name="articleTopic" placeholder="标题">
                     </div>
                     <div id="searchBar" class="field m-mobile-wide-selectBar">
                         <button class="ui tiny red  button"><i class="search icon"></i>搜索</button>
                     </div>
                 </div>
                 <!--点击搜索按钮后弹出来的选择框-->
-                <div id="reloadSearchBar" th:if="${showSearchCondition==null}" class="inline fields m-margin-top-large"
+                <div th:if="${showSearchCondition==null}" class="inline fields m-margin-top-large"
                      style="margin-bottom: 5px !important;display: none !important;">
                     <div class="inline fields">
                         <div class="field">
@@ -162,7 +167,7 @@
                                 <label>只显示草稿</label>
                             </div>
                         </div>
-                        <a href="blog-manage.html" style="margin-left: 25em !important;">重置搜索</a>
+                        <a onclick="restoreSearch()" style="margin-left: 28em !important;cursor: pointer;">重置搜索</a>
                     </div>
                 </div>
             </form>
@@ -266,7 +271,6 @@
             </div>
         </div>
     </div>
-
 </div>
 <div style="position: fixed !important;z-index: 99999999 !important;" id="model1" class="ui small modal">
     <div class="header" id="msg_header">删除</div>
@@ -292,7 +296,8 @@
         showCurrentPageNum();
         alertDispException();
         $('.ui.dropdown').dropdown({
-            on: 'hover'
+            on: 'hover',
+            clearable: true
         });
 
         $('#msg-btn').click(function () {
@@ -364,6 +369,30 @@
             }
         });
     });
+
+
+    function restoreSearch() {
+
+        $('.year').find('input').removeAttr('value');
+        $('.year').find('.text').remove();
+        $('.year').find('.dropdown.icon').after('<div class="default text">年</div>\n');
+
+        $('.month').find('.text').remove();
+        $('.month').find('input').removeAttr('value');
+        $('.month').find('.dropdown.icon').after('<div class="default text">月</div>\n');
+
+        $('.type').find('.text').remove();
+        $('.type').find('input').removeAttr('value');
+        $('.type').find('.dropdown.icon').after('<div class="default text">文章类型</div>\n');
+
+        $('.category').find('.text').remove();
+        $('.category').find('input').removeAttr('value');
+        $('.category').find('.dropdown.icon').after('<div class="default text">分类专栏</div>\n');
+
+        $('.topic').removeAttr('value');
+        $('.topic').attr('placeholder','标题');
+
+    }
 
 </script>
 </html>

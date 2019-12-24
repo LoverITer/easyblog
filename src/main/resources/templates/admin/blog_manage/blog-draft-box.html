@@ -21,7 +21,7 @@
 
 
 <!--中间内容-->
-<div class="ui m-container m-padded-tb-big stackable">
+<div class="ui m-container-large m-padded-tb-big stackable">
     <div class="ui stackable grid">
         <!--侧边栏-->
         <div th:replace="~{manage-sidebar::manage}"></div>
@@ -32,8 +32,7 @@
 
             <!--content-->
             <div class="ui attached bottom segment border-bt-none" style="padding-top: 0 !important;padding-bottom: 0 !important;">
-                <div th:if="${articlePages!=null&&#lists.size(articlePages.getList())>0}}" th:each="article:${articlePages.getList()}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed"
-                     style="padding-bottom: 20px !important;padding-top: 10px !important;">
+                <div th:if="${articlePages!=null&&#lists.size(articlePages.getList())>0}" th:each="article:${articlePages.getList()}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-dashed" style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid">
                         <div class="sixteen wide column">
                             <button th:switch="${article.getArticleType()}"
@@ -43,7 +42,7 @@
                                 <span th:case="2">翻译</span>
                             </button>
                             <h3 class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">
-                                <a href="#" th:href="@{/article/details/}+${article.getArticleId()}" title="查看" class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a>
+                                <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" title="查看" class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a>
                             </h3>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
