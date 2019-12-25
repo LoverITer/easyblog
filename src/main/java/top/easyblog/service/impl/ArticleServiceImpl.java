@@ -58,7 +58,7 @@ public class ArticleServiceImpl implements IArticleService {
     public Article getArticleById(int articleId) {
         if (articleId > 0) {
             try {
-                return parseMarkdown2Text(articleMapper.getByPrimaryKey((long) articleId));
+                return parseMarkdown2HTML(articleMapper.getByPrimaryKey((long) articleId));
             } catch (Exception e) {
                 e.printStackTrace();
             }
