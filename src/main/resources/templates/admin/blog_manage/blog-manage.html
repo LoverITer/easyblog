@@ -342,7 +342,6 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 100);
     }
 
     <!--退出操作异步请求-->
@@ -370,9 +369,7 @@
         });
     });
 
-
     function restoreSearch() {
-
         $('.year').find('input').removeAttr('value');
         $('.year').find('.text').remove();
         $('.year').find('.dropdown.icon').after('<div class="default text">年</div>\n');
@@ -391,7 +388,6 @@
 
         $('.topic').removeAttr('value');
         $('.topic').attr('placeholder','标题');
-
     }
 
 </script>

@@ -237,7 +237,7 @@
     }
 
     /**
-     * 不断检查用户的登录情况
+     * 检查用户的登录情况——显示按钮和头像
      */
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
@@ -248,7 +248,6 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 500);
     }
 
     <!--退出操作异步请求-->
@@ -277,7 +276,7 @@
     });
 
 </script>
-<script th:online="javascript">
+<script >
     //只看原创按钮是否按下
     $('#checkbox').click(function () {
         if ($('#checkbox').is(":checked")) {
