@@ -1,5 +1,6 @@
 package top.easyblog.controller;
 
+import com.github.pagehelper.util.StringUtil;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserLoginStatus;
 import top.easyblog.bean.UserSigninLog;
@@ -60,7 +61,16 @@ public class UserController {
         //把用户登录前的地址存下来
         if (null == session.getAttribute("Referer")) {
             String referUrl = request.getHeader("Referer");
-            if(Objects.nonNull(referUrl)&&!"".equals(referUrl)&&!referUrl.contains("/login")&&!referUrl.contains("register")&&!referUrl.contains("loginPage")&&!referUrl.contains("change_password")){
+            String baseUrl = request.getScheme()    //当前链接使用的协议
+                    +"://" + request.getServerName()   //服务器地址
+                    + ":" + request.getServerPort()   //端口号
+                    +request.getContextPath()+"/";
+            if(StringUtil.isNotEmpty(referUrl)&&
+                    !referUrl.contains("/login")&&
+                    !referUrl.contains("register")&&
+                    !referUrl.contains("loginPage")&&
+                    !referUrl.contains("change_password")&&
+                    !referUrl.equalsIgnoreCase(baseUrl)){
                 session.setAttribute("Referer", referUrl);
             }
         }

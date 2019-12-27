@@ -49,8 +49,7 @@
             <div class="twelve wide column" style="padding-top: 0 !important;">
                 <div class="ui top attached segment" style="padding-top: 5px !important;">
                     <!--内容-->
-                    <div class="ui left aligned basic segment"
-                         style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
+                    <div class="ui left aligned basic segment" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
                         <div th:switch="${article.getArticleType()}" class="ui red basic label m-inline-block"
                              style="margin-right: 10px">
                             <span th:case="0">原创</span>
@@ -76,9 +75,8 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="ui  attached padded segment" style="padding:auto 10px 0 10px !important;">
-                    <div th:utext="${article.getArticleContent()}" style="padding:0 10px 0 10px !important;"
+                <div class="ui attached padded segment" style="padding:10px 15px 0 15px !important;">
+                    <div th:utext="${article.getArticleContent()}" style="padding:0 10px !important;"
                          id="content"
                          class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large">
                     </div>

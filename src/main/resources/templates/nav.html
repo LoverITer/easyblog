@@ -6,11 +6,11 @@
 </head>
 <body>
 <!--公共的头部导航栏-->
-<nav th:fragment="navbar" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+<nav th:fragment="navbar" class="ui inverted attached segment m-padded-tb-mini m-shadow-small" style="border: none !important;">
     <!--用户信息-->
     <div class="ui m-container-large">
         <div class="ui inverted secondary stackable menu">
-            <h2 class="ui teal header item">EasyBlog</h2>
+            <a href="#" th:href="@{/}"><h2 class="ui teal header item">EasyBlog</h2></a>
             <!--搜索框--->
             <div class="right m-item item m-mobile-hide">
                 <form name="search" th:action="@{/search/details}" target="_blank" method="get" >
@@ -47,7 +47,7 @@
                            class="item"><i class="archive icon"></i>我的博客</a>
                         <a href="#" th:href="@{/manage/blog/}" class="item"><i class="edit icon"></i>管理博客</a>
                         <div class="divider"></div>
-                        <a href="#" th:href="@{/index/help}" class="item"><i class="basic question  circle icon"></i>帮助</a>
+                        <a href="#" th:href="@{/help}" class="item"><i class="basic question  circle icon"></i>帮助</a>
                         <a id="logout" class="item"><i class="sign out icon"></i>退出</a>
                     </div>
                 </div>
