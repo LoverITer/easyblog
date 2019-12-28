@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>EasyBlog — 让写博客更简单</title>
+    <meta name="keywords" content="EasyBlog — 让写博客更简单">
+    <meta name="description" content="EasyBlog — 让写博客更简单">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
+    <link rel="stylesheet" href="../static/css/base.css" th:href="@{/static/css/base.css}">
+    <link rel="stylesheet" href="../static/css/m.css" th:href="@{/static/css/m.css}">
+    <script src="../static/js/jquery.min.js" th:href="@{/static/js/jquery.min.js}"></script>
+    <script src="../static/js/comm.js" th:href="@{/static/js/comm.js}"></script>
+    <!--[if lt IE 9]>
+    <script src="js/modernizr.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!--top begin-->
+<header id="header">
+    <div class="navbox">
+        <h2 id="mnavh"><span class="navicon"></span></h2>
+        <div class="logo">
+            <a href="/" style="color: #00B5AD">EasyBlog</a>
+        </div>
+        <nav>
+            <ul id="starlist">
+                <li><a href="/" title="首页" th:href="@{/}">首页</a></li>
+                <li><a href="/about/">关于我</a></li>
+                <li ><a href="/about/" th:href="@{/user/loginPage}">登录/注册</a></li>
+            </ul>
+        </nav>
+        <div class="searchico"></div>
+    </div>
+</header>
+<div class="searchbox">
+    <div class="search">
+        <form action="#" method="post" name="searchform" id="searchform">
+            <input name="keyboard" id="keyboard" class="input_text" value="请输入关键字词" style="color: rgb(153, 153, 153);"
+                   onfocus="if(value=='请输入关键字词'){this.style.color='#000';value=''}"
+                   onblur="if(value==''){this.style.color='#999';value='请输入关键字词'}" type="text">
+            <input name="show" value="title" type="hidden">
+            <input name="tempid" value="1" type="hidden">
+            <input name="tbname" value="news" type="hidden">
+            <input name="Submit" class="input_submit" value="搜索" type="submit">
+        </form>
+    </div>
+    <div class="searchclose"></div>
+</div>
+<!--top end-->
+<article>
+    <!--lbox begin-->
+    <div class="lbox">
+        <!--banbox begin-->
+        <div class="banbox">
+            <div class="banner">
+                <div id="banner" class="fader">
+                    <li class="slide"><a href="/web/html/14.html" target="_blank">
+                        <img src="data:image/jpeg;base64,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"></a>
+                        <span class="imginfo">SpringBoot的自动配置原理</span>
+                    </li>
+                    <li class="slide">
+                        <a href="/web/html/16.html" target="_blank">
+                            <img src="http://www.yangqq.com/skin/852/images/banner01.jpg">
+                        </a>
+                    </li>
+                    <li class="slide"><a href="/web/wzjs/19.html" target="_blank"><img
+                            src="http://jxhx2.yangqq.com/skin/jxhx/images/2.jpg"></a></li>
+                    <li class="slide"><a href="/web/wzjs/21.html" target="_blank"><img
+                            src="http://www.yangqq.com/skin/852/images/banner01.jpg"></a></li>
+                    <div class="fader_controls">
+                        <div class="page prev" data-target="prev"></div>
+                        <div class="page next" data-target="next"></div>
+                        <ul class="pager_list">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearblank"></div>
+        <div class="tab_box whitebg">
+            <div class="tab_buttons">
+                <ul>
+                    <li class="newscurrent">个人博客</li>
+                    <li>CSS3|Html5</li>
+                    <li>网站建设</li>
+                    <li>推荐工具</li>
+                    <li>设计心得</li>
+                </ul>
+            </div>
+            <div class="newstab">
+                <div class="newsitem">
+                    <div class="newspic">
+                        <ul>
+                            <li><a href="/blog/4.html"><img src="/skin/jxhx/images/4.jpg"><span>个人网站做好了，百度不收录怎么办？来，看看他们怎么做的</span></a>
+                            </li>
+                            <li><a href="/blog/3.html"><img src="/skin/jxhx/images/2.jpg"><span>个人博客，属于我的小世界！</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="newslist">
+                        <li><i></i><a href="/blog/7.html" title="安静地做一个爱设计的女子">安静地做一个爱设计的女子</a>
+                            <p>自从入了这行，很多人跟我说可以做网络教程，我也有考虑，但最终没有实现，因为我觉得在这个教程泛滥的时代，直接做一套免费的原创个人博客模板更为实在。每当看到自己喜欢的配色图片</p>
+                        </li>
+                        <li><i></i><a href="/blog/6.html" title="电话以外的宁静">电话以外的宁静</a>
+                            <p>
+                                电话很久没有响过了，我的QQ也很久没有在线了，消失了很多天，刚刚结识的朋友因为我身上又起了红疹，每天都发来消息询问我的情况，我做到了这么多天来的沉默，我相信，没有网络，我还是可以继续我自己的生活</p>
+                        </li>
+                        <li><i></i><a href="/blog/5.html" title="遇见一个未知的你">遇见一个未知的你</a>
+                            <p>听着那熟悉的歌曲看着那一张张可爱的图片.-读着我们共同欣赏的诗……也许我们曾经相遇,看着你远去的背影 ,沿着你来的方向 ,回忆时间穿梭于幸福的点点滴滴....</p></li>
+                        <li><i></i><a href="/blog/4.html" title="个人网站做好了，百度不收录怎么办？来，看看他们怎么做的">个人网站做好了，百度不收录怎么办？来，看看他们怎么做的...</a>
+                            <p>不管你是学前端的还是后端的，作为一个程序员，做一个自己的博客，那是必然的。咱们的圈子就这么大，想让更多的人了解你，看看你的技术多牛逼，扔一个博客地址就行了</p></li>
+                        <li><i></i><a href="/blog/3.html" title="个人博客，属于我的小世界！">个人博客，属于我的小世界！</a>
+                            <p>
+                                个人博客，用来做什么？我刚开始就把它当做一个我吐槽心情的地方，也就相当于一个网络记事本，写上一些关于自己生活工作中的小情小事，也会放上一些照片，音乐。每天工作回家后就能访问自己的网站，一边听着音乐，一边写写文章。</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="newsitem">
+                    <div class="newspic">
+                        <ul>
+                            <li><a href="/web/html/14.html"><img
+                                    src="http://www.yangqq.com/d/file/jstt/css3/2018-03-20/718b56be9dbf920cc0a6124545216654.jpg"><span>十条设计原则教你学会如何设计网页布局!</span></a>
+                            </li>
+                            <li><a href="/web/html/13.html"><img
+                                    src="http://www.yangqq.com/d/file/jstt/css3/2018-03-25/393d21b65031dd0d85eb2e5789a97b1e.jpg"><span>别让这些闹心的套路，毁了你的网页设计</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="newslist">
+                        <li><i></i><a href="/web/html/17.html" title="【分享】css3侧边栏导航不同方向划出效果">【分享】css3侧边栏导航不同方向划出效果</a>
+                            <p>设定一组侧边栏导航菜单，然后可以从任何一边滑出。有两种实现方式，一种固定菜单，一种从左右两侧推出</p></li>
+                        <li><i></i><a href="/web/html/16.html" title="使用CSS3制作文字、图片倒影">使用CSS3制作文字、图片倒影</a>
+                            <p>
+                                CSS3制作文字、图片倒影需要涉及到使用CSS3.0新属性之box-reflect。box-reflect属性目前仅在Chrome、Safari和Opera浏览器下支持，但这并不影响我们来学习这个属性的应用</p>
+                        </li>
+                        <li><i></i><a href="/web/html/15.html" title="三步实现滚动条触动css动画效果">三步实现滚动条触动css动画效果</a>
+                            <p>现在很多网站都有这种效果，我就整理了一下，分享出来。利用滚动条来实现动画效果，ScrollReveal.js
+                                用于创建和管理元素进入可视区域时的动画效果，帮助你的网站增加吸引力</p></li>
+                        <li><i></i><a href="/web/html/14.html" title="十条设计原则教你学会如何设计网页布局!">十条设计原则教你学会如何设计网页布局!</a>
+                            <p>
+                                网页常见的布局有很多种,单列布局,多列布局.其中单列布局是国外很多网站比较常用的.咱们很多站长以及门户网站都使用的是是两列布局,很少用三列布局的.下面我来分享下我们常用的网页布局格式以及设计技巧</p>
+                        </li>
+                        <li><i></i><a href="/web/html/13.html" title="别让这些闹心的套路，毁了你的网页设计">别让这些闹心的套路，毁了你的网页设计</a>
+                            <p>网页设计和做人一样，需要少一些套路，多一些真诚。那么下面就为大家揭穿那些看似好用，但用户体验并不好的设计模式。另外再附上解决办法，避免网页设计中出现这些问题</p></li>
+                    </ul>
+                </div>
+                <div class="newsitem">
+                    <div class="newspic">
+                        <ul>
+                            <li><a href="/web/wzjs/21.html"><img
+                                    src="http://www.yangqq.com/d/file/jstt/web/2018-09-07/273cbdcdf336384159e3d0a9d83f90ac.png"><span>如何快速建立自己的个人博客网站</span></a>
+                            </li>
+                            <li><a href="/web/wzjs/19.html"><img
+                                    src="http://www.yangqq.com/d/file/jstt/web/2014-01-18/6fe49814982f3624e441334fea1999a4.png"><span>我的个人博客之——阿里云空间选择</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="newslist">
+                        <li><i></i><a href="/web/wzjs/22.html" title="【个人博客网站制作】自己不会个人博客网站制作，你会选择用什么博客程序源码？">【个人博客网站制作】自己不会个人博客网站制作，你会选择用什么博...</a>
+                            <p>
+                                这些开源的博客程序源码，都是经过很多次版本测试的，都有固定的使用人群。我所知道的主流的博客程序有，Z-blog，Emlog，WordPress，Typecho等，免费的cms系统有，织梦cms（dedecms），phpcms，帝国cms（EmpireCMS）等。</p>
+                        </li>
+                        <li><i></i><a href="/web/wzjs/21.html" title="如何快速建立自己的个人博客网站">如何快速建立自己的个人博客网站</a>
+                            <p>
+                                各大博客门户网站，相继关闭，做一个独立的个人博客网站，那是将来的趋势。越来越多的个人站长倾向于独立建站，有个属于自己的博客网站，那如何快速建立自己的个人博客网站呢，接下来，我</p>
+                        </li>
+                        <li><i></i><a href="/web/wzjs/20.html" title="个人博客用帝国cms 自定义页面 灵动标签调用网站所有信息">个人博客用帝国cms 自定义页面
+                            灵动标签调用网站所有信息...</a>
+                            <p>
+                                例如时间轴这个栏目，要把所有的信息都统计下来，有两种方法，一种是写一个自定义的js，然后调用js，但是这样操作，后台更新会更不上。于是可以用下面这个方法，直接在自定义页面，使用灵动标签调用</p>
+                        </li>
+                        <li><i></i><a href="/web/wzjs/19.html" title="我的个人博客之——阿里云空间选择">我的个人博客之——阿里云空间选择</a>
+                            <p>之前服务器放在电信机房，
+                                联通用户访问速度很不稳定，经常出现访问速度慢的问题，换到阿里云解决了之前的问题。很多人都问我的博客选得什么空间，一年的费用得多少钱，今天我列个表出来，供大家参考</p>
+                        </li>
+                        <li><i></i><a href="/web/wzjs/18.html" title="建站流程篇——教你如何快速学会做网站">建站流程篇——教你如何快速学会做网站</a>
+                            <p>
+                                如果你没有任何的建站基础，你想做一个网站，那么认真按照下面步骤操作，一小时内你就可以做出一个网站来。现在建一个网站对于新手来说，其实也是非常简单而且低成本的事情了。因为现在有大量开源免费的网站程序可以免费下载使用，就空间和域名一点钱，空间和域名加起来一年大概在200到400左右就可以做一个个人网站。</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="newsitem">
+                    <div class="newspic">
+                        <ul>
+                            <li><a href="/web/gj/12.html"><img
+                                    src="http://www.yangqq.com/d/file/newshtml5/t/2013-08-04/f941d07a6b63e91339b5a71a0465d4b0.png"><span>Color Scheme Designer 取色</span></a>
+                            </li>
+                            <li><a href="http://www.css3maker.com/"><img
+                                    src="http://www.yangqq.com/d/file/newshtml5/t/2013-08-04/2b6c100c8fd1f502a16899f1f1e0af90.png"><span>CSS3 Maker 在线生成代码</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="newslist">
+                        <li><i></i><a href="/web/gj/12.html" title="Color Scheme Designer 取色">Color Scheme Designer
+                            取色</a>
+                            <p>如果你还在为获取web颜色而烦恼的话，建议你使用Color Scheme Designer取色工具，以不同的模式，可以让你一下获取相近的四个颜色。</p></li>
+                        <li><i></i><a href="http://css-tricks.com/examples/ButtonMaker/" title="按钮在线生成工具Button Maker">按钮在线生成工具Button
+                            Maker</a>
+                            <p>Button Maker是CSS-TRICKS提供的一款在线生成Buttons的工具，可以根据工具上的参数，定制适合自己需要的Button</p></li>
+                        <li><i></i><a href="http://www.css3maker.com/" title="CSS3 Maker 在线生成代码">CSS3 Maker 在线生成代码</a>
+                            <p>CSS3
+                                Maker提供了10个最为常用的CSS3属性在线生成工具，比如说border-radius、gradient、transfrom、animation、transition、rgba、text-shadow、box-shadow、text
+                                rotation和@font-face。</p></li>
+                        <li><i></i><a href="/web/gj/9.html" title="Ui Parade免费的UI在线设计工具">Ui Parade免费的UI在线设计工具</a>
+                            <p>Ui
+                                Parade工具是一组免费的在线设计的应用程序，用很少的编码知识就能让您可以轻松地创建自定义的UI元素（按钮、表单、图标、丝带），你也可以下载你的作品在您的网站和在线应用程序使用。</p>
+                        </li>
+                        <li><i></i><a href="/web/gj/8.html" title="分享一个在线用css3生成气泡的工具CSS ARROW PLEASE!">分享一个在线用css3生成气泡的工具CSS
+                            ARROW PLEASE!...</a>
+                            <p>CSS ARROW PLEASE 是一个在线生成气泡的工具，你可以在线制作一个你需要的气泡，可以调整宽度大小、箭头方向，边框属性等</p></li>
+                    </ul>
+                </div>
+                <div class="newsitem">
+                    <div class="newspic">
+                        <ul>
+                            <li><a href="/xd/23.html"><img
+                                    src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg"><span>作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</span></a>
+                            </li>
+                            <li><a href="/xd/2.html"><img
+                                    src="http://www.yangqq.com/d/file/blogs/2018-08-22/28e3bbca2ae0205f641a9072ecb7c100.jpg"><span>网易博客关闭，何不从此开始潇洒行走江湖！</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="newslist">
+                        <li><i></i><a href="/xd/25.html" title="即便是坑，我也想要拉你入伙！">即便是坑，我也想要拉你入伙！</a>
+                            <p>
+                                对于刚毕业的学生来说，想学习建网站，掌握一技之长，最简单的入门无非就是学会html和css，先前发表过一篇文章《如果要学习web前端开发，需要学习什么？》，如果你还不知道如何着手，请仔细阅读....7天的时间，入门是没有问题的，当然，如果你用心的话！</p>
+                        </li>
+                        <li><i></i><a href="/xd/24.html" title="我是怎么评价自己的？">我是怎么评价自己的？</a>
+                            <p>
+                                为了挨打轻一些，问我哪里来的，我瞎说了一个说那个谁家的，结果，打得更凶。最后事情还原了真相，我妈说，你要说说奶奶家的，都不会打你了。从此以后，我知道撒谎是会付出更惨痛的代价的，我不再撒谎，也不喜欢爱撒谎的人。</p>
+                        </li>
+                        <li><i></i><a href="/xd/23.html" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?...</a>
+                            <p>
+                                就拿我自己来说吧，有时候会很矛盾，设计好的作品，不把它分享出来，会觉得待在自己电脑里面实在是没有意义。干脆就发布出去吧。我也害怕收到大家不好的评论，有些评论，可能说者无意，但是对于每一个用心的站长来说，都会受很深</p>
+                        </li>
+                        <li><i></i><a href="/xd/34.html" title="遇见一个未知的你">遇见一个未知的你</a>
+                            <p>听着那熟悉的歌曲看着那一张张可爱的图片.-读着我们共同欣赏的诗……也许我们曾经相遇,看着你远去的背影 ,沿着你来的方向 ,回忆时间穿梭于幸福的点点滴滴....</p></li>
+                        <li><i></i><a href="/xd/2.html" title="网易博客关闭，何不从此开始潇洒行走江湖！">网易博客关闭，何不从此开始潇洒行走江湖！</a>
+                            <p>从网易博客平台的出现，到现在已经有12个年头了，很多人还坚持着，网易博客一宣布关闭，很多人都很惋惜，那么多的文字记忆，又该如何是好？虽然可以一键搬迁到lofter</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--tab_box end-->
+        <div class="zhuanti whitebg">
+            <h2 class="htitle"><span class="hnav"><a href="/e/tags/?tagname=%E5%B8%9D%E5%9B%BDcms&amp;tempid=8"
+                                                     target="_blank">帝国cms</a> &nbsp; <a
+                    href="/e/tags/?tagname=%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2&amp;tempid=8" target="_blank">个人博客</a> &nbsp; <a
+                    href="/e/tags/?tagname=%E7%BD%91%E7%AB%99%E5%88%B6%E4%BD%9C&amp;tempid=8" target="_blank">网站制作</a> &nbsp; <a
+                    href="/e/tags/?tagname=%E8%AE%BE%E8%AE%A1&amp;tempid=8" target="_blank">设计</a></span>特别推荐</h2>
+            <ul>
+                <li><i class="ztpic"><a href="/blog/7.html" target="_blank"><img
+                        src="/skin/jxhx/images/b02.jpg"></a></i> <b>安静地做一个爱设计的女子</b><span>自从入了这行，很多人跟我说可以做网络教程，我也有考虑，但最终没有实现，因为我觉得在这个教程泛滥的时代，直接做一套免费的原创个人博客模板更为实在。每当看到自己喜欢的配色图片</span><a
+                        href="/blog/7.html" target="_blank" class="readmore">文章阅读</a></li>
+                <li><i class="ztpic"><a href="/notice/27.html" target="_blank"><img src="/skin/jxhx/images/h1.jpg"></a></i>
+                    <b>为什么说10月24日是程序员的节日？</b><span>创立“程序员节”最早是来自俄文《计算机世界》（《Компьютерра》）出版社的主编德米特里·门德列留科（Дмитрий Мендрелюк）在1996年7月15日的想法，当时计划将节日命名为“计算机用户节”，定在每年9月份的第一个星期五，称之为“纯净的星期五</span><a
+                            href="/notice/27.html" target="_blank" class="readmore">文章阅读</a></li>
+                <li><i class="ztpic"><a href="/notice/26.html" target="_blank"><img src="/skin/jxhx/images/h2.jpg"></a></i>
+                    <b>个人网站做好了，百度不收录怎么办？来，看看他们怎么做的。</b><span>不管你是学前端的还是后端的，作为一个程序员，做一个自己的博客，那是必然的。咱们的圈子就这么大，想让更多的人了解你，看看你的技术多牛逼，扔一个博客地址就行了。 大多数人在没有</span><a
+                            href="/notice/26.html" target="_blank" class="readmore">文章阅读</a></li>
+                <li><i class="ztpic"><a href="/xd/25.html" target="_blank"><img
+                        src="http://www.yangqq.com/d/file/news/life/2014-07-31/ae167e7d81612318949460aad1143e0d.jpg"></a></i>
+                    <b>即便是坑，我也想要拉你入伙！</b><span>对于刚毕业的学生来说，想学习建网站，掌握一技之长，最简单的入门无非就是学会html和css，先前发表过一篇文章《如果要学习web前端开发，需要学习什么？》，如果你还不知道如何着手，请仔细阅读....7天的时间，入门是没有问题的，当然，如果你用心的话！</span><a
+                            href="/xd/25.html" target="_blank" class="readmore">文章阅读</a></li>
+                <li><i class="ztpic"><a href="/xd/24.html" target="_blank"><img
+                        src="http://www.yangqq.com/d/file/news/s/2018-07-28/95d1b1577a8a7aa4fe3893f2502617e9.jpg"></a></i>
+                    <b>我是怎么评价自己的？</b><span>为了挨打轻一些，问我哪里来的，我瞎说了一个说那个谁家的，结果，打得更凶。最后事情还原了真相，我妈说，你要说说奶奶家的，都不会打你了。从此以后，我知道撒谎是会付出更惨痛的代价的，我不再撒谎，也不喜欢爱撒谎的人。</span><a
+                            href="/xd/24.html" target="_blank" class="readmore">文章阅读</a></li>
+                <li><i class="ztpic"><a href="/blog/6.html" target="_blank"><img
+                        src="http://www.yangqq.com/d/file/news/s/2013-07-09/0ea789bf08db903aaa6cc81d38615472.jpg"></a></i>
+                    <b>电话以外的宁静</b><span>电话很久没有响过了，我的QQ也很久没有在线了，消失了很多天，刚刚结识的朋友因为我身上又起了红疹，每天都发来消息询问我的情况，我做到了这么多天来的沉默，我相信，没有网络，我还是可以继续我自己的生活</span><a
+                            href="/blog/6.html" target="_blank" class="readmore">文章阅读</a></li>
+            </ul>
+        </div>
+        <div class="whitebg bloglist">
+            <h2 class="htitle">最新博文</h2>
+            <ul>
+                <li><h3 class="blogtitle"><b>【顶】</b><a href="/xd/23.html" target="_blank">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
+                </h3> <span class="blogpic imgscale"><i><a href="/xd/" target="_blank">设计心得</a></i><a href="/xd/23.html"
+                                                                                                      title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?"><img
+                        src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg"
+                        alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?"></a></span>
+                    <p class="blogtext">
+                        就拿我自己来说吧，有时候会很矛盾，设计好的作品，不把它分享出来，会觉得待在自己电脑里面实在是没有意义。干脆就发布出去吧。我也害怕收到大家不好的评论，有些评论，可能说者无意，但是对于每一个用心的站长来说，都会受很深 </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-08</span><span>【<a href="/xd/" target="_blank">设计心得</a>】</span></p>
+                    <a href="/xd/23.html" class="viewmore">阅读更多</a></li>
+                <li><h3 class="blogtitle"><b>【顶】</b><a href="/web/html/14.html" target="_blank">十条设计原则教你学会如何设计网页布局!</a>
+                </h3> <span class="blogpic imgscale"><i><a href="/web/html/" target="_blank">CSS3|Html5</a></i><a
+                        href="/web/html/14.html" title="十条设计原则教你学会如何设计网页布局!"><img
+                        src="http://www.yangqq.com/d/file/jstt/css3/2018-03-20/718b56be9dbf920cc0a6124545216654.jpg"
+                        alt="十条设计原则教你学会如何设计网页布局!"></a></span>
+                    <p class="blogtext">
+                        网页常见的布局有很多种,单列布局,多列布局.其中单列布局是国外很多网站比较常用的.咱们很多站长以及门户网站都使用的是是两列布局,很少用三列布局的.下面我来分享下我们常用的网页布局格式以及设计技巧 </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-08</span><span>【<a href="/web/html/" target="_blank">CSS3|Html5</a>】</span>
+                    </p>
+                    <a href="/web/html/14.html" class="viewmore">阅读更多</a></li>
+                <li><h3 class="blogtitle"><b>【顶】</b><a href="/blog/7.html" target="_blank">安静地做一个爱设计的女子</a></h3> <span
+                        class="blogpic imgscale"><i><a href="/blog/" target="_blank">个人博客</a></i><a href="/blog/7.html"
+                                                                                                    title="安静地做一个爱设计的女子"><img
+                        src="/skin/jxhx/images/b02.jpg" alt="安静地做一个爱设计的女子"></a></span>
+                    <p class="blogtext">
+                        自从入了这行，很多人跟我说可以做网络教程，我也有考虑，但最终没有实现，因为我觉得在这个教程泛滥的时代，直接做一套免费的原创个人博客模板更为实在。每当看到自己喜欢的配色图片 </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-08</span><span>【<a href="/blog/" target="_blank">个人博客</a>】</span></p>
+                    <a href="/blog/7.html" class="viewmore">阅读更多</a></li>
+                <li><h3 class="blogtitle"><b>【顶】</b><a href="/xd/1.html" target="_blank">Come on,行动起来吧!我们和时间来一场赛跑!</a>
+                </h3> <span class="blogpic imgscale"><i><a href="/xd/" target="_blank">设计心得</a></i><a href="/xd/1.html"
+                                                                                                      title="Come on,行动起来吧!我们和时间来一场赛跑!"><img
+                        src="/skin/jxhx/images/b03.jpg" alt="Come on,行动起来吧!我们和时间来一场赛跑!"></a></span>
+                    <p class="blogtext">
+                        "时间过得那么飞快,使我的小心眼儿里不只是着急,还有悲伤.有一天,我放学回家,看到太阳快落山了,就下决心说:"我要比太阳更快地回家."我狂奔回去,站在庭院前喘气的时候,看到太阳还露着半边脸,我高兴地跳跃起来 </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-07</span><span>【<a href="/xd/" target="_blank">设计心得</a>】</span></p>
+                    <a href="/xd/1.html" class="viewmore">阅读更多</a></li>
+                <li><h3 class="blogtitle"><a href="/notice/30.html" target="_blank">【个人博客空间申请】金牛云服，免费领空间啦</a></h3> <span
+                        class="blogpic imgscale"><i><a href="/notice/" target="_blank">网站公告</a></i><a
+                        href="/notice/30.html" title="【个人博客空间申请】金牛云服，免费领空间啦"><img
+                        src="http://www.yangqq.com/d/file/jstt/web/2018-10-16/56c49531df63eec5ccc3840e68f3ac21.png"
+                        alt="【个人博客空间申请】金牛云服，免费领空间啦"></a></span>
+                    <p class="blogtext">还在愁域名购买了，如何选择主机或者服务器吗？<br> <br>
+                        其实选择主机或者服务器有几个重要的选项，比如，线路，CPU，内存，带宽，网页空间，数据库，月流量等等。那什么是主机，什么是服务器，他们的区别 </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-08</span><span>【<a href="/notice/" target="_blank">网站公告</a>】</span>
+                    </p>
+                    <a href="/notice/30.html" class="viewmore">阅读更多</a></li>
+                <li><h3 class="blogtitle"><a href="/notice/29.html" target="_blank">双十一，阿里云特惠活动，快来领券啦</a></h3> <span
+                        class="blogpic imgscale"><i><a href="/notice/" target="_blank">网站公告</a></i><a
+                        href="/notice/29.html" title="双十一，阿里云特惠活动，快来领券啦"><img
+                        src="http://www.yangqq.com/d/file/jstt/web/2018-11-03/e3d39beb4e61d8545d6fbda2dc7a4b71.png"
+                        alt="双十一，阿里云特惠活动，快来领券啦"></a></span>
+                    <p class="blogtext">一折的产品，有没有看错，咱来看看，到底是哪些一折，想买空间吗？算了吧，服务器的价钱都比空间便宜呢，那肯定买服务器啊，咱来看看阿里云一折的服务器哪些好 </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-08</span><span>【<a href="/notice/" target="_blank">网站公告</a>】</span>
+                    </p>
+                    <a href="/notice/29.html" class="viewmore">阅读更多</a></li>
+                <li><h3 class="blogtitle"><a href="/notice/28.html" target="_blank">第二届 优秀个人博客模板比赛参选活动</a></h3> <span
+                        class="blogpic imgscale"><i><a href="/notice/" target="_blank">网站公告</a></i><a
+                        href="/notice/28.html" title="第二届 优秀个人博客模板比赛参选活动"><img
+                        src="http://www.yangqq.com/d/file/blogs/2018-06-11/372b79556c82ac59a8c46eda53f177c4.jpg"
+                        alt="第二届 优秀个人博客模板比赛参选活动"></a></span>
+                    <p class="blogtext">只要你是在校大学生，不管你是新生，还是即将毕业，不管你是前端菜鸟，还是前端大神，只要你会html，这里将会是你展示才能的大平台。 </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-08</span><span>【<a href="/notice/" target="_blank">网站公告</a>】</span>
+                    </p>
+                    <a href="/notice/28.html" class="viewmore">阅读更多</a></li>
+                <li><h3 class="blogtitle"><a href="/notice/27.html" target="_blank">为什么说10月24日是程序员的节日？</a></h3> <span
+                        class="blogpic imgscale"><i><a href="/notice/" target="_blank">网站公告</a></i><a
+                        href="/notice/27.html" title="为什么说10月24日是程序员的节日？"><img src="/skin/jxhx/images/h1.jpg"
+                                                                               alt="为什么说10月24日是程序员的节日？"></a></span>
+                    <p class="blogtext">创立“程序员节”最早是来自俄文《计算机世界》（《Компьютерра》）出版社的主编德米特里·门德列留科（Дмитрий
+                        Мендрелюк）在1996年7月15日的想法，当时计划将节日命名为“计算机用户节”，定在每年9月份的第一个星期五，称之为“纯净的星期五 </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-08</span><span>【<a href="/notice/" target="_blank">网站公告</a>】</span>
+                    </p>
+                    <a href="/notice/27.html" class="viewmore">阅读更多</a></li>
+                <li><h3 class="blogtitle"><a href="/notice/26.html" target="_blank">个人网站做好了，百度不收录怎么办？来，看看他们怎么做的。</a>
+                </h3> <span class="blogpic imgscale"><i><a href="/notice/" target="_blank">网站公告</a></i><a
+                        href="/notice/26.html" title="个人网站做好了，百度不收录怎么办？来，看看他们怎么做的。"><img src="/skin/jxhx/images/h2.jpg"
+                                                                                         alt="个人网站做好了，百度不收录怎么办？来，看看他们怎么做的。"></a></span>
+                    <p class="blogtext">
+                        不管你是学前端的还是后端的，作为一个程序员，做一个自己的博客，那是必然的。咱们的圈子就这么大，想让更多的人了解你，看看你的技术多牛逼，扔一个博客地址就行了。<br> <br> 大多数人在没有
+                    </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-08</span><span>【<a href="/notice/" target="_blank">网站公告</a>】</span>
+                    </p>
+                    <a href="/notice/26.html" class="viewmore">阅读更多</a></li>
+                <li><h3 class="blogtitle"><a href="/xd/25.html" target="_blank">即便是坑，我也想要拉你入伙！</a></h3> <span
+                        class="blogpic imgscale"><i><a href="/xd/" target="_blank">设计心得</a></i><a href="/xd/25.html"
+                                                                                                  title="即便是坑，我也想要拉你入伙！"><img
+                        src="http://www.yangqq.com/d/file/news/life/2014-07-31/ae167e7d81612318949460aad1143e0d.jpg"
+                        alt="即便是坑，我也想要拉你入伙！"></a></span>
+                    <p class="blogtext">
+                        对于刚毕业的学生来说，想学习建网站，掌握一技之长，最简单的入门无非就是学会html和css，先前发表过一篇文章《如果要学习web前端开发，需要学习什么？》，如果你还不知道如何着手，请仔细阅读....7天的时间，入门是没有问题的，当然，如果你用心的话！ </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-08</span><span>【<a href="/xd/" target="_blank">设计心得</a>】</span></p>
+                    <a href="/xd/25.html" class="viewmore">阅读更多</a></li>
+                <li><h3 class="blogtitle"><a href="/xd/24.html" target="_blank">我是怎么评价自己的？</a></h3> <span
+                        class="blogpic imgscale"><i><a href="/xd/" target="_blank">设计心得</a></i><a href="/xd/24.html"
+                                                                                                  title="我是怎么评价自己的？"><img
+                        src="http://www.yangqq.com/d/file/news/s/2018-07-28/95d1b1577a8a7aa4fe3893f2502617e9.jpg"
+                        alt="我是怎么评价自己的？"></a></span>
+                    <p class="blogtext">
+                        为了挨打轻一些，问我哪里来的，我瞎说了一个说那个谁家的，结果，打得更凶。最后事情还原了真相，我妈说，你要说说奶奶家的，都不会打你了。从此以后，我知道撒谎是会付出更惨痛的代价的，我不再撒谎，也不喜欢爱撒谎的人。 </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-08</span><span>【<a href="/xd/" target="_blank">设计心得</a>】</span></p>
+                    <a href="/xd/24.html" class="viewmore">阅读更多</a></li>
+                <li><h3 class="blogtitle"><a href="/web/wzjs/22.html" target="_blank">【个人博客网站制作】自己不会个人博客网站制作，你会选择用什么博客程序源码？</a>
+                </h3>
+                    <p class="blogtext">
+                        这些开源的博客程序源码，都是经过很多次版本测试的，都有固定的使用人群。我所知道的主流的博客程序有，Z-blog，Emlog，WordPress，Typecho等，免费的cms系统有，织梦cms（dedecms），phpcms，帝国cms（EmpireCMS）等。 </p>
+                    <p class="bloginfo"><i class="avatar">
+                        <script src="/d/js/acmsd/thea6.js"></script>
+                    </i><span></span><span>2018-11-08</span><span>【<a href="/web/wzjs/" target="_blank">网站建设</a>】</span>
+                    </p>
+                    <a href="/web/wzjs/22.html" class="viewmore">阅读更多</a></li>
+                <!--10条 1栏目名称 18最新 5标签id-->
+            </ul>
+        </div>
+        <!--bloglist end-->
+    </div>
+    <div class="rbox">
+        <div class="whitebg paihang" >
+            <h2 class="htitle">访问排行</h2>
+            <section class="topnews imgscale">
+                <a href="/blog/7.html"><img src="http://www.yangqq.com/skin/852/images/banner01.jpg"><span>安静地做一个爱设计的女子</span></a>
+            </section>
+            <ul>
+                <li><i></i><a href="/web/html/14.html" title="十条设计原则教你学会如何设计网页布局!"
+                              target="_blank">十条设计原则教你学会如何设计网页布局!</a></li>
+                <li><i></i><a href="/xd/23.html" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?" target="_blank">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
+                </li>
+                <li><i></i><a href="/xd/1.html" title="Come on,行动起来吧!我们和时间来一场赛跑!" target="_blank">Come
+                    on,行动起来吧!我们和时间来一场赛跑!</a></li>
+                <li><i></i><a href="/notice/27.html" title="为什么说10月24日是程序员的节日？" target="_blank">为什么说10月24日是程序员的节日？</a>
+                </li>
+                <li><i></i><a href="/notice/26.html" title="个人网站做好了，百度不收录怎么办？来，看看他们怎么做的。" target="_blank">个人网站做好了，百度不收录怎么办？来，看看他们怎么做的。</a>
+                </li>
+                <li><i></i><a href="/notice/30.html" title="【个人博客空间申请】金牛云服，免费领空间啦"
+                              target="_blank">【个人博客空间申请】金牛云服，免费领空间啦</a></li>
+                <li><i></i><a href="/blog/4.html" title="个人网站做好了，百度不收录怎么办？来，看看他们怎么做的" target="_blank">个人网站做好了，百度不收录怎么办？来，看看他们怎么做的</a>
+                </li>
+            </ul>
+        </div>
+        <div class="whitebg tuijian">
+            <h2 class="htitle">今日推荐</h2>
+            <section class="topnews imgscale">
+                <a href="/xd/23.html"><img
+                        src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg"><span>作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</span></a>
+            </section>
+            <ul>
+                <li><a href="/web/html/14.html" title="十条设计原则教你学会如何设计网页布局!" target="_blank"><i><img
+                        src="http://www.yangqq.com/d/file/jstt/css3/2018-03-20/718b56be9dbf920cc0a6124545216654.jpg"></i>
+                    <p>十条设计原则教你学会如何设计网页布局!</p></a></li>
+                <li><a href="/blog/7.html" title="安静地做一个爱设计的女子" target="_blank"><i><img src="/skin/jxhx/images/b02.jpg"></i>
+                    <p>安静地做一个爱设计的女子</p></a></li>
+                <li><a href="/notice/27.html" title="为什么说10月24日是程序员的节日？" target="_blank"><i><img
+                        src="/skin/jxhx/images/h1.jpg"></i>
+                    <p>为什么说10月24日是程序员的节日？</p></a></li>
+                <li><a href="/notice/26.html" title="个人网站做好了，百度不收录怎么办？来，看看他们怎么做的。" target="_blank"><i><img
+                        src="/skin/jxhx/images/h2.jpg"></i>
+                    <p>个人网站做好了，百度不收录怎么办？来，看看他们怎么做的。</p></a></li>
+                <li><a href="/xd/25.html" title="即便是坑，我也想要拉你入伙！" target="_blank"><i><img
+                        src="http://www.yangqq.com/d/file/news/life/2014-07-31/ae167e7d81612318949460aad1143e0d.jpg"></i>
+                    <p>即便是坑，我也想要拉你入伙！</p></a></li>
+                <li><a href="/xd/24.html" title="我是怎么评价自己的？" target="_blank"><i><img
+                        src="http://www.yangqq.com/d/file/news/s/2018-07-28/95d1b1577a8a7aa4fe3893f2502617e9.jpg"></i>
+                    <p>我是怎么评价自己的？</p></a></li>
+                <li><a href="/web/wzjs/21.html" title="如何快速建立自己的个人博客网站" target="_blank"><i><img
+                        src="http://www.yangqq.com/d/file/jstt/web/2018-09-07/273cbdcdf336384159e3d0a9d83f90ac.png"></i>
+                    <p>如何快速建立自己的个人博客网站</p></a></li>
+            </ul>
+        </div>
+        <!-- <div class="ad whitebg imgscale">
+             <ul>
+                 <a href="http://www.yangqq.com/download/div/917.html" target="_blank"><img
+                         src="/skin/jxhx/images/ad.jpg"></a>
+             </ul>
+         </div>-->
+        <div class="whitebg wenzi">
+            <h2 class="htitle">猜你喜欢</h2>
+            <ul>
+                <li><a target="_blank" href="/xd/23.html">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a></li>
+                <li><a target="_blank" href="/xd/1.html">Come on,行动起来吧!我们和时间来一场赛跑!</a></li>
+                <li><a target="_blank" href="/blog/7.html">安静地做一个爱设计的女子</a></li>
+                <li><a target="_blank" href="/web/html/14.html">十条设计原则教你学会如何设计网页布局!</a></li>
+                <li><a target="_blank" href="/web/html/16.html">使用CSS3制作文字、图片倒影</a></li>
+                <li><a target="_blank" href="/notice/28.html">第二届 优秀个人博客模板比赛参选活动</a></li>
+                <li><a target="_blank" href="/notice/29.html">双十一，阿里云特惠活动，快来领券啦</a></li>
+                <li><a target="_blank" href="/xd/24.html">我是怎么评价自己的？</a></li>
+                <li><a target="_blank" href="/web/gj/9.html">Ui Parade免费的UI在线设计工具</a></li>
+                <li><a target="_blank" href="/web/wzjs/22.html">【个人博客网站制作】自己不会个人博客网站制作，你会选择用什么博客程序源码？</a></li>
+            </ul>
+        </div>
+        <!--<div class="ad whitebg imgscale">
+            <ul>
+                <a href="http://www.yangqq.com/download/div/917.html" target="_blank"><img
+                        src="/skin/jxhx/images/ad02.jpg"></a>
+            </ul>
+        </div>-->
+        <div class="links whitebg">
+            <h2 class="htitle">友情链接</h2>
+            <ul>
+                <li><a href="http://www.yangqq.com" target="_blank">个人博客模板</a></li>
+            </ul>
+        </div>
+    </div>
+</article>
+<footer>
+    <div class="box">
+        <div class="wxbox">
+            <ul>
+                <!--<li><img src="../static/images/wechart.png"><span>微信公众号</span></li>-->
+                <li><img src="../static/images/wechart.png" th:src="@{/static/images/wechart.png}"><span>开发者微信</span></li>
+            </ul>
+        </div>
+        <div class="endnav">
+            <p><b>站点声明：</b></p>
+            <p>1、本站是个人博客网站，版权归EasyBlog开发者所有，个人可以使用，但是未经许可不得用于任何商业目的。</p>
+            <p>2、所有文章未经原作者授权禁止转载、摘编、复制或建立镜像，如有违反，追究法律责任。举报邮箱：<a
+                    href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=HHh9cn95b3F1cHVye1xtbTJ-c3E"
+                    target="_blank">dacesmiling@qq.com</a></p>
+            <p>3、评论区禁止发布有损国家形象和民族团结等非法言论，如有违反，追究法律责任。</p>
+            <p>4、本站所展示的所有内容仅供网友学习和交流，请勿作他用。若因非法使用引起纠纷、损失等，一切后果由使用者承担。</p>
+            <br/>
+            <p style="margin-left: 290px">Copyright © 2019-2020 <a href="http://www.easyblog.com" target="_blank">www.easyblog.top</a> 版权所有.
+            <a href="http://www.miitbeian.gov.cn/" target="_blank">陕ICP备-19025460号</a></p>
+        </div>
+    </div>
+    <a href="#">
+        <div class="top"></div>
+    </a>
+</footer>
+</body>
+</html>
