@@ -3,23 +3,20 @@ EasyBlog blog site
 ![](https://img.shields.io/github/tag/pandao/editor.md.svg) 
 ![](https://img.shields.io/github/release/pandao/editor.md.svg) 
 ![](https://img.shields.io/bower/v/editor.md.svg)
-
-EasyBlog will make it easy to write a blog .
-Look how easy it is to use:
- 
-    import project
-    # Get your stuff done
-    project.do_stuff()
+![](https://camo.githubusercontent.com/b28cf4816a133c75598a4d5ba5e182b9be15b439/68747470733a2f2f696d672e736869656c64732e696f2f686578706d2f6c2f706c75672e7376673f7374796c653d666c61742d737175617265)
+![](https://camo.githubusercontent.com/b74f0c55895a3e31913261c2933ce1233f69fefb/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f626c6f672d2545352538442539412545352541452541322d6f72616e67652e7376673f7374796c653d666c61742d737175617265)
  
 Features
 --------
  
 - Be awesome
 - Make things faster
- 
+- EasyBlog will make it easy to write a blog .
+
 How to use it?
 ------------
-  
+#### 项目首页：www.easyblog.top
+#### 项目运行效果演示： 
 分类专栏页面：
 <a href="https://sm.ms/image/YPxiMNZqVEl4aBT" target="_blank"><img src="https://i.loli.net/2019/10/11/YPxiMNZqVEl4aBT.png" ></a>
 
@@ -48,18 +45,20 @@ How to use it?
  
 Contribute
 ----------
+If you are interested in this project, then join us and make this project better to affect more people：
  
 - Issue Tracker: https://github.com/LoverITer/easyblog/issues
-- Source Code: https://github.com/LoverITer/easyblog
+- Source Code: https://github.com/LoverITer/easyblog.git
  
 Support
 -------
  
-If you are having issues, please let me know.<br/>
-We have a mailing list located at: huangxin981230@163.com
+If you are having issues, please let me know.
+We have a mailing list located at: huangxin981230@163.com <br/>
 Below are the main technologies and supporting plugins used by the system：
 * [前端页面框架Semantic UI](https://onebugman.cn/semantic-ui/elements/button.php#-floated)
 * [SpringBoot 2.1.8](https://docs.spring.io/spring-boot/docs/2.1.8.RELEASE/reference/html/)<br/>
+* [MySQL](https://www.mysql.com/)
 * [MyBatis](https://mybatis.org/mybatis-3/zh/index.html)
 * [Redis](https://redis.io/)
 * [Thymeleaf](https://www.thymeleaf.org/)
@@ -71,5 +70,4 @@ Below are the main technologies and supporting plugins used by the system：
 
 License
 -------
- 
-The project is licensed under the BSD license.
+The project is licensed under the  Apache 2.0 license.
