@@ -4,13 +4,13 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import top.easyblog.autoconfig.QiNiuCloudService;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserAttention;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.UserAttentionImpl;
 import top.easyblog.service.impl.UserServiceImpl;
 import top.easyblog.commons.utils.CalendarUtil;
-import top.easyblog.commons.utils.QiNiuCloudUtil;
 import top.easyblog.commons.utils.UserProfessionUtil;
 
 import javax.servlet.http.HttpSession;
@@ -22,14 +22,16 @@ import java.util.Objects;
 @RequestMapping(value = "/manage/uc")
 public class UserCenterController {
 
-    private static final String PREFIX = "admin/personalInfo";
-    private static final String LOGIN_PAGE = "redirect:/user/loginPage";
+    private final String PREFIX = "admin/personalInfo";
+    private final String LOGIN_PAGE = "redirect:/user/loginPage";
     private final UserServiceImpl userService;
     private final UserAttentionImpl userAttentionService;
+    private final QiNiuCloudService qiNiuCloudService;
 
-    public UserCenterController(UserServiceImpl userService, UserAttentionImpl userAttentionService) {
+    public UserCenterController(UserServiceImpl userService, UserAttentionImpl userAttentionService, QiNiuCloudService qiNiuCloudService) {
         this.userService = userService;
         this.userAttentionService = userAttentionService;
+        this.qiNiuCloudService = qiNiuCloudService;
     }
 
     @GetMapping(value = "/profile")
@@ -131,12 +133,12 @@ public class UserCenterController {
         if (Objects.nonNull(user)) {
             try {
                 String image = map.get("image");
-                String imageBytes = image.substring(image.indexOf(",") + 1, image.length());
+                String imageBytes = image.substring(image.indexOf(",") + 1);
                 Base64 base64Decoder = new Base64();
                 //转码得到base64的字节码
                 byte[] bytes = base64Decoder.decode(imageBytes);
                 //把图片保存到七牛云上，并返回图片的URL
-                String imageUrl = QiNiuCloudUtil.getInstance().putBase64Image(bytes, null);
+                String imageUrl = qiNiuCloudService.putBase64Image(bytes, null);
                 //把图片的URL保存到数据库中
                 User var0 = new User();
                 var0.setUserId(user.getUserId());
@@ -144,7 +146,7 @@ public class UserCenterController {
                 userService.updateUserInfo(var0);
                 System.out.println(user.getUserHeaderImgUrl());
                 if (!user.getUserHeaderImgUrl().contains("static")) {
-                    QiNiuCloudUtil.getInstance().delete(user.getUserHeaderImgUrl());
+                    qiNiuCloudService.delete(user.getUserHeaderImgUrl());
                     user.setUserHeaderImgUrl(imageUrl);
                 }
                 result.setSuccess(true);

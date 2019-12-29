@@ -6,12 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import top.easyblog.autoconfig.QiNiuCloudService;
 import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
 import top.easyblog.commons.utils.FileUploadUtils;
-import top.easyblog.commons.utils.QiNiuCloudUtil;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.CategoryServiceImpl;
 
@@ -27,21 +27,22 @@ import java.util.Objects;
 public class CategoryAdminController {
 
 
-    private static final String PREFIX = "/admin/type_manage/";
-    private static final String LOGIN_PAGE = "redirect:/user/loginPage";
+    private final String PREFIX = "/admin/type_manage/";
+    private final String LOGIN_PAGE = "redirect:/user/loginPage";
 
     private final CategoryServiceImpl categoryService;
+    private final QiNiuCloudService qiNiuCloudService;
 
-    public CategoryAdminController(CategoryServiceImpl categoryService) {
+    public CategoryAdminController(CategoryServiceImpl categoryService, QiNiuCloudService qiNiuCloudService) {
         this.categoryService = categoryService;
+        this.qiNiuCloudService = qiNiuCloudService;
     }
-
 
 
     @GetMapping(value = "/list")
     public String categoryPage(HttpSession session,
                                Model model,
-                               @RequestParam(value = "page",defaultValue = "1") int pageNo) {
+                               @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
             PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
@@ -114,7 +115,7 @@ public class CategoryAdminController {
             category.setCategoryId(categoryId);
             if (!imageUrl.contains("static")) {
                 try {
-                    QiNiuCloudUtil.getInstance().delete(imageUrl);
+                    qiNiuCloudService.delete(imageUrl);
                 } catch (Exception e) {
                     return "redirect:error/error";
                 }
@@ -132,30 +133,11 @@ public class CategoryAdminController {
      * @param session
      * @param model
      * @return
-     *//*
-    @GetMapping(value = "/dash")
-    public String categoryDashBoxPage(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        if (Objects.nonNull(user)) {
-            List<Category> categories = categoryService.getUserAllDeletedCategory(user.getUserId());
-            model.addAttribute("categories", categories);
-            putCategoryNumInModel(user, model);
-            return PREFIX + "category-dash";
-        }
-        return LOGIN_PAGE;
-    }*/
-
-    /**
-     * 从分类管理首页删除的分类进入到垃圾箱中，垃圾箱页面
-     *
-     * @param session
-     * @param model
-     * @return
      */
     @GetMapping(value = "/dash")
     public String categoryDashBoxPage(HttpSession session,
                                       Model model,
-                                      @RequestParam(value = "page",defaultValue = "1") int pageNo) {
+                                      @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
             PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
@@ -220,8 +202,7 @@ public class CategoryAdminController {
             } else {
                 //上传到七牛云图床，返回图片URL
                 try {
-                    String imageUrl = QiNiuCloudUtil.getInstance().putMultipartImage(categoryImg);
-                    category.setCategoryImageUrl(imageUrl);
+                    category.setCategoryImageUrl(qiNiuCloudService.putMultipartImage(categoryImg));
                 } catch (Exception e) {
                     return "/error/error";
                 }
@@ -248,15 +229,15 @@ public class CategoryAdminController {
 
     @PostMapping(value = "/saveEdit/{categoryId}")
     public String saveEditor(HttpSession session, @PathVariable("categoryId") int categoryId,
-                           @RequestParam String categoryName,
-                           @RequestParam String categoryDesc,
-                           @RequestParam String oldCategoryImg,
-                           @RequestParam MultipartFile categoryImage,
-                           RedirectAttributes redirectAttributes) {
+                             @RequestParam String categoryName,
+                             @RequestParam String categoryDesc,
+                             @RequestParam String oldCategoryImg,
+                             @RequestParam MultipartFile categoryImage,
+                             RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
             try {
-                final Category category = new Category();
+                 Category category = new Category();
                 category.setCategoryId(categoryId);
                 category.setCategoryName(categoryName);
                 category.setCategoryDescription(categoryDesc);
@@ -264,10 +245,9 @@ public class CategoryAdminController {
                     try {
                         if (!oldCategoryImg.contains("static")) {
                             //删除在七牛云上的图片
-                            QiNiuCloudUtil.getInstance().delete(oldCategoryImg);
+                            qiNiuCloudService.delete(oldCategoryImg);
                         }
-                        String imageUrl = QiNiuCloudUtil.getInstance().putMultipartImage(categoryImage);
-                        category.setCategoryImageUrl(imageUrl);
+                        category.setCategoryImageUrl(qiNiuCloudService.putMultipartImage(categoryImage));
                     } catch (Exception e) {
                         return "/error/error";
                     }

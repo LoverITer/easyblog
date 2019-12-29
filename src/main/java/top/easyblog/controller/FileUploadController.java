@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import top.easyblog.autoconfig.QiNiuCloudService;
 import top.easyblog.config.web.Result;
-import top.easyblog.commons.utils.QiNiuCloudUtil;
+
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -19,6 +20,11 @@ import java.util.Objects;
 @RequestMapping(value = "/upload")
 public class FileUploadController {
 
+    private final QiNiuCloudService qiNiuCloudService;
+
+    public FileUploadController(QiNiuCloudService qiNiuCloudService) {
+        this.qiNiuCloudService = qiNiuCloudService;
+    }
 
     @RequestMapping(value = "/interface1")
     public Result fileUpload(@RequestParam(value = "file") MultipartFile multipartFile, HttpServletRequest request,@RequestParam int categoryId){
@@ -66,7 +72,7 @@ public class FileUploadController {
         Result result = new Result();
         result.setSuccess(false);
         try {
-            String imageUrl = QiNiuCloudUtil.getInstance().putMultipartImage(multipartFile);
+            String imageUrl = qiNiuCloudService.putMultipartImage(multipartFile);
             //上传成功后把图片的URL带回页面
             result.setMsg(imageUrl);
             result.setSuccess(true);
@@ -96,7 +102,7 @@ public class FileUploadController {
     public JSONObject saveArticlesImage(@RequestParam(value = "editormd-image-file") MultipartFile multipartFile){
         JSONObject resultJs=new JSONObject();
         try {
-            String imageUrl = QiNiuCloudUtil.getInstance().putMultipartImage(multipartFile);
+            String imageUrl = qiNiuCloudService.putMultipartImage(multipartFile);
             //上传成功后把图片的URL带回页面
             resultJs.put("success", 1);
             resultJs.put("message", "上传成功");
