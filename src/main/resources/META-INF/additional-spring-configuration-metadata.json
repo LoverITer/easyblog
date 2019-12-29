@@ -11,13 +11,23 @@
       "description": "Description for spring.datasource.initial-size."
     },
     {
-      "name": "qiniu.accessKey",
+      "name": "qiniucloud.accessKey",
       "type": "java.lang.String",
-      "description": "Description for qiniu.accessKey."
+      "description": "Description for qiniuCloud.accessKey."
     },
     {
-      "name": "spring.profiles",
+      "name": "qiniucloud.secretKey",
       "type": "java.lang.String",
-      "description": "Description for spring.profiles."
+      "description": "Description for qiniuCloud.secretKey."
+    },
+    {
+      "name": "qiniucloud.bucket",
+      "type": "java.lang.String",
+      "description": "Description for qiniuCloud.bucket."
+    },
+    {
+      "name": "qiniucloud.domain",
+      "type": "java.lang.String",
+      "description": "Description for qiniuCloud.domain."
     }
   ] }

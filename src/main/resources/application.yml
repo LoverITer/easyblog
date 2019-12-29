@@ -35,9 +35,8 @@ logging:
   config: classpath:logback-spring.xml
 
 #七牛云配置
-qiniu:
+qiniucloud:
   accessKey: vRxHtqsnLfzK2h2DTGcEfFlLLDDNgqAvoZf0H08D
   secretKey: 5No0lIzPOv2pYDX9wPkFFh_kE99lvpPia0nA0ZPH
-  bucket: blog_album
-  path: http://poag7m5q9.bkt.clouddn.com
-
+  domain: image.easyblog.top
+  bucket-name: easyblog-pro
