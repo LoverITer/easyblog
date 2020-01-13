@@ -26,7 +26,6 @@ public class QiNiuCloudService {
 
     private Logger log = LoggerFactory.getLogger(QiNiuCloudService.class);
 
-
     /**
      * 获取上传凭证
      *

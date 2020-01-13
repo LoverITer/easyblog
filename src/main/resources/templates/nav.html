@@ -32,10 +32,12 @@
             </div>
 
             <!--我的头像-->
-            <div   th:if="${session.user!=null}" id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
+            <div  th:if="${session.user!=null}" id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
                 <div class="ui dropdown  item ">
                     <div class="text">
+                        <a href="#"  th:href="@{/manage/uc/profile}">
                         <img class="ui medium circular image image-42x42" style="max-height: none !important;" th:src="@{${#session.getAttribute('user').getUserHeaderImgUrl()}}"/>
+                        </a>
                     </div>
                     <div class="menu">
                         <a href="#" th:href="@{/manage/uc/follow-list}" class="item"><i

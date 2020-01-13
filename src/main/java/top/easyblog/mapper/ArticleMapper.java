@@ -74,6 +74,20 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      */
     List<Article> getNewestArticles(@Param("userId") int userId, @Param("limit") int limit);
 
+
+    /**
+     * 获得所有用户最近文章
+     * @return
+     */
+    List<Article> getAllUserNewestArticles();
+
+    /**
+     * 获得所有文章中访问量最高的limit片文章
+     * @param limit
+     * @return
+     */
+    List<Article> getAllMostFamousArticles(int limit);
+
     /**
      * 得到用户limit篇访问量最高的文章
      * @param userId

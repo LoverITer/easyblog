@@ -19,6 +19,12 @@ public interface IArticleService {
 
     Article getArticleById(int articleId);
 
+    /**
+     * 获得某个用户的最新文章
+     * @param userId
+     * @param limit
+     * @return
+     */
     List<Article> getUserNewestArticles(int userId, int limit);
 
     List<ArticleCount> getUserAllArticleArchives(int userId);
@@ -29,6 +35,19 @@ public interface IArticleService {
      * @return   所有文章
      */
     List<Article> getUserArticles(int userId, String articleType);
+
+    /**
+     * 获得所有用户的最新文章
+     * @return
+     */
+    PageInfo<Article> getAllUserNewestArticlesPage(PageParam pageParam);
+
+    /**
+     * 获得访问量最大的limit片文章
+     * @param limit
+     * @return
+     */
+    List<Article> getMostFamousArticles(int limit);
 
     /**
      * 分页用户的文章
@@ -46,6 +65,7 @@ public interface IArticleService {
      * @param month
      * @return
      */
+    @Deprecated
     List<Article> getUserArticlesMonthly(int userId, String year, String month);
 
     /**
@@ -65,6 +85,7 @@ public interface IArticleService {
      * @param month
      * @return
      */
+    @Deprecated
     List<Article> getUserArticlesMonthlyOrderByClickNum(int userId, String year, String month);
 
     /**
@@ -83,6 +104,7 @@ public interface IArticleService {
      * @param categoryId
      * @return
      */
+    @Deprecated
     List<Article> getByCategoryAndUserId(int userId, int categoryId);
 
     /**
@@ -101,6 +123,7 @@ public interface IArticleService {
      * @param month
      * @return
      */
+    @Deprecated
     List<Article> getArticlesSelective(Article article, String year, String month);
 
     /**

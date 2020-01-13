@@ -26,9 +26,8 @@
     <!--用户信息-->
     <div class="ui m-container">
         <div class="ui inverted secondary stackable menu">
-            <h2 class="ui teal header item">EasyBlog</h2>
+            <a th:href="@{/}"><h2 class="ui teal header item" >EasyBlog</h2></a>
             <div style="margin: 0 auto !important;float: right"></div>
-
             <div class="right m-item m-mobile-hide menu " style="margin: 1.4rem 0 auto 0 !important;">
                 <i class="teal paint brush icon"></i>
                 <a href="#" th:unless="${session.user!=null}" th:href="@{/manage/blog/post}"
@@ -78,7 +77,7 @@
 <!--中间内容-->
 <div class="m-container-middle m-padded-tb-big">
     <div class="ui container">
-        <form name="search" th:action="@{/search/details}" target="_blank" method="get">
+        <form name="search" th:action="@{/search/details}"  method="get">
             <div class="ui large icon input" style="width: 100% !important;">
                 <input th:if="${query==null}" name="query" class="prompt" type="text" placeholder="Search....">
                 <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt" type="text"
@@ -100,9 +99,8 @@
             </div>
         </div>
 
-        <div class="ui top attached  segment" style="margin-top: 0.1em !important;">
-            <div th:if="${articlePages!=null&&#lists.size(articlePages.getList())>0}"
-                 th:each="article:${articlePages.getList()}"
+        <div th:if="${articlePages!=null&&#lists.size(articlePages.getList())>0}" class="ui top attached  segment" style="margin-top: 0.1em !important;">
+            <div  th:each="article:${articlePages.getList()}"
                  class="ui padded vertical segment m-padded-tb-large">
                 <div class="ui middle aligned mobile reversed stackable grid">
                     <div class="eleven wide column">
