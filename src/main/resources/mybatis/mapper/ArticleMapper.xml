@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.easyblog.mapper.ArticleMapper">
     <cache type="top.easyblog.config.cache.MyBatisRedisCache">
-        <property name="eviction" value="LRU" />
-        <property name="flushInterval" value="6000000" />
-        <property name="size" value="1024" />
-        <property name="readOnly" value="false" />
+        <property name="eviction" value="LRU"/>
+        <property name="flushInterval" value="6000000"/>
+        <property name="size" value="1024"/>
+        <property name="readOnly" value="false"/>
     </cache>
     <resultMap id="BaseResultMap" type="top.easyblog.bean.Article">
         <id column="article_id" jdbcType="BIGINT" property="articleId"/>
@@ -23,69 +23,134 @@
         <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent"/>
     </resultMap>
 
-    <insert id="save" useGeneratedKeys="true" keyProperty="articleId" keyColumn="article_id" parameterType="top.easyblog.bean.Article" flushCache="false">
-        insert into article (article_user, article_topic,article_publish_time,
-                     article_click, article_category,article_status,
-                     article_top, article_type,article_tags,
-                     article_content,article_comment_num,article_appreciate)
-        values (#{articleUser}, #{articleTopic},now(), 0,#{articleCategory},
-                #{articleStatus}, #{articleTop}, #{articleType},#{articleTags},
-                #{articleContent},0,#{articleAppreciate})
+    <insert id="save" useGeneratedKeys="true" keyProperty="articleId" keyColumn="article_id"
+            parameterType="top.easyblog.bean.Article" flushCache="false">
+        insert into article (article_user, article_topic, article_publish_time,
+                             article_click, article_category, article_status,
+                             article_top, article_type, article_tags,
+                             article_content, article_comment_num, article_appreciate)
+        values (#{articleUser}, #{articleTopic}, now(), 0, #{articleCategory},
+                #{articleStatus}, #{articleTop}, #{articleType}, #{articleTags},
+                #{articleContent}, 0, #{articleAppreciate})
     </insert>
 
 
     <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-        select * from article where article_id = #{id,jdbcType=BIGINT}
+        select *
+        from article
+        where article_id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="getAll" resultType="list">
-        select * from article
+        select *
+        from article
     </select>
 
     <select id="countUserArticlesInCategory" resultType="integer">
-        select count(*) from article where article_user=#{userId} AND article_category=#{categoryName}
+        select count(*)
+        from article
+        where article_user = #{userId}
+          AND article_category = #{categoryName}
     </select>
 
     <select id="getUserArticlesSelective" resultType="top.easyblog.bean.Article">
-        select * from article where article_user=#{userId} AND article_type=#{articleType} AND article_status='0' order by article_publish_time DESC
+        select *
+        from article
+        where article_user = #{userId}
+          AND article_type = #{articleType}
+          AND article_status = '0'
+        order by article_publish_time DESC
     </select>
 
     <select id="getUserAllArticles" resultType="top.easyblog.bean.Article">
-        select * from article where article_user=#{userId} AND article_status='0' order by article_publish_time DESC
+        select *
+        from article
+        where article_user = #{userId}
+          AND article_status = '0'
+        order by article_publish_time DESC
     </select>
 
     <select id="getNewestArticles" resultType="top.easyblog.bean.Article">
-        select * from article where article_user=#{userId} AND article_status='0' order by article_publish_time DESC limit #{limit}
+        select *
+        from article
+        where article_user = #{userId}
+          AND article_status = '0'
+        order by article_publish_time DESC
+        limit #{limit}
     </select>
 
     <select id="getAllMostFamousArticles" resultType="top.easyblog.bean.Article">
-        select * from article where article_status='0' and date(article_publish_time)>=DATE_SUB(CURDATE(), INTERVAL 1 YEAR )  ORDER BY article_click DESC limit #{limit}
+        select *
+        from article
+        where article_status = '0'
+          and date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+        ORDER BY article_click DESC
+        limit #{limit}
     </select>
 
     <select id="getAllUserNewestArticles" resultType="top.easyblog.bean.Article">
-        select * from article where article_status='0' and  date(article_publish_time)>=DATE_SUB(CURDATE(), INTERVAL 30 DAY)  order by article_publish_time DESC
+        select *
+        from article
+        where article_status = '0'
+          and date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        order by article_publish_time DESC
     </select>
 
+    <select id="getAllUserHistoryNewestArticles" resultType="top.easyblog.bean.Article">
+        select *
+        from article
+        where article_status = '0'
+        order by article_publish_time DESC
+        limit #{limit}
+    </select>
+
+
     <select id="getHotArticles" resultType="top.easyblog.bean.Article">
-        select * from article where article_user=#{userId} AND article_status='0' order by article_click DESC limit #{limit}
+        select *
+        from article
+        where article_user = #{userId}
+          AND article_status = '0'
+        order by article_click DESC
+        limit #{limit}
     </select>
 
     <select id="countByUserIdMonthly" resultType="top.easyblog.bean.ArticleCount">
-        SELECT DATE_FORMAT(article_publish_time,"%Y年%m月") AS date,COUNT(*) AS count FROM article where article_user=#{userId} AND article_status='0' GROUP BY DATE_FORMAT(article_publish_time,"%Y年%m月")
-        ORDER BY DATE_FORMAT(article_publish_time,"%Y年%m月") DESC
+        SELECT DATE_FORMAT(article_publish_time, "%Y年%m月") AS date, COUNT(*) AS count
+        FROM article
+        where article_user = #{userId}
+          AND article_status = '0'
+        GROUP BY DATE_FORMAT(article_publish_time, "%Y年%m月")
+        ORDER BY DATE_FORMAT(article_publish_time, "%Y年%m月") DESC
     </select>
 
     <select id="getByUserIdMonthly" resultType="top.easyblog.bean.Article">
-        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} AND article_status='0' ORDER BY article_publish_time DESC
+        SELECT *
+        FROM article
+        WHERE YEAR(article_publish_time) = #{year}
+          AND MONTH(article_publish_time) = #{month}
+          AND article_user = #{userId}
+          AND article_status = '0'
+        ORDER BY article_publish_time DESC
     </select>
 
     <select id="getByUserIdMonthlyOrderByClickNum" resultType="top.easyblog.bean.Article">
-        SELECT * FROM article WHERE YEAR(article_publish_time)=#{year} AND MONTH(article_publish_time)=#{month} AND article_user=#{userId} AND article_status='0' ORDER BY article_click DESC
+        SELECT *
+        FROM article
+        WHERE YEAR(article_publish_time) = #{year}
+          AND MONTH(article_publish_time) = #{month}
+          AND article_user = #{userId}
+          AND article_status = '0'
+        ORDER BY article_click DESC
     </select>
 
     <select id="getByCategoryAndUserId" resultType="top.easyblog.bean.Article">
-        select * from article where article_user=#{userId} AND article_status='0' AND article_category
-            in (select category_name from category where category_id=#{categoryId}) ORDER BY article_publish_time DESC
+        select *
+        from article
+        where article_user = #{userId}
+          AND article_status = '0'
+          AND article_category
+            in (select category_name from category where category_id = #{categoryId})
+        ORDER BY article_publish_time DESC
     </select>
 
 
@@ -130,15 +195,26 @@
     </select>
 
     <select id="getUsersArticleByQueryString" resultType="top.easyblog.bean.Article">
-        select article_id,article_topic,article_publish_time,article_content,
-               article_click,article_category,article_comment_num,
-               user.user_nickname AS authorName,user.user_headerImg_url AS userHeaderImageUrl
-        from article,user where article_topic like #{query}
-                            AND article_user=user_id ORDER BY article_click DESC
+        select article_id,
+               article_topic,
+               article_publish_time,
+               article_content,
+               article_click,
+               article_category,
+               article_comment_num,
+               user.user_nickname      AS authorName,
+               user.user_headerImg_url AS userHeaderImageUrl
+        from article,
+             user
+        where article_topic like #{query}
+          AND article_user = user_id
+        ORDER BY article_click DESC
     </select>
 
     <select id="countByUserId" resultType="integer">
-        select count(*) from article where article_user=#{userId}
+        select count(*)
+        from article
+        where article_user = #{userId}
     </select>
 
 
@@ -177,7 +253,9 @@
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete from article where article_id = #{articleId,jdbcType=BIGINT}
+        delete
+        from article
+        where article_id = #{articleId,jdbcType=BIGINT}
     </delete>
 
     <insert id="saveSelective" parameterType="top.easyblog.bean.Article">
@@ -305,15 +383,15 @@
 
     <update id="updateByPrimaryKeyWithContent" parameterType="top.easyblog.bean.Article">
         update article
-        set article_user         = #{articleUser,jdbcType=INTEGER},
-            article_topic        = #{articleTopic,jdbcType=VARCHAR},
-            article_click        = #{articleClick,jdbcType=INTEGER},
-            article_category     = #{articleCategory,jdbcType=VARCHAR},
-            article_status       = #{articleStatus,jdbcType=CHAR},
-            article_top          = #{articleTop,jdbcType=BIT},
-            article_type         = #{articleType,jdbcType=CHAR},
-            article_tags         = #{articleTags,jdbcType=VARCHAR},
-            article_content      = #{articleContent,jdbcType=LONGVARCHAR},
+        set article_user        = #{articleUser,jdbcType=INTEGER},
+            article_topic       = #{articleTopic,jdbcType=VARCHAR},
+            article_click       = #{articleClick,jdbcType=INTEGER},
+            article_category    = #{articleCategory,jdbcType=VARCHAR},
+            article_status      = #{articleStatus,jdbcType=CHAR},
+            article_top         = #{articleTop,jdbcType=BIT},
+            article_type        = #{articleType,jdbcType=CHAR},
+            article_tags        = #{articleTags,jdbcType=VARCHAR},
+            article_content     = #{articleContent,jdbcType=LONGVARCHAR},
             article_comment_num =#{articleCommentNum},
             article_appreciate=#{articleAppreciate}
         where article_id = #{articleId,jdbcType=BIGINT}
@@ -330,15 +408,19 @@
             article_top          = #{articleTop,jdbcType=BIT},
             article_type         = #{articleType,jdbcType=CHAR},
             article_tags         = #{articleTags,jdbcType=VARCHAR},
-            article_comment_num =#{articleCommentNum},
+            article_comment_num  =#{articleCommentNum},
             article_appreciate=#{articleAppreciate}
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
 
     <!--根据用户的ID和文章标题删除草稿文章-->
-    <delete id="deleteArticleByUserIdAndTitle" >
-        delete from article where article_user=#{userId} AND article_topic=#{title} AND article_status='2'
+    <delete id="deleteArticleByUserIdAndTitle">
+        delete
+        from article
+        where article_user = #{userId}
+          AND article_topic = #{title}
+          AND article_status = '2'
     </delete>
 
 

@@ -87,22 +87,29 @@ public class ArticleServiceImpl implements IArticleService {
     @Override
     public PageInfo<Article> getAllUserNewestArticlesPage(PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
-        if ( Objects.nonNull(pageParam)) {
+        if (Objects.nonNull(pageParam)) {
             try {
                 PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
+                //查最近一个月内的所有数据
                 List<Article> articles = articleMapper.getAllUserNewestArticles();
-                articles.forEach(article->{
-                    try {
-                        Integer userId = article.getArticleUser();
-                        User user = userMapper.getByPrimaryKey((long) userId);
-                        article.setUser(user);
-                        Category category = categoryMapper.getCategoryByUserIdAndName(userId, article.getArticleCategory());
-                        article.setCategory(category);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                });
-                pageInfo = new PageInfo<>(articles);
+                if (Objects.isNull(articles) || articles.size() <5) {
+                    //查历史最新的20条数据
+                    articles = articleMapper.getAllUserHistoryNewestArticles(20);
+                }
+                if (articles != null) {
+                    articles.forEach(article -> {
+                        try {
+                            Integer userId = article.getArticleUser();
+                            User user = userMapper.getByPrimaryKey((long) userId);
+                            article.setUserHeaderImageUrl(user.getUserHeaderImgUrl());
+                            Category category = categoryMapper.getCategoryByUserIdAndName(userId, article.getArticleCategory());
+                            article.setCategoryId(category.getCategoryId());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    pageInfo = new PageInfo<>(articles);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

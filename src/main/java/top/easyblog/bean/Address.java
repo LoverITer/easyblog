@@ -2,7 +2,9 @@ package top.easyblog.bean;
 
 import java.io.Serializable;
 
-
+/**
+ * 用户的地址信息
+ */
 public class Address implements Serializable {
 
     private static final long serialVersionUID = -2744598988959076601L;
