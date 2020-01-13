@@ -24,9 +24,12 @@ public class Article implements Serializable {
     private Integer articleCommentNum;
     private String articleAppreciate;
     private String authorName;
-    private String userHeaderImageUrl;
     private String articleFirstPicture;
-
+    /****************非表字段*****************/
+    /**文章分类ID**/
+    private  Integer categoryId;
+    /**用户头像URL**/
+    private  String userHeaderImageUrl;
 
 
     public Article() {
@@ -45,6 +48,14 @@ public class Article implements Serializable {
         this.articleTags = articleTags;
         this.articleContent = articleContent;
         this.articleCommentNum=articleCommentNum;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getArticleFirstPicture() {

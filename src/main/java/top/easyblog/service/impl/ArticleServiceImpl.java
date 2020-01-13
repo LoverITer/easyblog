@@ -10,16 +10,16 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import top.easyblog.bean.Article;
-import top.easyblog.bean.ArticleCount;
-import top.easyblog.bean.UserComment;
+import top.easyblog.bean.*;
 import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.utils.HtmlParserUtil;
 import top.easyblog.commons.utils.MarkdownUtil;
 import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.ArticleMapper;
+import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.mapper.UserCommentMapper;
+import top.easyblog.mapper.UserMapper;
 import top.easyblog.service.IArticleService;
 
 import java.util.List;
@@ -31,10 +31,14 @@ public class ArticleServiceImpl implements IArticleService {
 
     private final ArticleMapper articleMapper;
     private final UserCommentMapper commentMapper;
+    private final CategoryMapper categoryMapper;
+    private final UserMapper userMapper;
 
-    public ArticleServiceImpl(ArticleMapper articleMapper, UserCommentMapper commentMapper) {
+    public ArticleServiceImpl(ArticleMapper articleMapper, UserCommentMapper commentMapper, CategoryMapper categoryMapper, UserMapper userMapper) {
         this.articleMapper = articleMapper;
         this.commentMapper = commentMapper;
+        this.categoryMapper = categoryMapper;
+        this.userMapper = userMapper;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -83,11 +87,29 @@ public class ArticleServiceImpl implements IArticleService {
     @Override
     public PageInfo<Article> getAllUserNewestArticlesPage(PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
-        if ( Objects.nonNull(pageParam)) {
+        if (Objects.nonNull(pageParam)) {
             try {
                 PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
+                //查最近一个月内的所有数据
                 List<Article> articles = articleMapper.getAllUserNewestArticles();
-                pageInfo = new PageInfo<>(articles);
+                if (Objects.isNull(articles) || articles.size() <5) {
+                    //查历史最新的20条数据
+                    articles = articleMapper.getAllUserHistoryNewestArticles(20);
+                }
+                if (articles != null) {
+                    articles.forEach(article -> {
+                        try {
+                            Integer userId = article.getArticleUser();
+                            User user = userMapper.getByPrimaryKey((long) userId);
+                            article.setUserHeaderImageUrl(user.getUserHeaderImgUrl());
+                            Category category = categoryMapper.getCategoryByUserIdAndName(userId, article.getArticleCategory());
+                            article.setCategoryId(category.getCategoryId());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    pageInfo = new PageInfo<>(articles);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
