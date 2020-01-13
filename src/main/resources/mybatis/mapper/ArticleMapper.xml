@@ -58,6 +58,14 @@
         select * from article where article_user=#{userId} AND article_status='0' order by article_publish_time DESC limit #{limit}
     </select>
 
+    <select id="getAllMostFamousArticles" resultType="top.easyblog.bean.Article">
+        select * from article where article_status='0' and date(article_publish_time)>=DATE_SUB(CURDATE(), INTERVAL 1 YEAR )  ORDER BY article_click DESC limit #{limit}
+    </select>
+
+    <select id="getAllUserNewestArticles" resultType="top.easyblog.bean.Article">
+        select * from article where article_status='0' and  date(article_publish_time)>=DATE_SUB(CURDATE(), INTERVAL 30 DAY)  order by article_publish_time DESC
+    </select>
+
     <select id="getHotArticles" resultType="top.easyblog.bean.Article">
         select * from article where article_user=#{userId} AND article_status='0' order by article_click DESC limit #{limit}
     </select>

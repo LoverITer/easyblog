@@ -47,7 +47,6 @@ public class ArticleServiceImpl implements IArticleService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return 0;
         }
         return 0;
     }
@@ -75,10 +74,42 @@ public class ArticleServiceImpl implements IArticleService {
                 return articleMapper.getNewestArticles(userId, limit);
             } catch (Exception e) {
                 e.printStackTrace();
-                return null;
             }
         }
         return null;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public PageInfo<Article> getAllUserNewestArticlesPage(PageParam pageParam) {
+        PageInfo<Article> pageInfo = null;
+        if ( Objects.nonNull(pageParam)) {
+            try {
+                PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
+                List<Article> articles = articleMapper.getAllUserNewestArticles();
+                pageInfo = new PageInfo<>(articles);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new IllegalPageParameterException();
+        }
+        return pageInfo;
+    }
+
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public List<Article> getMostFamousArticles(int limit) {
+        List<Article> articles = null;
+        try {
+            if (limit > 0) {
+                articles = articleMapper.getAllMostFamousArticles(limit);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return articles;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -94,7 +125,6 @@ public class ArticleServiceImpl implements IArticleService {
                 return articleCounts;
             } catch (Exception e) {
                 e.printStackTrace();
-                return null;
             }
         }
         return null;
@@ -154,7 +184,6 @@ public class ArticleServiceImpl implements IArticleService {
                 return parseMarkdowns2Text(articleMapper.getByUserIdMonthly(userId, year, month));
             } catch (Exception e) {
                 e.printStackTrace();
-                return null;
             }
         }
         return null;
@@ -257,7 +286,6 @@ public class ArticleServiceImpl implements IArticleService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
         return null;
     }
@@ -265,11 +293,11 @@ public class ArticleServiceImpl implements IArticleService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public PageInfo<Article> getArticlesSelectivePage(Article article, PageParam pageParam) {
-       return getArticlesSelectivePage(article,null, null,pageParam);
+        return getArticlesSelectivePage(article, null, null, pageParam);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public PageInfo<Article> getArticlesSelectivePage(Article article, String year, String month,PageParam pageParam){
+    public PageInfo<Article> getArticlesSelectivePage(Article article, String year, String month, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
         if (Objects.nonNull(article)) {
             if (Objects.nonNull(pageParam)) {
@@ -407,6 +435,7 @@ public class ArticleServiceImpl implements IArticleService {
 
     /**
      * 把单个Markdown转化为文本
+     *
      * @param article
      * @return
      */
@@ -420,7 +449,7 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     /**
-     * 把Markdo文章内容转化为HTML内容
+     * 把Markdown文章内容转化为HTML内容
      *
      * @param article
      * @return

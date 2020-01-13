@@ -24,9 +24,9 @@
     #mnavh { overflow: hidden; position: absolute; }
     #mnavh { display: block; }
     #starlist { display: none; width: 100%;/* top: 30px; */ }
-    #starlist li { width: 55%; text-align: center; background: #12b7de; float: none; display: block; font-weight: bold; }
+    #starlist li { width: 55%; text-align: center; background: #000000; float: none; display: block; font-weight: bold; }
     #starlist li:last-child { padding-bottom: 100% }
-    #starlist li a { color: #fff; display: block; width: 100%; text-align: center; float: none; padding: 0; background: #12b7de; border-bottom: #49ccea 1px solid; }
+    #starlist li a { color: #fff; display: block; width: 100%; text-align: center; float: none; padding: 0; background: #000000; }
     #starlist ul.sub { display: block; position: inherit; left: inherit; top: inherit; }
     #starlist ul.sub li { width: 100% }
     #starlist ul.sub li:last-child { padding-bottom: 0; border-bottom: #49ccea 1px solid; }

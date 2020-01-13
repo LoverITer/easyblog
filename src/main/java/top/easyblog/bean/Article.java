@@ -25,6 +25,9 @@ public class Article implements Serializable {
     private String articleAppreciate;
     private String authorName;
     private String userHeaderImageUrl;
+    private String articleFirstPicture;
+
+
 
     public Article() {
     }
@@ -42,6 +45,14 @@ public class Article implements Serializable {
         this.articleTags = articleTags;
         this.articleContent = articleContent;
         this.articleCommentNum=articleCommentNum;
+    }
+
+    public String getArticleFirstPicture() {
+        return articleFirstPicture;
+    }
+
+    public void setArticleFirstPicture(String articleFirstPicture) {
+        this.articleFirstPicture = articleFirstPicture;
     }
 
     public String getAuthorName() {

@@ -499,6 +499,12 @@ span.count {
     .m-margin-left-large {
         margin-left: 0 !important;
     }
+
+    .header{
+        max-height: 42px !important;
+        max-width: 42px !important;
+        border-radius: 30px !important;
+    }
 }
 
 .m-center {
@@ -508,6 +514,8 @@ span.count {
 }
 
 /******images****/
+
+
 .image-32x32 {
     width: 32px !important;
     height: 32px !important;
