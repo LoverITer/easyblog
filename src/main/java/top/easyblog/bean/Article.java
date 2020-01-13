@@ -26,7 +26,8 @@ public class Article implements Serializable {
     private String authorName;
     private String userHeaderImageUrl;
     private String articleFirstPicture;
-
+    private Category category;
+    private User user;
 
 
     public Article() {
@@ -45,6 +46,22 @@ public class Article implements Serializable {
         this.articleTags = articleTags;
         this.articleContent = articleContent;
         this.articleCommentNum=articleCommentNum;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public String getArticleFirstPicture() {

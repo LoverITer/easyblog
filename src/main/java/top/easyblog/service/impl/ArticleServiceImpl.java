@@ -10,16 +10,16 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import top.easyblog.bean.Article;
-import top.easyblog.bean.ArticleCount;
-import top.easyblog.bean.UserComment;
+import top.easyblog.bean.*;
 import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.utils.HtmlParserUtil;
 import top.easyblog.commons.utils.MarkdownUtil;
 import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.ArticleMapper;
+import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.mapper.UserCommentMapper;
+import top.easyblog.mapper.UserMapper;
 import top.easyblog.service.IArticleService;
 
 import java.util.List;
@@ -31,10 +31,14 @@ public class ArticleServiceImpl implements IArticleService {
 
     private final ArticleMapper articleMapper;
     private final UserCommentMapper commentMapper;
+    private final CategoryMapper categoryMapper;
+    private final UserMapper userMapper;
 
-    public ArticleServiceImpl(ArticleMapper articleMapper, UserCommentMapper commentMapper) {
+    public ArticleServiceImpl(ArticleMapper articleMapper, UserCommentMapper commentMapper, CategoryMapper categoryMapper, UserMapper userMapper) {
         this.articleMapper = articleMapper;
         this.commentMapper = commentMapper;
+        this.categoryMapper = categoryMapper;
+        this.userMapper = userMapper;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -87,6 +91,17 @@ public class ArticleServiceImpl implements IArticleService {
             try {
                 PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
                 List<Article> articles = articleMapper.getAllUserNewestArticles();
+                articles.forEach(article->{
+                    try {
+                        Integer userId = article.getArticleUser();
+                        User user = userMapper.getByPrimaryKey((long) userId);
+                        article.setUser(user);
+                        Category category = categoryMapper.getCategoryByUserIdAndName(userId, article.getArticleCategory());
+                        article.setCategory(category);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                });
                 pageInfo = new PageInfo<>(articles);
             } catch (Exception e) {
                 e.printStackTrace();
