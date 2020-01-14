@@ -8,10 +8,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>写文章 - EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
     <link rel="stylesheet" href="../../../static/lib/css/editormd.css" th:href="@{/static/lib/css/editormd.css}">
-    <link rel="stylesheet" href="../../../static/css/semantic-specifc.css" th:href="@{/static/css/semantic-specifc.css}">
+    <link rel="stylesheet" href="../../../static/css/semantic-specifc.css"
+          th:href="@{/static/css/semantic-specifc.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
 </head>
@@ -19,46 +20,63 @@
 
 <!--编辑器-->
 <div style="margin-top: 5px !important;">
-    <input id="publish-url" type="hidden" th:if="${session.user!=null}" th:value="@{/manage/blog/saveArticle/}+${session.user.getUserId()}">
-    <form id="blog" action="" th:if="${session.user!=null}" th:action="@{/manage/blog/saveAsDraft/}+${session.user.getUserId()}" method="post" class="ui form">
+    <input id="publish-url" type="hidden" th:if="${session.user!=null}"
+           th:value="@{/manage/blog/saveArticle/}+${session.user.getUserId()}">
+    <form id="blog" action="" th:if="${session.user!=null}"
+          th:action="@{/manage/blog/saveAsDraft/}+${session.user.getUserId()}" method="post" class="ui form">
         <!--这些属性是在编辑文章用的-->
         <input type="hidden" id="articleId" th:if="${article!=null}" th:value="${article.getArticleId()}">
-        <div class="ui row fluid  stackable centered grid" style="margin-left: 0.5rem !important;margin-right: 0.5em !important;">
+        <div class="ui row fluid  stackable centered grid"
+             style="margin-left: 0.5rem !important;margin-right: 0.5em !important;">
             <div class="left float  right aligned  two wide centered column">
                 <div class="ui segment"
                      style="background: none !important;border: none !important;box-shadow: none !important;padding-left: 0 !important;padding-right: 0 !important;">
                     <a href="#" th:href="@{/manage/blog/}" class="ui right floated"
                        style="color: #8da6ce !important;font-size: 1.23rem !important;">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="89px" height="17px" viewBox="0 0 89 17" version="1.1"><g id="页面1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="MD编辑器优化-20190916" transform="translate(-24.000000, -24.000000)" fill="#6B6B6B"><g id="Group-4" transform="translate(21.000000, 24.000000)"><path d="M11.2719767,13.1315385 C11.4864972,13.3286154 11.6239413,13.6086154 11.6239413,13.9230769 C11.6239413,14.5175385 11.1410006,15 10.5459486,15 C10.2651315,15 10.0118033,14.8901538 9.81992058,14.7140769 L9.8172256,14.7167692 L3.34926962,8.79369231 L3.3519646,8.791 C3.13690507,8.59392308 3,8.31392308 3,8 C3,7.68553846 3.13690507,7.40553846 3.3519646,7.20846154 L3.34926962,7.20630769 L9.8172256,1.28323077 L9.81992058,1.28538462 C10.0118033,1.10984615 10.2651315,1 10.5459486,1 C11.1410006,1 11.6239413,1.48192308 11.6239413,2.07692308 C11.6239413,2.39084615 11.4864972,2.67138462 11.2719767,2.86792308 L11.2741327,2.87061538 L5.6734218,8 L11.2741327,13.1288462 L11.2719767,13.1315385 Z M21.152,3.336 L28.604,3.336 C28.118,2.382 27.524,1.482 26.804,0.636 L28.1,0.168 C28.784,1.032 29.396,2.094 29.972,3.336 L36.848,3.336 L36.848,4.632 L34.04,4.632 C33.158,7.476 31.826,9.87 30.062,11.778 C31.97,13.398 34.364,14.73 37.244,15.792 L36.542,16.872 C33.554,15.756 31.106,14.37 29.162,12.696 C27.11,14.586 24.554,15.972 21.494,16.854 L20.81,15.72 C23.834,14.91 26.318,13.632 28.262,11.868 C26.174,9.816 24.734,7.404 23.924,4.632 L21.152,4.632 L21.152,3.336 Z M25.202,4.632 C25.976,7.062 27.29,9.168 29.162,10.968 C30.764,9.222 31.934,7.116 32.69,4.632 L25.202,4.632 Z M46.37,12.066 L41.348,12.066 L41.348,6.594 L52.688,6.594 L52.688,12.066 L47.702,12.066 L47.702,13.326 L54.92,13.326 L54.92,14.478 L47.702,14.478 L47.702,16.728 L46.37,16.728 L46.37,14.478 L39.08,14.478 L39.08,13.326 L46.37,13.326 L46.37,12.066 Z M42.626,9.834 L42.626,10.986 L51.41,10.986 L51.41,9.834 L42.626,9.834 Z M51.41,8.826 L51.41,7.674 L42.626,7.674 L42.626,8.826 L51.41,8.826 Z M42.968,2.688 L40.25,2.688 L40.25,1.554 L46.208,1.554 C46.064,1.122 45.902,0.708 45.722,0.348 L47.108,0.132 C47.288,0.564 47.45,1.032 47.63,1.554 L53.75,1.554 L53.75,2.688 L51.086,2.688 L50.438,4.362 L54.686,4.362 L54.686,5.478 L39.332,5.478 L39.332,4.362 L43.634,4.362 L42.968,2.688 Z M44.948,4.362 L49.106,4.362 L49.736,2.688 L44.282,2.688 L44.948,4.362 Z M70.148,7.404 L70.148,10.932 L61.166,10.932 L61.166,12.174 L70.976,12.174 L70.976,16.8 L69.698,16.8 L69.698,16.044 L61.166,16.044 L61.166,16.782 L59.87,16.782 L59.87,7.404 L70.148,7.404 Z M61.166,14.892 L69.698,14.892 L69.698,13.218 L61.166,13.218 L61.166,14.892 Z M61.166,9.888 L68.888,9.888 L68.888,8.448 L61.166,8.448 L61.166,9.888 Z M72.632,5.226 L72.632,8.484 L71.372,8.484 L71.372,6.342 L58.628,6.342 L58.628,8.484 L57.368,8.484 L57.368,5.226 L64.496,5.226 C64.316,4.794 64.136,4.416 63.938,4.056 L65.198,3.84 L65.09,3.768 C65.954,2.688 66.566,1.518 66.962,0.222 L68.204,0.492 C68.078,0.87 67.952,1.23 67.808,1.59 L73.01,1.59 L73.01,2.724 L69.806,2.724 C70.184,3.228 70.49,3.696 70.706,4.128 L69.554,4.56 C69.23,3.912 68.852,3.3 68.42,2.724 L67.286,2.724 C66.962,3.336 66.584,3.912 66.188,4.452 L65.216,3.858 C65.414,4.272 65.612,4.722 65.792,5.226 L72.632,5.226 Z M59.528,2.724 C59.096,3.426 58.628,4.074 58.088,4.668 L56.954,3.948 C58.034,2.832 58.826,1.572 59.33,0.204 L60.572,0.474 C60.428,0.87 60.266,1.23 60.122,1.59 L64.946,1.59 L64.946,2.724 L61.922,2.724 C62.318,3.264 62.66,3.786 62.912,4.272 L61.724,4.722 C61.4,4.038 61.004,3.372 60.554,2.724 L59.528,2.724 Z M81.488,1.014 L90.29,1.014 L90.29,9.33 L86.546,9.33 L86.546,11.454 L90.596,11.454 L90.596,12.678 L86.546,12.678 L86.546,15.018 L91.262,15.018 L91.262,16.26 L80.426,16.26 L80.426,15.018 L85.25,15.018 L85.25,12.678 L81.182,12.678 L81.182,11.454 L85.25,11.454 L85.25,9.33 L81.488,9.33 L81.488,1.014 Z M89.048,8.178 L89.048,5.748 L86.546,5.748 L86.546,8.178 L89.048,8.178 Z M85.25,8.178 L85.25,5.748 L82.73,5.748 L82.73,8.178 L85.25,8.178 Z M82.73,4.614 L85.25,4.614 L85.25,2.166 L82.73,2.166 L82.73,4.614 Z M86.546,2.166 L86.546,4.614 L89.048,4.614 L89.048,2.166 L86.546,2.166 Z M75.134,6.972 L77.096,6.972 L77.096,2.706 L74.882,2.706 L74.882,1.482 L80.624,1.482 L80.624,2.706 L78.428,2.706 L78.428,6.972 L80.408,6.972 L80.408,8.214 L78.428,8.214 L78.428,12.3 C79.112,12.066 79.76,11.814 80.408,11.526 L80.408,12.786 C78.752,13.47 76.97,14.046 75.062,14.514 L74.738,13.272 C75.53,13.128 76.322,12.948 77.096,12.732 L77.096,8.214 L75.134,8.214 L75.134,6.972 Z" id="形状结合"></path></g></g></g></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="89px"
+                             height="17px" viewBox="0 0 89 17" version="1.1">
+                            <g id="页面1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g id="MD编辑器优化-20190916" transform="translate(-24.000000, -24.000000)" fill="#6B6B6B">
+                                    <g id="Group-4" transform="translate(21.000000, 24.000000)">
+                                        <path d="M11.2719767,13.1315385 C11.4864972,13.3286154 11.6239413,13.6086154 11.6239413,13.9230769 C11.6239413,14.5175385 11.1410006,15 10.5459486,15 C10.2651315,15 10.0118033,14.8901538 9.81992058,14.7140769 L9.8172256,14.7167692 L3.34926962,8.79369231 L3.3519646,8.791 C3.13690507,8.59392308 3,8.31392308 3,8 C3,7.68553846 3.13690507,7.40553846 3.3519646,7.20846154 L3.34926962,7.20630769 L9.8172256,1.28323077 L9.81992058,1.28538462 C10.0118033,1.10984615 10.2651315,1 10.5459486,1 C11.1410006,1 11.6239413,1.48192308 11.6239413,2.07692308 C11.6239413,2.39084615 11.4864972,2.67138462 11.2719767,2.86792308 L11.2741327,2.87061538 L5.6734218,8 L11.2741327,13.1288462 L11.2719767,13.1315385 Z M21.152,3.336 L28.604,3.336 C28.118,2.382 27.524,1.482 26.804,0.636 L28.1,0.168 C28.784,1.032 29.396,2.094 29.972,3.336 L36.848,3.336 L36.848,4.632 L34.04,4.632 C33.158,7.476 31.826,9.87 30.062,11.778 C31.97,13.398 34.364,14.73 37.244,15.792 L36.542,16.872 C33.554,15.756 31.106,14.37 29.162,12.696 C27.11,14.586 24.554,15.972 21.494,16.854 L20.81,15.72 C23.834,14.91 26.318,13.632 28.262,11.868 C26.174,9.816 24.734,7.404 23.924,4.632 L21.152,4.632 L21.152,3.336 Z M25.202,4.632 C25.976,7.062 27.29,9.168 29.162,10.968 C30.764,9.222 31.934,7.116 32.69,4.632 L25.202,4.632 Z M46.37,12.066 L41.348,12.066 L41.348,6.594 L52.688,6.594 L52.688,12.066 L47.702,12.066 L47.702,13.326 L54.92,13.326 L54.92,14.478 L47.702,14.478 L47.702,16.728 L46.37,16.728 L46.37,14.478 L39.08,14.478 L39.08,13.326 L46.37,13.326 L46.37,12.066 Z M42.626,9.834 L42.626,10.986 L51.41,10.986 L51.41,9.834 L42.626,9.834 Z M51.41,8.826 L51.41,7.674 L42.626,7.674 L42.626,8.826 L51.41,8.826 Z M42.968,2.688 L40.25,2.688 L40.25,1.554 L46.208,1.554 C46.064,1.122 45.902,0.708 45.722,0.348 L47.108,0.132 C47.288,0.564 47.45,1.032 47.63,1.554 L53.75,1.554 L53.75,2.688 L51.086,2.688 L50.438,4.362 L54.686,4.362 L54.686,5.478 L39.332,5.478 L39.332,4.362 L43.634,4.362 L42.968,2.688 Z M44.948,4.362 L49.106,4.362 L49.736,2.688 L44.282,2.688 L44.948,4.362 Z M70.148,7.404 L70.148,10.932 L61.166,10.932 L61.166,12.174 L70.976,12.174 L70.976,16.8 L69.698,16.8 L69.698,16.044 L61.166,16.044 L61.166,16.782 L59.87,16.782 L59.87,7.404 L70.148,7.404 Z M61.166,14.892 L69.698,14.892 L69.698,13.218 L61.166,13.218 L61.166,14.892 Z M61.166,9.888 L68.888,9.888 L68.888,8.448 L61.166,8.448 L61.166,9.888 Z M72.632,5.226 L72.632,8.484 L71.372,8.484 L71.372,6.342 L58.628,6.342 L58.628,8.484 L57.368,8.484 L57.368,5.226 L64.496,5.226 C64.316,4.794 64.136,4.416 63.938,4.056 L65.198,3.84 L65.09,3.768 C65.954,2.688 66.566,1.518 66.962,0.222 L68.204,0.492 C68.078,0.87 67.952,1.23 67.808,1.59 L73.01,1.59 L73.01,2.724 L69.806,2.724 C70.184,3.228 70.49,3.696 70.706,4.128 L69.554,4.56 C69.23,3.912 68.852,3.3 68.42,2.724 L67.286,2.724 C66.962,3.336 66.584,3.912 66.188,4.452 L65.216,3.858 C65.414,4.272 65.612,4.722 65.792,5.226 L72.632,5.226 Z M59.528,2.724 C59.096,3.426 58.628,4.074 58.088,4.668 L56.954,3.948 C58.034,2.832 58.826,1.572 59.33,0.204 L60.572,0.474 C60.428,0.87 60.266,1.23 60.122,1.59 L64.946,1.59 L64.946,2.724 L61.922,2.724 C62.318,3.264 62.66,3.786 62.912,4.272 L61.724,4.722 C61.4,4.038 61.004,3.372 60.554,2.724 L59.528,2.724 Z M81.488,1.014 L90.29,1.014 L90.29,9.33 L86.546,9.33 L86.546,11.454 L90.596,11.454 L90.596,12.678 L86.546,12.678 L86.546,15.018 L91.262,15.018 L91.262,16.26 L80.426,16.26 L80.426,15.018 L85.25,15.018 L85.25,12.678 L81.182,12.678 L81.182,11.454 L85.25,11.454 L85.25,9.33 L81.488,9.33 L81.488,1.014 Z M89.048,8.178 L89.048,5.748 L86.546,5.748 L86.546,8.178 L89.048,8.178 Z M85.25,8.178 L85.25,5.748 L82.73,5.748 L82.73,8.178 L85.25,8.178 Z M82.73,4.614 L85.25,4.614 L85.25,2.166 L82.73,2.166 L82.73,4.614 Z M86.546,2.166 L86.546,4.614 L89.048,4.614 L89.048,2.166 L86.546,2.166 Z M75.134,6.972 L77.096,6.972 L77.096,2.706 L74.882,2.706 L74.882,1.482 L80.624,1.482 L80.624,2.706 L78.428,2.706 L78.428,6.972 L80.408,6.972 L80.408,8.214 L78.428,8.214 L78.428,12.3 C79.112,12.066 79.76,11.814 80.408,11.526 L80.408,12.786 C78.752,13.47 76.97,14.046 75.062,14.514 L74.738,13.272 C75.53,13.128 76.322,12.948 77.096,12.732 L77.096,8.214 L75.134,8.214 L75.134,6.972 Z"
+                                              id="形状结合"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
                     </a>
                 </div>
             </div>
-            <div  class="ten wide centered column">
+            <div class="ten wide centered column">
                 <div class="field" style="margin-bottom: 0.5em !important;">
-                    <div  class="ui left large  input">
-                        <input  th:if="${article==null}" id="title" type="text" name="title" placeholder="文章标题">
-                        <input th:if="${article!=null}" th:value="${article.getArticleTopic()}" id="title" type="text" name="title" placeholder="文章标题">
+                    <div class="ui left large  input">
+                        <input th:if="${article==null}" id="title" type="text" name="title" placeholder="文章标题">
+                        <input th:if="${article!=null}" th:value="${article.getArticleTopic()}" id="title" type="text"
+                               name="title" placeholder="文章标题">
                     </div>
                 </div>
             </div>
             <div class="two wide centered column"
                  style="padding-left: 0 !important;width: 8% !important;margin-right: 0 !important;padding-right: 0 !important;">
                 <a id="go" rel="leanModal" name="signup" href="#signup">
-                    <button  class="ui medium right floated red button" style="color:#ffffff !important;margin-left: 0 !important;">
+                    <button class="ui medium right floated red button"
+                            style="color:#ffffff !important;margin-left: 0 !important;">
                         发布文章
                     </button>
                 </a>
             </div>
             <div class="two wide centered column" style="padding-left: 0 !important;width: 10%!important">
-               <button class="ui medium right floated grey button" style="color:#ffffff !important;margin-left: 0 !important;">
-                   保存为草稿
-               </button>
+                <button class="ui medium right floated grey button"
+                        style="color:#ffffff !important;margin-left: 0 !important;">
+                    保存为草稿
+                </button>
             </div>
         </div>
         <div class="field" style="margin-top: 1px !important;">
             <div id="md-content" style="z-index: 1 !important;">
-              <textarea th:if="${article==null}"  id="content" name="content" style="display: none"></textarea>
-              <textarea th:if="${article!=null}" th:text="${article.getArticleContent()}" id="content"  name="content" style="display: none"></textarea>
+                <textarea th:if="${article==null}" id="content" name="content" style="display: none"></textarea>
+                <textarea th:if="${article!=null}" th:text="${article.getArticleContent()}" id="content" name="content"
+                          style="display: none"></textarea>
             </div>
         </div>
     </form>
@@ -81,18 +99,24 @@
                     </div>
                     <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
                         <div class="ui field">
-                            <select  id="types" name="maxCount"  class="ui dropdown type">
+                            <select id="types" name="maxCount" class="ui dropdown type">
                                 <option value="" selected="">请选择</option>
-                                <option th:if="${article!=null}" th:each="category:${categories}" th:selected="${article.getArticleCategory()==category.getCategoryName()}" value="1" th:value="${category.getCategoryId()}">[[${category.getCategoryName()}]]</option>
-                                <option th:if="${article==null}" th:each="category:${categories}"  value="1" th:value="${category.getCategoryId()}">[[${category.getCategoryName()}]]</option>
+                                <option th:if="${article!=null}" th:each="category:${categories}"
+                                        th:selected="${article.getArticleCategory()==category.getCategoryName()}"
+                                        value="1" th:value="${category.getCategoryId()}">
+                                    [[${category.getCategoryName()}]]
+                                </option>
+                                <option th:if="${article==null}" th:each="category:${categories}" value="1"
+                                        th:value="${category.getCategoryId()}">[[${category.getCategoryName()}]]
+                                </option>
                             </select>
                         </div>
                         <div class="ui fluid icon input">
-                            <input id="add-input" type="text" placeholder="添加分类..." style="display: none !important;">
+                            <input id="add-input" type="text" placeholder="添加分类..."
+                                   style="display: none !important;margin-top: 5px;max-width: 14em">
                             <div class="ui field" style="padding-top: 5px !important;padding-left: 3px !important;">
                                 <div id="add-type-btn" class="ui tiny primary submit button">
-                                    <i class="add icon"></i>
-                                    增加分类
+                                    添加分类
                                 </div>
                             </div>
                         </div>
@@ -109,33 +133,43 @@
                         <div class="field">
                             <select id="article_type" name="minCount" class="ui dropdown">
                                 <option value="-1">请选择</option>
-                                <option th:if="${article!=null}" th:selected="${article.getArticleType()=='0'}" value="0">原创</option>
-                                <option th:if="${article==null}"  value="0">原创</option>
-                                <option th:if="${article!=null}" th:selected="${article.getArticleType()=='1'}" value="1">转载</option>
-                                <option th:if="${article==null}"  value="1">转载</option>
-                                <option th:if="${article!=null}" th:selected="${article.getArticleType()=='2'}" value="2">翻译</option>
-                                <option th:if="${article==null}"  value="2">翻译</option>
+                                <option th:if="${article!=null}" th:selected="${article.getArticleType()=='0'}"
+                                        value="0">原创
+                                </option>
+                                <option th:if="${article==null}" value="0">原创</option>
+                                <option th:if="${article!=null}" th:selected="${article.getArticleType()=='1'}"
+                                        value="1">转载
+                                </option>
+                                <option th:if="${article==null}" value="1">转载</option>
+                                <option th:if="${article!=null}" th:selected="${article.getArticleType()=='2'}"
+                                        value="2">翻译
+                                </option>
+                                <option th:if="${article==null}" value="2">翻译</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
                 <div class="row " style="margin-top: 15px !important;">
-                   <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
-                       开启赞赏
-                   </div>
-                   <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
-                       <div class="ui field">
-                           <select id="appreciate" name="maxCount" class="ui dropdown tags">
-                               <option value="-1" selected="">请选择</option>
-                               <option th:if="${article==null}"  value="0">否</option>
-                               <option th:if="${article==null}"  value="1">是</option>
-                               <option th:if="${article!=null}" th:selected="${article.getArticleAppreciate()=='0'}" value="0">否</option>
-                               <option th:if="${article!=null}" th:selected="${article.getArticleAppreciate()=='1'}" value="1">是</option>
-                           </select>
-                       </div>
-                   </div>
-               </div>
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                        开启赞赏
+                    </div>
+                    <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
+                        <div class="ui field">
+                            <select id="appreciate" name="maxCount" class="ui dropdown tags">
+                                <option value="-1" selected="">请选择</option>
+                                <option th:if="${article==null}" value="0">否</option>
+                                <option th:if="${article==null}" value="1">是</option>
+                                <option th:if="${article!=null}" th:selected="${article.getArticleAppreciate()=='0'}"
+                                        value="0">否
+                                </option>
+                                <option th:if="${article!=null}" th:selected="${article.getArticleAppreciate()=='1'}"
+                                        value="1">是
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
                 <!--发布形式-->
                 <div class="row">
@@ -147,15 +181,18 @@
                             <div class="inline fields">
                                 <div class="field">
                                     <div class="ui radio checkbox">
-                                        <input id="public" type="radio" name="frequency" th:if="${article!=null}" th:selected="${article.getArticleStatus()=='0'}">
-                                        <input id="public" type="radio" name="frequency" th:if="${article==null}"  checked="checked">
-                                        <label >公开</label>
+                                        <input id="public" type="radio" name="frequency" th:if="${article!=null}"
+                                               th:selected="${article.getArticleStatus()=='0'}">
+                                        <input id="public" type="radio" name="frequency" th:if="${article==null}"
+                                               checked="checked">
+                                        <label>公开</label>
                                     </div>
                                 </div>
                                 <div class="field">
                                     <div class="ui radio checkbox">
-                                        <input id="private"  type="radio" th:if="${article!=null}" th:selected="${article.getArticleStatus()=='0'}"  name="frequency">
-                                        <input id="private"  type="radio" th:if="${article==null}" name="frequency">
+                                        <input id="private" type="radio" th:if="${article!=null}"
+                                               th:selected="${article.getArticleStatus()=='0'}" name="frequency">
+                                        <input id="private" type="radio" th:if="${article==null}" name="frequency">
                                         <label>私有</label>
                                     </div>
                                 </div>
@@ -188,7 +225,7 @@
     <div id="msg" class="content">
     </div>
     <div class="actions">
-        <div  id="msg-btn" class="ui red button">知道了</div>
+        <div id="msg-btn" class="ui red button">知道了</div>
     </div>
 </div>
 
@@ -205,14 +242,14 @@
 
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
-        if(user!=null){
+        if (user != null) {
             $('#header-images').show();
             $('#login-btn').hide();
-        }else{
+        } else {
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus,300);
+        setTimeout(toggleStatus, 300);
     }
 
     <!--退出操作异步请求-->
@@ -226,7 +263,7 @@
             success: function (response) {
                 if (response.success) {
                     sessionStorage.removeItem("user");
-                    window.location.href="/user/loginPage";
+                    window.location.href = "/user/loginPage";
                 }
             },
             error: function () {
@@ -252,19 +289,19 @@
             height: 660,
             syncScrolling: "single",
             placeholder: "Enjoy Markdown! Writing now...",
-            path:"[[${#request.getContextPath()}]]/static/lib/lib/" ,
+            path: "[[${#request.getContextPath()}]]/static/lib/lib/",
             emoji: true,
             taskList: true,
             tocm: true, // Using [TOCM]
             tex: true, // 开启科学公式TeX语言支持，默认关闭
             flowChart: true, // 开启流程图支持，默认关闭
             sequenceDiagram: true, // 开启时序/序列图支持，默认关闭,
-            searchReplace : true,
+            searchReplace: true,
             imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
             imageUpload: true,
-            imageUploadURL:"[[${#request.getContextPath()}]]/upload/interface3",
-            dialogLockScreen : false,   //设置弹出层对话框不锁屏，全局通用，默认为true
-            onload: function() {
+            imageUploadURL: "[[${#request.getContextPath()}]]/upload/interface3",
+            dialogLockScreen: false,   //设置弹出层对话框不锁屏，全局通用，默认为true
+            onload: function () {
                 console.log('onload', this);
             }
         });
@@ -342,122 +379,123 @@
         $("#add-input").show();
     });
     $("#add-input").blur(function () {
-        var str = $("#add-input").val();
-        if (str != null && str.length > 0) {
-            var select = document.getElementById("types");
-            var option = new Option();  //产生一个Option结点
-            var value = select.childElementCount;
-            select.append(option);
-            option.text = str;
-            option.value = value;
-            $('.type').append('<a class=\"ui label transition visible\" data-value=' + value + " style=\"display: inline-block !important;\">" + str + "<i class=\"delete icon\"></i></a>");
-            $("#types").val(value);
-        }
-        $("#add-input").hide();
+        $("#add-type-btn").click(function () {
+            var str = $("#add-input").val();
+            if (str !== "") {
+                var options=$('#types').find("option");
+                let flag=true;
+                console.log(options);
+                for(var i=0;i<options.length;i++){
+                    var channlVar=options.eq(i).text();   //option中的值
+                    channlVar = channlVar.replace(/\s*/g,"");
+                    console.log(channlVar);
+                    if (channlVar==str) {
+                        spop({
+                            template: '您已经存在'+str+'分类,请不要重复添加！',
+                            autoclose: 3000,
+                            position: "top-center",
+                            style: 'info',
+                        });
+                        flag=false;
+                        break;
+                    }
+                }
+                if(flag) {
+                    var select = document.getElementById("types");
+                    var option = new Option();  //产生一个Option结点
+                    var value = select.childElementCount;
+                    option.text = str;
+                    option.value = value;
+                    $("#types").append(option);
+                    $("#types").find("option[value='" + select.childElementCount + "']").attr("selected", true);
+                }
+                str = "";
+            }
+        });
     });
-
-    //控制标签栏
-    $("#add-tag-btn").click(function () {
-        $("#tag-input").show();
-    });
-    $("#tag-input").blur(function () {
-        var str = $("#tag-input").val();
-        if (str != null && str.length > 0) {
-            var select = document.getElementById("tags");
-            var option = new Option();  //产生一个Option结点
-            var value = select.childElementCount;
-            select.append(option);
-            option.text = str;
-            option.value = value;
-            $('.tags').append("<a class=\"ui label transition visible\" data-value=" + value + " style=\"display: inline-block !important;\">" + str + "<i class=\"delete icon\"></i></a>");
-            $("#tags").val(value);
-        }
-        $("#tag-input").hide();
-    });
-
 
 </script>
 
 <script type="text/javascript">
- $('#cancel-btn').click(function(){
-     $('#signup').css("display","none");
- });
- $('#draft-btn').click(function () {
-     $('#blog').submit();
- });
+    $('#cancel-btn').click(function () {
+        $('#signup').css("display", "none");
+    });
+    $('#draft-btn').click(function () {
+        $('#blog').submit();
+    });
 
- //发布按钮按下后的操作
- $('#publish-btn').click(function () {
-     var articleId=$('#articleId').val();
-     var url=$('#publish-url').val();
-     var title=$('#title').val();
-     var content=$('#content').val();
-     var categoryName=$('#types').find("option:selected").text();
-     var articleType=$('#article_type').val();
-     var appreciate=$('#appreciate').find("option:selected").text();
-     if("undefined"===articleId||null==articleId){
-         articleId=-1;
-     }
-     if("是"==appreciate){
-         appreciate="1";
-     }else{
-         appreciate="0";
-     }
-     var public=$('#public').is(":checked");
-     var status="0";
-     if(!public){
-         status="1";
-     }
-    if(title==null||title==""){
-        $('#msg_header').html("错误");
-        $('#msg').html("标题是必填项");
-        $('.ui.modal').modal('show');
-    }else if(content==null||content==""){
-        $('#msg_header').html("错误");
-        $('#msg').html("文章内容是必填项");
-        $('.ui.modal').modal('show');
-    }else if("请选择"==categoryName){
-        $('#msg_header').html("错误");
-        $('#msg').html("文章分类是必填项");
-        $('.ui.modal').modal('show');
-    }else if("-1"==articleType){
-        $('#msg_header').html("错误");
-        $('#msg').html("文章类型是必填项");
-        $('.ui.modal').modal('show');
-    }else {
-        $.ajax({
-            url: url,
-            method: "POST",
-            sync: true,
-            contentType: "application/json",
-            data: JSON.stringify({
-                articleId:articleId,
-                articleTopic: title,
-                articleCategory: categoryName,
-                articleType: articleType,
-                articleAppreciate: appreciate,
-                articleStatus: status,
-                articleContent: content
-            }),
-            dataType: "json",  //服务器返回的数据类型
-            success: function (response) {
-                //跳转页面
-                var articleId=response.msg;
-                if(response.success){
-                    window.location.href="/manage/blog/success/"+articleId;
-                }else{
+    //发布按钮按下后的操作
+    $('#publish-btn').click(function () {
+        var articleId = $('#articleId').val();
+        var url = $('#publish-url').val();
+        var title = $('#title').val();
+        var content = $('#content').val();
+        var categoryName = $('#types').find("option:selected").text();
+        var articleType = $('#article_type').val();
+        var appreciate = $('#appreciate').find("option:selected").text();
+        if ("undefined" === articleId || null == articleId) {
+            articleId = -1;
+        }
+        if ("是" == appreciate) {
+            appreciate = "1";
+        } else {
+            appreciate = "0";
+        }
+        var public = $('#public').is(":checked");
+        var status = "0";
+        if (!public) {
+            status = "1";
+        }
+        if (title == null || title == "") {
+            $('#msg_header').html("提示");
+            $('#msg').html("请填写文章标题");
+            $('.ui.modal').modal('show');
+        } else if (content == null || content == "") {
+            $('#msg_header').html("提示");
+            $('#msg').html("写点内容再发布吧！");
+            $('.ui.modal').modal('show');
+        } else if ("请选择" == categoryName) {
+            $('#msg_header').html("提示");
+            $('#msg').html("请选择文章分类");
+            $('.ui.modal').modal('show');
+        } else if ("-1" == articleType) {
+            $('#msg_header').html("提示");
+            $('#msg').html("请选择文章类型");
+            $('.ui.modal').modal('show');
+        } else {
+            $.ajax({
+                url: url,
+                method: "POST",
+                sync: true,
+                contentType: "application/json",
+                data: JSON.stringify({
+                    articleId: articleId,
+                    articleTopic: title,
+                    articleCategory: categoryName,
+                    articleType: articleType,
+                    articleAppreciate: appreciate,
+                    articleStatus: status,
+                    articleContent: content
+                }),
+                dataType: "json",  //服务器返回的数据类型
+                success: function (response) {
+                    //跳转页面
+                    var articleId = response.msg;
+                    if (response.success) {
+                        window.location.href = "/manage/blog/success/" + articleId;
+                    } else {
+                        $('#msg_header').html("错误");
+                        $('#msg').css("color", "red").html("抱歉！服务异常，请重试!");
+                        $('.ui.modal').modal('show');
+                    }
+                },
+                error: function (response) {
                     $('#msg_header').html("错误");
                     $('#msg').css("color", "red").html("抱歉！服务异常，请重试!");
                     $('.ui.modal').modal('show');
                 }
-            },
-            error: function (response) {
-                $('#msg_header').html("错误");
-                $('#msg').css("color", "red").html("抱歉！服务异常，请重试!");
-                $('.ui.modal').modal('show');
-            }
-        });
-    }
- })
+            });
+        }
+    })
 </script>
 </html>
