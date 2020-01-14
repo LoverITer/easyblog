@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * 用于映射文章表的统计信息
  */
-public class ArticleCount implements Serializable {
+public class ArticleCounter implements Serializable {
 
 
     private static final long serialVersionUID = 7441077545294577920L;

@@ -88,6 +88,35 @@
         limit #{limit}
     </select>
 
+
+    <select id="getAllHistoryFamousArticles" resultType="top.easyblog.bean.Article">
+        select *
+        from article
+        where article_status = '0'
+        ORDER BY article_click DESC
+        limit #{limit}
+    </select>
+
+    <select id="getArticleCategoryCounter" resultType="top.easyblog.bean.ArticleCategoryCounter">
+        select article_category AS category_name, count(*) AS article_num
+        from article
+        where article_status = '0'
+          and date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 180 DAY)
+        GROUP BY article_category
+        limit #{limit}
+    </select>
+
+    <select id="getByCategoryWithLimit" resultType="top.easyblog.bean.Article">
+        select *
+        from article
+        where article_status = '0'
+          and date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 180 DAY)
+          and (article_category like #{key}
+            or article_topic like #{key})
+        order by article_click DESC
+        limit #{limit}
+    </select>
+
     <select id="getAllUserNewestArticles" resultType="top.easyblog.bean.Article">
         select *
         from article
@@ -114,7 +143,7 @@
         limit #{limit}
     </select>
 
-    <select id="countByUserIdMonthly" resultType="top.easyblog.bean.ArticleCount">
+    <select id="countByUserIdMonthly" resultType="top.easyblog.bean.ArticleCounter">
         SELECT DATE_FORMAT(article_publish_time, "%Y年%m月") AS date, COUNT(*) AS count
         FROM article
         where article_user = #{userId}

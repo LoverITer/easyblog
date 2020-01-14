@@ -1,10 +1,11 @@
 package top.easyblog.mapper;
 
 import org.apache.ibatis.annotations.Param;
-import top.easyblog.bean.Article;
-import top.easyblog.bean.ArticleCount;
-import top.easyblog.mapper.core.BaseMapper;
 import org.springframework.stereotype.Repository;
+import top.easyblog.bean.Article;
+import top.easyblog.bean.ArticleCategoryCounter;
+import top.easyblog.bean.ArticleCounter;
+import top.easyblog.mapper.core.BaseMapper;
 
 import java.util.List;
 
@@ -89,11 +90,34 @@ public  interface ArticleMapper extends BaseMapper<Article> {
     List<Article> getAllUserHistoryNewestArticles(@Param("limit") int limit);
 
     /**
+     * 统计分类下文章数量
+     * @param limit
+     * @return
+     */
+    List<ArticleCategoryCounter> getArticleCategoryCounter(@Param("limit") int limit);
+
+    /**
+     * 获得指定数量的访问量最高的某个分类的文章
+     * @param key  分类的关键字
+     * @param limit   数量
+     * @return
+     */
+    List<Article> getByCategoryWithLimit(String key,int limit);
+
+    /**
      * 获得所有文章中访问量最高的limit片文章
      * @param limit
      * @return
      */
     List<Article> getAllMostFamousArticles(@Param("limit") int limit);
+
+
+    /**
+     * 获得历史访问量最高的limit篇文章
+     * @param limit
+     * @return
+     */
+    List<Article> getAllHistoryFamousArticles(@Param("limit") int limit);
 
     /**
      * 得到用户limit篇访问量最高的文章
@@ -108,7 +132,7 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      * @param userId
      * @return
      */
-    List<ArticleCount> countByUserIdMonthly(@Param("userId") int userId);
+    List<ArticleCounter> countByUserIdMonthly(@Param("userId") int userId);
 
     /**
      * 按月份查询用户的文章,按照时间降序排列

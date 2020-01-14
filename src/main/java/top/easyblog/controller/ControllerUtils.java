@@ -1,14 +1,14 @@
 package top.easyblog.controller;
 
+import org.springframework.ui.Model;
 import top.easyblog.bean.Article;
-import top.easyblog.bean.ArticleCount;
+import top.easyblog.bean.ArticleCounter;
 import top.easyblog.bean.Category;
 import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
 import top.easyblog.service.impl.UserAttentionImpl;
-import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Objects;
@@ -51,7 +51,7 @@ class ControllerUtils {
             //查作者的所有允许显示的分类
             List<Category> lists = categoryService.getUserAllViableCategory(userId);
             //查作者的所有归档
-            List<ArticleCount> archives = articleService.getUserAllArticleArchives(userId);
+            List<ArticleCounter> archives = articleService.getUserAllArticleArchives(userId);
             //查作者的最新文章
             List<Article> newestArticles = articleService.getUserNewestArticles(userId, 5);
             //查作者的原创文章数
