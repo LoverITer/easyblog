@@ -2,7 +2,7 @@ package top.easyblog.service;
 
 import com.github.pagehelper.PageInfo;
 import top.easyblog.bean.Article;
-import top.easyblog.bean.ArticleCount;
+import top.easyblog.bean.ArticleCounter;
 import top.easyblog.commons.pagehelper.PageParam;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public interface IArticleService {
      */
     List<Article> getUserNewestArticles(int userId, int limit);
 
-    List<ArticleCount> getUserAllArticleArchives(int userId);
+    List<ArticleCounter> getUserAllArticleArchives(int userId);
 
     /**
      * @param userId      用户ID
@@ -41,6 +41,19 @@ public interface IArticleService {
      * @return
      */
     PageInfo<Article> getAllUserNewestArticlesPage(PageParam pageParam);
+
+    /**
+     * 获得历史访问量最高的limit篇文章
+     * @param limit
+     * @return
+     */
+    List<Article> getAllHistoryFamousArticles(int limit);
+
+    /**
+     * 获得猜你喜欢文章
+     * @return
+     */
+    List<Article> getYouMayAlsoLikeArticles();
 
     /**
      * 获得访问量最大的limit片文章

@@ -22,6 +22,7 @@ import top.easyblog.mapper.UserCommentMapper;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.service.IArticleService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -85,6 +86,37 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
+    public List<Article> getYouMayAlsoLikeArticles() {
+        List<Article> articles = new ArrayList<>();
+        try {
+            List<ArticleCategoryCounter> categories = articleMapper.getArticleCategoryCounter(10);
+            categories.forEach(category -> {
+                //根据排名靠前的10个分类查询出来对应的2篇文章
+                List<Article> lists = articleMapper.getByCategoryWithLimit("%" + category.getCategoryName() + "%", 2);
+                articles.addAll(lists);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return articles;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public List<Article> getAllHistoryFamousArticles(int limit) {
+        List<Article> articles = null;
+        if (limit > 0) {
+            try {
+                articles = articleMapper.getAllHistoryFamousArticles(limit);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return articles;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
     public PageInfo<Article> getAllUserNewestArticlesPage(PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
         if (Objects.nonNull(pageParam)) {
@@ -92,7 +124,7 @@ public class ArticleServiceImpl implements IArticleService {
                 PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
                 //查最近一个月内的所有数据
                 List<Article> articles = articleMapper.getAllUserNewestArticles();
-                if (Objects.isNull(articles) || articles.size() <5) {
+                if (Objects.isNull(articles) || articles.size() < 5) {
                     //查历史最新的20条数据
                     articles = articleMapper.getAllUserHistoryNewestArticles(20);
                 }
@@ -137,10 +169,10 @@ public class ArticleServiceImpl implements IArticleService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
     @Override
-    public List<ArticleCount> getUserAllArticleArchives(int userId) {
+    public List<ArticleCounter> getUserAllArticleArchives(int userId) {
         if (userId > 0) {
             try {
-                List<ArticleCount> articleCounts = articleMapper.countByUserIdMonthly(userId);
+                List<ArticleCounter> articleCounts = articleMapper.countByUserIdMonthly(userId);
                 articleCounts.forEach(ele -> {
                     ele.setUserId(userId);
                 });

@@ -34,7 +34,8 @@ public class WelcomeController {
         //查询最近1个月内的文章
         PageInfo<Article> newestArticlesPages = articleService.getAllUserNewestArticlesPage(new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize()));
         //查询访问量最高的19篇最近的文章用于首页大图、访问排行、特别推荐的显示
-        List<Article> mostFamousArticles = articleService.getMostFamousArticles(19);
+        List<Article> mostFamousArticles = articleService.getMostFamousArticles(22);
+        model.addAttribute("newestArticlesPages", newestArticlesPages);
         List<List<?>> splitList = CollectionUtils.splitList(mostFamousArticles, new int[]{5,1,7,6});
         model.addAttribute("articles", splitList.get(0));
         //访问排行侧边栏带首图显示的文章
@@ -42,7 +43,12 @@ public class WelcomeController {
         //访问排行侧边栏其他文章
         model.addAttribute("visitRankingArticles",splitList.get(2));
         model.addAttribute("specialRecommendArticles",splitList.get(3));
-        model.addAttribute("newestArticlesPages", newestArticlesPages);
+        List<Article> allHistoryFamousArticles = articleService.getAllHistoryFamousArticles(10);
+        List<List<?>> lists = CollectionUtils.splitList(allHistoryFamousArticles, new int[]{1, 9});
+        model.addAttribute("recommendTopic",lists.get(0));
+        model.addAttribute("recommend",lists.get(1));
+        List<Article> youMayAlsoLikeArticles = articleService.getYouMayAlsoLikeArticles();
+        model.addAttribute("youMayAlsoLikeArticles",youMayAlsoLikeArticles);
         //当前年份
         model.addAttribute("CURRENT_YEAR", new Date());
         return "index";
