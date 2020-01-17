@@ -140,6 +140,8 @@ public class ArticleServiceImpl implements IArticleService {
                             e.printStackTrace();
                         }
                     });
+                    //把MarkDown文本转换为普通文本
+                    parseMarkdowns2Text(articles);
                     pageInfo = new PageInfo<>(articles);
                 }
             } catch (Exception e) {
@@ -159,6 +161,7 @@ public class ArticleServiceImpl implements IArticleService {
         try {
             if (limit > 0) {
                 articles = articleMapper.getAllMostFamousArticles(limit);
+                parseMarkdowns2Text(articles);
             }
         } catch (Exception e) {
             e.printStackTrace();

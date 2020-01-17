@@ -8,7 +8,7 @@ spring:
     #指定使用Druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://mysql:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
     username: root
     password: huangxin@95162437
     druid:
@@ -45,8 +45,8 @@ spring:
     # 通过connectProperties属性来打开mergeSql功能
     connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
   redis:
-    host: 127.0.0.1
-    port: 63790
+    host: redis      #在docker容器中部署，host地址一定要写你配置的--link的名字
+    port: 6379
     database: 0
     password: CySynWsw5NLzbzHne3XcXaRGPWKpJxSKsHikLYvQ6VI0dNKjScuyYPjt
     timeout: 10000

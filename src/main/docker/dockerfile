@@ -1,11 +1,12 @@
-#   基于JAVA的镜像
+# 基础镜像使用Java
 FROM java:8
-#  Linux上面的挂载点为/tmp
+# VOLUME 指定了临时文件目录为/tmp。
+# 其效果是在主机 /var/lib/docker 目录下创建了一个临时文件，并链接到容器的/tmp（两个文件夹共享数据）
 VOLUME /tmp
 #  添加一个jar为本项目的jar,第一个是打包的Jar 第二个是别名
-ADD target/*.jar app.jar
+ADD easyblog-0.3.0.jar app.jar
 #  暴露的端口号和application.yml的端口号一直
 EXPOSE 80
-ENV TZ=PRC
+
 #  入口点 执行JAVA Jvm命令： 加快随机数产生过程，运行这个Jar包
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]

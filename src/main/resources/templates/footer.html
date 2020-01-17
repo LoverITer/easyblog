@@ -9,7 +9,7 @@
 <!--公共片段： 页脚-->
 <footer th:fragment="footbar" class="ui  vertical segment m-padded-tb-massive" style="padding-top: 20px !important;">
     <div class="ui center aligned container">
-        <p style="color: #0a001f" class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2019 EasyBlog Designed by HuangXin</p>
+        <p style="color: #0a001f" class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2019-[[${#dates.format(new java.util.Date().getTime(),'yyyy')}]] EasyBlog Designed by HuangXin</p>
         <img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
         <a href="http://www.beian.miit.gov.cn/"  style="color:#999" target="_blank">陕ICP备-19025460号</a>
     </div>

@@ -56,7 +56,6 @@ spring:
       additional-paths: src/main/java
   redis:
     host: 192.168.92.128
-    #password: CySynWsw5NLzbzHne3XcXaRGPWKpJxSKsHikLYvQ6VI0dNKjScuyYPjt
     port: 6379
     database: 0
     timeout: 10000
