@@ -18,7 +18,6 @@
                     <a href="#" th:if="${user!=null}" th:href="@{/article/index/{id}(id=${user.getUserId()})}" class="m-black">
                         <img class="ui top avatar aligned tiny image medium circular"
                              style="width: 55px !important;height: 55px !important;"
-                             src="../static/images/header.jpg"
                              th:if="${user!=null}"
                              th:src="@{${user.getUserHeaderImgUrl()}}"/>
                     </a>

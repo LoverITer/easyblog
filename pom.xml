@@ -11,7 +11,7 @@
     <groupId>top.easyblog</groupId>
     <artifactId>easyblog</artifactId>
     <name>easyblog</name>
-    <version>0.3.10</version>
+    <version>0.3.11</version>
     <packaging>war</packaging>
     <description>personal-blog</description>
 
@@ -43,8 +43,8 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-          <!--  &lt;!&ndash; 移除嵌入式tomcat插件 &ndash;&gt;
-            <exclusions>
+            <!-- 移除嵌入式tomcat插件 -->
+           <!-- <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -52,8 +52,8 @@
             </exclusions>-->
         </dependency>
 
-   <!--     &lt;!&ndash;外置tomcat&ndash;&gt;
-        <dependency>
+        <!--外置tomcat-->
+        <!--<dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>

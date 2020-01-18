@@ -91,7 +91,7 @@ public class ArticleController {
     @GetMapping(value = "/details/{articleId}")
     public String articleDetails(@PathVariable("articleId") int articleId, Model model) {
         try {
-            Article article = articleServiceImpl.getArticleById(articleId);
+            Article article = articleServiceImpl.getArticleById(articleId,"html");
             if (Objects.nonNull(article)) {
                 model.addAttribute("article", article);
                 List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());

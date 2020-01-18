@@ -57,12 +57,12 @@ public class CollectionUtils {
         return result;
     }
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         ArrayList<Integer> list = new ArrayList<>();
         for(int i=0;i<19;i++){
             list.add(i);
         }
         System.out.println(splitList(list,new int[]{5,1,7,6}));
-    }
+    }*/
 
 }

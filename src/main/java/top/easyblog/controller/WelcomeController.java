@@ -37,7 +37,7 @@ public class WelcomeController {
         List<Article> mostFamousArticles = articleService.getMostFamousArticles(22);
         model.addAttribute("newestArticlesPages", newestArticlesPages);
         List<List<?>> splitList = CollectionUtils.splitList(mostFamousArticles, new int[]{5,1,7,6});
-        if(Objects.nonNull(splitList)&&splitList.size()==4) {
+        if(Objects.nonNull(splitList)) {
             model.addAttribute("articles", splitList.get(0));
             //访问排行侧边栏带首图显示的文章
             model.addAttribute("famousSideBarTopArticle", splitList.get(1));
@@ -47,7 +47,7 @@ public class WelcomeController {
         }
         List<Article> allHistoryFamousArticles = articleService.getAllHistoryFamousArticles(10);
         List<List<?>> lists = CollectionUtils.splitList(allHistoryFamousArticles, new int[]{1, 9});
-        if(Objects.nonNull(lists)&&lists.size()==2) {
+        if(Objects.nonNull(lists)) {
             model.addAttribute("recommendTopic", lists.get(0));
             model.addAttribute("recommend", lists.get(1));
         }
