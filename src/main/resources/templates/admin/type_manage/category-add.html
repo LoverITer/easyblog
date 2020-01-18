@@ -39,8 +39,6 @@
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏名称：</label>
                                 <input id="category-name" name="categoryName" type="text"
                                        style="width: 340px !important;" placeholder="请输入分类专栏名称">
-                                <span hidden="hidden" id="category-name-msg"
-                                      style="color: #C92027 !important;margin-left: 10px !important;">不可为空</span>
                             </div>
                         </div>
                     </div>
@@ -48,8 +46,10 @@
                         <div class="ui form">
                             <div class="inline  field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏简介：</label>
-                                <textarea name="categoryDesc" style="width: 340px !important;" rows="5"
+                                <textarea th:if="${categoryDesc==null}" name="categoryDesc" style="width: 340px !important;" rows="5"
                                           placeholder="输入分类专栏简介"></textarea>
+                                <textarea th:if="${categoryDesc!=null}" name="categoryDesc" style="width: 340px !important;" rows="5"
+                                          placeholder="输入分类专栏简介" th:text="${categoryDesc}"></textarea>
                             </div>
                         </div>
                     </div>
@@ -57,11 +57,13 @@
                         <div class="ui form">
                             <div class="inline  field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏配图：</label>
-                                <input id="input_file" name="categoryImg"
+                                <input id="input_file"  name="categoryImg"
                                        style="position:absolute;opacity:0;height: 120px !important;padding: 0 !important;"
                                        onchange="show(this)" accept="image/*" type="file"/>
-                                <img id="pre-look" style="width: 338px;height: 120px;"
+                                <img id="pre-look"  style="width: 338px;height: 120px;"
                                      th:src="@{/static/images/upload.jpg}"/>
+                                <!--<img id="pre-look" th:if="${categoryImg!=null}" style="width: 120px;height: 120px;"
+                                     th:src="@{${categoryImg}}"/>-->
                             </div>
                         </div>
                     </div>
@@ -106,11 +108,38 @@
         $('#add-btn').addClass("basic");
     })
 </script>
+<script th:online="javascript">
+    $(document).ready(function () {
+        var msg="[[${error}]]";
+        if(msg!="") {
+            spop({
+                template: msg,
+                autoclose: 2000,
+                position: "top-center",
+                style: 'info',
+            });
+        }
+    });
+
+</script>
 
 <script type="text/javascript">
 
     $(document).ready(function () {
         toggleStatus();
+        $('#side-bnt5').css("background", "#DB2828");
+        $('#side-bnt5').css("color", "#ffffff");
+        $('.menu.toggle').click(function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        });
+
+        $('.ui.dropdown').dropdown({
+            on: 'hover'
+        });
+
+        $('#searchBar').click(function () {
+            $('#reloadSearchBar').css("display", "block");  //显示div
+        });
     });
 
     function toggleStatus() {
@@ -122,7 +151,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 500);
+        setTimeout(`toggleStatus()`, 500);
     }
 
     <!--退出操作异步请求-->
@@ -152,34 +181,12 @@
 
 </script>
 <script>
-    $('.menu.toggle').click(function () {
-        $('.m-item').toggleClass('m-mobile-hide');
-    });
-
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
-    });
-
-    $('#searchBar').click(function () {
-        $('#reloadSearchBar').css("display", "block");  //显示div
-    });
-
-</script>
-<script>
     $('#add-btn').mouseenter(function () {
         $('#add-btn').removeClass("basic");
-    })
+    });
     $('#add-btn').mouseleave(function () {
         $('#add-btn').addClass("basic");
-    })
-    $('#add-btn').click(function () {
-        var str = $('#category-name').val();
-        if ("" == str || null == str) {
-            $('#category-name-msg').show();
-        } else {
-            $('#category-name-msg').hide();
-        }
-    })
+    });
 </script>
 <script>
     function show(obj) {
@@ -191,12 +198,8 @@
             $('#pre-look').height(120);
             $('#pre-look').width(120);
             document.getElementById("pre-look").src = this.result;
-            console.log(this.result);
+            //console.log(this.result);
         }
     }
-</script>
-<script>
-    $('#side-bnt5').css("background", "#DB2828");
-    $('#side-bnt5').css("color", "#ffffff");
 </script>
 </html>

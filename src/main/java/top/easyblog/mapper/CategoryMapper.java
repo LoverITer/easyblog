@@ -1,9 +1,9 @@
 package top.easyblog.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import top.easyblog.bean.Category;
 import top.easyblog.mapper.core.BaseMapper;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -31,6 +31,8 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return
      */
     List<Category> getUserAllDeletedCategory(@Param("userId") int userId);
+
+
 
     int countSelective(@Param("category") Category category);
 
