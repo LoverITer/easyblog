@@ -27,6 +27,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -70,6 +71,7 @@ public class UserController {
                     !referUrl.contains("register")&&
                     !referUrl.contains("loginPage")&&
                     !referUrl.contains("change_password")&&
+                    !referUrl.contains("/article/index")&&
                     !referUrl.equalsIgnoreCase(baseUrl)){
                 session.setAttribute("Referer", referUrl);
             }
@@ -160,10 +162,10 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/register")
-    public Result register(@RequestParam("nickname") String nickname,
-                           @RequestParam("pwd") String password,
-                           @RequestParam("account") String account,
-                           @RequestParam("code") String captchaCode,
+    public Result register(@RequestParam(value = "nickname",defaultValue = "") String nickname,
+                           @RequestParam(value = "pwd",defaultValue = "") String password,
+                           @RequestParam(value = "account",defaultValue = "") String account,
+                           @RequestParam(value = "code",defaultValue = "") String captchaCode,
                            HttpServletRequest request,
                            HttpSession session) {
         String captcha = (String) session.getAttribute("captcha-code");
@@ -176,15 +178,18 @@ public class UserController {
         if (user != null) {
             result.setMsg("昵称已存在");
         } else if (userService.getUser(account) != null) {
-            result.setMsg("此邮箱已经注册了");
-        } else if (userService.getUser(account) != null) {
-            result.setMsg("此手机号已经注册过了");
+            result.setMsg("此邮箱/手机号已经注册了");
         } else if (!captcha.equals(captchaCode)) {
             result.setMsg("验证码不正确");
         } else {
-            userService.register(nickname, EncryptUtil.getInstance().SHA1(password, "user"), account, ip + " " + ipInfo);
-            result.setSuccess(true);
-            result.setMsg("注册成功");
+            try {
+                userService.register(nickname, EncryptUtil.getInstance().SHA1(password, "user"), account, ip + " " + ipInfo);
+                result.setSuccess(true);
+                result.setMsg("注册成功");
+                log.info("用户：{}注册成功,{}",account,new Date());
+            }catch (Exception e){
+                log.error(e.getMessage());
+            }
         }
         return result;
     }
@@ -244,13 +249,13 @@ public class UserController {
     public String login(@RequestParam(value = "username", defaultValue = "") String username,
                         @RequestParam(value = "password", defaultValue = "") String password,
                         @RequestParam(value = "remember-me", defaultValue = "") String remember,
-                        HttpSession session,
                         RedirectAttributes redirectAttributes,
                         HttpServletRequest request,
                         HttpServletResponse response) {
         User user = userService.checkUser(username, EncryptUtil.getInstance().SHA1(password, "user"));
         String ip = NetWorkUtil.getUserIp(request);
         String location = NetWorkUtil.getLocation(request, ip);
+        HttpSession session = request.getSession();
         try {
             if (user != null) {
                 user.setUserPassword(null);
@@ -264,7 +269,7 @@ public class UserController {
                     response.addCookie(ck);
                 }
                 new Thread(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功"))).start();
-                // 得到用户登录前的页面
+                // 跳转到用户登录前的页面
                 String refererUrl = (String) session.getAttribute("Referer");
                 if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
                     session.removeAttribute("Referer");
@@ -293,7 +298,7 @@ public class UserController {
     public Result logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
         if(session!=null){
-            session.invalidate();
+           session.removeAttribute("user");
         }
         Result result = new Result();
         result.setSuccess(true);

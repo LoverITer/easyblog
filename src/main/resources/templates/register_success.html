@@ -12,7 +12,7 @@
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
 </head>
-<body onload="timer()">
+<body >
 
 <!--导航-->
 <div th:replace="~{nav :: navbar}"></div>
@@ -25,14 +25,17 @@
     <div class="ui success message m-padded-tb-huge">
         <div class="ui contianer">
             <h2>注册成功</h2>
-            <p>恭喜您注册成功，页面将于<span id="time"></span>秒后跳转到登录页面.<a href="" th:href="@{/user/loginPage}">立即登录</a></p>
+            <p>恭喜您注册成功，页面将于<strong><span id="time" style="font-size: 22px"></span></strong>秒后跳转到登录页面。
+                <a href="#" th:href="@{/user/loginPage}" style="font-size: 16px">
+                    <button class="ui button tiny blue" >立即登录</button>
+                </a>
+            </p>
         </div>
     </div>
 </div>
-<br>
-<br>
-<br>
-<br>
+
+
+<div style="margin-top: 18.5em"></div>
 
 <!--footer-->
 <div th:replace="~{footer :: footbar}"></div>
@@ -54,22 +57,26 @@
     });
 </script>
 <script type="text/javascript">
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
-    });
+
     var t = 5;
-    setTimeout("timer()", 1000);
+    $(document).ready(function () {
+        $('.ui.dropdown').dropdown({
+            on: 'hover'
+        });
+        timer();
+    });
 
     function timer() {
-        if (t > 0) {
+        if (t >0) {
             $('#time').css("color", "#d0393f").text(t);
             t--;
         } else {
             //跳转到登录页面
             window.location.href = "/user/loginPage";
         }
-
+        setTimeout("timer()", 1000);
     }
+
 </script>
 </body>
 </html>

@@ -193,7 +193,7 @@ public class ArticleAdminController {
     @RequestMapping(value = "/success/{articleId}")
     public String articlePublishSuccess(@PathVariable(value = "articleId") int articleId,
                                         Model model) {
-        Article article = articleService.getArticleById(articleId);
+        Article article = articleService.getArticleById(articleId,"text");
         model.addAttribute("article", article);
         return PREFIX + "/blog-input-success";
     }
@@ -231,7 +231,7 @@ public class ArticleAdminController {
                 return "redirect:" + Referer;
             }
             try {
-                Article article = articleService.getArticleById(articleId);
+                Article article = articleService.getArticleById(articleId,null);
                 model.addAttribute("article", article);
                 List<Category> categories = categoryService.getUserAllCategories(article.getArticleUser());
                 model.addAttribute("categories", categories);

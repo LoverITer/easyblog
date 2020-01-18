@@ -1,11 +1,15 @@
 package top.easyblog.controller.admin;
 
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sun.misc.BASE64Encoder;
 import top.easyblog.autoconfig.QiNiuCloudService;
 import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
@@ -26,9 +30,10 @@ import java.util.Objects;
 @RequestMapping(value = "/manage/category")
 public class CategoryAdminController {
 
-
+    private static Logger log = LoggerFactory.getLogger(CategoryAdminController.class);
     private final String PREFIX = "/admin/type_manage/";
     private final String LOGIN_PAGE = "redirect:/user/loginPage";
+
 
     private final CategoryServiceImpl categoryService;
     private final QiNiuCloudService qiNiuCloudService;
@@ -190,19 +195,37 @@ public class CategoryAdminController {
                           RedirectAttributes attributes) {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
+            //用于回显
+            attributes.addFlashAttribute("categoryDesc",categoryDesc);
+            if(!categoryImg.isEmpty()){
+                try {
+                    BASE64Encoder encoder = new BASE64Encoder();
+                    // 通过base64来转化图片
+                    String data = encoder.encode(categoryImg.getBytes());
+                    attributes.addFlashAttribute("categoryImg", "data:image/jpeg;base64,"+data);
+                }catch (Exception e){
+                    log.error(e.getMessage());
+                }
+            }
+            if(StringUtil.isEmpty(categoryName)){
+                attributes.addFlashAttribute("error", "分类名称不能为空");
+                return "redirect:/manage/category/add";
+            }
+            //已经存在该分类时，不能重复创建
             Category var0 = categoryService.getCategoryByUserIdAndName(user.getUserId(), categoryName);
             if (Objects.nonNull(var0)) {
-                attributes.addFlashAttribute("msg", "你已经存在该分类，请勿重复创建！");
+                attributes.addFlashAttribute("error", "你已经存在该分类，请不要重复创建！");
                 return "redirect:/manage/category/add";
             }
             Category category = new Category(user.getUserId(), categoryName, "", 0, 0, 0, "1", categoryDesc);
-            if (categoryImg.getSize() == 0) {
+            if (categoryImg.isEmpty()) {
                 //用户新建分类的时用户没有上传图片，系统随机分配一张
                 category.setCategoryImageUrl(FileUploadUtils.defaultCategoryImage());
             } else {
                 //上传到七牛云图床，返回图片URL
                 try {
-                    category.setCategoryImageUrl(qiNiuCloudService.putMultipartImage(categoryImg));
+                    String imageUrl=qiNiuCloudService.putMultipartImage(categoryImg);
+                    category.setCategoryImageUrl(imageUrl);
                 } catch (Exception e) {
                     return "/error/error";
                 }

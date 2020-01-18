@@ -8,12 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>【 分类专栏 】 - EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
     <style type="text/css">
-        a:hover{
-            color:#ca0c16 !important;
+        a:hover {
+            color: #ca0c16 !important;
         }
     </style>
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
@@ -29,7 +29,8 @@
 <div class="m-padded-tb-big" style="max-width: 96em!important;margin: auto !important;">
     <div class="ui stackable grid">
         <!--左边的卡片-->
-        <div class="four wide column" style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
+        <div class="four wide column"
+             style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
             <!--用户信息-->
             <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
 
@@ -44,7 +45,8 @@
 
             <h4 class="ui horizontal divider header m-margin-top-large">联系开发者</h4>
             <div class="ui centered card" style="width: 11em">
-                <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image">
+                <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt=""
+                     class="ui rounded image">
             </div>
         </div>
 
@@ -68,17 +70,21 @@
                                     style="font-size: 1rem;">
                                 关注
                             </button>
-                            <div th:if="${!#strings.isEmpty(category.getCategoryDescription())}" style="color: #999;font-size: 14.5px ;margin-top: 12px" th:text="${category.getCategoryDescription()}"></div>
+                            <p th:if="${!#strings.isEmpty(category.getCategoryDescription())}"
+                               style="color: #999;font-size: 14.5px ;margin-top: 12px;max-width: 800px"
+                               th:text="${category.getCategoryDescription()}"></p>
                             <div class="right aligned column m-margin-top-small">
                            <span style="color: #888888;font-size: 14.5px;">
                               <span>关注数：<span style="color: dodgerblue !important;"
                                               th:text="${category.getCategoryCareNum()}">0</span>
                               </span>
                               <span class="m-margin-left-big">
-                                  文章数：<span style="color: dodgerblue !important;"  th:text="${category.getCategoryArticleNum()}">23</span>
+                                  文章数：<span style="color: dodgerblue !important;"
+                                            th:text="${category.getCategoryArticleNum()}">23</span>
                               </span>
                               <span class="m-margin-left-big">
-                                  访问量：<span style="color: dodgerblue !important;" th:text="${category.getCategoryClickNum()}">22255</span>
+                                  访问量：<span style="color: dodgerblue !important;"
+                                            th:text="${category.getCategoryClickNum()}">22255</span>
                               </span>
                            </span>
                             </div>
@@ -88,17 +94,22 @@
             </div>
 
             <!--每个分类的文章-->
-            <div class="ui top attached  segment" style="padding-top: 0 !important;border-bottom: none !important;margin-top: 0.1em !important;">
-                <div th:if="${!#lists.isEmpty(categoryArticles)&&!#lists.isEmpty(categoryArticles.getList())&&#lists.size(categoryArticles.getList())>0}" th:each="article:${categoryArticles.getList()}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear"
+            <div class="ui top attached  segment"
+                 style="padding-top: 0 !important;border-bottom: none !important;margin-top: 0.1em !important;">
+                <div th:if="${!#lists.isEmpty(categoryArticles)&&!#lists.isEmpty(categoryArticles.getList())&&#lists.size(categoryArticles.getList())>0}"
+                     th:each="article:${categoryArticles.getList()}"
+                     class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear"
                      style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
-                            <button th:switch="${article.getArticleType()}" class="ui mini red basic button  m-inline-block ">
+                            <button th:switch="${article.getArticleType()}"
+                                    class="ui mini red basic button  m-inline-block ">
                                 <span th:case="0">原创</span>
                                 <span th:case="1">转载</span>
                                 <span th:case="2">翻译</span>
                             </button>
-                            <a href="#" th:href="@{/article/details/{articleId}(articleId=${article.getArticleId()})}" th:text="${article.getArticleTopic()}"
+                            <a href="#" th:href="@{/article/details/{articleId}(articleId=${article.getArticleId()})}"
+                               th:text="${article.getArticleTopic()}"
                                class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
                             <p class="m-text" style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;"
                                th:text="${#strings.abbreviate(article.getArticleContent(),150)}">
@@ -108,12 +119,15 @@
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
                                         <div class="item">
-                                            <img th:src="${user.getUserHeaderImgUrl()}" src="https://unsplash.it/100/100?image=1005" alt=""
+                                            <img th:src="${user.getUserHeaderImgUrl()}"
+                                                 src="https://unsplash.it/100/100?image=1005" alt=""
                                                  class="ui avatar image">
-                                            <div class="content"><a href="#" class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
+                                            <div class="content"><a href="#" class="header"
+                                                                    th:text="${user.getUserNickname()}">黄鑫</a></div>
                                         </div>
                                         <div class="item">
-                                            <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd  hh:mm:ss')}]]
+                                            <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd
+                                            hh:mm:ss')}]]
                                         </div>
                                         <div class="item">
                                             <i class="eye icon"></i>[[${article.getArticleClick()}]]
@@ -127,30 +141,36 @@
                         </div>
 
                         <div class="five wide column">
-                            <a  target="_blank">
-                                <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" alt="" class="ui rounded image">
+                            <a target="_blank">
+                                <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                     alt="" class="ui rounded image">
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div th:if="${!#lists.isEmpty(categoryArticles)&&categoryArticles.getTotal()<15&&categoryArticles.getTotal()>0}" class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
+            <div th:if="${!#lists.isEmpty(categoryArticles)&&categoryArticles.getTotal()<15&&categoryArticles.getTotal()>0}"
+                 class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
 
             <!--分页按钮-->
-            <div th:if="${categoryArticles.getTotal()>15}" class="ui bottom attached segment" style="border-top: solid 1px #ccc !important;">
+            <div th:if="${categoryArticles.getTotal()>15}" class="ui bottom attached segment"
+                 style="border-top: solid 1px #ccc !important;">
                 <div class="ui middle aligned two column grid">
                     <div class="column" style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
-                            <a  th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${user.getUserId()},page=${categoryArticles.getPrePage()})}">
-                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                            <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${user.getUserId()},page=${categoryArticles.getPrePage()})}">
+                                <button class="ui labeled icon button"
+                                        style="background: white !important;font-weight: 100 !important;">上一页
                                 </button>
                             </a>
-                            <a  th:each="pageNo:${categoryArticles.getNavigatepageNums()}" th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${user.getUserId()},page=${pageNo})}">
-                                <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
+                            <a th:each="pageNo:${categoryArticles.getNavigatepageNums()}"
+                               th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${user.getUserId()},page=${pageNo})}">
+                                <button class="ui button pages"
+                                        style="background: white !important;font-weight: 100 !important;">
                                     [[${pageNo}]]
                                 </button>
                             </a>
-                            <a  th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${user.getUserId()},page=${categoryArticles.getNextPage()})}">
+                            <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${user.getUserId()},page=${categoryArticles.getNextPage()})}">
                                 <button class="ui right labeled icon button"
                                         style="background: white !important;font-weight: 100 !important;"> 下一页
                                 </button>
@@ -162,10 +182,12 @@
 
 
             <!--没有任何数据时候显示-->
-            <div th:if="${categoryArticles.getTotal()==0}" class="ui bottom attached segment" style="border-top: none !important;">
+            <div th:if="${categoryArticles.getTotal()==0}" class="ui bottom attached segment"
+                 style="border-top: none !important;">
                 <div class="ui middle aligned two column grid">
                     <div style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
-                        分类 <strong><span style="color: black !important;" th:text="${category.getCategoryName()}"></span></strong> 目前没有任何文章
+                        分类 <strong><span style="color: black !important;"
+                                         th:text="${category.getCategoryName()}"></span></strong> 目前没有任何文章
                     </div>
                 </div>
             </div>
@@ -191,12 +213,12 @@
     });
 
     function showCurrentPageNum() {
-        var obj=document.getElementsByClassName('pages');
-        var page=[[${categoryArticles.pageNum}]];
-        console.log(obj,page);
-        for(var i=0;i<obj.length;i++){
-            if(obj[i].textContent==page){
-                $(obj[i]).css('background','#eee');
+        var obj = document.getElementsByClassName('pages');
+        var page = [[${categoryArticles.pageNum}]];
+        console.log(obj, page);
+        for (var i = 0; i < obj.length; i++) {
+            if (obj[i].textContent == page) {
+                $(obj[i]).css('background', '#eee');
             }
         }
     }
@@ -253,21 +275,21 @@
         changeBtn();
     });
 
-    function changeBtn(){
+    function changeBtn() {
         var str = $('#care_id').val();
         if ("false" == str) {
-            $('#care-btn').css("color","inherit").text("关注");
+            $('#care-btn').css("color", "inherit").text("关注");
             $('#care-btn').addClass("red");
             $('#care-btn').addClass("basic");
             $('#care-btn').mouseenter(function () {
-                $('#care-btn').css("background","#DB2828");
+                $('#care-btn').css("background", "#DB2828");
                 $('#care-btn').addClass("red");
-                $('#care-btn').css("color","#ffffff").text("关注");
+                $('#care-btn').css("color", "#ffffff").text("关注");
                 $('#care-btn').text("关注");
                 $('#care-btn').removeClass("basic");
             });
             $('#care-btn').mouseleave(function () {
-                $('#care-btn').css("color","inherit").text("关注");
+                $('#care-btn').css("color", "inherit").text("关注");
                 $('#care-btn').text("关注");
                 $('#care-btn').addClass("basic");
             });
@@ -279,12 +301,12 @@
             $('#care-btn').mouseenter(function () {
                 $('#care-btn').removeClass("basic");
                 $('#care-btn').removeClass("grey");
-                $('#care-btn').css("background","#fde3e4");
+                $('#care-btn').css("background", "#fde3e4");
                 $('#care-btn').css("color", "red").text("取消关注");
             });
             $('#care-btn').mouseleave(function () {
-                $('#care-btn').css("box-shadow","none");
-                $('#care-btn').css("color","snow");
+                $('#care-btn').css("box-shadow", "none");
+                $('#care-btn').css("color", "snow");
                 $('#care-btn').addClass("basic");
                 $('#care-btn').addClass("grey");
                 $('#care-btn').css("color", "#7c7b7c").text("已关注");
@@ -295,8 +317,8 @@
     $('#care-btn').click(function () {
         //异步请求
         var id = $('#category_Id').val();
-        var btnHtml=$('#care-btn').html();
-        if("关注"==btnHtml) {
+        var btnHtml = $('#care-btn').html();
+        if ("关注" == btnHtml) {
             $.ajax({
                 url: "/category/details/care/" + id,
                 method: "GET",
@@ -311,7 +333,7 @@
                     alert(result.msg);
                 }
             })
-        }else if("取消关注"==btnHtml){
+        } else if ("取消关注" == btnHtml) {
             $.ajax({
                 url: "/category/details/cancelCare/" + id,
                 method: "GET",

@@ -17,7 +17,7 @@ spring:
   #邮件相关配置
   mail:
     host: smtp.qq.com
-    password: ceozdvepgtlydihg   #这里的password是生成的授权码，不是账户密码
+    password: wwqznxqyajhdeahg   #这里的password是生成的授权码，不是账户密码
     username: huangxin9830@qq.com  #发送邮件的账户名
     properties:      #properties的值应该是一个Map
       mail.smpt.ssl: true       #设置使用SSL安全协议

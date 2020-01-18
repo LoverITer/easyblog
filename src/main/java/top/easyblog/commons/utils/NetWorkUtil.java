@@ -101,7 +101,7 @@ public final class NetWorkUtil {
         String location="未知地址";
         //通过请求头或者客户端的User-Agent
         String USERAGENT = request.getHeader("User-Agent");
-        log.info(USERAGENT);
+        log.debug(USERAGENT);
         try {
             //从ip138网站获得所需查询ip的物理地址
             Document doc = Jsoup.connect(IP138 + ip + "&action=2").timeout(80000).userAgent(USERAGENT).get();
@@ -118,9 +118,10 @@ public final class NetWorkUtil {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return location;
     }
+
 }
 

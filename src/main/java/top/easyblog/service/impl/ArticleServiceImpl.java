@@ -59,15 +59,21 @@ public class ArticleServiceImpl implements IArticleService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "article", condition = "#result!=null")
     @Override
-    public Article getArticleById(int articleId) {
+    public Article getArticleById(int articleId, String flag) {
+        Article article = null;
         if (articleId > 0) {
             try {
-                return parseMarkdown2HTML(articleMapper.getByPrimaryKey((long) articleId));
+                article = articleMapper.getByPrimaryKey((long) articleId);
+                if ("html".equals(flag)) {
+                    parseMarkdown2HTML(article);
+                } else if ("text".equals(flag)) {
+                    parseMarkdown2Text(article);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return null;
+        return article;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -140,6 +146,8 @@ public class ArticleServiceImpl implements IArticleService {
                             e.printStackTrace();
                         }
                     });
+                    //把MarkDown文本转换为普通文本
+                    parseMarkdowns2Text(articles);
                     pageInfo = new PageInfo<>(articles);
                 }
             } catch (Exception e) {
@@ -159,6 +167,7 @@ public class ArticleServiceImpl implements IArticleService {
         try {
             if (limit > 0) {
                 articles = articleMapper.getAllMostFamousArticles(limit);
+                parseMarkdowns2Text(articles);
             }
         } catch (Exception e) {
             e.printStackTrace();

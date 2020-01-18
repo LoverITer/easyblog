@@ -17,7 +17,7 @@ public interface IArticleService {
      */
     int saveArticle(Article article);
 
-    Article getArticleById(int articleId);
+    Article getArticleById(int articleId,String flag);
 
     /**
      * 获得某个用户的最新文章
