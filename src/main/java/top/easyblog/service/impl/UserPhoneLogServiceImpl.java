@@ -1,9 +1,9 @@
 package top.easyblog.service.impl;
 
+import org.springframework.stereotype.Service;
 import top.easyblog.bean.UserPhoneLog;
 import top.easyblog.mapper.UserPhoneLogMapper;
 import top.easyblog.service.IUserPhoneLogService;
-import org.springframework.stereotype.Service;
 
 @Service
 public class UserPhoneLogServiceImpl implements IUserPhoneLogService {

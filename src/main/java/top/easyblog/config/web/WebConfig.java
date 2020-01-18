@@ -1,11 +1,11 @@
 package top.easyblog.config.web;
 
-import top.easyblog.handler.interceptor.LoginInterceptor;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.servlet.config.annotation.*;
+import top.easyblog.handler.interceptor.LoginInterceptor;
 
 import javax.servlet.MultipartConfigElement;
 

@@ -1,13 +1,13 @@
 package top.easyblog.service.impl;
 
-import top.easyblog.bean.User;
-import top.easyblog.bean.UserAttention;
-import top.easyblog.mapper.UserAttentionMapper;
-import top.easyblog.service.IUserAttention;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import top.easyblog.bean.User;
+import top.easyblog.bean.UserAttention;
+import top.easyblog.mapper.UserAttentionMapper;
+import top.easyblog.service.IUserAttention;
 
 import java.util.HashMap;
 import java.util.List;
