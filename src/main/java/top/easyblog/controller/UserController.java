@@ -14,6 +14,7 @@ import top.easyblog.bean.UserLoginStatus;
 import top.easyblog.bean.UserSigninLog;
 import top.easyblog.commons.email.Email;
 import top.easyblog.commons.email.SendEmailUtil;
+import top.easyblog.commons.utils.AESCrypt;
 import top.easyblog.commons.utils.EncryptUtil;
 import top.easyblog.commons.utils.NetWorkUtil;
 import top.easyblog.commons.utils.SendMessageUtil;
@@ -259,14 +260,29 @@ public class UserController {
         try {
             if (user != null) {
                 user.setUserPassword(null);
-                session.setAttribute("user", user);
-                session.setMaxInactiveInterval(60 * 60 * 24 * 10);   //登录信息10天有效
-                // 保存登录状态一个月
+                //会话信息，如果没有退出15天有效
+                if(Objects.isNull(session.getAttribute("user"))) {
+                    session.setAttribute("user", user);
+                    session.setMaxInactiveInterval(60 * 60 * 24 * 15);
+                }
+                // 保存用户名密码
+                // 一个月
                 if("on".equals(remember)) {
-                    Cookie ck = new Cookie("USER-COOKIE", username+"-"+password);
-                    ck.setMaxAge(30 * 24 * 60 * 60);
-                    ck.setPath("/");
-                    response.addCookie(ck);
+                    boolean newCookie=true;   //是否创建一个新的Cookie
+                    Cookie[] cookies = request.getCookies();
+                    for(Cookie ck:cookies){
+                        if("USER-COOKIE".equals(ck.getName())){
+                            newCookie=false;
+                        }
+                    }
+                    if(newCookie) {
+                        //使用AES对密码进行加密保存 :用户名-密码密文
+                        Cookie ck = new Cookie("USER-COOKIE", username + "-" + AESCrypt.encryptECB(password,"1a2b3c4d5e6f7g8h"));
+                        ck.setMaxAge(60*60*24*30);
+                        ck.setPath("/");
+                        // addCookie后，如果已经存在相同名字的cookie，则最新的覆盖旧的cookie
+                        response.addCookie(ck);
+                    }
                 }
                 new Thread(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功"))).start();
                 // 跳转到用户登录前的页面
@@ -277,7 +293,7 @@ public class UserController {
                 }
                 return "redirect:/article/index/" + user.getUserId();
             } else {
-                redirectAttributes.addFlashAttribute("msg", "抱歉！用户名和密码不匹配！");
+                redirectAttributes.addFlashAttribute("error", "抱歉！用户名和密码不匹配！");
                 return "redirect:/user/loginPage";
             }
         } catch (Exception e) {
@@ -287,7 +303,7 @@ public class UserController {
                     userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录失败"));
                 }
             }).start();
-            redirectAttributes.addFlashAttribute("msg", "服务异常，请重试！");
+            redirectAttributes.addFlashAttribute("error", "服务异常，请重试！");
             return "redirect:/user/loginPage";
         }
     }
