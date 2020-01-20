@@ -97,6 +97,38 @@ body {
     line-height: 1.8;
 }
 
+/**
+输入验证：对号
+ */
+.correct:before {
+    content: '\e013';
+    color: #008100;
+    font-family: Glyphicons Halflings;
+    text-align: center;
+    z-index: 2;
+    display: block;
+    width: 47.6px;
+    height: 47.6px;
+    line-height: 47.6px;
+    border-radius: 25px;
+}
+
+/**
+输入验证：错误
+ */
+.incorrect:before {
+    content: "\e101";
+    color: #b20610;
+    font-family: Glyphicons Halflings;
+    text-align: center;
+    z-index: 2;
+    display: block;
+    width: 47.6px;
+    height: 47.6px;
+    line-height: 47.6px;
+    border-radius: 25px;
+}
+
 /*-----margin------*/
 
 .m-margin-top-small {

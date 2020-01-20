@@ -13,7 +13,7 @@ function detectZoom() {
 
     if (window.devicePixelRatio !== undefined) {
         ratio = window.devicePixelRatio;
-    } else if (~ua.indexOf('msie')) {
+    } else if (ua.indexOf('msie')) {
         if (screen.deviceXDPI && screen.logicalXDPI) {
             ratio = screen.deviceXDPI / screen.logicalXDPI;
         }
