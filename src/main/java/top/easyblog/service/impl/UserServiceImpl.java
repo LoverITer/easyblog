@@ -1,19 +1,19 @@
 package top.easyblog.service.impl;
 
-import top.easyblog.bean.User;
-import top.easyblog.config.web.Result;
-import top.easyblog.commons.enums.UserFreeze;
-import top.easyblog.commons.enums.UserLock;
-import top.easyblog.commons.enums.UserPower;
-import top.easyblog.handler.exception.NullUserException;
-import top.easyblog.mapper.UserMapper;
-import top.easyblog.service.IUserService;
-import top.easyblog.commons.utils.EncryptUtil;
-import top.easyblog.commons.utils.FileUploadUtils;
-import top.easyblog.commons.utils.RegexUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import top.easyblog.bean.User;
+import top.easyblog.commons.enums.UserFreeze;
+import top.easyblog.commons.enums.UserLock;
+import top.easyblog.commons.enums.UserPower;
+import top.easyblog.commons.utils.EncryptUtil;
+import top.easyblog.commons.utils.FileUploadUtils;
+import top.easyblog.commons.utils.RegexUtil;
+import top.easyblog.config.web.Result;
+import top.easyblog.handler.exception.NullUserException;
+import top.easyblog.mapper.UserMapper;
+import top.easyblog.service.IUserService;
 
 import java.util.Objects;
 

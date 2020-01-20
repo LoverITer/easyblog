@@ -14,6 +14,12 @@
     <link rel="stylesheet" href="../static/css/jigsaw.css" th:href="@{/static/css/jigsaw.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+    <style type="text/css">
+        input::-webkit-calendar-picker-indicator{
+            display: none;
+            -webkit-appearance: none;
+        }
+    </style>
 </head>
 <body style="background: url(../static/images/bg.png)">
 <div class="jq22-container" style="padding-top:30px">
@@ -26,21 +32,20 @@
                     <div class="sign-in-htm">
                         <div class="group">
                             <label class="label">手机号/邮箱</label>
-                            <input id="username" name="username" type="text" class="input">
+                            <input id="username" name="username" type="text" class="input" list="mails">
+                            <datalist id="mails"></datalist>
                         </div>
-                        <div class="group">
+                        <div class="group" style="position: relative;">
                             <label for="pass" class="label">密码</label>
-                            <input id="password" name="password" type="password" class="input" data-type="password">
-                            <span th:unless="${#strings.isEmpty(msg)}" th:text="${msg}"
-                                  style="font-size: 12px;margin-top: 5px;color:#d0393f"></span>
+                            <input id="password" name="password" type="password" class="input">
+                            <span id="login-password-display-toggle" class="password-hide" style=":before;position: absolute;right:2px;top:18px;cursor: pointer;"></span>
+                        </div>
+                        <div class="group" >
+                           <input id="check1" name="remember-me" type="checkbox" class="check" checked>
+                           <label for="check1" style="font-size: 14px"> <span class="icon"></span> 保持登录</label>
                         </div>
                         <div class="group">
-                            <input id="check1" name="remember-me" type="checkbox" class="check" checked>
-                            <label for="check1" style="font-size: 14px"> <span class="icon"></span> 保持登录</label>
-                        </div>
-                        <div class="group">
-                            <input id="login-btn" style="cursor: pointer;" type="submit" onclick="storage()"
-                                   class="button" value="登录">
+                            <input id="login-btn" style="cursor: pointer;" type="submit" onclick="storage()" class="button" value="登录">
                         </div>
 
                         <div class="foot-lnk">
@@ -50,38 +55,38 @@
                 </form>
                 <form>
                     <div class="sign-up-htm">
-                        <div class="group">
+                        <div class="group" style="position: relative;">
                             <label class="label">昵称</label>
-                            <input id="user-nickname" name="user-nickname" type="text" class="input"
-                                   placeholder="请输入昵称">
-                            <span id="nickname-msg" style="display: none;font-size: 12px;margin-top: 5px"></span>
+                            <input id="user-nickname" name="user-nickname" type="text" class="input" placeholder="请输入昵称">
+                            <span id="register-nickname-validate-correct" class="correct" style=":before;position: absolute;right:2px;top:18px;display: none"></span>
+                            <span id="register-nickname-validate-incorrect" class="incorrect"  style=":before;position: absolute;right:2px;top:18px;display: none"></span>
+                            <span id="nickname-msg" style="display: none;font-size: 12px;margin-top: 5px;"></span>
                         </div>
-                        <div class="group">
+                        <div class="group" style="position: relative;">
+                            <label class="label" >手机号/邮箱</label>
+                            <input id="phone-mail" name="account" list="r-mails" type="text" class="input" placeholder="请输入手机号码/邮箱">
+                            <span id="register-account-validate-correct" class="correct" style=":before;position: absolute;right:2px;top:18px;display: none"></span>
+                            <span id="register-account-validate-incorrect" class="incorrect" style=":before;position: absolute;right:2px;top:18px;display: none"></span>
+                            <datalist id="r-mails"></datalist>
+                            <span id="account-msg" style="display: none;font-size: 12px;margin-top: 5px;"></span>
+                        </div>
+                        <div class="group" style="position: relative;">
                             <label class="label">密码</label>
-                            <input id="pass" name="user-pwd" type="password" class="input" data-type="password"
-                                   placeholder="6-16位字符组成，区分大小写">
+                            <input id="pass" name="user-pwd" type="password" class="input"   placeholder="11-20位字符组成，区分大小写">
+                            <span id="register-password-display-toggle" class="password-hide" style=":before;position: absolute;right:2px;top:18px;cursor: pointer;"></span>
                             <span id="password-msg" style="display: none;font-size: 12px;margin-top: 5px"></span>
                         </div>
-                        <div class="group">
-                            <label class="label">手机号/邮箱</label>
-                            <input id="phone-mail" name="account" type="text" class="input" placeholder="请输入手机号码/邮箱">
-                            <span id="account-msg" style="display: none;font-size: 12px;margin-top: 5px"></span>
-                        </div>
-                        <div class="group">
+                        <div class="group" >
                             <label class="label">验证码</label>
-                            <input id="captcha" type="text" name="code" style="max-width: 60%;display: inline-block"
-                                   class="input" placeholder="请输入验证码">
-                            <button id="code-btn" type="button"
-                                    style="cursor: pointer;max-width: 35%;display: inline-block;padding:15px 0"
+                            <input id="captcha" type="text" name="code" style="max-width: 60%;display: inline-block" class="input" placeholder="请输入验证码">
+                            <button id="code-btn" type="button" style="cursor: pointer;max-width: 35%;display: inline-block;padding:15px 0"
                                     class="button m-font-size">获取验证码
                             </button>
-                            <span id="captcha-msg" style="display: none;font-size: 12px;margin-top: 5px"></span>
                         </div>
 
                         <div class="group">
                             <input id="check2" type="checkbox" class="check">
-                            <label for="check2" style="font-size: 14px"><span class="icon"></span> 我已经同意<a href="#"
-                                                                                                           style="color: #00a1d6">《EasyBlog用户使用协议》</a></label>
+                            <label for="check2" style="font-size: 13px"><span class="icon"></span> 我已经同意<a href="#"  th:href="@{/help}"style="color: #00a1d6">《EasyBlog用户使用协议》</a></label>
                         </div>
                         <div class="group">
                             <input id="sub-btn" style="cursor: pointer;" disabled="disabled" type="button"
@@ -100,175 +105,33 @@
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="../static/js/jigsaw.js" th:href="@{/static/js/jigsaw.js}"></script>
-<!--用户输入信息验证-->
-<script type="text/javascript">
-    var obj = window.document.location;
-    var BASE_PATH = obj.href.substring(0, obj.href.indexOf(obj.pathname));
-    $('#user-nickname').keyup(function () {
-        var nickname = $('#user-nickname').val();
-        $.ajax({
-            url: BASE_PATH + "/user/checkNickname",
-            type: "GET",
-            async: true,
-            data: {nickname: nickname},
-            contentType: "application/json",
-            dataType: "json",
-            success: function (result) {
-                //console.log(result.msg + result.success)
-                if (result.success) {
-                    var value = $('#user-nickname').val();
-
-                    if (value === "" || value === undefined || value == null) {
-                        $('#nickname-msg').show().css("color", "#d0393f").text("请输入昵称");
-                    } else {
-                        $('#nickname-msg').show().css("color", "#00ec3f").text("昵称可用");
-                    }
-                } else {
-                    var value = $('#user-nickname').val();
-                    if (value === "" || value === undefined || value == null) {
-                        $('#nickname-msg').show().css("color", "#d0393f").text("请输入昵称");
-                    } else {
-                        $('#nickname-msg').show().css("color", "#d0393f").text("昵称已经存在");
-                    }
-                }
-
-            },
-            error: function () {
-                spop({
-                    template: "服务异常，请重新输入昵称",
-                    autoclose: 3000,
-                    position: "top-center",
-                    style: 'error',
-                });
-            }
-        })
-    });
-    $('#pass').keyup(function () {
-        var value = $('#pass').val();
-        $.ajax({
-            url: BASE_PATH + "/user/checkPassword",
-            type: "GET",
-            async: true,
-            data: {password: value},
-            contentType: "application/json",
-            dataType: "json",
-            success: function (result) {
-                console.log(result.msg + result.success)
-                if (result.success) {
-                    var value = $('#pass').val();
-                    if (value === "" || value === undefined || value == null) {
-                        $('#password-msg').show().css("color", "#d0393f").text("请输入密码");
-                    } else {
-                        $('#password-msg').show().css("color", "#00ec3f").text("密码可用");
-                    }
-                } else {
-                    var value = $('#pass').val();
-                    if (value === "" || value === undefined || value == null) {
-                        $('#password-msg').show().css("color", "#d0393f").text("请输入密码");
-                    } else {
-                        $('#password-msg').show().css("color", "#d0393f").text("密码长度必须介于6-16个字符");
-                    }
-                }
-
-            },
-            error: function () {
-                spop({
-                    template: "服务异常，请重新输入密码",
-                    autoclose: 3000,
-                    position: "top-center",
-                    style: 'error',
-                });
-            }
-        })
-    });
-    $('#phone-mail').keyup(function () {
-        var str = $('#phone-mail').val();
-        var mail_reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
-        var phone_reg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(199))+\d{8})$/;
-        if (mail_reg.test(str)) {
-            $.ajax({
-                url: "/user/checkEmail",
-                type: "GET",
-                async: true,
-                data: {email: str},
-                contentType: "application/json",
-                dataType: "json",
-                success: function (result) {
-                    //console.log(result.msg + result.success)
-                    if (result.success) {
-                        var value = $('#phone-mail').val();
-
-                        if (value === "" || value === undefined || value == null) {
-                            $('#account-msg').show().css("color", "#d0393f").text("请输入邮箱");
-                        } else {
-                            $('#account-msg').show().css("color", "#00ec3f").text("邮箱可用");
-                        }
-                    } else {
-                        var value = $('#phone-mail').val();
-                        if (value === "" || value === undefined || value == null) {
-                            $('#account-msg').show().css("color", "#d0393f").text("请输入邮箱");
-                        } else {
-                            $('#account-msg').show().css("color", "#d0393f").text("邮箱已经存在");
-                        }
-                    }
-
-                },
-                error: function () {
-                    spop({
-                        template: "服务异常，请尝试重新输入邮箱！",
-                        autoclose: 3000,
-                        position: "top-center",
-                        style: 'error',
-                    });
-                }
-            })
-        } else if (phone_reg.test(str)) {
-            $.ajax({
-                url: "/user/checkPhone",
-                type: "GET",
-                async: true,
-                data: {phone: str},
-                contentType: "application/json",
-                dataType: "json",
-                success: function (result) {
-                    //console.log(result.msg + result.success)
-                    if (result.success) {
-                        var value = $('#phone-mail').val();
-
-                        if (value === "" || value === undefined || value == null) {
-                            $('#account-msg').show().css("color", "#d0393f").text("请输入手机号");
-                        } else {
-                            $('#account-msg').show().css("color", "#00ec3f").text("手机号可用");
-                        }
-                    } else {
-                        var value = $('#phone-mail').val();
-                        if (value === "" || value === undefined || value == null) {
-                            $('#account-msg').show().css("color", "#d0393f").text("请输入手机号");
-                        } else {
-                            $('#account-msg').show().css("color", "#d0393f").text("手机号已经存在");
-                        }
-                    }
-
-                },
-                error: function () {
-                    spop({
-                        template: "服务异常，请尝试重新输入手机号！",
-                        autoclose: 3000,
-                        position: "top-center",
-                        style: 'error',
-                    });
-                }
-            })
-        }
-    });
-</script>
+<script src="../static/js/jigsaw.js" th:src="@{/static/js/jigsaw.js}"></script>
+<script src="../static/js/aes.js" type="text/javascript" th:src="@{/static/js/aes.js}"></script>
+<script src="../static/js/mode-ecb.js" type="text/javascript" th:src="@{/static/js/mode-ecb.js}"></script>
+<script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
 <!--发送验证码-->
-<script type="text/javascript">
+<script th:online="javascript" type="text/javascript">
     var maxtime = 60;
     var timeOut;
+    let passwordToggle=document.getElementById('register-password-display-toggle');
+    console.log(passwordToggle.style.top);
     $(document).ready(function () {
+        //自动补全邮箱
+        inputList($("#username"),$("#mails"));
+        inputList($("#phone-mail"),$("#r-mails"));
+        //自动填写账号密码
+        autoFillUserAccountByCookie($('#username'),$('#password'));
+        //显示服务器返回的信息
+        showInfoMessage("[[${error}]]");
+        sendEmail();
+        passwordDisplayToggle($('#login-password-display-toggle'),$('#password'));
+        passwordDisplayToggle($('#register-password-display-toggle'),$('#pass'));
+    });
 
+    /**
+     * 发送邮件
+     */
+    function sendEmail() {
         $('#code-btn').click(function () {
             var str = $('#phone-mail').val();
             var mail_reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
@@ -282,21 +145,11 @@
                     data: {phone: str, option: "register"},
                     dataType: "text",
                     success: function () {
-                        spop({
-                            template: "验证码已发送到您的手机，请注意查收！",
-                            autoclose: 3000,
-                            position: "top-center",
-                            style: 'info',
-                        });
-                        timeOut=setInterval('countDown()',1000);      //倒计时，并设置按钮不可用
+                        showInfoMessage("验证码已发送到您的手机，请注意查收！");
+                        timeOut = setInterval('countDown()', 1000);      //倒计时，并设置按钮不可用
                     },
                     error: function () {
-                        spop({
-                            template: "服务异常，请尝试重新输入手机号！",
-                            autoclose: 3000,
-                            position: "top-center",
-                            style: 'error',
-                        });
+                        showErrorMessage("服务异常，请尝试重新输入手机号！");
                     }
                 })
             } else if (mail_reg.test(str)) {
@@ -308,33 +161,22 @@
                     data: {email: str, option: "register"},
                     dataType: "text",
                     success: function () {
-                        spop({
-                            template: '验证码已发送到您的邮箱，请注意查收！',
-                            autoclose: 3000,
-                            position: "top-center",
-                            style: 'info',
-                        });
-                        timeOut=setInterval('countDown()',1000);   //倒计时，并设置按钮不可用
+                        showInfoMessage('验证码已发送到您的邮箱，请注意查收！');
+                        timeOut = setInterval('countDown()', 1000);   //倒计时，并设置按钮不可用
                     },
                     error: function () {
-                        spop({
-                            template: '服务异常，请尝试重新输入邮箱！',
-                            autoclose: 3000,
-                            position: "top-center",
-                            style: 'error',
-                        });
+                        showErrorMessage("服务异常，请重试！");
                     }
                 })
             } else {
-                spop({
-                    template: '请输入正确的手机号或者邮箱地址',
-                    autoclose: 3000,
-                    position: "top-center",
-                    style: 'error',
-                });
+                showErrorMessage('请输入正确的手机号或者邮箱地址');
             }
         });
-    });
+    }
+
+    /**
+     * 倒计时并禁用按钮
+     */
     function countDown() {
         if (maxtime >= 0) {
             $("#code-btn").attr("disabled", "disabled");
@@ -347,8 +189,167 @@
             maxtime = 60;
         }
     }
+
+
+    function hover(obj) {
+        $(this).hover();
+    }
+</script>
+<!--用户输入信息验证-->
+<script type="text/javascript">
+    let obj = window.document.location;
+    let BASE_PATH = obj.href.substring(0, obj.href.indexOf(obj.pathname));
+    $('#user-nickname').blur(function () {
+        let nickname = $('#user-nickname').val();
+        $.ajax({
+            url: BASE_PATH + "/user/checkNickname",
+            type: "GET",
+            async: true,
+            data: {nickname: nickname},
+            contentType: "application/json",
+            dataType: "json",
+            success: function (result) {
+                if (result.success) {
+                    if (nickname === "" || nickname === undefined || nickname == null) {
+                        $('#nickname-msg').show().css("color", "#d0393f").text("请输入昵称");
+                        $('#register-nickname-validate-correct').hide();
+                        $('#register-nickname-validate-incorrect').show();
+                    } else {
+                        $('#nickname-msg').text("");
+                        $('#register-nickname-validate-correct').show();
+                        $('#register-nickname-validate-incorrect').hide();
+                    }
+                } else {
+                    if (nickname === "" || nickname === undefined || nickname == null) {
+                        $('#nickname-msg').show().css("color", "#d0393f").text("请输入昵称");
+                        $('#register-nickname-validate-correct').hide();
+                        $('#register-nickname-validate-incorrect').show();
+                    } else {
+                        $('#nickname-msg').show().css("color", "#d0393f").text("昵称已经存在");
+                        $('#register-nickname-validate-correct').hide();
+                        $('#register-nickname-validate-incorrect').show();
+                    }
+                }
+
+            },
+            error: function () {
+                showErrorMessage("服务异常，请重试！");
+            }
+        })
+    });
+
+    $('#phone-mail').blur(function () {
+        let account = $('#phone-mail').val();
+        let mail_reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+        let phone_reg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(199))+\d{8})$/;
+        if (mail_reg.test(account)) {
+            $.ajax({
+                url: "/user/checkEmailNotExist",
+                type: "GET",
+                async: true,
+                data: {email: account},
+                contentType: "application/json",
+                dataType: "json",
+                success: function (result) {
+                    if (result.success) {
+                        if (account === "" || account === undefined || account == null) {
+                            $('#account-msg').show().css("color", "#d0393f").text("请输入邮箱");
+                            $('#register-account-validate-correct').hide();
+                            $('#register-account-validate-incorrect').show();
+                        } else {
+                            $('#account-msg').show().text("");
+                            $('#register-account-validate-correct').show();
+                            $('#register-account-validate-incorrect').hide();
+                        }
+                    } else {
+                        if (account === "" || account === undefined || account == null) {
+                            $('#account-msg').show().css("color", "#d0393f").text("请输入邮箱");
+                            $('#register-account-validate-correct').hide();
+                            $('#register-account-validate-incorrect').show();
+                        } else {
+                            $('#account-msg').show().css("color", "#d0393f").text("邮箱已经存在");
+                            $('#register-account-validate-correct').hide();
+                            $('#register-account-validate-incorrect').show();
+                        }
+                    }
+                },
+                error: function () {
+                    showErrorMessage("服务异常，请重试！");
+                }
+            })
+        } else if (phone_reg.test(account)) {
+            $.ajax({
+                url: "/user/checkPhone",
+                type: "GET",
+                async: true,
+                data: {phone: account},
+                contentType: "application/json",
+                dataType: "json",
+                success: function (result) {
+                    if (result.success) {
+                        if (account === "" || account === undefined || account == null) {
+                            $('#account-msg').show().css("color", "#d0393f").text("请输入手机号");
+                            $('#register-account-validate-correct').hide();
+                            $('#register-account-validate-incorrect').show();
+                        } else {
+                            $('#account-msg').show().text("");
+                            $('#register-account-validate-correct').show();
+                            $('#register-account-validate-incorrect').hide();
+                        }
+                    } else {
+                        if (account === "" || account === undefined || account == null) {
+                            $('#account-msg').show().css("color", "#d0393f").text("请输入手机号");
+                            $('#register-account-validate-correct').hide();
+                            $('#register-account-validate-incorrect').show();
+                        } else {
+                            $('#account-msg').show().css("color", "#d0393f").text("手机号已经存在");
+                            $('#register-account-validate-correct').hide();
+                            $('#register-account-validate-incorrect').show();
+                        }
+                    }
+
+                },
+                error: function () {
+                    showErrorMessage("服务异常，请重试！");
+                }
+            })
+        }
+    });
+
+    $('#pass').blur(function () {
+        let password = $('#pass').val();
+        $.ajax({
+            url: BASE_PATH + "/user/checkPassword",
+            type: "GET",
+            async: true,
+            data: {password: password},
+            contentType: "application/json",
+            dataType: "json",
+            success: function (result) {
+                if (result.success) {
+                    if (password === "" || password === undefined || password == null) {
+                        $('#password-msg').show().css("color", "#d0393f").text("请输入密码");
+                    } else {
+                        $('#password-msg').text("");
+                    }
+                } else {
+                    if (password === "" || password === undefined || password == null) {
+                        $('#password-msg').show().css("color", "#d0393f").text("请输入密码");
+                    } else {
+                        $('#password-msg').show().css("color", "#d0393f").text("密码长度必须介于11-20个字符");
+                    }
+                }
+            },
+            error: function () {
+                showErrorMessage("服务异常，请重试！");
+            }
+        })
+    });
+
+
 </script>
 <script type="text/javascript">
+    //用户注册
     $(function open() {
         var b1 = $("input[type='checkbox']#check2").is(':checked');
         var msg1 = $('#nickname-msg').html();
@@ -365,7 +366,7 @@
         if (b1 && b2 && b3 && (b4 || b5) && b6) {
             $('#sub-btn').removeAttr("disabled");
         }
-        setTimeout(function (){
+        setTimeout(function () {
             open()
         }, 1000);
     });
@@ -385,12 +386,7 @@
                 window.location.href = "/user/register-success";
             },
             error: function (result) {
-                spop({
-                    template: result.msg,
-                    autoclose: 3000,
-                    position: "top-center",
-                    style: 'error',
-                });
+                showErrorMessage(result.msg);
             }
         })
     });
@@ -398,35 +394,6 @@
     function storage() {
         //用户登录后保存信息
         sessionStorage.setItem("user", $('#account').val());
-    }
-</script>
-<!--自动填写用户名和密码-->
-<script type="text/javascript">
-    $(document).ready(function () {
-        //记住密码功能
-        var str = getCookie("USER-COOKIE");
-        //console.log(str);
-        var account = str.split("-");
-        //自动填充用户名和密码
-        $("#username").val(account[0]);
-        $("#password").val(account[1]);
-    });
-
-    //获取cookie
-    function getCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') c = c.substring(1);
-            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
-        }
-        return "";
-    }
-</script>
-<script type="text/javascript">
-    function hover(obj) {
-        $(this).hover();
     }
 </script>
 </html>

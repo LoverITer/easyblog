@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import top.easyblog.autoconfig.QiNiuCloudService;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserAttention;
+import top.easyblog.commons.utils.CalendarUtil;
+import top.easyblog.commons.utils.UserProfessionUtil;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.UserAttentionImpl;
 import top.easyblog.service.impl.UserServiceImpl;
-import top.easyblog.commons.utils.CalendarUtil;
-import top.easyblog.commons.utils.UserProfessionUtil;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;

@@ -1,8 +1,8 @@
 package top.easyblog.mapper;
 
+import org.springframework.stereotype.Repository;
 import top.easyblog.bean.UserPower;
 import top.easyblog.mapper.core.BaseMapper;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserPowerMapper extends BaseMapper<UserPower> {

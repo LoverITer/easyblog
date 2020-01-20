@@ -32,12 +32,13 @@
                         <a style="color:#bbbbbb;font-size: 1rem !important;" href="#" th:href="@{/manage/category/list}">< 返回分类专栏</a>
                     </div>
                 </div>
-                <form class="ui form" method="post" th:action="@{/manage/category/saveEdit/}+@{${category.getCategoryId()}}"
+                <form class="ui form" method="post" th:action="@{/manage/category/saveEdit/{categoryId}(categoryId=${category.getCategoryId()})}"
                       enctype="multipart/form-data">
                     <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
                         <div class="ui form">
                             <div class="inline field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏名称：</label>
+                                <input name="oldCategoryName" type="hidden"  th:value="${category.getCategoryName()}">
                                 <input id="category-name" name="categoryName" type="text"
                                        style="width: 340px !important;" th:value="${category.getCategoryName()}" placeholder="请输入分类专栏名称">
                                 <span hidden="hidden" id="category-name-msg"
@@ -61,7 +62,7 @@
                                 <input type="hidden" name="oldCategoryImg" th:value="${category.getCategoryImageUrl()}">
                                 <input id="categoryImgUrl" name="categoryImage" th:value="${category.getCategoryImageUrl()}" style="position:absolute;opacity:0;height: 120px !important;padding: 0 !important;"
                                        onchange="show(this)" accept="image/*" type="file"/>
-                                <img id="pre-look" style="width: 338px;height: 120px;" src="" th:src="${category.getCategoryImageUrl()}">
+                                <img id="pre-look" style="width: 120px;height: 120px;" src="" th:src="${category.getCategoryImageUrl()}">
                             </div>
                         </div>
                     </div>
@@ -86,12 +87,22 @@
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery.form/4.2.2/jquery.form.js"></script>
 <script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
-<script>
+<script th:online="javascript">
     $(document).ready(function () {
         if (detectZoom() != 125) {
             spop({
                 template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
                 autoclose: 4000,
+                position: "top-center",
+                style: 'info',
+            });
+        }
+
+        var msg="[[${error}]]";
+        if(msg!="") {
+            spop({
+                template: msg,
+                autoclose: 2000,
                 position: "top-center",
                 style: 'info',
             });
@@ -120,7 +131,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 500);
+        setTimeout(`toggleStatus()`, 500);
     }
     <!--退出操作异步请求-->
     $('#logout').click(function () {

@@ -1,8 +1,8 @@
 package top.easyblog.mapper;
 
+import org.springframework.stereotype.Repository;
 import top.easyblog.bean.UserPhoneLog;
 import top.easyblog.mapper.core.BaseMapper;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserPhoneLogMapper extends BaseMapper<UserPhoneLog> {

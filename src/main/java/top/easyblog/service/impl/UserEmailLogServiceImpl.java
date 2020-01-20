@@ -1,10 +1,10 @@
 package top.easyblog.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import top.easyblog.bean.UserMailLog;
 import top.easyblog.mapper.UserMailLogMapper;
 import top.easyblog.service.IUserEmailLogService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class UserEmailLogServiceImpl implements IUserEmailLogService {

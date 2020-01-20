@@ -196,25 +196,25 @@ public class CategoryAdminController {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
             //用于回显
-            attributes.addFlashAttribute("categoryDesc",categoryDesc);
-            if(!categoryImg.isEmpty()){
+            attributes.addFlashAttribute("categoryDesc", categoryDesc);
+            if (!categoryImg.isEmpty()) {
                 try {
                     BASE64Encoder encoder = new BASE64Encoder();
                     // 通过base64来转化图片
                     String data = encoder.encode(categoryImg.getBytes());
-                    attributes.addFlashAttribute("categoryImg", "data:image/jpeg;base64,"+data);
-                }catch (Exception e){
+                    attributes.addFlashAttribute("categoryImg", "data:image/jpeg;base64," + data);
+                } catch (Exception e) {
                     log.error(e.getMessage());
                 }
             }
-            if(StringUtil.isEmpty(categoryName)){
-                attributes.addFlashAttribute("error", "分类名称不能为空");
+            if (StringUtil.isEmpty(categoryName)) {
+                attributes.addFlashAttribute("error", "专栏名称不能为空");
                 return "redirect:/manage/category/add";
             }
             //已经存在该分类时，不能重复创建
             Category var0 = categoryService.getCategoryByUserIdAndName(user.getUserId(), categoryName);
             if (Objects.nonNull(var0)) {
-                attributes.addFlashAttribute("error", "你已经存在该分类，请不要重复创建！");
+                attributes.addFlashAttribute("error", "专栏"+categoryName+"已存在！");
                 return "redirect:/manage/category/add";
             }
             Category category = new Category(user.getUserId(), categoryName, "", 0, 0, 0, "1", categoryDesc);
@@ -224,7 +224,7 @@ public class CategoryAdminController {
             } else {
                 //上传到七牛云图床，返回图片URL
                 try {
-                    String imageUrl=qiNiuCloudService.putMultipartImage(categoryImg);
+                    String imageUrl = qiNiuCloudService.putMultipartImage(categoryImg);
                     category.setCategoryImageUrl(imageUrl);
                 } catch (Exception e) {
                     return "/error/error";
@@ -251,7 +251,9 @@ public class CategoryAdminController {
 
 
     @PostMapping(value = "/saveEdit/{categoryId}")
-    public String saveEditor(HttpSession session, @PathVariable("categoryId") int categoryId,
+    public String saveEditor(HttpSession session,
+                             @PathVariable("categoryId") int categoryId,
+                             @RequestParam String oldCategoryName,
                              @RequestParam String categoryName,
                              @RequestParam String categoryDesc,
                              @RequestParam String oldCategoryImg,
@@ -259,12 +261,25 @@ public class CategoryAdminController {
                              RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
+            //判断改名是否为空
+            if(StringUtil.isEmpty(categoryName)){
+                redirectAttributes.addFlashAttribute("error","专栏名称不可为空！");
+                return "redirect:/manage/category/edit?categoryId="+categoryId;
+            }
+            //判断改名是否重复
+            if(!oldCategoryName.equals(categoryName)) {
+                Category var0 = categoryService.getCategoryByUserIdAndName(user.getUserId(), categoryName);
+                if (Objects.nonNull(var0)) {
+                    redirectAttributes.addFlashAttribute("error", "专栏" + categoryName + "已存在！");
+                    return "redirect:/manage/category/edit?categoryId=" + categoryId;
+                }
+            }
             try {
-                 Category category = new Category();
+                Category category = new Category();
                 category.setCategoryId(categoryId);
                 category.setCategoryName(categoryName);
                 category.setCategoryDescription(categoryDesc);
-                if (categoryImage.getSize() > 0) {
+                if (!categoryImage.isEmpty()) {
                     try {
                         if (!oldCategoryImg.contains("static")) {
                             //删除在七牛云上的图片
@@ -282,7 +297,7 @@ public class CategoryAdminController {
                     return "redirect:/error/404";
                 }
             } catch (Exception ex) {
-                redirectAttributes.addFlashAttribute("err", "抱歉！，服务异常，请重试！");
+                redirectAttributes.addFlashAttribute("error", "抱歉！，服务异常，请重试！");
                 return "redirect:/manage/category/edit";
             }
         }
