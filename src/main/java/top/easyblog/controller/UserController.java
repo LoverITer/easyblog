@@ -210,12 +210,26 @@ public class UserController {
     }
 
     @ResponseBody
-    @GetMapping(value = "/checkEmail")
-    public Result checkUserEmail(@RequestParam(value = "email", defaultValue = "") String email) {
+    @GetMapping(value = "/checkEmailNotExist")
+    public Result checkUserEmailNotExist(@RequestParam(value = "email", defaultValue = "") String email) {
         Result result = new Result();
         result.setSuccess(false);
         if (!"".equals(email)) {
             if (Objects.isNull(userService.getUser(email))) {
+                result.setSuccess(true);
+            }
+        }
+        return result;
+    }
+
+
+    @ResponseBody
+    @GetMapping(value = "/checkEmailExist")
+    public Result checkUserEmailExist(@RequestParam(value = "email", defaultValue = "") String email) {
+        Result result = new Result();
+        result.setSuccess(false);
+        if (!"".equals(email)) {
+            if (!Objects.isNull(userService.getUser(email))) {
                 result.setSuccess(true);
             }
         }
@@ -345,26 +359,25 @@ public class UserController {
                                  @RequestParam(value = "code", defaultValue = "") String code,
                                  HttpSession session) {
         Result result = new Result();
-        if (code.equals(session.getAttribute("captcha-code")) &&
-                Objects.nonNull(newPassword) &&
-                Objects.nonNull(account)) {
+        result.setSuccess(false);
+        if(!code.equals(session.getAttribute("captcha-code"))){
+            result.setMsg("验证码错误！");
+        }else if(Objects.isNull(newPassword)){
+            result.setMsg("请填写新密码！");
+        }else if(Objects.isNull(account)){
+            result.setMsg("请填写您的账号！");
+        }else{
             try {
-                new Thread(() -> {
-                    userService.updateUserInfo(account, EncryptUtil.getInstance().SHA1(newPassword, "user"));
-                }).start();
+                new Thread(() -> userService.updateUserInfo(account, EncryptUtil.getInstance().SHA1(newPassword, "user"))).start();
                 result.setSuccess(true);
                 result.setMsg("密码修改成功，正在跳转到登录页面...");
-                return result;
             } catch (Exception e) {
                 result.setMsg("抱歉，服务异常，请重试！");
-                result.setSuccess(false);
                 return result;
             } finally {
                 session.removeAttribute("captcha-code");
             }
         }
-        result.setSuccess(false);
-        result.setMsg("验证码不正确");
         return result;
     }
 

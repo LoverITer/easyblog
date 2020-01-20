@@ -112,7 +112,6 @@ function getCookie(cname) {
  * @return {string}
  */
 function AES_ECB_decrypt(ciphered, keyStr) {
-    console.log("密文：" + ciphered);
     let key = CryptoJS.enc.Utf8.parse(keyStr);
     // 解密
     let decryptedData = CryptoJS.AES.decrypt(ciphered, key, {
@@ -120,7 +119,6 @@ function AES_ECB_decrypt(ciphered, keyStr) {
         padding: CryptoJS.pad.Pkcs7
     });
     // 解密后，需要按照Utf8的方式将明文转为字符串
-    console.log("解密：" + CryptoJS.enc.Utf8.stringify(decryptedData).toString());
     return CryptoJS.enc.Utf8.stringify(decryptedData).toString();
 }
 
@@ -165,6 +163,28 @@ function showWarningMessage(message) {
             style: 'waring',
         });
     }
+}
+
+
+/**
+ * 密码可见性开关
+ * @param obj   显示/不显示按钮
+ * @param passwordObj   密码框
+ */
+function passwordDisplayToggle(obj,passwordObj) {
+    $(obj).click(function () {
+        if($(this).hasClass('password-hide')){
+            $(this).removeClass('password-hide');
+            $(this).addClass('password-show');
+            $(passwordObj).attr('type','text');
+            let value=$(passwordObj).val();
+            $(passwordObj).val(value);
+        }else{
+            $(this).removeClass('password-show');
+            $(this).addClass('password-hide');
+            $(passwordObj).attr('type','password');
+        }
+    });
 }
 
 
