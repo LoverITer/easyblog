@@ -11,7 +11,6 @@ import top.easyblog.commons.utils.EncryptUtil;
 import top.easyblog.commons.utils.FileUploadUtils;
 import top.easyblog.commons.utils.RegexUtil;
 import top.easyblog.config.web.Result;
-import top.easyblog.handler.exception.NullUserException;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.service.IUserService;
 
@@ -50,11 +49,11 @@ public class UserServiceImpl implements IUserService {
         if (var0 != null) {
             if (EncryptUtil.getInstance().SHA1(inputOldPWD, "user").equals(var0.getUserPassword())) {
                 result.setSuccess(true);
-            }else{
-                result.setMsg("旧密码输入错误");
+            } else {
+                result.setMessage("旧密码输入错误");
             }
-        }else{
-            result.setMsg("用户未登录");
+        } else {
+            result.setMessage("用户未登录");
         }
         return result;
     }
@@ -65,7 +64,7 @@ public class UserServiceImpl implements IUserService {
         result.setSuccess(false);
         if (inputOldPWD.equals(newPWD)) {
             result.setSuccess(true);
-            result.setMsg("新旧密码不能一样");
+            result.setMessage("新旧密码不能一样");
         }
         return result;
     }
@@ -76,7 +75,7 @@ public class UserServiceImpl implements IUserService {
         result.setSuccess(true);
         if (password.length() < 11 || password.length() > 20) {
             result.setSuccess(false);
-            result.setMsg("密码长度必须介于11-20个字符");
+            result.setMessage("密码长度必须介于11-20个字符");
         }
         return result;
     }
@@ -105,19 +104,15 @@ public class UserServiceImpl implements IUserService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public boolean register(String nickname, String password, String account, String ipInfo) {
-        String headUrl = FileUploadUtils.defaultAvatar();
+        String headImageUrl = FileUploadUtils.defaultAvatar();
         try {
-            User user = null;
+            User user = new User(nickname, password, null, null, null, null, null, null, null, 0, 100000, headImageUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
             if (RegexUtil.isEmail(account)) {
-                user = new User(nickname, password, null, null, null, null, null, account, null, 0, 100000, headUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
+                user.setUserMail(account);
             } else if (RegexUtil.isMobile(account)) {
-                user = new User(nickname, password, null, null, null, null, null, null, account, 0, 100000, headUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
+                user.setUserPhone(account);
             }
-            if (user != null) {
-                return userMapper.save(user) > 0;
-            } else {
-                throw new NullUserException("用户不可为空！");
-            }
+            return userMapper.save(user) > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -159,7 +154,7 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     @Override
     public int deleteUserByPK(int userId) {
-        if(userId>0) {
+        if (userId > 0) {
             try {
                 userMapper.deleteByPrimaryKey((long) userId);
             } catch (Exception e) {

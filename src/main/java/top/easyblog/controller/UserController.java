@@ -174,22 +174,21 @@ public class UserController {
         String ipInfo = NetWorkUtil.getLocation(request, ip);
         Result result = new Result();
         result.setSuccess(false);
-
-        User user = userService.getUser(nickname);
-        if (user != null) {
-            result.setMsg("昵称已存在");
+        if (userService.getUser(nickname) != null) {
+            result.setMessage("昵称已存在!");
         } else if (userService.getUser(account) != null) {
-            result.setMsg("此邮箱/手机号已经注册了");
-        } else if (!captcha.equals(captchaCode)) {
-            result.setMsg("验证码不正确");
+            result.setMessage("此邮箱/手机号已经注册了!");
+        } else if (Objects.isNull(captcha)||!captcha.equals(captchaCode)) {
+            result.setMessage("验证码填写不正确或验证码已过期!");
         } else {
             try {
                 userService.register(nickname, EncryptUtil.getInstance().SHA1(password, "user"), account, ip + " " + ipInfo);
                 result.setSuccess(true);
-                result.setMsg("注册成功");
+                result.setMessage("注册成功!");
                 log.info("用户：{}注册成功,{}",account,new Date());
             }catch (Exception e){
                 log.error(e.getMessage());
+                result.setMessage("服务异常，请重试！");
             }
         }
         return result;
@@ -279,8 +278,7 @@ public class UserController {
                     session.setAttribute("user", user);
                     session.setMaxInactiveInterval(60 * 60 * 24 * 15);
                 }
-                // 保存用户名密码
-                // 一个月
+                // 保存用户名密码一个月
                 if("on".equals(remember)) {
                     boolean newCookie=true;   //是否创建一个新的Cookie
                     Cookie[] cookies = request.getCookies();
@@ -332,7 +330,7 @@ public class UserController {
         }
         Result result = new Result();
         result.setSuccess(true);
-        result.setMsg(AJAX_SUCCESS);
+        result.setMessage(AJAX_SUCCESS);
         return result;
     }
 
@@ -361,18 +359,18 @@ public class UserController {
         Result result = new Result();
         result.setSuccess(false);
         if(!code.equals(session.getAttribute("captcha-code"))){
-            result.setMsg("验证码错误！");
+            result.setMessage("验证码错误！");
         }else if(Objects.isNull(newPassword)){
-            result.setMsg("请填写新密码！");
+            result.setMessage("请填写新密码！");
         }else if(Objects.isNull(account)){
-            result.setMsg("请填写您的账号！");
+            result.setMessage("请填写您的账号！");
         }else{
             try {
                 new Thread(() -> userService.updateUserInfo(account, EncryptUtil.getInstance().SHA1(newPassword, "user"))).start();
                 result.setSuccess(true);
-                result.setMsg("密码修改成功，正在跳转到登录页面...");
+                result.setMessage("密码修改成功，正在跳转到登录页面...");
             } catch (Exception e) {
-                result.setMsg("抱歉，服务异常，请重试！");
+                result.setMessage("抱歉，服务异常，请重试！");
                 return result;
             } finally {
                 session.removeAttribute("captcha-code");

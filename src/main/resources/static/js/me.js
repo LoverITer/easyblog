@@ -137,6 +137,21 @@ function showInfoMessage(message) {
     }
 }
 
+
+/**
+ *错误提示信息框
+ */
+function showSuccessMessage(message) {
+    if (message != "") {
+        spop({
+            template: message,
+            autoclose: 4000,
+            position: "top-center",
+            style: 'success',
+        });
+    }
+}
+
 /**
  *错误提示信息框
  */
@@ -163,6 +178,20 @@ function showWarningMessage(message) {
             style: 'waring',
         });
     }
+}
+
+/**
+ * 加载动画
+ * @param type
+ */
+function _loading(type) {
+    zeroModal.loading(type);
+}
+
+
+function _loadingClose() {
+    $('.zeromodal-overlay').remove();
+    $('.zeromodal-loading2').remove();
 }
 
 

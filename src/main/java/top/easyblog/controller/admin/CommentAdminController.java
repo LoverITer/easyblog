@@ -96,14 +96,13 @@ public class CommentAdminController {
         User user = (User) session.getAttribute("user");
         Result result = new Result();
         result.setSuccess(false);
-        result.setMsg("未登录");
+        result.setMessage("未登录");
         if(Objects.nonNull(user)){
             int var0 = commentService.deleteComment(commentId);
             if(var0==1){
                 result.setSuccess(true);
-                result.setMsg("OK");
             }
-            result.setMsg("删除失败");
+            result.setMessage("删除失败");
             return result;
         }
         return result;

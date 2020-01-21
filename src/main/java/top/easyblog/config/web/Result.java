@@ -1,23 +1,23 @@
 package top.easyblog.config.web;
 
 
+import java.io.Serializable;
+
 /**
- * 向页面返回信息
+ * 向页面返回JSON格式信息
  */
-public class Result {
+public class Result implements Serializable {
 
-    private String msg;
-
+    private static final long serialVersionUID = 1987961797257523721L;
+    private String message="";
     private boolean success = false;
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-
-
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public boolean isSuccess() {

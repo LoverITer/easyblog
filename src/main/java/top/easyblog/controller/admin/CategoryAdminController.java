@@ -69,7 +69,7 @@ public class CategoryAdminController {
         result.setSuccess(false);
         User user = (User) session.getAttribute("user");
         if (Objects.isNull(user)) {
-            result.setMsg("请先登录后再操作");
+            result.setMessage("请先登录后再操作");
             return result;
         }
         try {
@@ -78,10 +78,10 @@ public class CategoryAdminController {
             category.setDisplay(displayStatus);
             categoryService.updateByPKSelective(category);
             result.setSuccess(true);
-            result.setMsg("Ok");
+            result.setMessage("Ok");
             return result;
         } catch (Exception e) {
-            result.setMsg("服务异常，请重试！");
+            result.setMessage("服务异常，请重试！");
             return result;
         }
     }

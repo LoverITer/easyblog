@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
     <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/static/css/styles.css}">
     <link rel="stylesheet" href="../static/css/jigsaw.css" th:href="@{/static/css/jigsaw.css}">
+    <!--弹出框特效-->
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
     <style type="text/css">
@@ -20,6 +21,10 @@
             -webkit-appearance: none;
         }
     </style>
+    <!--加载动画和确认框特效-->
+    <link rel="stylesheet" href="../static/css/loading/zeroModal.css" th:href="@{/static/css/loading/zeroModal.css}">
+
+
 </head>
 <body style="background: url(../static/images/bg.png)">
 <div class="jq22-container" style="padding-top:30px">
@@ -45,9 +50,9 @@
                            <label for="check1" style="font-size: 14px"> <span class="icon"></span> 保持登录</label>
                         </div>
                         <div class="group">
-                            <input id="login-btn" style="cursor: pointer;" type="submit" onclick="storage()" class="button" value="登录">
+                            <input id="login-btn" style="cursor: pointer;"  type="submit"  class="button" value="登录">
                         </div>
-
+                        <div class="hr"></div>
                         <div class="foot-lnk">
                             <a href="#" th:href="@{/user/change_password}">忘记密码?</a>
                         </div>
@@ -86,13 +91,13 @@
 
                         <div class="group">
                             <input id="check2" type="checkbox" class="check">
-                            <label for="check2" style="font-size: 13px"><span class="icon"></span> 我已经同意<a href="#"  th:href="@{/help}"style="color: #00a1d6">《EasyBlog用户使用协议》</a></label>
+                            <label for="check2" style="font-size: 13px;font-family: 'Microsoft YaHei','SF Pro Display',Roboto,Noto,Arial,'PingFang SC',sans-serif !important;"><span class="icon"></span> 我已经同意<a href="#"  th:href="@{/help}"style="color: #00a1d6;font-family: inherit;">《EasyBlog用户使用协议》</a></label>
                         </div>
                         <div class="group">
-                            <input id="sub-btn" style="cursor: pointer;" disabled="disabled" type="button"
+                            <input id="sub-btn" style="cursor: pointer;"  type="button"
                                    class="button" value="注册">
                         </div>
-
+                        <div class="hr"></div>
                         <div class="foot-lnk">
                             <label style="cursor: pointer;" for="tab-1">已经有账号了?</label>
                         </div>
@@ -109,6 +114,8 @@
 <script src="../static/js/aes.js" type="text/javascript" th:src="@{/static/js/aes.js}"></script>
 <script src="../static/js/mode-ecb.js" type="text/javascript" th:src="@{/static/js/mode-ecb.js}"></script>
 <script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
+<script src="../static/js/loading/mustache.js" th:src="@{/static/js/loading/mustache.js}"></script>
+<script src="../static/js/loading/zeroModal.js" th:src="@{/static/js/loading/zeroModal.js}"></script>
 <!--发送验证码-->
 <script th:online="javascript" type="text/javascript">
     var maxtime = 60;
@@ -126,6 +133,11 @@
         sendEmail();
         passwordDisplayToggle($('#login-password-display-toggle'),$('#password'));
         passwordDisplayToggle($('#register-password-display-toggle'),$('#pass'));
+    });
+
+    $('#login-btn').click(function () {
+        storage();
+        _loading(2);
     });
 
     /**
@@ -216,6 +228,7 @@
                         $('#register-nickname-validate-incorrect').show();
                     } else {
                         $('#nickname-msg').text("");
+                        $('#user-nickname').css('border','none');
                         $('#register-nickname-validate-correct').show();
                         $('#register-nickname-validate-incorrect').hide();
                     }
@@ -258,6 +271,7 @@
                             $('#register-account-validate-incorrect').show();
                         } else {
                             $('#account-msg').show().text("");
+                            $('#phone-mail').css('border','none');
                             $('#register-account-validate-correct').show();
                             $('#register-account-validate-incorrect').hide();
                         }
@@ -293,6 +307,7 @@
                             $('#register-account-validate-incorrect').show();
                         } else {
                             $('#account-msg').show().text("");
+                            $('#phone-mail').css('border','none');
                             $('#register-account-validate-correct').show();
                             $('#register-account-validate-incorrect').hide();
                         }
@@ -307,7 +322,6 @@
                             $('#register-account-validate-incorrect').show();
                         }
                     }
-
                 },
                 error: function () {
                     showErrorMessage("服务异常，请重试！");
@@ -331,6 +345,7 @@
                         $('#password-msg').show().css("color", "#d0393f").text("请输入密码");
                     } else {
                         $('#password-msg').text("");
+                        $('#pass').css('border','none');
                     }
                 } else {
                     if (password === "" || password === undefined || password == null) {
@@ -345,50 +360,51 @@
             }
         })
     });
-
-
 </script>
 <script type="text/javascript">
     //用户注册
-    $(function open() {
-        var b1 = $("input[type='checkbox']#check2").is(':checked');
-        var msg1 = $('#nickname-msg').html();
-        var msg2 = $('#password-msg').html();
-        var msg3 = $('#account-msg').html();
-        var msg4 = $('#account-msg').html();
-        var msg5 = $('#captcha').val();
-        //console.log(msg1+" "+msg2+" "+msg3+" "+msg4+" "+msg5);
-        var b2 = $.trim(msg1) == "昵称可用";
-        var b3 = $.trim(msg2) == "密码可用";
-        var b4 = $.trim(msg3) == "邮箱可用";
-        var b5 = $.trim(msg4) == "手机号可用";
-        var b6 = $.trim(msg5) != null && msg5.length >= 6;
-        if (b1 && b2 && b3 && (b4 || b5) && b6) {
-            $('#sub-btn').removeAttr("disabled");
-        }
-        setTimeout(function () {
-            open()
-        }, 1000);
-    });
-
     $('#sub-btn').click(function () {
-        var nickname = $('#user-nickname').val();
-        var password = $('#pass').val();
-        var account = $('#phone-mail').val();
-        var code = $('#captcha').val();
-        $.ajax({
-            url: "/user/register",
-            method: "GET",
-            sync: true,
-            data: {nickname: nickname, pwd: password, account: account, code: code},
-            dataType: "text",
-            success: function () {
-                window.location.href = "/user/register-success";
-            },
-            error: function (result) {
-                showErrorMessage(result.msg);
-            }
-        })
+        let nickname = $('#user-nickname').val();
+        let password = $('#pass').val();
+        let account = $('#phone-mail').val();
+        let code = $('#captcha').val();
+        let checked=$('#check2').is(':checked');
+        if(nickname==""){
+            showErrorMessage("请填写昵称");
+            $('#user-nickname').css('border','red 0.09em solid');
+        }else if(account==""){
+            showErrorMessage("请填写邮箱号/手机号");
+            $('#phone-mail').css('border','red 0.09em solid');
+        }else if(password==""){
+            showErrorMessage("请填写密码");
+            $('#pass').css('border','red 0.09em solid');
+        }else if(code==""||code.length<6){
+            showErrorMessage("请正确填写验证码");
+            $('#captcha').css('border','red 0.09em solid');
+        }else if(!checked){
+            showErrorMessage("您还没有同意用户协议");
+        }else{
+            _loading(2);
+            $.ajax({
+                url: "/user/register",
+                method: "GET",
+                sync: true,
+                data: {nickname: nickname, pwd: password, account: account, code: code},
+                dataType: "text",
+                success: function (result) {
+                    _loadingClose();
+                    if(result.success) {
+                        window.location.href = "/user/register-success";
+                    }else{
+                        showErrorMessage(result.message);
+                    }
+                },
+                error: function (result) {
+                    _loadingClose();
+                    showErrorMessage(result.message);
+                }
+            })
+        }
     });
 
     function storage() {
