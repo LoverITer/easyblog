@@ -47,18 +47,18 @@ public class FileUploadController {
                    File newFile = new File(path, fileName);
                    //保存文件到服务器
                    multipartFile.transferTo(newFile);
-                   result.setMsg(path + fileName);
+                   result.setMessage(path + fileName);
                    //url="http://你自己的域名/项目名/images/"+fileName;//正式项目
                    url="http://localhost:8080/images/"+fileName;//本地运行项目
-                   result.setMsg(url);
+                   result.setMessage(url);
                } else {
-                   result.setMsg("文件上传失败！只支持jpeg, jpg, png, gif, bmp 格式的图片文件");
+                   result.setMessage("文件上传失败！只支持jpeg, jpg, png, gif, bmp 格式的图片文件");
                }
            }else{
-               result.setMsg("服务异常，请重试！");
+               result.setMessage("服务异常，请重试！");
            }
         } catch (IOException e) {
-            result.setMsg("服务异常，请重试！");
+            result.setMessage("服务异常，请重试！");
             e.printStackTrace();
             return result;
         }
@@ -73,10 +73,10 @@ public class FileUploadController {
         try {
             String imageUrl = qiNiuCloudService.putMultipartImage(multipartFile);
             //上传成功后把图片的URL带回页面
-            result.setMsg(imageUrl);
+            result.setMessage(imageUrl);
             result.setSuccess(true);
         }catch (Exception e){
-            result.setMsg("抱歉！服务异常，请重试！");
+            result.setMessage("抱歉！服务异常，请重试！");
             return result;
         }
         return result;

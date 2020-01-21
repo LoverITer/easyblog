@@ -101,9 +101,9 @@ public class UserCenterController {
             int res = userAttentionService.deleteByPK(attentionId);
             if (res > 0) {
                 result.setSuccess(true);
-                result.setMsg("OK");
+                result.setMessage("OK");
             } else {
-                result.setMsg("服务异常，请重试！");
+                result.setMessage("服务异常，请重试！");
             }
         }
         return result;
@@ -150,10 +150,10 @@ public class UserCenterController {
                     user.setUserHeaderImgUrl(imageUrl);
                 }
                 result.setSuccess(true);
-                result.setMsg("头像上传成功");
+                result.setMessage("头像上传成功");
             } catch (Exception e) {
                 e.printStackTrace();
-                result.setMsg("服务异常，请重试！");
+                result.setMessage("服务异常，请重试！");
             }
         }
         return result;

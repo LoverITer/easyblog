@@ -50,7 +50,7 @@ public class CommentController {
             int re = commentService.save(comment);
             if (re > 0) {
                 result.setSuccess(true);
-                result.setMsg("OK");
+                result.setMessage("OK");
             }
         }
         return result;

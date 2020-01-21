@@ -72,23 +72,23 @@ public class UserAccountController {
                             var0.setUserPassword(EncryptUtil.getInstance().SHA1(newPwdConfirm, "user"));
                             var0.setUserId(user.getUserId());
                             userService.updateUserInfo(var0);
-                            result.setMsg("密码修改成功！");
+                            result.setMessage("密码修改成功！");
                             result.setSuccess(true);
                         } else {
-                            result.setMsg("两次输入的新密码不一致");
+                            result.setMessage("两次输入的新密码不一致");
                         }
                     } else {
-                        result.setMsg(passwordLegal.getMsg());
+                        result.setMessage(passwordLegal.getMessage());
                     }
                 } else {
-                    result.setMsg(isSame.getMsg());
+                    result.setMessage(isSame.getMessage());
                 }
 
             }else{
-                result.setMsg(authorized.getMsg());
+                result.setMessage(authorized.getMessage());
             }
         }else{
-            result.setMsg("请登录后再修改密码，如果忘记密码可以到登录页找回密码");
+            result.setMessage("请登录后再修改密码，如果忘记密码可以到登录页找回密码");
         }
         return result;
     }
@@ -115,10 +115,10 @@ public class UserAccountController {
             if(code.equals(session.getAttribute("code"))){
                 result.setSuccess(true);
             }else{
-                result.setMsg("验证码输入错误！");
+                result.setMessage("验证码输入错误！");
             }
         }else{
-            result.setMsg("请登录后再操作！");
+            result.setMessage("请登录后再操作！");
         }
         return result;
     }
@@ -164,20 +164,20 @@ public class UserAccountController {
                     user.setUserPhone(phone);
                     int res = userService.updateUserInfo(user);
                     if (res <= 0) {
-                        result.setMsg("服务异常，请重试！");
+                        result.setMessage("服务异常，请重试！");
                         return result;
                     }
-                    result.setMsg("手机号绑定成功!");
+                    result.setMessage("手机号绑定成功!");
                     result.setSuccess(true);
                     return result;
                 } catch (Exception e) {
-                    result.setMsg("服务异常，请重试！");
+                    result.setMessage("服务异常，请重试！");
                 }
             }else{
-                result.setMsg("验证码输入不正确");
+                result.setMessage("验证码输入不正确");
             }
         }else{
-            result.setMsg("请登录后再操作");
+            result.setMessage("请登录后再操作");
         }
         return result;
     }
@@ -206,12 +206,12 @@ public class UserAccountController {
                 if(code.equals(var0)) {
                     session.removeAttribute("code");
                     result.setSuccess(true);
-                    result.setMsg("OK");
+                    result.setMessage("OK");
                 }else {
-                    result.setMsg("验证码输入错误，请重新输入");
+                    result.setMessage("验证码输入错误，请重新输入");
                 }
             }else {
-                result.setMsg("验证码已超时，请重新获取");
+                result.setMessage("验证码已超时，请重新获取");
             }
         }else {
             session.removeAttribute("code");
@@ -290,7 +290,7 @@ public class UserAccountController {
                 result.setSuccess(true);
                 userService. deleteUserByPK(user.getUserId());
             }else{
-                result.setMsg("密码输入错误，请重试！");
+                result.setMessage("密码输入错误，请重试！");
             }
         }
         return result;

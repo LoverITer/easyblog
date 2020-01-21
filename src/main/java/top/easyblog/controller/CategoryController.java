@@ -83,14 +83,14 @@ public class CategoryController {
                                @RequestParam("userId") int userId) {
         Result result = new Result();
         result.setSuccess(false);
-        result.setMsg("服务异常，请重试！");
+        result.setMessage("服务异常，请重试！");
         ConcurrentHashMap<String, Object> map = new ConcurrentHashMap<>();
         map.put("categoryCareNum", 1);   //更新关注数
         try {
             categoryServiceImpl.updateCategoryInfo(categoryId, map);
             categoryCareService.saveCareInfo(userId, categoryId);
             result.setSuccess(true);
-            result.setMsg("OK");
+            result.setMessage("OK");
         } catch (Exception e) {
             return result;
         }
@@ -104,14 +104,14 @@ public class CategoryController {
                              @RequestParam("userId") int userId) {
         Result result = new Result();
         result.setSuccess(false);
-        result.setMsg("服务异常，请重试！");
+        result.setMessage("服务异常，请重试！");
         ConcurrentHashMap<String, Object> map = new ConcurrentHashMap<>();
         map.put("categoryCareNum", -1);   //更新关注数
         try {
             categoryServiceImpl.updateCategoryInfo(categoryId, map);
             categoryCareService.deleteCareInfo(userId, categoryId);
             result.setSuccess(true);
-            result.setMsg("OK");
+            result.setMessage("OK");
         } catch (Exception e) {
             return result;
         }

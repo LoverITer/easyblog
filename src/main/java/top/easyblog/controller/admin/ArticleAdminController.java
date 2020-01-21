@@ -159,7 +159,7 @@ public class ArticleAdminController {
                     categoryService.updateByPKSelective(category0);
                 }
             } else {
-                result.setMsg("文章分类名不可为空");
+                result.setMessage("文章分类名不可为空");
                 return result;
             }
             //-1标志这是一篇新文章
@@ -184,7 +184,7 @@ public class ArticleAdminController {
                 userService.updateUserInfo(user);
             }).start();
             result.setSuccess(true);
-            result.setMsg(article.getArticleId() + "");  //把文章的ID返回给页面
+            result.setMessage(article.getArticleId() + "");  //把文章的ID返回给页面
             return result;
         }
         return result;
