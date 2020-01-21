@@ -15,15 +15,16 @@
           th:href="@{/static/css/semantic-specifc.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+    <link rel="stylesheet" href="../static/css/loading/zeroModal.css" th:href="@{/static/css/loading/zeroModal.css}">
 </head>
 <body>
 
 <!--编辑器-->
 <div style="margin-top: 5px !important;">
     <input id="publish-url" type="hidden" th:if="${session.user!=null}"
-           th:value="@{/manage/blog/saveArticle/}+${session.user.getUserId()}">
+           th:value="@{/manage/blog/saveArticle/{userId}(userId=${session.user.getUserId()})}">
     <form id="blog" action="" th:if="${session.user!=null}"
-          th:action="@{/manage/blog/saveAsDraft/}+${session.user.getUserId()}" method="post" class="ui form">
+          th:action="@{/manage/blog/saveAsDraft/{userId}(userId=${session.user.getUserId()})}" method="post" class="ui form">
         <!--这些属性是在编辑文章用的-->
         <input type="hidden" id="articleId" th:if="${article!=null}" th:value="${article.getArticleId()}">
         <div class="ui row fluid  stackable centered grid"
@@ -249,7 +250,7 @@
             $('#header-images').hide();
             $('#login-btn').show();
         }
-        setTimeout(toggleStatus, 300);
+        setTimeout(`toggleStatus()`, 300);
     }
 
     <!--退出操作异步请求-->
@@ -267,12 +268,7 @@
                 }
             },
             error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
+                showErrorMessage("服务异常，请重试！")
             }
         });
     });
@@ -280,6 +276,9 @@
 </script>
 <script src="../../../static/lib/editormd.min.js" th:src="@{/static/lib/editormd.min.js}"></script>
 <script src="../../../static/lib/editormd.amd.js" th:src="@{/static/lib/editormd.amd.min.js}"></script>
+<script src="../../../static/js/me.js" th:src="@{/static/js/me.js}"></script>
+<script src="../static/js/loading/mustache.js" th:src="@{/static/js/loading/mustache.js}"></script>
+<script src="../static/js/loading/zeroModal.js" th:src="@{/static/js/loading/zeroModal.js}"></script>
 <script th:online="javascript">
     //初始化Markdown编辑器
     var contentEditor;
@@ -301,9 +300,6 @@
             imageUpload: true,
             imageUploadURL: "[[${#request.getContextPath()}]]/upload/interface3",
             dialogLockScreen: false,   //设置弹出层对话框不锁屏，全局通用，默认为true
-            onload: function () {
-                console.log('onload', this);
-            }
         });
     });
     $('.menu.toggle').click(function () {
@@ -382,20 +378,14 @@
         $("#add-type-btn").click(function () {
             var str = $("#add-input").val();
             if (str !== "") {
-                var options=$('#types').find("option");
+                let options=$('#types').find("option");
                 let flag=true;
-                console.log(options);
-                for(var i=0;i<options.length;i++){
-                    var channlVar=options.eq(i).text();   //option中的值
+                for(let i=0;i<options.length;i++){
+                    let channlVar=options.eq(i).text();   //option中的值
                     channlVar = channlVar.replace(/\s*/g,"");
                     console.log(channlVar);
                     if (channlVar==str) {
-                        spop({
-                            template: '您已经存在'+str+'分类,请不要重复添加！',
-                            autoclose: 3000,
-                            position: "top-center",
-                            style: 'info',
-                        });
+                        showErrorMessage('您已经存在'+str+'分类,请不要重复添加！');
                         flag=false;
                         break;
                     }
@@ -426,43 +416,33 @@
 
     //发布按钮按下后的操作
     $('#publish-btn').click(function () {
-        var articleId = $('#articleId').val();
-        var url = $('#publish-url').val();
-        var title = $('#title').val();
-        var content = $('#content').val();
-        var categoryName = $('#types').find("option:selected").text();
-        var articleType = $('#article_type').val();
-        var appreciate = $('#appreciate').find("option:selected").text();
+        let articleId = $('#articleId').val();
+        let url = $('#publish-url').val();
+        let title = $('#title').val();
+        let content = $('#content').val();
+        let categoryName = $('#types').find("option:selected").text();
+        let articleType = $('#article_type').val();
+        let appreciate = $('#appreciate').find("option:selected").val();
         if ("undefined" === articleId || null == articleId) {
             articleId = -1;
         }
-        if ("是" == appreciate) {
-            appreciate = "1";
-        } else {
-            appreciate = "0";
-        }
-        var public = $('#public').is(":checked");
-        var status = "0";
+
+        let public = $('#public').is(":checked");
+        let status = "0";
         if (!public) {
             status = "1";
         }
+
         if (title == null || title == "") {
-            $('#msg_header').html("提示");
-            $('#msg').html("请填写文章标题");
-            $('.ui.modal').modal('show');
+            _alert1("请填写文章标题");
         } else if (content == null || content == "") {
-            $('#msg_header').html("提示");
-            $('#msg').html("写点内容再发布吧！");
-            $('.ui.modal').modal('show');
+            _alert1("写点内容再发布吧");
         } else if ("请选择" == categoryName) {
-            $('#msg_header').html("提示");
-            $('#msg').html("请选择文章分类");
-            $('.ui.modal').modal('show');
+            _alert1("请选择文章分类");
         } else if ("-1" == articleType) {
-            $('#msg_header').html("提示");
-            $('#msg').html("请选择文章类型");
-            $('.ui.modal').modal('show');
+            _alert1("请选择文章类型");
         } else {
+            _loading(2);
             $.ajax({
                 url: url,
                 method: "POST",
@@ -478,21 +458,19 @@
                     articleContent: content
                 }),
                 dataType: "json",  //服务器返回的数据类型
-                success: function (response) {
+                success: function (result) {
+                    _loadingClose();
                     //跳转页面
-                    var articleId = response.msg;
-                    if (response.success) {
+                    let articleId = result.message;
+                    if (result.success) {
                         window.location.href = "/manage/blog/success/" + articleId;
                     } else {
-                        $('#msg_header').html("错误");
-                        $('#msg').css("color", "red").html("抱歉！服务异常，请重试!");
-                        $('.ui.modal').modal('show');
+                        showErrorMessage(result.message);
                     }
                 },
-                error: function (response) {
-                    $('#msg_header').html("错误");
-                    $('#msg').css("color", "red").html("抱歉！服务异常，请重试!");
-                    $('.ui.modal').modal('show');
+                error: function (result) {
+                    _loadingClose();
+                    showErrorMessage(result.message);
                 }
             });
         }

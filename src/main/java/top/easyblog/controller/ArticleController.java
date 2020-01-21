@@ -91,6 +91,7 @@ public class ArticleController {
     @GetMapping(value = "/details/{articleId}")
     public String articleDetails(@PathVariable("articleId") int articleId, Model model) {
         try {
+            //根据id拿到文章
             Article article = articleServiceImpl.getArticleById(articleId,"html");
             if (Objects.nonNull(article)) {
                 model.addAttribute("article", article);

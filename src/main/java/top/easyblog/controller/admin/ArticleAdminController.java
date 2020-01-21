@@ -185,7 +185,6 @@ public class ArticleAdminController {
             }).start();
             result.setSuccess(true);
             result.setMessage(article.getArticleId() + "");  //把文章的ID返回给页面
-            return result;
         }
         return result;
     }

@@ -188,16 +188,81 @@ function _loading(type) {
     zeroModal.loading(type);
 }
 
-
+/**
+ * 关闭loading框
+ * @private
+ */
 function _loadingClose() {
     $('.zeromodal-overlay').remove();
     $('.zeromodal-loading2').remove();
 }
 
+/**
+ * 错误提示框
+ * @private
+ */
+function _error(message) {
+    zeroModal.error(message+"!");
+}
+
+/**
+ * 成功提示框
+ * @private
+ */
+function _success(message) {
+    zeroModal.success(message+'!');
+}
+
+function _alert1(message) {
+    zeroModal.alert(message+"!");
+}
+
+function _alert2() {
+    zeroModal.alert({
+        content: '操作提示!',
+        contentDetail: '请选择数据后再进行操作',
+        okFn: function() {
+            alert('ok callback');
+        }
+    });
+}
+
+/**
+ * 简单提示框
+ * @param message   确认的操作
+ * @private
+ */
+function _confirmBase(message) {
+    zeroModal.confirm(message, function() {
+        alert('ok');
+    });
+}
+
+/**
+ * 有详细信息提示的确认框
+ * @param option    确认操作
+ * @param optionDetail   确认操作详细说明
+ * @private
+ */
+function _confirmWithDetail(option,optionDetail) {
+    zeroModal.confirm({
+        content: option+'？',
+        contentDetail: optionDetail+'。',
+        okFn: function() {
+            //确认按钮按下
+
+        },
+        cancelFn: function() {
+            //取消按钮按下
+
+        }
+    });
+}
+
 
 /**
  * 密码可见性开关
- * @param obj   显示/不显示按钮
+ * @param obj   显示/不显示的按钮
  * @param passwordObj   密码框
  */
 function passwordDisplayToggle(obj,passwordObj) {

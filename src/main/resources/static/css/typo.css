@@ -2,9 +2,10 @@
 
 .typo p {
   font-size: 16px;
-  font-weight: 300;
-  line-height: 1.8;
-  text-align: justify;
+  font-weight: 400;
+  line-height: 26px;
+  color: #4d4d4d;
+  margin: 0 0 16px;
 }
 
 /* 重设 HTML5 标签, IE 需要在 js 中 createElement(TAG) */
@@ -42,11 +43,19 @@
 /* 块/段落引用 */
 .typo blockquote {
   position: relative;
+  display: block;
+  font-size: 14px;
   color: #999;
   font-weight: 400;
-  border-left: 1px solid #1abc9c;
-  padding-left: 1em;
-  margin: 1em 3em 1em 2em;
+  background: #eef0f4;
+  overflow: auto;
+  border-left: 8px solid #dddfe4;
+  padding: 8px;
+  margin: 0 0 24px;
+}
+
+.typo li{
+  margin-top: 8px;
 }
 
 @media only screen and ( max-width: 640px ) {
@@ -111,7 +120,7 @@
 
 /* 让链接在 hover 状态下显示下划线 */
 .typo a {
-  color: #1abc9c;
+  color: #61aeee;
 }
 
 .typo a:hover {
@@ -119,12 +128,12 @@
 }
 
 .typo a {
-  border-bottom: 1px solid #1abc9c;
+  border-bottom: 1px solid #61aeee;
 }
 
 .typo a:hover {
   border-bottom-color: #555;
-  color: #555;
+  color: #61aeee;
   text-decoration: none;
 }
 
@@ -219,14 +228,14 @@
 }
 
 /* 保证块/段落之间的空白隔行 */
-.typo p, .typo pre, .typo ul, .typo ol, .typo dl, .typo form, .typo hr, .typo table,
+.typo p, .typo pre,  .typo dl, .typo form, .typo hr, .typo table,
 .typo-p, .typo-pre, .typo-ul, .typo-ol, .typo-dl, .typo-form, .typo-hr, .typo-table, blockquote {
-  margin-bottom: 1.2em
+  margin-bottom: 1em
 }
 
 .typo h1,.typo  h2,.typo  h3,.typo  h4,.typo  h5,.typo  h6 {
-  font-family: PingFang SC, Verdana, Helvetica Neue, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
-  font-weight: 100;
+  font-family:  Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+  font-weight: 600;
   color: #000;
   line-height: 1.35;
 }
@@ -267,7 +276,6 @@
 
 .typo ol, .typo-ol {
   list-style: decimal;
-  margin-left: 1.9em;
 }
 
 .typo li ul, .typo li ol, .typo-ul ul, .typo-ul ol, .typo-ol ul, .typo-ol ol {
