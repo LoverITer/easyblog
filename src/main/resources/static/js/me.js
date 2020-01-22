@@ -190,7 +190,6 @@ function _loading(type) {
 
 /**
  * 关闭loading框
- * @private
  */
 function _loadingClose() {
     $('.zeromodal-overlay').remove();

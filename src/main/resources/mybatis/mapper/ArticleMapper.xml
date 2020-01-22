@@ -35,7 +35,7 @@
     </insert>
 
 
-    <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    <select id="getByPrimaryKey" parameterType="java.lang.Long" useCache="false" resultMap="ResultMapWithBLOBs">
         select *
         from article
         where article_id = #{id,jdbcType=BIGINT}

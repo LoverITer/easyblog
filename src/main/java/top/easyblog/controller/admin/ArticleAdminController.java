@@ -2,7 +2,6 @@ package top.easyblog.controller.admin;
 
 
 import com.github.pagehelper.PageInfo;
-import com.github.pagehelper.util.StringUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +53,7 @@ public class ArticleAdminController {
                 article.setArticleUser(user.getUserId());
                 PageInfo articlePages = articleService.getArticlesSelectivePage(article, pageParam);
                 model.addAttribute("articlePages", articlePages);
-                getShareInfo(model, user,"年","月","文章类型","分类专栏");
+                getShareInfo(model, user, "年", "月", "文章类型", "分类专栏");
                 putArticleNumToModel(user, model);
                 return PREFIX + "/blog-manage";
             } catch (Exception ex) {
@@ -73,7 +72,7 @@ public class ArticleAdminController {
                                     @RequestParam(defaultValue = "不限") String articleType,
                                     @RequestParam(defaultValue = "不限") String categoryName,
                                     @RequestParam(defaultValue = "") String articleTopic,
-                                    @RequestParam(value = "page",defaultValue = "1") int pageNo,
+                                    @RequestParam(value = "page", defaultValue = "1") int pageNo,
                                     Model model) {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
@@ -98,9 +97,9 @@ public class ArticleAdminController {
                 PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
                 PageInfo<Article> articlePages = articleService.getArticlesSelectivePage(article, year, month, pageParam);
                 model.addAttribute("articlePages", articlePages);
-                model.addAttribute("articleTopic",articleTopic);
-                model.addAttribute("showSearchCondition",true);
-                getShareInfo(model, user,year,month,articleType,categoryName);
+                model.addAttribute("articleTopic", articleTopic);
+                model.addAttribute("showSearchCondition", true);
+                getShareInfo(model, user, year, month, articleType, categoryName);
                 //System.out.println(year + " " + month + " " + articleType + " " + categoryName);
                 //统计各种状态文章的数量
                 putArticleNumToModel(user, model);
@@ -133,91 +132,150 @@ public class ArticleAdminController {
         return PREFIX + "/blog-input";
     }
 
-
+    /**
+     * 发布文章
+     *
+     * @param article 文章类容
+     * @param userId  用户ID
+     * @param session session
+     * @return
+     */
     @ResponseBody
     @PostMapping(value = "/saveArticle/{userId}")
-    public Result saveArticle(@RequestBody Article article,
+    public Result publishArticle(@RequestBody Article article,
                               @PathVariable(value = "userId") Integer userId,
                               HttpSession session) {
         User user = (User) session.getAttribute("user");
         Result result = new Result();
         result.setSuccess(false);
         if (Objects.nonNull(user)) {
-            //根据分类名查用户的分类
-            Category category = null;
-            if (Objects.nonNull(article.getArticleCategory())) {
-                category = categoryService.getCategoryByUserIdAndName(userId, article.getArticleCategory());
-                //处理用户文章分类
-                if (Objects.isNull(category)) {
-                    category = new Category(userId, article.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1", "");
-                    categoryService.saveCategory(category);
+            try {
+                //根据分类名查用户的分类
+                Category category = null;
+                if (Objects.nonNull(article.getArticleCategory())) {
+                    category = categoryService.getCategoryByUserIdAndName(userId, article.getArticleCategory());
+                    //处理用户文章分类
+                    if (Objects.isNull(category)) {
+                        //新建分类
+                        category = new Category(userId, article.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1", "");
+                        categoryService.saveCategory(category);
+                    } else {
+                        //更新该分类下的文章的数量
+                        Category category0 = new Category();
+                        category0.setCategoryId(category.getCategoryId());
+                        int num = articleService.countUserArticleInCategory(userId, article.getArticleCategory());
+                        category0.setCategoryArticleNum(num + 1);
+                        categoryService.updateByPKSelective(category0);
+                    }
                 } else {
-                    Category category0 = new Category();
-                    category0.setCategoryId(category.getCategoryId());
-                    int num = articleService.countUserArticleInCategory(userId, article.getArticleCategory());
-                    category0.setCategoryArticleNum(num + 1);
-                    categoryService.updateByPKSelective(category0);
+                    result.setMessage("文章专栏名不可为空");
+                    return result;
                 }
-            } else {
-                result.setMessage("文章分类名不可为空");
-                return result;
-            }
-            //-1标志这是一篇新文章
-            if (article.getArticleId() == -1) {
-                article.setArticleId(null);
-            }
+                int updateRes = 0;
+                //-1标志这是一篇新文章
+                if (article.getArticleId() != -1) {
+                    //更新已有的数据
+                    updateRes = articleService.updateSelective(article);
+                } else {
+                    article.setArticleId(null);
+                }
 
-            //用户之前的可能把文章已经保存为草稿了，再次提交发布就更新
-            int affectedRow = articleService.updateSelective(article);
-            if (affectedRow == 0) {
-                article.setArticleUser(userId);
-                article.setArticleTags("");
-                article.setArticleCommentNum(0);
-                article.setArticlePublishTime(new Date());
-                //如果更新影响的行数是0，那就直接保存文章
-                articleService.saveArticle(article);
+                //用户之前的可能把文章已经保存为草稿了，再次提交发布就更新
+                if (updateRes == 0) {
+                    //数据库新增一条记录
+                    article.setArticleUser(userId);
+                    article.setArticleTags("");
+                    article.setArticleCommentNum(0);
+                    article.setArticlePublishTime(new Date());
+                    //如果更新影响的行数是0，那就直接保存文章
+                    int createRes = articleService.saveArticle(article);
+                    if (createRes > 0) {
+                        new Thread(() -> {
+                            //根据文章不同的分类给用户加对应的积分
+                            user.setUserScore(article.getArticleType());
+                            user.setUserRank();
+                            userService.updateUserInfo(user);
+                        }).start();
+                        result.setSuccess(true);
+                        result.setMessage(article.getArticleId().toString());  //把文章的ID返回给页面
+                    }
+                } else {
+                    //编辑文章重新发布
+                    result.setSuccess(true);
+                    result.setMessage(article.getArticleId().toString());  //把文章的ID返回给页面
+                }
+            }catch (Exception e){
+                result.setMessage("服务异常，请重试！");
             }
-            new Thread(() -> {
-                //根据文章不同的分类给用户加对应的积分
-                user.setUserScore(article.getArticleType());
-                user.setUserRank();
-                userService.updateUserInfo(user);
-            }).start();
-            result.setSuccess(true);
-            result.setMessage(article.getArticleId() + "");  //把文章的ID返回给页面
         }
         return result;
     }
 
+
+    @ResponseBody
+    @PostMapping(value = "/saveAsDraft/{userId}")
+    public Result saveArticleAsDraft(Model model,
+                                     @PathVariable(value = "userId") Integer userId,
+                                     @RequestBody Article article,
+                                     HttpServletRequest request) {
+        Result result = new Result();
+        result.setSuccess(false);
+        result.setMessage("请登录后再操作！");
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (Objects.nonNull(user) || userId != null) {
+            try {
+                int updateRes = 0;
+                //尝试更新文章
+                if (article.getArticleId() != -1) {
+                    String categoryName = article.getArticleCategory();
+                    if(Objects.nonNull(categoryName)){
+                        Category category = categoryService.getCategoryByUserIdAndName(userId, categoryName);
+                        if(Objects.isNull(category)){
+                            categoryService.saveCategory(new Category(userId, article.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1", ""));
+                        }
+                    }
+                    //让数据库自动分配ID
+                    updateRes = articleService.updateSelective(article);
+                }
+                //更新发现没有再插入一条新纪录
+                if (updateRes == 0) {
+                    article.setArticleUser(userId);
+                    article.setArticleTags("");
+                    article.setArticleCommentNum(0);
+                    article.setArticleTop("0");
+                    article.setArticleClick(0);
+                    article.setArticlePublishTime(new Date());
+                    int createRes = articleService.saveArticle(article);
+                    if (createRes > 0) {
+                        result.setSuccess(true);
+                        result.setMessage(article.getArticleId().toString());
+                    }else{
+                        result.setMessage("服务异常，请尝试重新提交！");
+                    }
+                }else{
+                    result.setSuccess(true);
+                    result.setMessage(article.getArticleId().toString());
+                }
+                List<Category> categories = categoryService.getUserAllCategories(userId);
+                model.addAttribute("categories", categories);
+                model.addAttribute("userId", userId);
+            } catch (Exception e) {
+                result.setMessage("服务异常，请尝试重新提交！");
+            }
+        }
+        return result;
+    }
+
+
     @RequestMapping(value = "/success/{articleId}")
     public String articlePublishSuccess(@PathVariable(value = "articleId") int articleId,
                                         Model model) {
-        Article article = articleService.getArticleById(articleId,"text");
+        Article article = articleService.getArticleById(articleId, "text");
         model.addAttribute("article", article);
         return PREFIX + "/blog-input-success";
     }
 
-
-    @PostMapping(value = "/saveAsDraft/{userId}")
-    public String saveAsDraft(Model model,
-                              @PathVariable(value = "userId") Integer userId,
-                              @RequestParam(value = "content", defaultValue = "") String content,
-                              @RequestParam(value = "title", defaultValue = "") String title) {
-        try {
-            if (StringUtil.isNotEmpty(content) && StringUtil.isNotEmpty(title)) {
-                Article article = new Article(userId, title, new Date(), 0, "", "2", "0", "0", "", content, 0, "0");
-                articleService.saveArticle(article);
-            }
-            model.addAttribute("content", content);
-            model.addAttribute("title", title);
-            List<Category> categories = categoryService.getUserAllCategories(userId);
-            model.addAttribute("categories", categories);
-            model.addAttribute("userId", userId);
-        } catch (Exception e) {
-            return "/error/error";
-        }
-        return PREFIX + "/blog-input";
-    }
 
     @GetMapping(value = "/edit")
     public String editArticle(Model model,
@@ -230,7 +288,8 @@ public class ArticleAdminController {
                 return "redirect:" + Referer;
             }
             try {
-                Article article = articleService.getArticleById(articleId,null);
+                //得到文章
+                Article article = articleService.getArticleById(articleId, null);
                 model.addAttribute("article", article);
                 List<Category> categories = categoryService.getUserAllCategories(article.getArticleUser());
                 model.addAttribute("categories", categories);
@@ -257,7 +316,7 @@ public class ArticleAdminController {
 
 
     @GetMapping(value = "/deleteDraft")
-    public String deleteDraft(@RequestParam("articleId") int articleId) {
+    public String deleteDraftArticle(@RequestParam("articleId") int articleId) {
         String updateStatus = deleteArticle2Dash(articleId);
         return null == updateStatus ? "redirect:/manage/blog/draft" : updateStatus;
     }
@@ -302,7 +361,7 @@ public class ArticleAdminController {
         articleService.updateSelective(article);
     }
 
-    private void getShareInfo(Model model, User user,String currentYear,String month,String type,String category) {
+    private void getShareInfo(Model model, User user, String currentYear, String month, String type, String category) {
         try {
             //文章作者信息
             model.addAttribute("user", user);
@@ -352,8 +411,8 @@ public class ArticleAdminController {
 
     @GetMapping(value = "/private")
     public String privateBlogPage(Model model,
-                              HttpSession session,
-                              @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+                                  HttpSession session,
+                                  @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
         return getArticles(model, "1", session, "/blog-private", pageParam);
     }
@@ -368,12 +427,11 @@ public class ArticleAdminController {
 
     @GetMapping(value = "/dash")
     public String dashBlogPage(Model model,
-                           HttpSession session,
-                           @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+                               HttpSession session,
+                               @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
         return getArticles(model, "3", session, "/blog-dash", pageParam);
     }
-
 
 
     /**
@@ -382,7 +440,7 @@ public class ArticleAdminController {
      * @param model
      * @param session
      * @param articleStatus
-     * @param dest    目标页面
+     * @param dest          目标页面
      * @param pageParam     分页参数
      * @return
      */

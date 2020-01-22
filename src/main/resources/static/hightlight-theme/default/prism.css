@@ -93,7 +93,7 @@ pre[class*="language-"] {
 .token.constant,
 .token.symbol,
 .token.deleted {
-	color: #905;
+	color: #c7254e;
 }
 
 .token.selector,
@@ -357,8 +357,7 @@ span.inline-color {
 	width: 0;
 	height: 0;
 	margin: 5px 0 0 -7px;
-	border: 7px solid transparent;
-	border-color: rgba(255, 0, 0, 0);
+	border: 7px solid rgba(255, 0, 0, 0);
 	border-top-color: #fff;
 }
 .prism-previewer.flipped:after {
