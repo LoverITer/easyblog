@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>博客详情 - EasyBlog博客</title>
+    <title>[[${article.getArticleTopic()}]]_[[${user.getUserNickname()}]]的博客—EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
     <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/static/css/typo.css}">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
-    <link rel="stylesheet" href="../static/hightlight-theme/okaida/prism.css" th:href="@{/static/hightlight-theme/coy/prism.css}">
+    <link rel="stylesheet" href="../static/hightlight-theme/okaida/prism.css" th:href="@{/static/hightlight-theme/default/prism.css}">
     <style type="text/css">
         a:hover {
             color: #ca0c16 !important;
@@ -40,8 +40,7 @@
                 <div th:replace="~{userinfo_sidebar::sidebar_archives}"></div>
                 <h4 class="ui horizontal divider header m-margin-top-large">联系开发者</h4>
                 <div class="ui centered card" style="width: 11em">
-                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt=""
-                         class="ui rounded image">
+                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="我的微信" class="ui rounded image">
                 </div>
             </div>
 
@@ -50,59 +49,53 @@
                 <div class="ui top attached segment" style="padding-top: 5px !important;">
                     <!--内容-->
                     <div class="ui left aligned basic segment" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
-                        <div th:switch="${article.getArticleType()}" class="ui red basic label m-inline-block"
-                             style="margin-right: 10px">
+                        <div th:switch="${article.getArticleType()}" class="ui red basic label m-inline-block" style="margin-right: 10px">
                             <span th:case="0">原创</span>
                             <span th:case="1">转载</span>
                             <span th:case="2">翻译</span>
                         </div>
-                        <h2 class="ui left aligned header m-inline-block" th:text="${article.getArticleTopic()}">
-                            关于刻意练习的清单</h2>
+                        <h2 class="ui left aligned header m-inline-block" th:text="${article.getArticleTopic()}"></h2>
                     </div>
                     <div class="ui horizontal link list">
                         <div class="item">
-                            <img th:src="@{${user.getUserHeaderImgUrl()}}" src="https://unsplash.it/100/100?image=1005"
-                                 alt="" class="ui avatar image">
-                            <div class="content"><a href="#" class="header" th:text="${user.getUserNickname()}">黄鑫</a>
-                            </div>
+                            <a href="#" th:href="@{/article/index/{userId}(userId=${user.getUserId()})}" >
+                                <img th:src="@{${user.getUserHeaderImgUrl()}}" src="https://unsplash.it/100/100?image=1005" alt="${user.getUserNickname()}" class="ui avatar image" style="display: inline-block">
+                                <div class="content" style="display: inline-block">
+                                    <a th:text="${user.getUserNickname()}" style="color: #333"></a>
+                                </div>
+                            </a>
                         </div>
-                        <div class="item">
-                            <i class="calendar icon"></i> [[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd
-                            hh:mm:ss')}]]
+                        <div class="item" style="color: #858585">
+                            <i class="calendar icon"></i> [[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd hh:mm:ss')}]]
                         </div>
-                        <div class="item">
+                        <div class="item" style="color: #858585">
                             <i class="eye icon"></i> [[${article.getArticleClick()}]]
                         </div>
                     </div>
                 </div>
+                <!--文章主体开始-->
                 <div class="ui attached padded segment" style="padding:10px 15px 0 15px !important;">
-                    <div th:utext="${article.getArticleContent()}" style="padding:0 10px !important;"
-                         id="content"
-                         class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large">
-                    </div>
+                    <div  id="content" th:utext="${article.getArticleContent()}" style="padding:0 10px !important;" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large"></div>
                     <!--赞赏-->
-                    <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}"
-                         class="ui center aligned basic segment">
+                    <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui center aligned basic segment">
                         <button id="payButton" class="ui orange basic circular button">赞赏</button>
                     </div>
-                    <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}"
-                         class="ui payQR flowing popup transition hidden">
+                    <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui payQR flowing popup transition hidden">
                         <div class="ui black basic label">
                             <div class="ui images" style="font-size: inherit !important;">
                                 <div class="image">
-                                    <img src="../static/images/wechat.jpg" alt="" class="ui rounded bordered image"
-                                         style="width: 120px">
+                                    <img src="../static/images/wechat.jpg" alt="" class="ui rounded bordered image" style="width: 120px">
                                     <div>支付宝</div>
                                 </div>
                                 <div class="image">
-                                    <img src="../static/images/wechat.jpg" alt="" class="ui rounded bordered image"
-                                         style="width: 120px">
+                                    <img src="../static/images/wechat.jpg" alt="" class="ui rounded bordered image" style="width: 120px">
                                     <div>微信</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!--文章主体结束-->
                 <!--声明信息-->
                 <div th:if="${article.getArticleType()=='0'}" class="ui attached positive message">
                     <!--博客信息-->
@@ -110,21 +103,16 @@
                         <div class="sixteen wide column">
                             <ul class="list">
                                 <li>作者：[[${user.getUserNickname()}]]</li>
-                                <li>发表时间：[[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd hh:mm:ss')}]]
-                                </li>
-                                <li>版权声明：本文为博主原创文章，遵循<a target="_blank"
-                                                        href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-                                                        style="font-size: 16px"> CC 4.0 BY-SA</a> 版权协议，转载请附上原文出处链接和本声明。
-                                </li>
-                                <li>原文链接：<a th:href="${#httpServletRequest.getRequestURL()}"
-                                            th:text="${#httpServletRequest.getRequestURL()}"></a></li>
+                                <li>发表时间：[[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd hh:mm:ss')}]]</li>
+                                <li>版权声明：本文为博主原创文章，遵循<a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="font-size: 16px"> CC 4.0 BY-SA</a> 版权协议，转载请附上原文出处链接和本声明。</li>
+                                <li>原文链接：<a th:href="${#httpServletRequest.getRequestURL()}" th:text="${#httpServletRequest.getRequestURL()}"></a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="divider"></div>
                 <!--留言信息-->
-                <div style="margin-top: 0.1em !important;" id="comment-container" class="ui bottom attached segment">
+                <div style="margin-top: 1em !important;" id="comment-container" class="ui bottom attached segment">
                     <!--留言区域列表-->
                     <div id="commentForm" class="ui form" style="padding-bottom: 15px !important;">
                         <!--默认存放文章作者的ID,评论默认发送给文章的作者-->
@@ -141,8 +129,7 @@
                                         <span style="color: #999999 !important;">还能输入<em id="num_txt">500</em>个字符</span>
                                     </div>
                                     <div class="m-inline-block  m-margin-bottom-small m-mobile-wide">
-                                        <button id="publish-comment-btn" class="ui  button m-mobile-wide"
-                                                style="background-color: #ca0c16 !important;color: #FFFFFF !important;">
+                                        <button id="publish-comment-btn" class="ui  button m-mobile-wide" style="background-color: #ca0c16 !important;color: #FFFFFF !important;">
                                             <i class="edit icon"></i>
                                             发布评论
                                         </button>
@@ -153,51 +140,42 @@
                     </div>
                     <!--留言信息-->
                     <div th:if="${articleComments!=null&&!#lists.isEmpty(articleComments)}" class="ui threaded comments"
-                         style="max-width: none !important;">
+                         style="max-width: none !important;border: none !important;">
                         <div th:each="comment:${articleComments}" class="comment">
-                            <a th:href="@{/article/home/}+${comment.getCommentSend()}" class="avatar">
-                                <img th:src="@{${comment.getSendUserNicknameHeadImgUrl()}}"
-                                     src="https://unsplash.it/100/100?image=1005">
+                            <a th:href="@{/article/index/{sendUserId}(sendUserId=${comment.getCommentSend()})}" class="avatar">
+                                <img th:src="@{${comment.getSendUserNicknameHeadImgUrl()}}" src="https://unsplash.it/100/100?image=1005">
                             </a>
                             <div class="content">
-                                <a th:href="@{/article/home/}+${comment.getCommentSend()}" class="author"
+                                <a th:href="@{/article/index/{sendUserId}(sendUserId=${comment.getCommentSend()})}" class="author"
                                    th:text="${comment.getSendUserNickname()}">Elliot Fu</a>
                                 <div class="metadata">
-                                    <span class="date"
-                                          th:text="${#dates.format(comment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
+                                    <span class="date" th:text="${#dates.format(comment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
                                 </div>
                                 <div class="text">
-                                    <p th:text="${comment.getCommentContent()}">This has been very useful for my
-                                        research. Thanks as well!</p>
+                                    <p th:text="${comment.getCommentContent()}"></p>
                                 </div>
                                 <div th:if="${user!=null&&user.getUserId()!=comment.getCommentSend()}" class="actions">
-                                    <a style="color: #0e90d2 !important;font-size: 14px !important;" class="reply"
-                                       th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
+                                    <a style="color: #0e90d2 !important;font-size: 14px !important;" class="reply" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
                                        onclick="changeInfo(this)">回复</a>
                                 </div>
                             </div>
-                            <div th:if="${comment.getChildComment()!=null&&!#lists.isEmpty(comment.getChildComment())}"
-                                 class="comments" style="padding-bottom: 10px !important;">
+                            <div th:if="${comment.getChildComment()!=null&&!#lists.isEmpty(comment.getChildComment())}" class="comments" style="padding-bottom: 10px !important;">
                                 <div class="comment" th:each="childComment:${comment.getChildComment()}">
-                                    <a th:href="@{/article/home/}+${childComment.getCommentSend()}" class="avatar">
-                                        <img th:src="@{${childComment.getSendUserNicknameHeadImgUrl()}}"
-                                             src="https://unsplash.it/100/100?image=1005">
+                                    <a th:href="@{/article/index/{sendUserId}(sendUserId=${childComment.getCommentSend()})}" class="avatar">
+                                        <img th:src="@{${childComment.getSendUserNicknameHeadImgUrl()}}" src="https://unsplash.it/100/100?image=1005">
                                     </a>
                                     <div class="content">
-                                        <a th:href="@{/article/home/}+${childComment.getCommentSend()}" class="author"
+                                        <a th:href="@{/article/index/{sendUserId}(sendUserId=${childComment.getCommentSend()})}" class="author"
                                            th:text="${childComment.getSendUserNickname()}">Jenny Hess</a> <span
                                             style="color: grey">回复</span> <span
                                             th:text="${childComment.getReceivedUserNickname()}"></span>
                                         <div class="metadata">
-                                            <span class="date"
-                                                  th:text="${#dates.format(childComment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
+                                            <span class="date" th:text="${#dates.format(childComment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
                                         </div>
                                         <div class="text">
-                                            <p th:text="${childComment.getCommentContent()}">This has been very useful
-                                                for my research. Thanks as well!</p>
+                                            <p th:text="${childComment.getCommentContent()}"></p>
                                         </div>
-                                        <div th:if="${user!=null&&user.getUserId()!=childComment.getCommentSend()}"
-                                             class="actions">
+                                        <div th:if="${user!=null&&user.getUserId()!=childComment.getCommentSend()}" class="actions">
                                             <a th:value="${childComment.getCommentSend()}+@{/}+${childComment.getSendUserNickname()}+@{/}+${childComment.getCommentId()}"
                                                onclick="changeInfo(this)" class="reply"
                                                style="color: #0e90d2 !important;font-size: 14px !important;">回复</a>
@@ -228,7 +206,7 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script src="../static/hightlight-theme/okaida/prism.js" th:src="@{/static/hightlight-theme/coy/prism.js}"></script>
+<script src="../static/hightlight-theme/okaida/prism.js" th:src="@{/static/hightlight-theme/default/prism.js}"></script>
 <script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
 <script>
     $(document).ready(function () {

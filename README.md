@@ -63,10 +63,10 @@ Below are the main technologies and supporting plugins used by the system：
 * [Redis](https://redis.io/)
 * [Thymeleaf](https://www.thymeleaf.org/)
 * [分页插件Mybatis-PageHelper](https://github.com/pagehelper/Mybatis-PageHelper)
-* [开源在线的Markdown编辑器插件](https://pandao.github.io/editor.md/)
+* [开源在线的Markdown编辑器插件Editor](https://pandao.github.io/editor.md/)
 * [代码高亮插件](https://github.com/PrismJS/prism)
-* [中文网页重设与排版插件](https://github.com/sofish/typo.css)
-* [Markdown转HTML插件](https://github.com/atlassian/commonmark-java) 
+* [中文网页重设与排版插件Typo](https://github.com/sofish/typo.css)
+* [Markdown解析器CommonMark](https://github.com/atlassian/commonmark-java) 
 
 License
 -------
