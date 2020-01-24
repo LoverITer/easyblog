@@ -198,7 +198,15 @@
             <version>1.9.22</version>
         </dependency>
 
-       <!--Markdown转HTML插件-->
+       <!--Markdown解析器-->
+        <!--Markdown 解析器-->
+        <dependency>
+            <groupId>com.vladsch.flexmark</groupId>
+            <artifactId>flexmark-all</artifactId>
+            <version>0.50.44</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark</artifactId>

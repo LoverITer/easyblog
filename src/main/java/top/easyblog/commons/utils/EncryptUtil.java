@@ -289,9 +289,9 @@ public class EncryptUtil {
         return new String(Base64.decode(res));
     }
 
-    public static void main(String[] args) {
+  /*  public static void main(String[] args) {
         System.out.println(EncryptUtil.getInstance().AESEncode("95162437hx$","user"));
         System.out.println(EncryptUtil.getInstance().AESDecode("13535242520A4618494787903A47AC7B","user"));
-    }
+    }*/
 
 }

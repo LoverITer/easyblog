@@ -1,33 +1,16 @@
-package top.easyblog.commons.utils;
-
-import org.commonmark.Extension;
-import org.commonmark.ext.gfm.tables.TableBlock;
-import org.commonmark.ext.gfm.tables.TablesExtension;
-import org.commonmark.ext.heading.anchor.HeadingAnchorExtension;
-import org.commonmark.node.Link;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.AttributeProvider;
-import org.commonmark.renderer.html.AttributeProviderContext;
-import org.commonmark.renderer.html.AttributeProviderFactory;
-import org.commonmark.renderer.html.HtmlRenderer;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+package top.easyblog.commons.utils.markdown;
 
 /**
  * Markdown文本转成HTML文本的工具类
  */
 public class MarkdownUtil {
 
-    /**
+/*    *//**
      * markdown格式转换成HTML格式
      *
      * @param markdown
      * @return
-     */
+     *//*
     public static String markdownToHtml(String markdown) {
         Parser parser = Parser.builder().build();
         Node document = parser.parse(markdown);
@@ -35,38 +18,35 @@ public class MarkdownUtil {
         return renderer.render(document);
     }
 
-    /**
+    *//**
      * 增加扩展[标题锚点，表格生成]
      * Markdown转换成HTML
      *
      * @param markdown
      * @return
-     */
+     *//*
     public static String markdownToHtmlExtensions(String markdown) {
         //h标题生成id
         Set<Extension> headingAnchorExtensions = Collections.singleton(HeadingAnchorExtension.create());
         //转换table的HTML
         List<Extension> tableExtension = Collections.singletonList(TablesExtension.create());
+
         Parser parser = Parser.builder()
                 .extensions(tableExtension)
                 .build();
-        markdown=markdown.replaceAll("\\[TOC\\]", "");
+        markdown = markdown.replaceAll("\\[TOC\\]", "");
         Node document = parser.parse(markdown);
         HtmlRenderer renderer = HtmlRenderer.builder()
                 .extensions(headingAnchorExtensions)
                 .extensions(tableExtension)
-                .attributeProviderFactory(new AttributeProviderFactory() {
-                    public AttributeProvider create(AttributeProviderContext context) {
-                        return new CustomAttributeProvider();
-                    }
-                })
+                .attributeProviderFactory(context -> new CustomAttributeProvider())
                 .build();
         return renderer.render(document);
     }
 
-    /**
+    *//**
      * 处理标签的属性
-     */
+     *//*
     static class CustomAttributeProvider implements AttributeProvider {
         @Override
         public void setAttributes(Node node, String tagName, Map<String, String> attributes) {
@@ -78,6 +58,11 @@ public class MarkdownUtil {
                 attributes.put("class", "ui celled table");
             }
         }
+    }*/
+
+    public static String markdownToHtmlExtensions(String markdown){
+        MarkdownParser parser=new Markdown2HTMLParser();
+        return parser.render2Html(markdown);
     }
 
 }

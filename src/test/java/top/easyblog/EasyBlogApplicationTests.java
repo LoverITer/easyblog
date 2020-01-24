@@ -13,6 +13,8 @@ import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.mapper.UserPowerMapper;
 
+import java.io.IOException;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class EasyBlogApplicationTests {
@@ -64,6 +66,23 @@ public class EasyBlogApplicationTests {
         Article article = new Article();
         articleMapper.saveSelective(article);
 
+    }
+
+    @Test
+    public void testProcess() throws IOException {
+        final Runtime runtime = Runtime.getRuntime();
+        Process process = null;
+        String[] cmds = {"C:\\Program Files\\Typora\\Typora.exe","### hello"};
+        try {
+            process = new ProcessBuilder(cmds).start();
+            System.out.println(process.isAlive());            //true
+            int exitVal = process.waitFor();
+            System.out.println(exitVal);                //0
+            System.out.println(process.isAlive());            //false
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

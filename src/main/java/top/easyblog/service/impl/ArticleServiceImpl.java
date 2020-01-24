@@ -14,7 +14,7 @@ import top.easyblog.bean.*;
 import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.utils.HtmlParserUtil;
-import top.easyblog.commons.utils.MarkdownUtil;
+import top.easyblog.commons.utils.markdown.MarkdownUtil;
 import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.CategoryMapper;

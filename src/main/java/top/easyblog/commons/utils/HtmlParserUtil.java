@@ -28,6 +28,11 @@ public class HtmlParserUtil {
         return htmlStr.trim();
     }
 
+    /**
+     *转化HTML为text
+     * @param htmlStr
+     * @return
+     */
     public static String HTML2Text(String htmlStr) {
         htmlStr = delHTMLTag(htmlStr);
         htmlStr = htmlStr.replaceAll(" ", "");
