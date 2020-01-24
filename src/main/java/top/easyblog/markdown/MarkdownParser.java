@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils.markdown;
+package top.easyblog.markdown;
 
 /**
  * @author HuangXin

@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils.markdown;
+package top.easyblog.markdown;
 
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
