@@ -198,7 +198,6 @@
             <version>1.9.22</version>
         </dependency>
 
-       <!--Markdown解析器-->
         <!--Markdown 解析器-->
         <dependency>
             <groupId>com.vladsch.flexmark</groupId>
@@ -206,24 +205,6 @@
             <version>0.50.44</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.atlassian.commonmark</groupId>
-            <artifactId>commonmark</artifactId>
-            <version>0.13.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.atlassian.commonmark</groupId>
-            <artifactId>commonmark-ext-heading-anchor</artifactId>
-            <version>0.13.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.atlassian.commonmark</groupId>
-            <artifactId>commonmark-ext-gfm-tables</artifactId>
-            <version>0.13.0</version>
-        </dependency>
 
        <!--七牛云SDK-->
         <dependency>
