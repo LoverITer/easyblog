@@ -1,8 +1,11 @@
 @charset "utf-8";
+@media screen and (min-width: 1200px) {
+    .copyright{margin-left: 290px}
+}
 @media screen and (min-width: 1024px) and (max-width: 1199px) {
     .navbox { width: 96% }
-    #starlist li a { padding: 0 10px; }
-    #starlist li.menu:before { right: 0 }
+     #starlist li a { padding: 0 10px; }
+     #starlist li.menu:before { right: 0 }
     .zhuanti li { width: 27% }
     .searchbox { width: 96% }
     .box, article { width: 96% }
@@ -11,6 +14,7 @@
     .jianzhan li section { margin: 0 5px; }
     .jianzhan li:nth-child(1) { width: 30% }
     .jianzhan li:nth-child(3) { width: 36.3% }
+    .copyright{margin-left: 270px}
 }
 @media screen and (max-width: 1023px) {
     /*header*/
@@ -44,6 +48,7 @@
     .jianzhan li:nth-child(1) { width: 30% }
     .jianzhan li:nth-child(3) { width: 36.3% }
     .zhuanti li { width: 27%; }
+    .copyright{margin-left: 260px}
 }
 @media only screen and (max-width: 768px) {
     .zhuanti li { padding: 15px; }
@@ -57,6 +62,7 @@
     .hnav a { font-size: 12px }
     .muban li section { margin: 0 5px; height: 260px; overflow: hidden }
     .zhuanti li { width: 27.6%; padding: 8px }
+    .copyright{margin-left: 10px}
 }
 @media only screen and (max-width: 480px) {
     .headline { width: 100% }
@@ -115,4 +121,5 @@
     .tab_buttons ul { width: 600px;overflow-x: scroll;}
     .tab_buttons li {margin-right: 30px;width: auto;}
     .newscurrent:after{width:100%}
+    .copyright{margin-left: 5px}
 }

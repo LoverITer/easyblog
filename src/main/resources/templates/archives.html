@@ -139,14 +139,14 @@
             <!--分页按钮-->
             <div th:if="${articlePages.getTotal()>15}" class="ui bottom attached segment">
                 <div class="ui middle aligned two column grid">
-                    <div class="column" style="margin: 5px auto;float: left !important;">
+                    <div  style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
                             <a th:if="${defaultOrderFlag==true}" th:href="@{/archives/details/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${articlePages.getPrePage()})}" >
-                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                <button class="ui  button" style="background: white !important;font-weight: 100 !important;">上一页
                                 </button>
                             </a>
                             <a th:if="${orderByUpdateTimeFlag==true}" th:href="@{/archives/details/orderByUpdateTime/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${articlePages.getPrePage()})}" >
-                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                <button class="ui  button" style="background: white !important;font-weight: 100 !important;">上一页
                                 </button>
                             </a>
                             <a th:if="${orderByClickNumFlag==true}" th:href="@{/archives/details/orderByClickNum/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${articlePages.getPrePage()})}" >
@@ -174,12 +174,12 @@
                             </a>
                             <!-------------------------------------------------------------->
                             <a th:if="${defaultOrderFlag==true}" th:href="@{/archives/details/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${articlePages.getNextPage()})}">
-                                <button class="ui right labeled icon button"
+                                <button class="ui right  button"
                                         style="background: white !important;font-weight: 100 !important;"> 下一页
                                 </button>
                             </a>
                             <a th:if="${orderByUpdateTimeFlag==true}" th:href="@{/archives/details/orderByUpdateTime/{uid}/{date}(uid=${user.getUserId()},date=${date},page=${articlePages.getNextPage()})}">
-                                <button class="ui right labeled icon button"
+                                <button class="ui right  button"
                                         style="background: white !important;font-weight: 100 !important;"> 下一页
                                 </button>
                             </a>

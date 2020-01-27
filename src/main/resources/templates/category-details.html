@@ -156,10 +156,10 @@
             <div th:if="${categoryArticles.getTotal()>15}" class="ui bottom attached segment"
                  style="border-top: solid 1px #ccc !important;">
                 <div class="ui middle aligned two column grid">
-                    <div class="column" style="margin: 5px auto;float: left !important;">
+                    <div  style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
                             <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${user.getUserId()},page=${categoryArticles.getPrePage()})}">
-                                <button class="ui labeled icon button"
+                                <button class="ui  button"
                                         style="background: white !important;font-weight: 100 !important;">上一页
                                 </button>
                             </a>
@@ -171,7 +171,7 @@
                                 </button>
                             </a>
                             <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${user.getUserId()},page=${categoryArticles.getNextPage()})}">
-                                <button class="ui right labeled icon button"
+                                <button class="ui right button"
                                         style="background: white !important;font-weight: 100 !important;"> 下一页
                                 </button>
                             </a>

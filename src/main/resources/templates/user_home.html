@@ -140,14 +140,14 @@
                 <!--content footer ,每页默认显示15条-->
                 <div th:if="${articlePages.getTotal()>15}" class="ui bottom attached segment">
                     <div class="ui middle aligned two column grid">
-                        <div class="column" style="margin: 5px auto;float: left !important;">
+                        <div  style="margin: 5px auto;float: left !important;">
                             <div class="ui buttons">
                                 <a th:if="${displayOnlyOriginal=='1'}" th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${articlePages.getPrePage()})}">
-                                    <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                    <button class="ui  button" style="background: white !important;font-weight: 100 !important;">上一页
                                     </button>
                                 </a>
                                 <a th:if="${displayOnlyOriginal=='0'}" th:href="@{/article/index/{id}(id=${user.getUserId()},page=${articlePages.getPrePage()})}">
-                                    <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                    <button class="ui  button" style="background: white !important;font-weight: 100 !important;">上一页
                                     </button>
                                 </a>
                                 <a th:if="${displayOnlyOriginal=='1'}" th:each="pageNo:${articlePages.getNavigatepageNums()}" th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${pageNo})}">
@@ -161,12 +161,12 @@
                                     </button>
                                 </a>
                                 <a th:if="${displayOnlyOriginal=='1'}" th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${articlePages.getNextPage()})}">
-                                    <button class="ui right labeled icon button"
+                                    <button class="ui  button"
                                             style="background: white !important;font-weight: 100 !important;"> 下一页
                                     </button>
                                 </a>
                                 <a th:if="${displayOnlyOriginal=='0'}" th:href="@{/article/index/{id}(id=${user.getUserId()},page=${articlePages.getNextPage()})}">
-                                    <button class="ui right labeled icon button"
+                                    <button class="ui button"
                                             style="background: white !important;font-weight: 100 !important;"> 下一页
                                     </button>
                                 </a>

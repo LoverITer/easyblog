@@ -11,13 +11,14 @@
     <groupId>top.easyblog</groupId>
     <artifactId>easyblog</artifactId>
     <name>easyblog</name>
-    <version>0.3.11</version>
+    <version>beat</version>
     <packaging>war</packaging>
     <description>personal-blog</description>
 
     <properties>
         <java.version>1.8</java.version>
         <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
+        <docker.image.prefix>easyblog</docker.image.prefix>
     </properties>
 
     <dependencies>
@@ -44,7 +45,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <!-- 移除嵌入式tomcat插件 -->
-           <!-- <exclusions>
+            <!--<exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -257,6 +258,50 @@
                     <verbose>true</verbose>
                 </configuration>
             </plugin>
+
+           <!-- &lt;!&ndash;Docker自动部署插件&ndash;&gt;
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                &lt;!&ndash;将插件绑定在某个phase执行&ndash;&gt;
+                <executions>
+                    <execution>
+                        <id>build-image</id>
+                        &lt;!&ndash;将插件绑定在package这个phase上。也就是说，用户只需执行mvn package ，就会自动执行mvn docker:build&ndash;&gt;
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    &lt;!&ndash;指定生成的镜像名&ndash;&gt;
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    &lt;!&ndash;指定标签&ndash;&gt;
+                    <imageTags>
+                        <imageTag>latest</imageTag>
+                    </imageTags>
+                    <baseImage>tomcat:latest</baseImage>
+                    &lt;!&ndash; 指定 Dockerfile 路径 ${project.basedir}：项目根路径下&ndash;&gt;
+                    <dockerDirectory>${project.basedir}</dockerDirectory>
+                    &lt;!&ndash;指定远程 docker api地址&ndash;&gt;
+                    <dockerHost>http://121.36.49.86:2375</dockerHost>
+                    &lt;!&ndash; 这里是复制 war 包到 docker 容器指定目录配置 &ndash;&gt;
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            &lt;!&ndash;jar 包所在的路径 此处配置的 即对应 target 目录&ndash;&gt;
+                            <directory>${project.build.directory}</directory>
+                            &lt;!&ndash; 需要包含的 jar包 ，这里对应的是 Dockerfile中添加的文件名　&ndash;&gt;
+                            <include>${project.build.finalName}.war</include>
+                        </resource>
+                    </resources>
+                    &lt;!&ndash; 以下两行是为了docker push到DockerHub使用的。 &ndash;&gt;
+                    <serverId>docker-hub</serverId>
+                    <registryUrl>https://index.docker.io/v1</registryUrl>
+                </configuration>
+            </plugin>-->
         </plugins>
     </build>
 
