@@ -88,14 +88,12 @@
                 </div>
             </div>
         </div>
-        <div class="ui segment" th:each="categoty:${categories}">
+        <div class="ui segment" th:each="category:${categories}">
             <!--专栏的图片-->
-            <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg"
-                 th:src="${categoty.categoryImageUrl}">
-            <a href="#" th:href="@{/category/details/{id}/{user}(id=${categoty.categoryId},user=${categoty.categoryUser})}" target class="m-black m-text-thin m-margin-left" th:text="${categoty.categoryName}">2019年2月
-            </a>
+            <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg" th:src="${category.categoryImageUrl}">
+            <a href="#" th:href="@{/category/details/{id}/{user}(id=${category.categoryId},user=${category.categoryUser})}" target class="m-black m-text-thin m-margin-left" th:text="${category.categoryName}">2019年2月</a>
             <span class="count float-right">
-                [[${categoty.categoryArticleNum}]]篇
+                [[${category.categoryArticleNum}]]篇
             </span>
         </div>
     </div>
@@ -105,7 +103,7 @@
             <i class="bookmark icon"></i><strong>最新文章</strong>
         </div>
         <div class="ui segment" th:each="article:${newestArticles}">
-            <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target class="m-black m-text-thin" th:text="${article.articleTopic}">用户故事（User Story）</a>
+            <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target class="m-black m-text-thin" th:text="${article.articleTopic}"></a>
         </div>
     </div>
     <!--归档-->
@@ -114,9 +112,8 @@
             <i class="bookmark icon"></i><strong>归档</strong>
         </div>
         <div class="ui segment" th:each="archive:${archives}">
-            <a href="#" th:href="@{/archives/details/{uid}/{date}(uid=${archive.userId},date=${archive.date})}" target class="m-black m-text-thin" th:text="${archive.date}">2019年1月
-            </a>
-            <span class="count float-right" th:text="${archive.count}">14篇</span>
+            <a href="#" th:href="@{/archives/details/{uid}/{date}(uid=${archive.userId},date=${archive.date})}" target class="m-black m-text-thin" th:text="${archive.date}"></a>
+            <span class="count float-right">[[${archive.count}]]篇</span>
         </div>
     </div>
 </div>

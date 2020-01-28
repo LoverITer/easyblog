@@ -205,7 +205,7 @@ public class ArticleServiceImpl implements IArticleService {
                     return parseMarkdowns2Text(articleMapper.getUserArticlesSelective(userId, articleType));  //根据option
                 }
             } catch (Exception e) {
-                throw new RuntimeException("发生未知异常");
+                throw new RuntimeException(e.getMessage());
             }
         }
         return null;

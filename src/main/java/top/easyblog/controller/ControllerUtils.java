@@ -1,5 +1,7 @@
 package top.easyblog.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.ArticleCounter;
@@ -16,6 +18,7 @@ import java.util.Objects;
 
 class ControllerUtils {
 
+    private static Logger log = LoggerFactory.getLogger(ControllerUtils.class);
     private final CategoryServiceImpl categoryService;
     private final ArticleServiceImpl articleService;
     private final CommentServiceImpl commentService;
@@ -48,18 +51,18 @@ class ControllerUtils {
      */
     void getArticleUserInfo(Model model, int userId, String articleType) {
         try {
-            //查作者的所有允许显示的分类
+            //作者的所有允许显示的分类
             List<Category> lists = categoryService.getUserAllViableCategory(userId);
-            //查作者的所有归档
+            //作者的所有归档
             List<ArticleCounter> archives = articleService.getUserAllArticleArchives(userId);
-            //查作者的最新文章
+            //作者的最新文章5篇文章
             List<Article> newestArticles = articleService.getUserNewestArticles(userId, 5);
-            //查作者的原创文章数
+            //作者的原创文章数
             Article article = new Article();
             article.setArticleUser(userId);
             article.setArticleType(ArticleType.Original.getArticleType());
             int originalArticle = articleService.countSelective(article);
-            //查作者的指定类型的所有文章
+            //作者指定类型的所有文章
             List<Article> articles = articleService.getUserArticles(userId, articleType);
             //关于我的文章的评论数
             int receiveCommentNum = commentService.getReceiveCommentNum(userId);
@@ -74,7 +77,7 @@ class ControllerUtils {
             model.addAttribute("articleNum", articles.size());
             model.addAttribute("originalArticleNum", originalArticle);
         }catch (Exception  e){
-            return;
+            log.error(e.getMessage());
         }
     }
 
