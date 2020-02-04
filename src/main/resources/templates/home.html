@@ -126,19 +126,19 @@
         <!--关于我面板-->
         <div class="four wide column m-mobile-hide">
             <div class="ui attached segment">
-                <div class="ui header">关于我</div>
-                <p class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环. 希望结识可以共同成长的小伙伴.</p>
+                <div class="ui header">关于我<a href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400">修改</a></div>
+                <p class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}" th:text="${user.getUserDescription()}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环. 希望结识可以共同成长的小伙伴.</p>
                 <p class="m-text" th:if="${#strings.isEmpty(user.getUserDescription())}">这人很懒，什么也没留下~~</p>
             </div>
             <div class="ui attached segment">
-                <div class="ui header">我的爱好</div>
+                <div class="ui header">我的爱好<a href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400">修改</a></div>
                 <div class="ui orange basic left pointing label">编程</div>
                 <div class="ui orange basic left pointing label">写作</div>
                 <div class="ui orange basic left pointing label">思考</div>
                 <div class="ui orange basic left pointing label">运动</div>
             </div>
             <div class="ui attached segment">
-                <div class="ui header">我的技术栈</div>
+                <div class="ui header">我的技术栈<a href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400">修改</a></div>
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">JavaScript</div>
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">Node</div>
@@ -147,10 +147,10 @@
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">MYSQL</div>
             </div>
             <div class="ui bottom attached segment">
+                <div class="ui header">联系我<a href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400">修改</a></div>
                 <a href="#" class="ui circular icon button"><i class="github icon"></i></a>
                 <a href="#" class="ui wechat circular icon button"><i class="weixin icon"></i></a>
-                <a href="#" class="ui qq circular icon button" data-content="2489868503"
-                   data-position="bottom center"><i class="qq icon"></i></a>
+                <a href="#" class="ui qq circular icon button" data-content="2489868503" data-position="bottom center"><i class="qq icon"></i></a>
             </div>
 
             <div class="ui wechat-qr flowing popup transition hidden">
@@ -181,7 +181,7 @@
             });
         }
     });
-</script>v
+</script>
 <script type="text/javascript">
 
     $(document).ready(function () {

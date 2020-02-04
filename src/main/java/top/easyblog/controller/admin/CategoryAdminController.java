@@ -17,6 +17,7 @@ import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
 import top.easyblog.commons.utils.FileUploadUtils;
 import top.easyblog.config.web.Result;
+import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
 
 import javax.servlet.http.HttpSession;
@@ -37,10 +38,12 @@ public class CategoryAdminController {
 
     private final CategoryServiceImpl categoryService;
     private final QiNiuCloudService qiNiuCloudService;
+    private final ArticleServiceImpl articleService;
 
-    public CategoryAdminController(CategoryServiceImpl categoryService, QiNiuCloudService qiNiuCloudService) {
+    public CategoryAdminController(CategoryServiceImpl categoryService, QiNiuCloudService qiNiuCloudService, ArticleServiceImpl articleService) {
         this.categoryService = categoryService;
         this.qiNiuCloudService = qiNiuCloudService;
+        this.articleService = articleService;
     }
 
 
@@ -270,8 +273,16 @@ public class CategoryAdminController {
             if(!oldCategoryName.equals(categoryName)) {
                 Category var0 = categoryService.getCategoryByUserIdAndName(user.getUserId(), categoryName);
                 if (Objects.nonNull(var0)) {
+                    //已经存在分类名
                     redirectAttributes.addFlashAttribute("error", "专栏" + categoryName + "已存在！");
                     return "redirect:/manage/category/edit?categoryId=" + categoryId;
+                }else{
+                    //没有改分类名
+                    int res = articleService.updateArticlesByCategoryName(categoryName, oldCategoryName, user.getUserId());
+                    if(res<=0){
+                        redirectAttributes.addFlashAttribute("error","发生未知异常！");
+                        return "redirect:/manage/category/edit?categoryId="+categoryId;
+                    }
                 }
             }
             try {

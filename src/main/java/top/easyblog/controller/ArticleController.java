@@ -15,6 +15,7 @@ import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
 import top.easyblog.service.impl.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 
@@ -89,7 +90,9 @@ public class ArticleController {
 
 
     @GetMapping(value = "/details/{articleId}")
-    public String articleDetails(@PathVariable("articleId") int articleId, Model model) {
+    public String articleDetails(@PathVariable("articleId") int articleId,
+                                 HttpSession session,
+                                 Model model) {
         try {
             //根据id拿到文章
             Article article = articleServiceImpl.getArticleById(articleId,"html");
@@ -97,23 +100,26 @@ public class ArticleController {
                 model.addAttribute("article", article);
                 List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
                 model.addAttribute("articleComments", articleComments);
-                User user = userService.getUser(article.getArticleUser());
-                if (Objects.nonNull(user)) {
-                    user.setUserPassword(null);
-                    model.addAttribute("user", user);
+                User user = (User)session.getAttribute("user");
+                if(Objects.nonNull(user)) {
+                    model.addAttribute("userId", user.getUserId());
+                }
+                User author = userService.getUser(article.getArticleUser());
+                //更新文章作者的信息
+                if (Objects.nonNull(author)) {
+                    author.setUserPassword(null);
+                    model.addAttribute("user", author);
                     //更新用户的访问量
                     User user1 = new User();
-                    user1.setUserId(user.getUserId());
-                    user1.setUserVisit(user.getUserVisit() + 1);
+                    user1.setUserId(author.getUserId());
+                    user1.setUserVisit(author.getUserVisit() + 1);
                     userService.updateUserInfo(user1);
-                    user1=null;
                     //更新文章的访问量
                     Article article1 = new Article();
                     article1.setArticleId(article.getArticleId());
                     article1.setArticleClick(article.getArticleClick() + 1);
                     articleServiceImpl.updateSelective(article1);
-                    article=null;
-                    ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, user.getUserId(), ArticleType.Original.getArticleType());
+                    ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, author.getUserId(), ArticleType.Original.getArticleType());
                     return "blog";
                 }
             }

@@ -442,6 +442,10 @@
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
+    <update id="updateArticlesByUserIdAndArticleCategory">
+        update article set article_category=#{newArticleCategory} where article_category=#{oldArticleCategory} and article_user=#{userId}
+    </update>
+
 
     <!--根据用户的ID和文章标题删除草稿文章-->
     <delete id="deleteArticleByUserIdAndTitle">

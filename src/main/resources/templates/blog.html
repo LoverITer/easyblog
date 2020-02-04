@@ -55,6 +55,7 @@
                             <span th:case="2">翻译</span>
                         </div>
                         <h2 class="ui left aligned header m-inline-block" th:text="${article.getArticleTopic()}"></h2>
+                        <a target="_blank" style="float: right;margin: 25px 10px;font-size:15px" th:if="${userId!=null&&userId==article.getArticleUser()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}"><button class="ui button basic tiny blue" style="color: inherit !important;">修改文章</button></a>
                     </div>
                     <div class="ui horizontal link list">
                         <div class="item">
