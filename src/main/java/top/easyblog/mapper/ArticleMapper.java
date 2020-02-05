@@ -18,6 +18,8 @@ public  interface ArticleMapper extends BaseMapper<Article> {
 
     int updateByPrimaryKeyWithContent(Article record);
 
+    int updateArticlesByUserIdAndArticleCategory(@Param(value = "newArticleCategory") String newArticleCategory,@Param(value = "oldArticleCategory") String oldArticleCategory,@Param(value = "userId") int userId);
+
     /**
      * 查询用户的所有文章数
      * @param userId

@@ -23,12 +23,12 @@
             </div>
 
             <div class="right m-item m-mobile-hide menu " style="margin: 1.7em 0 auto 2em !important;">
-                <i class="teal paint brush icon"></i>
-                <a href="#"  th:unless="${session.user!=null}" th:href="@{/manage/blog/post}"
-                   style="color :rgb(0,183,173);font-size: 17px">写博客</a>
-                <a href="#"  th:unless="${session.user==null}"
+                <!--<i class="teal paint brush icon"></i>-->
+                <a target="_blank" href="#"  th:unless="${session.user!=null}" th:href="@{/manage/blog/post}"
+                   style="color :rgb(0,183,173);font-size: 17px"><i class="paint brush icon" style="color: inherit !important;"></i>写博客</a>
+                <a target="_blank" href="#"  th:unless="${session.user==null}"
                    th:href="@{/manage/blog/post(userId=${#session.getAttribute('user').getUserId()})}"
-                   style="color :rgb(0,183,173);font-size: 17px">写博客</a>
+                   style="color :rgb(0,183,173);font-size: 17px"><i class="paint brush icon" style="color: inherit !important;"></i>写博客</a>
             </div>
 
             <!--我的头像-->

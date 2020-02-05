@@ -205,7 +205,7 @@ public class ArticleServiceImpl implements IArticleService {
                     return parseMarkdowns2Text(articleMapper.getUserArticlesSelective(userId, articleType));  //根据option
                 }
             } catch (Exception e) {
-                throw new RuntimeException("发生未知异常");
+                throw new RuntimeException(e.getMessage());
             }
         }
         return null;
@@ -482,6 +482,18 @@ public class ArticleServiceImpl implements IArticleService {
         return 0;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public int updateArticlesByCategoryName(String newCategoryName, String oldCategoryName, int userId) {
+        if(Objects.nonNull(newCategoryName)&&Objects.nonNull(oldCategoryName)&&userId>0){
+            try{
+                return articleMapper.updateArticlesByUserIdAndArticleCategory(newCategoryName, oldCategoryName, userId);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
 
     /**
      * 把批量的Markdown转化为text文本

@@ -4,7 +4,7 @@ import top.easyblog.bean.UserAttention;
 
 import java.util.List;
 
-public interface IUserAttention {
+public interface IUserAttentionService {
 
 
    /**

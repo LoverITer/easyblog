@@ -156,27 +156,31 @@ public class ArticleAdminController {
                     category = categoryService.getCategoryByUserIdAndName(userId, article.getArticleCategory());
                     //处理用户文章分类
                     if (Objects.isNull(category)) {
-                        //新建分类
+                        //数据库中用户没有这个分类就新建分类
                         category = new Category(userId, article.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1", "");
                         categoryService.saveCategory(category);
                     } else {
-                        //更新该分类下的文章的数量
+                        //数据库中用户有这个分类就更新该分类下的文章的数量
                         Category category0 = new Category();
                         category0.setCategoryId(category.getCategoryId());
                         int num = articleService.countUserArticleInCategory(userId, article.getArticleCategory());
-                        category0.setCategoryArticleNum(num + 1);
+                        //id=-1标志这是一篇新文章
+                        if(article.getArticleId()==-1) {
+                            category0.setCategoryArticleNum(num + 1);
+                        }
                         categoryService.updateByPKSelective(category0);
                     }
                 } else {
-                    result.setMessage("文章专栏名不可为空");
+                    result.setMessage("请填写文章专栏名");
                     return result;
                 }
                 int updateRes = 0;
-                //-1标志这是一篇新文章
+                //id=-1标志这是一篇新文章
                 if (article.getArticleId() != -1) {
                     //更新已有的数据
                     updateRes = articleService.updateSelective(article);
                 } else {
+                    //让数据库自增ID
                     article.setArticleId(null);
                 }
 

@@ -13,7 +13,6 @@ public interface BaseMapper<T> {
      */
     int save(T t) ;
 
-    void saveBatch(List<T> list);
 
     /**
      * 通过主键删除

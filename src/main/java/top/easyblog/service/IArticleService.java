@@ -175,5 +175,14 @@ public interface IArticleService {
      * @param article
      */
     int updateSelective(Article article);
+
+    /**
+     * 批量更新文章的分类名
+     * @param newCategoryName
+     * @param oldCategoryName
+     * @param userId
+     * @return
+     */
+    int updateArticlesByCategoryName(String newCategoryName,String oldCategoryName,int userId);
 }
 

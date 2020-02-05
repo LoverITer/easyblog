@@ -128,7 +128,7 @@
                     <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
                         <div class="ui field">
                             <div class="ui input">
-                                <input name="userNickname" type="text" placeholder="请填写" th:value="${user.getUserNickname()}">
+                                <input name="userNickname" type="text" placeholder="请填写" th:value="${user.getUserNickname()}" style="width:446px !important">
                             </div>
                         </div>
                     </div>
@@ -144,7 +144,7 @@
                                  style="margin-top: 5px !important;padding-left: 0 !important;">
                                 <div class="ui field">
                                     <div class="ui input">
-                                        <input name="userName" type="text" placeholder="请填写" th:value="${user.getUserName()}">
+                                        <input name="userName" type="text" placeholder="请填写" th:value="${user.getUserName()}" style="width:446px !important">
                                     </div>
                                 </div>
                             </div>
@@ -162,7 +162,7 @@
                                  style="margin-top: 5px !important;padding-left: 0 !important;">
                                 <div class="ui field">
                                     <div class="ui input">
-                                        <input name="userJobPosition" type="text" placeholder="请填写" th:value="${user.getUserJobPosition()}">
+                                        <input name="userJobPosition" type="text" placeholder="请填写" th:value="${user.getUserJobPosition()}" style="width:446px !important">
                                     </div>
                                 </div>
                             </div>
@@ -174,7 +174,7 @@
                     <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
                         性别
                     </div>
-                    <div class="thirteen wide column" style="padding-left: 0 !important;">
+                    <div class="thirteen wide column" style="padding-left: 0 !important;min-width:446px !important">
                         <div class="field">
                             <select name="minCount" class="ui dropdown">
                                 <option th:selected="${user.getUserGender()=='M'}" value="1">男</option>
@@ -194,7 +194,7 @@
                                  style="margin-top: 5px !important;padding-left: 0 !important;">
                                 <div class="ui field">
                                     <div class="ui input">
-                                        <input name="birthday" type="date" th:value="${#dates.format(user.getUserBirthday(),'yyyy-MM-dd')}">
+                                        <input name="birthday" type="date" th:value="${#dates.format(user.getUserBirthday(),'yyyy-MM-dd')}" style="width:446px !important">
                                     </div>
                                 </div>
                             </div>
@@ -206,7 +206,7 @@
                     <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
                         行业
                     </div>
-                    <div class="thirteen wide column" style="padding-left: 0 !important;">
+                    <div class="thirteen wide column" style="padding-left: 0 !important;min-width:446px !important">
                         <div class="field">
                             <select id="prefession" name="userPrefession" class="ui dropdown">
                                 <option th:selected="${#strings.equals(user.getUserPrefession(),null)}" value="000000">
@@ -350,7 +350,7 @@
                 </div>
                 <!--地区-->
                 <div class="row" style="padding-bottom: 0 !important;padding-top: 0 !important;">
-                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;">
+                    <div class="center aligned three wide column" style="padding-top: 0.5em !important;" >
                         地区
                     </div>
                     <div class="thirteen wide column" style="margin-top: 5px !important;padding-left: 0 !important;">
@@ -360,7 +360,7 @@
                                       <option selected th:text="${country}"></option>
                                   </select>
                                   <select  style="border-radius: .28571429rem;border: 1px solid rgba(34,36,38,.15);padding: .67861429em 1em;line-height: 1em;" id="city" data-city="---- 选择市 ----" name="city">
-                                       <option selected th:text="${city}"></option>
+                                      <option selected th:text="${city}"></option>
                                    </select>
                                   <select style="border-radius: .28571429rem;border: 1px solid rgba(34,36,38,.15);padding: .67861429em 1em;line-height: 1em;min-width: 130px !important;" id="district" data-district="---- 选择区 ----" name="county" >
                                       <option selected th:text="${county}"></option>
@@ -482,11 +482,13 @@
         }
     });
 </script>
-<script type="text/javascript">
+<script type="text/javascript" th:online="javascript">
 
     $(document).ready(function () {
         toggleStatus();
+        $('.ui.selection.dropdown').css('cssText','min-width:446px !important');
     });
+
 
     function toggleStatus() {
         var user = sessionStorage.getItem("user");

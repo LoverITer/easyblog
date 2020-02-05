@@ -11,13 +11,14 @@
     <groupId>top.easyblog</groupId>
     <artifactId>easyblog</artifactId>
     <name>easyblog</name>
-    <version>0.3.11</version>
+    <version>beat</version>
     <packaging>war</packaging>
     <description>personal-blog</description>
 
     <properties>
         <java.version>1.8</java.version>
         <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
+        <docker.image.prefix>easyblog</docker.image.prefix>
     </properties>
 
     <dependencies>
@@ -53,7 +54,7 @@
         </dependency>
 
         <!--外置tomcat-->
-        <!--<dependency>
+       <!-- <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
@@ -255,6 +256,31 @@
                     <configurationFile>${basedir}/src/main/resources/generator/generatorConfig.xml</configurationFile>
                     <overwrite>true</overwrite>
                     <verbose>true</verbose>
+                </configuration>
+            </plugin>
+
+            <!--Docker自动部署插件-->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <!--指定生成的镜像名-->
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <!-- 指定 Dockerfile 路径 ${project.basedir}：项目根路径下-->
+                    <dockerDirectory>${project.basedir}</dockerDirectory>
+                    <!--指定远程 docker api地址-->
+                    <dockerHost>http://121.36.49.86:23750</dockerHost>
+                    <!-- 这里是复制 war 包到 docker 容器指定目录配置 -->
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <!--war包所在的路径 此处配置的 即对应 target 目录-->
+                            <directory>${project.build.directory}</directory>
+                            <!-- 需要包含的war包 ，这里对应的是 Dockerfile中添加的文件名　-->
+                            <include>${project.build.finalName}.war</include>
+                        </resource>
+                    </resources>
                 </configuration>
             </plugin>
         </plugins>
