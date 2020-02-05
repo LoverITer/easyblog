@@ -48,14 +48,14 @@
             <div class="twelve wide column" style="padding-top: 0 !important;">
                 <div class="ui top attached segment" style="padding-top: 5px !important;">
                     <!--内容-->
-                    <div class="ui left aligned basic segment" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
+                    <div class="ui left aligned basic segment editArticle" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
                         <div th:switch="${article.getArticleType()}" class="ui red basic label m-inline-block" style="margin-right: 10px">
                             <span th:case="0">原创</span>
                             <span th:case="1">转载</span>
                             <span th:case="2">翻译</span>
                         </div>
                         <h2 class="ui left aligned header m-inline-block" th:text="${article.getArticleTopic()}"></h2>
-                        <a target="_blank" style="float: right;margin: 25px 10px;font-size:15px" th:if="${userId!=null&&userId==article.getArticleUser()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}"><button class="ui button basic tiny blue" style="color: inherit !important;">修改文章</button></a>
+                        <a target="_blank" style="float: right;margin: 25px 10px;font-size:15px;display: none" th:if="${userId!=null&&userId==article.getArticleUser()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}">修改文章</a>
                     </div>
                     <div class="ui horizontal link list">
                         <div class="item">
@@ -225,6 +225,7 @@
     //图像/登录注册按钮显示控制
     $(document).ready(function () {
         toggleStatus();
+        showModifyButton('.editArticle');
     });
 
     function toggleStatus() {

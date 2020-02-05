@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import top.easyblog.bean.User;
+import top.easyblog.bean.UserAccount;
 import top.easyblog.bean.UserLoginStatus;
 import top.easyblog.bean.UserSigninLog;
 import top.easyblog.commons.email.Email;
@@ -19,6 +20,7 @@ import top.easyblog.commons.utils.EncryptUtil;
 import top.easyblog.commons.utils.NetWorkUtil;
 import top.easyblog.commons.utils.SendMessageUtil;
 import top.easyblog.config.web.Result;
+import top.easyblog.service.IUserAccountService;
 import top.easyblog.service.impl.UserEmailLogServiceImpl;
 import top.easyblog.service.impl.UserPhoneLogServiceImpl;
 import top.easyblog.service.impl.UserServiceImpl;
@@ -42,6 +44,7 @@ public class UserController {
     private final UserPhoneLogServiceImpl userPhoneLogService;
     private final SendEmailUtil emailUtil;
     private final UserSigninLogServiceImpl userSigninLogService;
+    private final IUserAccountService userAccountService;
 
     /***ajax异步请求成功标志***/
     private static final String AJAX_SUCCESS = "OK";
@@ -50,12 +53,13 @@ public class UserController {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public UserController(UserServiceImpl userService, UserEmailLogServiceImpl userEmailLogService, UserPhoneLogServiceImpl userPhoneLogService, SendEmailUtil emailUtil, UserSigninLogServiceImpl userSigninLogService) {
+    public UserController(UserServiceImpl userService, UserEmailLogServiceImpl userEmailLogService, UserPhoneLogServiceImpl userPhoneLogService, SendEmailUtil emailUtil, UserSigninLogServiceImpl userSigninLogService, IUserAccountService userAccountService) {
         this.userService = userService;
         this.userEmailLogService = userEmailLogService;
         this.userPhoneLogService = userPhoneLogService;
         this.emailUtil = emailUtil;
         this.userSigninLogService = userSigninLogService;
+        this.userAccountService = userAccountService;
     }
 
     @GetMapping("/loginPage")
@@ -64,16 +68,16 @@ public class UserController {
         if (null == session.getAttribute("Referer")) {
             String referUrl = request.getHeader("Referer");
             String baseUrl = request.getScheme()    //当前链接使用的协议
-                    +"://" + request.getServerName()   //服务器地址
+                    + "://" + request.getServerName()   //服务器地址
                     + ":" + request.getServerPort()   //端口号
-                    +request.getContextPath()+"/";
-            if(StringUtil.isNotEmpty(referUrl)&&
-                    !referUrl.contains("/login")&&
-                    !referUrl.contains("register")&&
-                    !referUrl.contains("loginPage")&&
-                    !referUrl.contains("change_password")&&
-                    !referUrl.contains("/article/index")&&
-                    !referUrl.equalsIgnoreCase(baseUrl)){
+                    + request.getContextPath() + "/";
+            if (StringUtil.isNotEmpty(referUrl) &&
+                    !referUrl.contains("/login") &&
+                    !referUrl.contains("register") &&
+                    !referUrl.contains("loginPage") &&
+                    !referUrl.contains("change_password") &&
+                    !referUrl.contains("/article/index") &&
+                    !referUrl.equalsIgnoreCase(baseUrl)) {
                 session.setAttribute("Referer", referUrl);
             }
         }
@@ -163,10 +167,10 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/register")
-    public Result register(@RequestParam(value = "nickname",defaultValue = "") String nickname,
-                           @RequestParam(value = "pwd",defaultValue = "") String password,
-                           @RequestParam(value = "account",defaultValue = "") String account,
-                           @RequestParam(value = "code",defaultValue = "") String captchaCode,
+    public Result register(@RequestParam(value = "nickname", defaultValue = "") String nickname,
+                           @RequestParam(value = "pwd", defaultValue = "") String password,
+                           @RequestParam(value = "account", defaultValue = "") String account,
+                           @RequestParam(value = "code", defaultValue = "") String captchaCode,
                            HttpServletRequest request,
                            HttpSession session) {
         String captcha = (String) session.getAttribute("captcha-code");
@@ -178,15 +182,15 @@ public class UserController {
             result.setMessage("昵称已存在!");
         } else if (userService.getUser(account) != null) {
             result.setMessage("此邮箱/手机号已经注册了!");
-        } else if (Objects.isNull(captcha)||!captcha.equals(captchaCode)) {
+        } else if (Objects.isNull(captcha) || !captcha.equals(captchaCode)) {
             result.setMessage("验证码填写不正确或验证码已过期!");
         } else {
             try {
                 userService.register(nickname, EncryptUtil.getInstance().SHA1(password, "user"), account, ip + " " + ipInfo);
                 result.setSuccess(true);
                 result.setMessage("注册成功!");
-                log.info("用户：{}注册成功,{}",account,new Date());
-            }catch (Exception e){
+                log.info("用户：{}注册成功,{}", account, new Date());
+            } catch (Exception e) {
                 log.error(e.getMessage());
                 result.setMessage("服务异常，请重试！");
             }
@@ -254,7 +258,7 @@ public class UserController {
     public Result checkPassword(@RequestParam("password") String password) {
         Result result = new Result();
         result.setSuccess(true);
-        result=userService.isPasswordLegal(password);
+        result = userService.isPasswordLegal(password);
         return result;
     }
 
@@ -274,23 +278,23 @@ public class UserController {
             if (user != null) {
                 user.setUserPassword(null);
                 //会话信息，如果没有退出15天有效
-                if(Objects.isNull(session.getAttribute("user"))) {
+                if (Objects.isNull(session.getAttribute("user"))) {
                     session.setAttribute("user", user);
                     session.setMaxInactiveInterval(60 * 60 * 24 * 15);
                 }
                 // 保存用户名密码一个月
-                if("on".equals(remember)) {
-                    boolean newCookie=true;   //是否创建一个新的Cookie
+                if ("on".equals(remember)) {
+                    boolean newCookie = true;   //是否创建一个新的Cookie
                     Cookie[] cookies = request.getCookies();
-                    for(Cookie ck:cookies){
-                        if("USER-COOKIE".equals(ck.getName())){
-                            newCookie=false;
+                    for (Cookie ck : cookies) {
+                        if ("USER-COOKIE".equals(ck.getName())) {
+                            newCookie = false;
                         }
                     }
-                    if(newCookie) {
+                    if (newCookie) {
                         //使用AES对密码进行加密保存 :用户名-密码密文
-                        Cookie ck = new Cookie("USER-COOKIE", username + "-" + AESCrypt.encryptECB(password,"1a2b3c4d5e6f7g8h"));
-                        ck.setMaxAge(60*60*24*30);
+                        Cookie ck = new Cookie("USER-COOKIE", username + "-" + AESCrypt.encryptECB(password, "1a2b3c4d5e6f7g8h"));
+                        ck.setMaxAge(60 * 60 * 24 * 30);
                         ck.setPath("/");
                         // addCookie后，如果已经存在相同名字的cookie，则最新的覆盖旧的cookie
                         response.addCookie(ck);
@@ -325,8 +329,8 @@ public class UserController {
     @RequestMapping(value = "/logout")
     public Result logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        if(session!=null){
-           session.removeAttribute("user");
+        if (session != null) {
+            session.removeAttribute("user");
         }
         Result result = new Result();
         result.setSuccess(true);
@@ -358,13 +362,13 @@ public class UserController {
                                  HttpSession session) {
         Result result = new Result();
         result.setSuccess(false);
-        if(!code.equals(session.getAttribute("captcha-code"))){
+        if (!code.equals(session.getAttribute("captcha-code"))) {
             result.setMessage("验证码错误！");
-        }else if(Objects.isNull(newPassword)){
+        } else if (Objects.isNull(newPassword)) {
             result.setMessage("请填写新密码！");
-        }else if(Objects.isNull(account)){
+        } else if (Objects.isNull(account)) {
             result.setMessage("请填写您的账号！");
-        }else{
+        } else {
             try {
                 new Thread(() -> userService.updateUserInfo(account, EncryptUtil.getInstance().SHA1(newPassword, "user"))).start();
                 result.setSuccess(true);
@@ -374,6 +378,64 @@ public class UserController {
                 return result;
             } finally {
                 session.removeAttribute("captcha-code");
+            }
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/aboutMe")
+    public Result changeAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo,
+                                HttpSession session) {
+        Result result = new Result();
+        result.setMessage("请登录后重试！");
+        User user = (User) session.getAttribute("user");
+        if (Objects.nonNull(user)) {
+            user.setUserDescription(aboutMeInfo);
+            try {
+                int res = userService.updateUserInfo(user);
+                if (res < 0) {
+                    result.setMessage("更新异常，请重试！");
+                } else {
+                    result.setMessage("修改成功！");
+                    result.setSuccess(true);
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                result.setMessage("服务异常，请重试！");
+            }
+
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/settingContact")
+    public Result settingContact(@RequestParam String github,
+                                 @RequestParam String wechat,
+                                 @RequestParam String qq,
+                                 @RequestParam String weibo,
+                                 @RequestParam String twitter,
+                                 @RequestParam String steam,
+                                 HttpSession session) {
+        Result result = new Result();
+        result.setMessage("请登录后重试！");
+        User user = (User) session.getAttribute("user");
+        if (Objects.nonNull(user)) {
+             UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, user.getUserId());
+            System.out.println(account);
+             //检查用户的account是否存在
+            int res=userAccountService.updateAccountByUserId(account);
+            if (res<=0) {
+                //如果没有就创建一个
+               res=userAccountService.createAccount(account);
+            }
+            if (res > 0) {
+                result.setSuccess(true);
+                result.setMessage("修改成功！");
+            } else {
+                result.setSuccess(false);
+                result.setMessage("修改失败！");
             }
         }
         return result;

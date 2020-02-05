@@ -126,19 +126,19 @@
         <!--关于我面板-->
         <div class="four wide column m-mobile-hide">
             <div class="ui attached segment">
-                <div class="ui header">关于我<a href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400">修改</a></div>
-                <p class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}" th:text="${user.getUserDescription()}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环. 希望结识可以共同成长的小伙伴.</p>
-                <p class="m-text" th:if="${#strings.isEmpty(user.getUserDescription())}">这人很懒，什么也没留下~~</p>
+                <div class="ui header about">关于我<a id="about" href="#"  style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a></div>
+                <p id="about-show" class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}" th:text="${user.getUserDescription()}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环. 希望结识可以共同成长的小伙伴.</p>
+                <p id="about-show" class="m-text" th:if="${#strings.isEmpty(user.getUserDescription())}">这人很懒，什么也没留下~~</p>
             </div>
             <div class="ui attached segment">
-                <div class="ui header">我的爱好<a href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400">修改</a></div>
+                <div class="ui header hobby">我的爱好<a id="hobby" href="#"  style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none" >修改</a></div>
                 <div class="ui orange basic left pointing label">编程</div>
                 <div class="ui orange basic left pointing label">写作</div>
                 <div class="ui orange basic left pointing label">思考</div>
                 <div class="ui orange basic left pointing label">运动</div>
             </div>
             <div class="ui attached segment">
-                <div class="ui header">我的技术栈<a href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400">修改</a></div>
+                <div class="ui header tech">我的技术栈<a id="thchnology" href="#"  style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none" >修改</a></div>
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">JavaScript</div>
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">Node</div>
@@ -147,7 +147,7 @@
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">MYSQL</div>
             </div>
             <div class="ui bottom attached segment">
-                <div class="ui header">联系我<a href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400">修改</a></div>
+                <div class="ui header contact">联系我<a id="contact-me" href="#"  style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a></div>
                 <a href="#" class="ui circular icon button"><i class="github icon"></i></a>
                 <a href="#" class="ui wechat circular icon button"><i class="weixin icon"></i></a>
                 <a href="#" class="ui qq circular icon button" data-content="2489868503" data-position="bottom center"><i class="qq icon"></i></a>
@@ -157,6 +157,91 @@
                 <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image" style="width: 110px">
             </div>
         </div>
+    </div>
+</div>
+
+<!--关于我修改-->
+<div class="ui large modal scrolling transition hidden about">
+    <i class="close icon" style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
+    <div class="header">
+        关于我
+    </div>
+    <div class="content">
+        <div class="ui form">
+            <div class="field">
+                <label>向大家介绍一下自己吧！</label>
+                <textarea id="about-me" th:text="${user.getUserDescription()}"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div id="about-cancel" class="ui button close">取消</div>
+        <div id="about-commit" class="ui green button">提交</div>
+    </div>
+</div>
+
+<!--我的爱好修改-->
+<div class="ui large modal scrolling transition hidden hobby">
+    <i class="close icon" style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
+    <div class="header">
+        我的爱好
+    </div>
+    <div class="content">
+        <div class="ui form">
+            <div class="field">
+                <label>向大家介绍一下自己吧！</label>
+                <textarea id="hobby-me" th:text="${user.getUserDescription()}"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div id="hobby-cancel" class="ui button close">取消</div>
+        <div id="hobby-commit" class="ui green button">提交</div>
+    </div>
+</div>
+
+
+<!--我的技术栈修改-->
+<div class="ui large modal scrolling transition hidden tech">
+    <i class="close icon" style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
+    <div class="header">
+        我的技术栈
+    </div>
+    <div class="content">
+        <div class="ui form">
+            <div class="field">
+                <label>向大家介绍一下自己吧！</label>
+                <textarea id="tech-me" th:text="${user.getUserDescription()}"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div id="tech-cancel" class="ui button close">取消</div>
+        <div id="tech-commit" class="ui green button">提交</div>
+    </div>
+</div>
+
+<!--我的联系方式修改-->
+<div class="ui large modal scrolling transition hidden contact">
+    <i class="close icon" style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
+    <div class="header">
+        联系我
+    </div>
+    <div class="content">
+        <div class="ui form" style="font-size: 1.1rem">
+            <div class="field">
+                <div><i class="github icon"></i>GitHub</div><input id="github" class="ui input" type="text" placeholder="GitHub账号">
+                <div><i class="wechat icon"></i>微信</div><input id="wechat" class="ui input" type="text" placeholder="微信账号">
+                <div><i class="qq icon"></i>QQ</div><input id="qq" class="ui input" type="text" placeholder="QQ账号">
+                <div><i class="weibo icon"></i>微博</div><input id="weibo" class="ui input" type="text" placeholder="微博账号">
+                <div><i class="steam icon"></i>Steam</div><input id="steam" class="ui input" type="text" placeholder="steam账号">
+                <div><i class="twitter icon"></i>twitter</div><input id="twitter"  class="ui input" type="text" placeholder="twitter账号">
+            </div>
+        </div>
+    </div>
+    <div class="actions" >
+        <div id="contact-cancel" class="ui button close">取消</div>
+        <div id="contact-commit" class="ui green button">提交</div>
     </div>
 </div>
 
@@ -173,13 +258,106 @@
 <script>
     $(document).ready(function () {
         if (detectZoom() != 125) {
-            spop({
-                template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
-                autoclose: 4000,
-                position: "top-center",
-                style: 'info',
-            });
+            showInfoMessage("您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%")
         }
+        //控制“修改按钮的显示和隐藏”
+        showModifyButton(".ui.header.about");
+        showModifyButton(".ui.header.hobby");
+        showModifyButton(".ui.header.tech");
+        showModifyButton(".ui.header.contact");
+    });
+
+</script>
+<script>
+    /***修改关于我的信息***/
+    $('#about').click(function () {
+        $('.large.modal.about').modal('show');
+    });
+    $('#about-cancel').click(function () {
+        $('.large.modal.about').modal('toggle');
+    });
+    $('#about-commit').click(function () {
+        let about_me_info=$('#about-me').val();
+        $.ajax({
+            url: "/user/aboutMe",
+            method: "GET",
+            sync: false,
+            data: {aboutMeInfo: about_me_info},
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    $('#about-show').text(about_me_info);
+                    $('#about-me').val(about_me_info);
+                    $('.large.modal.about').modal('toggle');
+                    showSuccessMessage(response.message);
+                }
+            },
+            error: function () {
+                ('.large.modal.about').modal('toggle');
+                showErrorMessage("服务异常，请重试！");
+            }
+        });
+    });
+
+   /***修改我的爱好***/
+    $('#hobby').click(function () {
+        $('.large.modal.hobby').modal('show');
+    });
+    $('#hobby-cancel').click(function () {
+        $('.large.modal.hobby').modal('toggle');
+    });
+    $('#hobby-commit').click(function () {
+
+    });
+
+    /***修改我的技术栈***/
+    $('#thchnology').click(function () {
+        $('.large.modal.tech').modal('show');
+    });
+    $('#tech-cancel').click(function () {
+        $('.large.modal.tech').modal('toggle');
+    });
+    $('#tech-commit').click(function () {
+
+    });
+
+    /***修改我的联系方式***/
+    $('#contact-me').click(function () {
+        $('.large.modal.contact').modal('show');
+    });
+    $('#contact-cancel').click(function () {
+        $('.large.modal.contact').modal('toggle');
+    });
+    $('#contact-commit').click(function () {
+        let github=$('#github').val()==null?"":$('#github').val();
+        let wechat=$('#wechat').val()==null?"":$('#wechat').val();
+        let qq=$('#qq').val()==null?"":$('#qq').val();
+        let steam=$('#steam').val()==null?"":$('#steam').val();
+        let twitter=$('#twitter').val()==null?"":$('#twitter').val();
+        let weibo=$('#weibo').val()==null?"":$('#weibo').val();
+        $.ajax({
+            url:"/user/settingContact",
+            method:"Get",
+            sync:false,
+            data:{github:github,wechat:wechat,qq:qq,steam:steam,twitter:twitter,weibo:weibo},
+            dataType: "json",     //服务器返回的数据类型
+            success: function (response) {
+                $('.large.modal.contact').modal('toggle');
+                if (response.success) {
+                    showSuccessMessage(response.message);
+                    //刷新页面
+                    setTimeout(function () {
+                        window.location.reload();
+                    },4000);
+                }else{
+                    showInfoMessage(response.message);
+                }
+            },
+            error: function () {
+                ('.large.modal.contact').modal('toggle');
+                showErrorMessage("服务异常，请重试！");
+            }
+        });
     });
 </script>
 <script type="text/javascript">
@@ -215,12 +393,7 @@
                 }
             },
             error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
+                showErrorMessage("服务异常，请重试！")
             }
         });
     });

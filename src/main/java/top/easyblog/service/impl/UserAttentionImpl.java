@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserAttention;
 import top.easyblog.mapper.UserAttentionMapper;
-import top.easyblog.service.IUserAttention;
+import top.easyblog.service.IUserAttentionService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.Objects;
 
 
 @Service
-public class UserAttentionImpl implements IUserAttention {
+public class UserAttentionImpl implements IUserAttentionService {
 
 
     private final UserAttentionMapper userAttentionMapper;

@@ -280,4 +280,17 @@ function passwordDisplayToggle(obj,passwordObj) {
     });
 }
 
+/**
+ * 控制一个元素结点的显示和隐藏
+ * @param identity  标识元素结点的class
+ */
+function showModifyButton(identity){
+    $(identity).hover(function () {
+            $('a',this).show();
+        },
+        function () {
+            $('a',this).hide();
+        });
+}
+
 
