@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>个人空间 - EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
@@ -28,31 +28,34 @@
                        user是文章的作者
                        visitor是访问者
                     -->
-                    <img th:src="${user.getUserHeaderImgUrl()}" src="https://img-blog.csdnimg.cn/20190927151132530.png" class="ui fluid top aligned  medium circular image image-100x100" alt="">
+                    <img th:src="${user.getUserHeaderImgUrl()}" src="https://img-blog.csdnimg.cn/20190927151132530.png"
+                         class="ui fluid top aligned  medium circular image image-100x100" alt="">
                 </div>
                 <div class="thirteen wide column" style="padding-left: 0 !important;">
                     <div class="row">
                         <span style="font-size: 26px"><strong>LoveITer</strong></span>
                         <button id="secret-btn" class="ui right floated  small yellow basic button">
-                            <a  href="#" style="color: inherit;font-size: 12px;">私信</a>
+                            <a href="#" style="color: inherit;font-size: 12px;">私信</a>
                         </button>
                         <button id="care-btn" class="ui right floated  small red basic button">
-                            <a href="#"  style="color: inherit;font-size: 12px;">关注</a>
+                            <a href="#" style="color: inherit;font-size: 12px;">关注</a>
                         </button>
                     </div>
 
                     <div class="row m-margin-top-large">
                         <span>关注数：<span style="color: dodgerblue !important;"><em>0</em></span></span>
 
-                        <span class="m-margin-left">访问量：<span style="color: dodgerblue !important;"><em th:text="${user.getUserVisit()}">22255</em></span></span>
+                        <span class="m-margin-left">访问量：<span style="color: dodgerblue !important;"><em
+                                th:text="${user.getUserVisit()}">22255</em></span></span>
                     </div>
                 </div>
             </div>
             <!--content header-->
             <div class="ui top attached segment">
-                <div  class="ui middle aligned two column grid">
+                <div class="ui middle aligned two column grid">
                     <div class="column">
-                        <h3 class="ui header m-inline-block m-black" style="letter-spacing: 2px !important;;color: #ca0c16 !important;">TA的博文</h3>
+                        <h3 class="ui header m-inline-block m-black"
+                            style="letter-spacing: 2px !important;;color: #ca0c16 !important;">TA的博文</h3>
                     </div>
                     <div class="right aligned column">
                         共 <h2 class="ui header m-inline-block m-text-thin" style="color: #ca0c16 !important;">
@@ -62,7 +65,8 @@
             </div>
             <!--content-->
             <div class="ui attached segment border-bt-none">
-                <div th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none"
+                <div th:each="article:${articles}"
+                     class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none"
                      style="padding-bottom: 20px !important;padding-top: 10px !important;">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
@@ -72,7 +76,8 @@
                                 <span th:case="1">转载</span>
                                 <span th:case="2">翻译</span>
                             </button>
-                            <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}"
+                            <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                               th:text="${article.getArticleTopic()}"
                                class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
                             <p class="m-text"
                                style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;"
@@ -83,11 +88,15 @@
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
                                         <div class="item">
-                                            <img th:src="${user.getUserHeaderImgUrl()}" src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
-                                            <div class="content"><a href="#" class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
+                                            <img th:src="${user.getUserHeaderImgUrl()}"
+                                                 src="https://unsplash.it/100/100?image=1005" alt=""
+                                                 class="ui avatar image">
+                                            <div class="content"><a href="#" class="header"
+                                                                    th:text="${user.getUserNickname()}">黄鑫</a></div>
                                         </div>
                                         <div class="item">
-                                            <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd hh:mm:ss')}]]
+                                            <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd
+                                            hh:mm:ss')}]]
                                         </div>
                                         <div class="item">
                                             <i class="eye icon"></i>[[${article.getArticleClick()}]]
@@ -101,8 +110,9 @@
                         </div>
 
                         <div class="five wide column">
-                            <a  target="_blank">
-                                <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" alt="" class="ui rounded image">
+                            <a target="_blank">
+                                <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                     alt="" class="ui rounded image">
                             </a>
                         </div>
                     </div>
@@ -112,16 +122,19 @@
             <!--查看更多-->
             <div th:if="${articleSize>15}" class="ui attached segment bottom " style="border-top: none !important;">
                 <a href="#" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}">
-                    <button id="more-btn" class="ui negative basic button" style="margin-left: 40% !important;">查看更多</button>
+                    <button id="more-btn" class="ui negative basic button" style="margin-left: 40% !important;">查看更多
+                    </button>
                 </a>
             </div>
 
-            <div th:if="${articleSize<=15&&articleSize!=0}" class="ui attached segment bottom " style="border-top: none !important;">
+            <div th:if="${articleSize<=15&&articleSize!=0}" class="ui attached segment bottom "
+                 style="border-top: none !important;">
             </div>
 
-            <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment" style="border-top: none !important;">
+            <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment"
+                 style="border-top: none !important;">
                 <div class="ui middle aligned two column grid">
-                    <div  style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
+                    <div style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
                         没有任何文章
                     </div>
                 </div>
@@ -130,19 +143,31 @@
         <!--关于我面板-->
         <div class="four wide column m-mobile-hide">
             <div class="ui attached segment">
-                <div class="ui header about">关于我<a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="about" href="#"  style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a></div>
-                <p id="about-show" class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}" th:text="${user.getUserDescription()}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环. 希望结识可以共同成长的小伙伴.</p>
-                <p id="about-show" class="m-text" th:if="${#strings.isEmpty(user.getUserDescription())}">这人很懒，什么也没留下~~</p>
+                <div class="ui header about">关于我<a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="about"
+                                                   href="#"
+                                                   style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
+                </div>
+                <p id="about-show" class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}"
+                   th:text="${user.getUserDescription()}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环.
+                    希望结识可以共同成长的小伙伴.</p>
+                <p id="about-show" class="m-text" th:if="${#strings.isEmpty(user.getUserDescription())}">
+                    这人很懒，什么也没留下~~</p>
             </div>
             <div class="ui attached segment">
-                <div class="ui header hobby">我的爱好<a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="hobby" href="#"  style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none" >修改</a></div>
+                <div class="ui header hobby">我的爱好<a th:if="${visitorId!=null and visitorId==user.getUserId()}"
+                                                    id="hobby" href="#"
+                                                    style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
+                </div>
                 <div class="ui orange basic left pointing label">编程</div>
                 <div class="ui orange basic left pointing label">写作</div>
                 <div class="ui orange basic left pointing label">思考</div>
                 <div class="ui orange basic left pointing label">运动</div>
             </div>
             <div class="ui attached segment">
-                <div class="ui header tech">我的技术栈<a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="thchnology" href="#"  style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none" >修改</a></div>
+                <div class="ui header tech">我的技术栈<a th:if="${visitorId!=null and visitorId==user.getUserId()}"
+                                                    id="thchnology" href="#"
+                                                    style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
+                </div>
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">JavaScript</div>
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">Node</div>
@@ -151,25 +176,56 @@
                 <div class="ui teal basic left pointing label m-margin-tb-tiny">MYSQL</div>
             </div>
             <div class="ui bottom attached segment">
-                <div class="ui header contact">联系我<a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="contact-me" href="#"  style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a></div>
-                <a href="#" th:if="${authorAccounts!=null and authorAccounts.getWechat()!=null and !#strings.isEmpty(authorAccounts.getWechat())}" class="ui wechat circular icon button" th:data-content="${authorAccounts.getWechat()}" data-position="bottom center"><i class="weixin icon green"></i></a>
-                <a href="#" th:if="${authorAccounts!=null and authorAccounts.getQq()!=null and !#strings.isEmpty(authorAccounts.getQq())}" class="ui qq circular icon button" th:data-content="${authorAccounts.getQq()}" data-position="bottom center"><i class="qq icon black"></i></a>
-                <a href="#" th:if="${authorAccounts!=null and authorAccounts.getGithub()!=null and !#strings.isEmpty(authorAccounts.getGithub())}" class="ui github circular icon button" th:data-content="${authorAccounts.getGithub()}" data-position="bottom center"><i class="github icon" ></i></a>
-                <a href="#" th:if="${authorAccounts!=null and authorAccounts.getWeibo()!=null and !#strings.isEmpty(authorAccounts.getWeibo())}"  class="ui weibo circular icon button" th:data-content="${authorAccounts.getWeibo()}" data-position="bottom center"><i class="weibo red icon"></i></a>
-                <a href="#" th:if="${authorAccounts!=null and authorAccounts.getSteam()!=null and !#strings.isEmpty(authorAccounts.getSteam())}" style="background-color: rgb(19,83,131) !important;" class="ui steam circular icon button" th:data-content="${authorAccounts.getSteam()}" data-position="bottom center"><i class="steam  icon" style="color: floralwhite !important;"></i></a>
-                <a href="#" th:if="${authorAccounts!=null and authorAccounts.getTwitter()!=null and !#strings.isEmpty(authorAccounts.getTwitter())}" class="u i twitter circular icon button" th:data-content="${authorAccounts.getTwitter()}" data-position="bottom center"><i class="twitter blue icon"></i></a>
+                <div class="ui header contact">联系我<a th:if="${visitorId!=null and visitorId==user.getUserId()}"
+                                                     id="contact-me" href="#"
+                                                     style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
+                </div>
+                <a href="#"
+                   th:if="${authorAccounts!=null and authorAccounts.getWechat()!=null and !#strings.isEmpty(authorAccounts.getWechat())}"
+                   class="ui wechat circular icon button" th:data-content="${authorAccounts.getWechat()}"
+                   data-position="bottom center"><i class="weixin icon green"></i></a>
+                <a href="#"
+                   th:if="${authorAccounts!=null and authorAccounts.getQq()!=null and !#strings.isEmpty(authorAccounts.getQq())}"
+                   class="ui qq circular icon button" th:data-content="${authorAccounts.getQq()}"
+                   data-position="bottom center"><i class="qq icon black"></i></a>
+                <a href="#" target="_blank"
+                   th:if="${authorAccounts!=null and authorAccounts.getGithub()!=null and !#strings.isEmpty(authorAccounts.getGithub())}"
+                   class="ui github circular icon button" th:data-content="${authorAccounts.getGithub()}"
+                   th:href="@{${authorAccounts.getGithub()}}" data-position="bottom center"><i class="github icon"></i></a>
+                <a href="#"
+                   th:if="${authorAccounts!=null and authorAccounts.getWeibo()!=null and !#strings.isEmpty(authorAccounts.getWeibo())}"
+                   class="ui weibo circular icon button" th:data-content="${authorAccounts.getWeibo()}"
+                   data-position="bottom center"><i class="weibo red icon"></i></a>
+                <a href="#"
+                   th:if="${authorAccounts!=null and authorAccounts.getSteam()!=null and !#strings.isEmpty(authorAccounts.getSteam())}"
+                   style="background-color: rgb(19,83,131) !important;" class="ui steam circular icon button"
+                   th:data-content="${authorAccounts.getSteam()}" data-position="bottom center"><i class="steam  icon"
+                                                                                                   style="color: floralwhite !important;"></i></a>
+                <a href="#"
+                   th:if="${authorAccounts!=null and authorAccounts.getTwitter()!=null and !#strings.isEmpty(authorAccounts.getTwitter())}"
+                   class="u i twitter circular icon button" th:data-content="${authorAccounts.getTwitter()}"
+                   data-position="bottom center"><i class="twitter blue icon"></i></a>
+                <p th:if="${authorAccounts==null ||
+                ((authorAccounts.getWechat()==null||#strings.isEmpty(authorAccounts.getWechat())) &&
+                (authorAccounts.getQq()==null||#strings.isEmpty(authorAccounts.getQq())) &&
+                (authorAccounts.getWeibo()==null||#strings.isEmpty(authorAccounts.getWeibo())) &&
+                (authorAccounts.getSteam()==null||#strings.isEmpty(authorAccounts.getSteam())) &&
+                (authorAccounts.getTwitter()==null||#strings.isEmpty(authorAccounts.getTwitter())) &&
+                (authorAccounts.getGithub()==null||#strings.isEmpty(authorAccounts.getGithub())))}">这人很懒，什么也没留下~~</p>
             </div>
 
             <div class="ui wechat-qr flowing popup transition hidden">
-                <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image" style="width: 110px">
+                <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt=""
+                     class="ui rounded image" style="width: 110px">
             </div>
         </div>
     </div>
 </div>
 
 <!--关于我修改-->
-<div class="ui large modal scrolling transition hidden about">
-    <i class="close icon" style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
+<div class="ui  modal scrolling transition hidden about">
+    <i class="close icon"
+       style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
     <div class="header">
         关于我
     </div>
@@ -188,8 +244,9 @@
 </div>
 
 <!--我的爱好修改-->
-<div class="ui large modal scrolling transition hidden hobby">
-    <i class="close icon" style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
+<div class="ui  modal scrolling transition hidden hobby">
+    <i class="close icon"
+       style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
     <div class="header">
         我的爱好
     </div>
@@ -209,8 +266,9 @@
 
 
 <!--我的技术栈修改-->
-<div class="ui large modal scrolling transition hidden tech">
-    <i class="close icon" style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
+<div class="ui  modal scrolling transition hidden tech">
+    <i class="close icon"
+       style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
     <div class="header">
         我的技术栈
     </div>
@@ -229,35 +287,122 @@
 </div>
 
 <!--我的联系方式修改-->
-<div class="ui large modal scrolling transition hidden contact">
-    <i class="close icon" style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
+<div class="ui coupled modal transition hidden contact">
+    <i class="close icon"
+       style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
     <div class="header">
         联系我
     </div>
     <div class="content">
         <div class="ui form" style="font-size: 1.1rem">
             <div class="field">
-                <div th:if="${authorAccounts!=null && authorAccounts.getGithub()!=null && !#strings.isEmpty(authorAccounts.getGithub())}" th:value="${authorAccounts.getGithub()}"><i class="github icon"></i>GitHub</div><input id="github" class="ui input" type="text" placeholder="GitHub账号" th:if="${authorAccounts!=null && authorAccounts.getGithub()!=null && !#strings.isEmpty(authorAccounts.getGithub())}" th:value="${authorAccounts.getGithub()}">
-                <div th:if="${authorAccounts!=null && authorAccounts.getWechat()!=null && !#strings.isEmpty(authorAccounts.getWechat())}" th:value="${authorAccounts.getWechat()}"><i class="wechat icon"></i>微信</div><input id="wechat" class="ui input" type="text" placeholder="微信账号" th:if="${authorAccounts!=null && authorAccounts.getWechat()!=null && !#strings.isEmpty(authorAccounts.getWechat())}" th:value="${authorAccounts.getWechat()}">
-                <div th:if="${authorAccounts!=null && authorAccounts.getQq()!=null && !#strings.isEmpty(authorAccounts.getQq())}" th:value="${authorAccounts.getQq()}"><i class="qq icon"></i>QQ</div><input id="qq" class="ui input" type="text" placeholder="QQ账号"th:if="${authorAccounts!=null && authorAccounts.getQq()!=null && !#strings.isEmpty(authorAccounts.getQq())}" th:value="${authorAccounts.getQq()}">
-                <div th:if="${authorAccounts!=null && authorAccounts.getWeibo()!=null && !#strings.isEmpty(authorAccounts.getWeibo())}" th:value="${authorAccounts.getWeibo()}"><i class="weibo icon"></i>微博</div><input id="weibo" class="ui input" type="text" placeholder="微博账号" th:if="${authorAccounts!=null && authorAccounts.getWeibo()!=null && !#strings.isEmpty(authorAccounts.getWeibo())}" th:value="${authorAccounts.getWeibo()}">
-                <div th:if="${authorAccounts!=null && authorAccounts.getSteam()!=null && !#strings.isEmpty(authorAccounts.getSteam())}" th:value="${authorAccounts.getSteam()}"><i class="steam icon"></i>Steam</div><input id="steam" class="ui input" type="text" placeholder="steam账号" th:if="${authorAccounts!=null && authorAccounts.getSteam()!=null && !#strings.isEmpty(authorAccounts.getSteam())}" th:value="${authorAccounts.getSteam()}">
-                <div th:if="${authorAccounts!=null && authorAccounts.getTwitter()!=null && !#strings.isEmpty(authorAccounts.getTwitter())}" th:value="${authorAccounts.getTwitter()}"><i class="twitter icon"></i>twitter</div><input id="twitter"  class="ui input" type="text" placeholder="twitter账号" th:if="${authorAccounts!=null && authorAccounts.getTwitter()!=null && !#strings.isEmpty(authorAccounts.getTwitter())}" th:value="${authorAccounts.getTwitter()}">
+                <!--有值显示-->
+                <div th:if="${authorAccounts!=null && authorAccounts.getGithub()!=null && !#strings.isEmpty(authorAccounts.getGithub())}"
+                     th:value="${authorAccounts.getGithub()}"><i class="github icon"></i>GitHub
+                </div>
+                <input id="github" class="ui input" type="text" placeholder="GitHub账号"
+                       th:if="${authorAccounts!=null && authorAccounts.getGithub()!=null && !#strings.isEmpty(authorAccounts.getGithub())}"
+                       th:value="${authorAccounts.getGithub()}">
+                <div th:if="${authorAccounts!=null && authorAccounts.getWechat()!=null && !#strings.isEmpty(authorAccounts.getWechat())}"
+                     th:value="${authorAccounts.getWechat()}"><i class="wechat icon"></i>微信
+                </div>
+                <div th:if="${authorAccounts!=null && authorAccounts.getWechat()!=null && !#strings.isEmpty(authorAccounts.getWechat())}"
+                     class="ui  left icon input">
+                    <input id="wechat" style="padding-left: 14px !important;"
+                           th:value="${authorAccounts.getWechat()}" type="text" placeholder="微信账号">
+                    <div class="ui button img-upload">上传微信二维码名片</div>
+                </div>
+                <br/>
+                <div th:if="${authorAccounts!=null && authorAccounts.getQq()!=null && !#strings.isEmpty(authorAccounts.getQq())}"
+                     th:value="${authorAccounts.getQq()}"><i class="qq icon"></i>QQ
+                </div>
+                <input id="qq" class="ui input" type="text" placeholder="QQ账号"
+                       th:if="${authorAccounts!=null && authorAccounts.getQq()!=null && !#strings.isEmpty(authorAccounts.getQq())}"
+                       th:value="${authorAccounts.getQq()}">
+                <div th:if="${authorAccounts!=null && authorAccounts.getWeibo()!=null && !#strings.isEmpty(authorAccounts.getWeibo())}"
+                     th:value="${authorAccounts.getWeibo()}"><i class="weibo icon"></i>微博
+                </div>
+                <input id="weibo" class="ui input" type="text" placeholder="微博账号"
+                       th:if="${authorAccounts!=null && authorAccounts.getWeibo()!=null && !#strings.isEmpty(authorAccounts.getWeibo())}"
+                       th:value="${authorAccounts.getWeibo()}">
+                <div th:if="${authorAccounts!=null && authorAccounts.getSteam()!=null && !#strings.isEmpty(authorAccounts.getSteam())}"
+                     th:value="${authorAccounts.getSteam()}"><i class="steam icon"></i>Steam
+                </div>
+                <input id="steam" class="ui input" type="text" placeholder="steam账号"
+                       th:if="${authorAccounts!=null && authorAccounts.getSteam()!=null && !#strings.isEmpty(authorAccounts.getSteam())}"
+                       th:value="${authorAccounts.getSteam()}">
+                <div th:if="${authorAccounts!=null && authorAccounts.getTwitter()!=null && !#strings.isEmpty(authorAccounts.getTwitter())}"
+                     th:value="${authorAccounts.getTwitter()}"><i class="twitter icon"></i>twitter
+                </div>
+                <input id="twitter" class="ui input" type="text" placeholder="twitter账号"
+                       th:if="${authorAccounts!=null && authorAccounts.getTwitter()!=null && !#strings.isEmpty(authorAccounts.getTwitter())}"
+                       th:value="${authorAccounts.getTwitter()}">
 
-                <div th:if="${authorAccounts==null || authorAccounts.getGithub()==null ||#strings.isEmpty(authorAccounts.getGithub())}"><i class="github icon"></i>GitHub</div><input id="github" class="ui input" type="text" placeholder="GitHub账号" th:if="${authorAccounts==null || authorAccounts.getGithub()==null ||#strings.isEmpty(authorAccounts.getGithub())}" >
-                <div th:if="${authorAccounts==null || authorAccounts.getWechat()==null ||#strings.isEmpty(authorAccounts.getWechat())}"><i class="wechat icon"></i>微信</div><input id="wechat" class="ui input" type="text" placeholder="微信账号"  th:if="${authorAccounts==null || authorAccounts.getWechat()==null ||#strings.isEmpty(authorAccounts.getWechat())}">
-                <div th:if="${authorAccounts==null || authorAccounts.getQq()==null ||#strings.isEmpty(authorAccounts.getQq())}"><i class="qq icon"></i>QQ</div><input id="qq" class="ui input" type="text" placeholder="QQ账号" th:if="${authorAccounts==null || authorAccounts.getQq()==null ||#strings.isEmpty(authorAccounts.getQq())}">
-                <div th:if="${authorAccounts==null || authorAccounts.getWeibo()==null ||#strings.isEmpty(authorAccounts.getWeibo())}"><i class="weibo icon"></i>微博</div><input id="weibo" class="ui input" type="text" placeholder="微博账号"  th:if="${authorAccounts==null || authorAccounts.getWeibo()==null ||#strings.isEmpty(authorAccounts.getWeibo())}">
-                <div th:if="${authorAccounts==null || authorAccounts.getSteam()==null ||#strings.isEmpty(authorAccounts.getSteam())}"><i class="steam icon"></i>Steam</div><input id="steam" class="ui input" type="text" placeholder="steam账号"  th:if="${authorAccounts==null || authorAccounts.getSteam()==null ||#strings.isEmpty(authorAccounts.getSteam())}">
-                <div th:if="${authorAccounts==null || authorAccounts.getTwitter()==null ||#strings.isEmpty(authorAccounts.getTwitter())}"><i class="twitter icon"></i>twitter</div><input id="twitter"  class="ui input" type="text" placeholder="twitter账号"  th:if="${authorAccounts==null || authorAccounts.getTwitter()==null ||#strings.isEmpty(authorAccounts.getTwitter())}">
+                <!--没值显示-->
+                <div th:if="${authorAccounts==null || authorAccounts.getGithub()==null ||#strings.isEmpty(authorAccounts.getGithub())}">
+                    <i class="github icon"></i>GitHub
+                </div>
+                <input id="github" class="ui input" type="text" placeholder="GitHub账号"
+                       th:if="${authorAccounts==null || authorAccounts.getGithub()==null ||#strings.isEmpty(authorAccounts.getGithub())}">
+                <div th:if="${authorAccounts==null || authorAccounts.getWechat()==null || #strings.isEmpty(authorAccounts.getWechat())}"
+                     th:value="${authorAccounts.getWechat()}"><i class="wechat icon"></i>微信
+                </div>
+                <div th:if="${authorAccounts==null || authorAccounts.getWechat()==null || #strings.isEmpty(authorAccounts.getWechat())}"
+                     class="ui  left icon input">
+                    <input id="wechat" style="padding-left: 14px !important;" type="text" placeholder="微信账号">
+                    <div class="ui button img-upload">上传微信二维码名片</div>
+                </div>
+                <div th:if="${authorAccounts==null || authorAccounts.getQq()==null ||#strings.isEmpty(authorAccounts.getQq())}">
+                    <i class="qq icon"></i>QQ
+                </div>
+                <input id="qq" class="ui input" type="text" placeholder="QQ账号"
+                       th:if="${authorAccounts==null || authorAccounts.getQq()==null ||#strings.isEmpty(authorAccounts.getQq())}">
+                <div th:if="${authorAccounts==null || authorAccounts.getWeibo()==null ||#strings.isEmpty(authorAccounts.getWeibo())}">
+                    <i class="weibo icon"></i>微博
+                </div>
+                <input id="weibo" class="ui input" type="text" placeholder="微博账号"
+                       th:if="${authorAccounts==null || authorAccounts.getWeibo()==null ||#strings.isEmpty(authorAccounts.getWeibo())}">
+                <div th:if="${authorAccounts==null || authorAccounts.getSteam()==null ||#strings.isEmpty(authorAccounts.getSteam())}">
+                    <i class="steam icon"></i>Steam
+                </div>
+                <input id="steam" class="ui input" type="text" placeholder="steam账号"
+                       th:if="${authorAccounts==null || authorAccounts.getSteam()==null ||#strings.isEmpty(authorAccounts.getSteam())}">
+                <div th:if="${authorAccounts==null || authorAccounts.getTwitter()==null ||#strings.isEmpty(authorAccounts.getTwitter())}">
+                    <i class="twitter icon"></i>twitter
+                </div>
+                <input id="twitter" class="ui input" type="text" placeholder="twitter账号"
+                       th:if="${authorAccounts==null || authorAccounts.getTwitter()==null ||#strings.isEmpty(authorAccounts.getTwitter())}">
             </div>
         </div>
     </div>
-    <div class="actions" >
+    <div class="actions">
         <div id="contact-cancel" class="ui button close">取消</div>
         <div id="contact-commit" class="ui green button">提交</div>
     </div>
 </div>
+<div class="ui small second coupled modal transition hidden" >
+    <div class="header" >
+        上传二维码图片
+    </div>
+    <div class="content" >
+        <div class="ui from">
+            <input id="input_file"  name="categoryImg" style="position:absolute;opacity:0;height: 35px !important;width: 279px !important;padding: 0 !important;"
+                   onchange="show(this)" accept="image/*" type="file"/>
+            <button class="ui button"><i class="upload icon"></i>选择要上传的文件</button>
+            <div style="margin-top: 10px; ">
+                <img  id="pre-look" src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" style="width: 400px;height: 400px;margin-left: 150px">
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui  button weixin-upload-image-cancel">取消</div>
+        <div class="ui green button weixin-upload-image-ok">
+            <i class="checkmark  icon"></i>
+            上传
+        </div>
+    </div>
+</div>
+<
 
 
 <div style="height: 25px"></div>
@@ -279,14 +424,29 @@
         showModifyButton(".ui.header.hobby");
         showModifyButton(".ui.header.tech");
         showModifyButton(".ui.header.contact");
-        let contact_edit_success=localStorage.getItem("contact_edit_success");
+        let contact_edit_success = localStorage.getItem("contact_edit_success");
         console.log(contact_edit_success);
-        if(contact_edit_success){
+        if (contact_edit_success) {
             showSuccessMessage("修改成功！");
             localStorage.removeItem("contact_edit_success");
         }
     });
 
+
+</script>
+<script>
+    function show(obj) {
+        var rd = new FileReader(); //创建文件读取对象
+        var files = obj.files[0];  //获取file组件中的文件
+        rd.readAsDataURL(files);   //文件读取装换为base64类型
+        rd.onloadend = function (e) {
+            //加载完毕之后获取结果赋值给img
+            $('#pre-look').height(400);
+            $('#pre-look').width(400);
+            document.getElementById("pre-look").src = this.result;
+        };
+
+    }
 </script>
 <script>
     /***修改关于我的信息***/
@@ -297,7 +457,7 @@
         $('.large.modal.about').modal('toggle');
     });
     $('#about-commit').click(function () {
-        let about_me_info=$('#about-me').val();
+        let about_me_info = $('#about-me').val();
         $.ajax({
             url: "/user/aboutMe",
             method: "GET",
@@ -319,7 +479,7 @@
         });
     });
 
-   /***修改我的爱好***/
+    /***修改我的爱好***/
     $('#hobby').click(function () {
         $('.large.modal.hobby').modal('show');
     });
@@ -343,19 +503,41 @@
 
     /***修改我的联系方式***/
     $('#contact-me').click(function () {
-        $('.large.modal.contact').modal('show');
+        $('.contact.modal').modal({
+            allowMultiple: true,
+            closable: false
+        });
+        $('.contact.modal')
+            .modal('show')
+        ;
     });
+
+    $('.img-upload').click(function () {
+        $('.second.modal').modal({
+            closable: false
+        });
+        $('.second.modal').modal("show");
+    });
+
     $('#contact-cancel').click(function () {
-        $('.large.modal.contact').modal('toggle');
+        $('.modal.contact').modal('toggle');
+    });
+    //微信二维码上传框的取消/上传按钮按下后
+    $('.weixin-upload-image-cancel,.weixin-upload-image-ok').click(function () {
+        $('.second.modal').modal("toggle");
+        for(let i=0;i<800;i++){
+           console.log(i);
+        }
+        $('.contact.modal') .modal('show');
     });
     $('#contact-commit').click(function (key, value) {
-        let github=$('#github').val()==null?"":$('#github').val();
-        let wechat=$('#wechat').val()==null?"":$('#wechat').val();
-        let qq=$('#qq').val()==null?"":$('#qq').val();
-        let steam=$('#steam').val()==null?"":$('#steam').val();
-        let twitter=$('#twitter').val()==null?"":$('#twitter').val();
-        let weibo=$('#weibo').val()==null?"":$('#weibo').val();
-        if(github!=""||wechat!=""||qq!=""||steam!=""||twitter!=""||weibo!="") {
+        let github = $('#github').val() == null ? "" : $('#github').val();
+        let wechat = $('#wechat').val() == null ? "" : $('#wechat').val();
+        let qq = $('#qq').val() == null ? "" : $('#qq').val();
+        let steam = $('#steam').val() == null ? "" : $('#steam').val();
+        let twitter = $('#twitter').val() == null ? "" : $('#twitter').val();
+        let weibo = $('#weibo').val() == null ? "" : $('#weibo').val();
+        if (github != "" || wechat != "" || qq != "" || steam != "" || twitter != "" || weibo != "") {
             $.ajax({
                 url: "/user/settingContact",
                 method: "Get",
@@ -377,7 +559,7 @@
                     showErrorMessage("服务异常，请重试！");
                 }
             });
-        }else{
+        } else {
             $('.large.modal.contact').modal('toggle');
             showInfoMessage("没有任何内容可以提交！");
         }
@@ -391,10 +573,10 @@
 
     function toggleStatus() {
         var user = sessionStorage.getItem("user");
-        if(user!=null){
+        if (user != null) {
             $('#header-images').show();
             $('#login-btn').hide();
-        }else{
+        } else {
             $('#header-images').hide();
             $('#login-btn').show();
         }
@@ -458,12 +640,13 @@
     });
     //更多按钮颜色的交互变化
     $('#more-btn').mouseenter(function () {
-        $('#more-btn').css("color","#ffffff");
+        $('#more-btn').css("color", "#ffffff");
         $('#more-btn').removeClass("basic")
     });
     $('#more-btn').mouseleave(function () {
-        $('#more-btn').css("color","inherit");
+        $('#more-btn').css("color", "inherit");
         $('#more-btn').addClass("basic")
     });
 </script>
+
 </html>
