@@ -423,7 +423,7 @@ public class UserController {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
              UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, user.getUserId());
-            System.out.println(account);
+             System.out.println(account);
              //检查用户的account是否存在
             int res=userAccountService.updateAccountByUserId(account);
             if (res<=0) {

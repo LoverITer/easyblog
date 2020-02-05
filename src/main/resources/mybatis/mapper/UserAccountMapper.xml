@@ -41,12 +41,12 @@
     <update id="updateSelective" parameterType="top.easyblog.bean.UserAccount">
         update user_account
         <set>
-            <if test="github!=null and github!=''">github=#{github,jdbcType=VARCHAR},</if>
-            <if test="wechat!=null and wechat!=''">wechat=#{wechat,jdbcType=VARCHAR},</if>
-            <if test="qq!=null and qq!=''">qq=#{qq,jdbcType=VARCHAR},</if>
-            <if test="weibo!=null and weibo!=''">weibo=#{weibo,jdbcType=VARCHAR},</if>
-            <if test="twitter!=null and twitter!=''">twitter=#{twitter,jdbcType=VARCHAR},</if>
-            <if test="steam!=null and steam!=''">steam=#{steam,jdbcType=VARCHAR},</if>
+            <if test="github!=null">github=#{github,jdbcType=VARCHAR},</if>
+            <if test="wechat!=null">wechat=#{wechat,jdbcType=VARCHAR},</if>
+            <if test="qq!=null">qq=#{qq,jdbcType=VARCHAR},</if>
+            <if test="weibo!=null">weibo=#{weibo,jdbcType=VARCHAR},</if>
+            <if test="twitter!=null">twitter=#{twitter,jdbcType=VARCHAR},</if>
+            <if test="steam!=null">steam=#{steam,jdbcType=VARCHAR},</if>
         </set>
         <where>
             <choose>

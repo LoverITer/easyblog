@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
+import top.easyblog.bean.UserAccount;
 import top.easyblog.bean.UserComment;
 import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.commons.pagehelper.PageParam;
@@ -29,14 +30,16 @@ public class ArticleController {
     private final ArticleServiceImpl articleServiceImpl;
     private final CommentServiceImpl commentService;
     private final UserAttentionImpl userAttention;
+    private final UserAccountImpl userAccount;
     private final String PAGE404 = "redirect:/error/404";
 
-    public ArticleController(CategoryServiceImpl categoryServiceImpl, UserServiceImpl userService, ArticleServiceImpl articleServiceImpl, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
+    public ArticleController(CategoryServiceImpl categoryServiceImpl, UserServiceImpl userService, ArticleServiceImpl articleServiceImpl, CommentServiceImpl commentService, UserAttentionImpl userAttention, UserAccountImpl userAccount) {
         this.categoryServiceImpl = categoryServiceImpl;
         this.userService = userService;
         this.articleServiceImpl = articleServiceImpl;
         this.commentService = commentService;
         this.userAttention = userAttention;
+        this.userAccount = userAccount;
     }
 
     @RequestMapping(value = "/index/{userId}")
@@ -65,10 +68,10 @@ public class ArticleController {
 
 
     @RequestMapping(value = "/home/{userId}")
-    public String homePage(@PathVariable("userId") int userId, Model model) {
+    public String homePage(@PathVariable("userId") int userId,Model model, HttpSession session) {
         try {
-            User user = userService.getUser(userId);
-            user.setUserPassword(null);
+            User author = userService.getUser(userId);
+            author.setUserPassword(null);
             List<Article> articles = articleServiceImpl.getUserArticles(userId, ArticleType.Unlimited.getArticleType());
             if (Objects.nonNull(articles)) {
                 int articleSize = articles.size();
@@ -79,7 +82,15 @@ public class ArticleController {
                     model.addAttribute("articles", articles.subList(0, 15));
                 }
                 model.addAttribute("articleSize", articleSize);
-                model.addAttribute("user", user);
+                model.addAttribute("user", author);
+                //作者的各种联系方式
+                UserAccount authorAccounts = userAccount.getAccountByUserId(author.getUserId());
+                model.addAttribute("authorAccounts",authorAccounts);
+                //登录的访客的信息
+                User visitor = (User) session.getAttribute("user");
+                if(visitor!=null) {
+                    model.addAttribute("visitorId", visitor.getUserId());
+                }
                 return "home";
             }
             return PAGE404;
@@ -90,9 +101,7 @@ public class ArticleController {
 
 
     @GetMapping(value = "/details/{articleId}")
-    public String articleDetails(@PathVariable("articleId") int articleId,
-                                 HttpSession session,
-                                 Model model) {
+    public String articleDetails(@PathVariable("articleId") int articleId,HttpSession session, Model model) {
         try {
             //根据id拿到文章
             Article article = articleServiceImpl.getArticleById(articleId,"html");
