@@ -1,6 +1,8 @@
 package top.easyblog.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.util.StringUtil;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.UUID;
 
 @Controller
 @RequestMapping(value = "/upload")
@@ -65,6 +68,11 @@ public class FileUploadController {
         return result;
     }
 
+    /**
+     * 以MultipartFile的形式上传图片到七牛云
+     * @param multipartFile
+     * @return
+     */
     @ResponseBody
     @PostMapping(value = "/interface2")
     public Result upload2QiNiuCloud(@RequestParam MultipartFile multipartFile){
@@ -76,16 +84,15 @@ public class FileUploadController {
             result.setMessage(imageUrl);
             result.setSuccess(true);
         }catch (Exception e){
-            result.setMessage("抱歉！服务异常，请重试！");
-            return result;
+            result.setMessage("抱歉！服务异常，请稍后重试！");
         }
         return result;
     }
 
 
     /**
-     * 把图片上传到七牛云
-     * editor.md期望得到一个json格式的上传后的返回值，格式是这样的：
+     * 把图片上传到七牛云：editor.md专用
+     * editor.md插件期望得到一个json格式的上传后的返回值，格式是这样的：
      *
      *    {
      *         success : 0 | 1,           // 0 表示上传失败，1 表示上传成功
@@ -112,6 +119,34 @@ public class FileUploadController {
         }
         return resultJs;
     }
+
+    /**
+     * 以base64字符串的形式上传图片
+     * @param imgByte64Str
+     * @return
+     */
+    @ResponseBody
+    @PostMapping(value = "/interface4")
+    public Result upload2QiNiuCloud(@RequestParam String imgByte64Str){
+        Result result = new Result();
+        try {
+            if(StringUtil.isNotEmpty(imgByte64Str)) {
+                //把base64字符串转换为字节数组
+                byte[] imageBytes= Base64.decodeBase64(imgByte64Str.replace("data:image/jpeg;base64,",""));
+                String imageName = System.currentTimeMillis() + UUID.randomUUID().toString() + ".jpg";
+                String imageUrl = qiNiuCloudService.putBase64Image(imageBytes, imageName);
+                result.setSuccess(true);
+                result.setMessage(imageUrl);
+            }else{
+                result.setMessage("上传的图片内容为空");
+            }
+        }catch (Exception e){
+            result.setMessage("图片上传失败，请稍后重试！");
+        }
+
+        return result;
+    }
+
 
 
 }

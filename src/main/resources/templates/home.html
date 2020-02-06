@@ -215,7 +215,7 @@
             </div>
 
             <div class="ui wechat-qr flowing popup transition hidden">
-                <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt=""
+                <img src="../static/images/wechat.jpg" th:src="@{${#strings.substring(authorAccounts.getWechat(),#strings.indexOf(authorAccounts.getWechat(),'=')+1,#strings.length(authorAccounts.getWechat()))}}" alt=""
                      class="ui rounded image" style="width: 110px">
             </div>
         </div>
@@ -308,8 +308,7 @@
                 </div>
                 <div th:if="${authorAccounts!=null && authorAccounts.getWechat()!=null && !#strings.isEmpty(authorAccounts.getWechat())}"
                      class="ui  left icon input">
-                    <input id="wechat" style="padding-left: 14px !important;"
-                           th:value="${authorAccounts.getWechat()}" type="text" placeholder="微信账号">
+                    <input id="wechat" style="padding-left: 14px !important;" th:value="${#strings.substring(authorAccounts.getWechat(),0,#strings.indexOf(authorAccounts.getWechat(),'='))}" type="text" placeholder="微信账号">
                     <div class="ui button img-upload">上传微信二维码名片</div>
                 </div>
                 <br/>
@@ -425,7 +424,7 @@
         showModifyButton(".ui.header.tech");
         showModifyButton(".ui.header.contact");
         let contact_edit_success = localStorage.getItem("contact_edit_success");
-        console.log(contact_edit_success);
+        //console.log(contact_edit_success);
         if (contact_edit_success) {
             showSuccessMessage("修改成功！");
             localStorage.removeItem("contact_edit_success");
@@ -434,22 +433,9 @@
 
 
 </script>
-<script>
-    function show(obj) {
-        var rd = new FileReader(); //创建文件读取对象
-        var files = obj.files[0];  //获取file组件中的文件
-        rd.readAsDataURL(files);   //文件读取装换为base64类型
-        rd.onloadend = function (e) {
-            //加载完毕之后获取结果赋值给img
-            $('#pre-look').height(400);
-            $('#pre-look').width(400);
-            document.getElementById("pre-look").src = this.result;
-        };
 
-    }
-</script>
 <script>
-    /***修改关于我的信息***/
+    /***修改关于我的信息弹窗控制***/
     $('#about').click(function () {
         $('.large.modal.about').modal('show');
     });
@@ -479,7 +465,7 @@
         });
     });
 
-    /***修改我的爱好***/
+    /***修改我的爱好弹窗控制***/
     $('#hobby').click(function () {
         $('.large.modal.hobby').modal('show');
     });
@@ -490,7 +476,7 @@
 
     });
 
-    /***修改我的技术栈***/
+    /***修改我的技术栈弹窗控制***/
     $('#thchnology').click(function () {
         $('.large.modal.tech').modal('show');
     });
@@ -501,7 +487,7 @@
 
     });
 
-    /***修改我的联系方式***/
+    /***修改我的联系方式弹窗控制***/
     $('#contact-me').click(function () {
         $('.contact.modal').modal({
             allowMultiple: true,
@@ -522,22 +508,68 @@
     $('#contact-cancel').click(function () {
         $('.modal.contact').modal('toggle');
     });
+
     //微信二维码上传框的取消/上传按钮按下后
-    $('.weixin-upload-image-cancel,.weixin-upload-image-ok').click(function () {
+    $('.weixin-upload-image-cancel.button').click(function () {
         $('.second.modal').modal("toggle");
+        //延时
         for(let i=0;i<800;i++){
-           console.log(i);
+           //console.log(i);
         }
         $('.contact.modal') .modal('show');
     });
-    $('#contact-commit').click(function (key, value) {
+
+    //上传微信二维码，返回二维码的URL
+    $('.weixin-upload-image-ok.button').click(function () {
+        //获取图片的串
+        let imgByte64Str=$('#pre-look')[0].src;
+        if(imgByte64Str!=null&&imgByte64Str!=""&&imgByte64Str.toString().startsWith("data:image/jpeg;base64")){
+            $.ajax({
+                url:"/upload/interface4",
+                method:"POST",
+                sync:false,
+                data:{imgByte64Str:imgByte64Str},
+                dataType:"json",
+                success:function (response) {
+                    if(response.success){
+                        //服务器返回上传后图片的URL
+                        let weixinImgUrl=response.message;
+                        localStorage.setItem("weixinImgUrl",weixinImgUrl);
+                        console.log(weixinImgUrl);
+                        $('.second.modal').modal("toggle");
+                        //延时
+                        for(let i=0;i<800;i++){}
+                        $('.contact.modal') .modal('show');
+                        showSuccessMessage("二维码上传成功！")
+                    }else{
+                        showErrorMessage("服务异常，请稍后重试！")
+                    }
+                },
+                error:function () {
+                    showErrorMessage("服务异常，请稍后重试！")
+                }
+            })
+        }else{
+            showWarningMessage("请选择二维码图片");
+        }
+    });
+
+
+    $('#contact-commit').click(function () {
         let github = $('#github').val() == null ? "" : $('#github').val();
         let wechat = $('#wechat').val() == null ? "" : $('#wechat').val();
+        let wechatQRImageUrl=localStorage.getItem("weixinImgUrl");
+        if(wechatQRImageUrl!=null&&wechatQRImageUrl.length>0){
+            //微信账号和微信二维码的分隔是“:”
+            wechat=wechat.concat("="+wechatQRImageUrl);
+        }
+        console.log(wechat);
         let qq = $('#qq').val() == null ? "" : $('#qq').val();
         let steam = $('#steam').val() == null ? "" : $('#steam').val();
         let twitter = $('#twitter').val() == null ? "" : $('#twitter').val();
         let weibo = $('#weibo').val() == null ? "" : $('#weibo').val();
         if (github != "" || wechat != "" || qq != "" || steam != "" || twitter != "" || weibo != "") {
+            //内容不能全为空就提交
             $.ajax({
                 url: "/user/settingContact",
                 method: "Get",
@@ -564,6 +596,20 @@
             showInfoMessage("没有任何内容可以提交！");
         }
     });
+
+    //从本地选择图片后，页面显示
+    function show(obj) {
+        let rd = new FileReader(); //创建文件读取对象
+        let files = obj.files[0];  //获取file组件中的文件
+        rd.readAsDataURL(files);   //文件读取装换为base64类型
+        rd.onloadend = function (e) {
+            //加载完毕之后获取结果赋值给img
+            $('#pre-look').height(400);
+            $('#pre-look').width(400);
+            document.getElementById("pre-look").src = this.result;
+        };
+
+    }
 </script>
 <script type="text/javascript">
 
