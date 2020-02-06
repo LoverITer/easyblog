@@ -67,6 +67,13 @@ public class ArticleController {
     }
 
 
+    /**
+     * 关于我页面
+     * @param userId
+     * @param model
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/home/{userId}")
     public String homePage(@PathVariable("userId") int userId,Model model, HttpSession session) {
         try {
@@ -75,7 +82,7 @@ public class ArticleController {
             List<Article> articles = articleServiceImpl.getUserArticles(userId, ArticleType.Unlimited.getArticleType());
             if (Objects.nonNull(articles)) {
                 int articleSize = articles.size();
-                //默认值显示15条数据
+                //默认值显示15篇文章
                 if (articleSize < 15) {
                     model.addAttribute("articles", articles);
                 } else {
@@ -83,6 +90,17 @@ public class ArticleController {
                 }
                 model.addAttribute("articleSize", articleSize);
                 model.addAttribute("user", author);
+                String hobbyStr;
+                String techStr;
+                if(Objects.nonNull(hobbyStr=author.getUserHobby())) {
+                    //先用英文的逗号切分
+                    String[] hobbies = hobbyStr.replaceAll("，", ",").split(",");
+                    model.addAttribute("userHobby",hobbies);
+                }
+                if(Objects.nonNull(techStr=author.getUserTech())) {
+                    String[] techs = techStr.replaceAll("，", ",").split(",");
+                    model.addAttribute("userTech", techs);
+                }
                 //作者的各种联系方式
                 UserAccount authorAccounts = userAccount.getAccountByUserId(author.getUserId());
                 model.addAttribute("authorAccounts",authorAccounts);

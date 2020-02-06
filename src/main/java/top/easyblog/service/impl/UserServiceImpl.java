@@ -34,8 +34,6 @@ public class UserServiceImpl implements IUserService {
             user = userMapper.getUserByUserEmailAndPassword(username, password);
         } else if (RegexUtil.isPhone(username)) {
             user = userMapper.getUserByUserPhoneAndPassword(username, password);
-        } else if (RegexUtil.isQQ(username)) {
-            user = userMapper.getUserByUserQQAndPassword(username, password);
         }
 
         return user;
@@ -106,7 +104,7 @@ public class UserServiceImpl implements IUserService {
     public boolean register(String nickname, String password, String account, String ipInfo) {
         String headImageUrl = FileUploadUtils.defaultAvatar();
         try {
-            User user = new User(nickname, password, null, null, null, null, null, null, null, 0, 100000, headImageUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
+            User user = new User(nickname, password, null, null, null, null, null,  null, 0, 100000, headImageUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
             if (RegexUtil.isEmail(account)) {
                 user.setUserMail(account);
             } else if (RegexUtil.isMobile(account)) {

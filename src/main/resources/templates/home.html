@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+    <!--加载动画和确认框特效-->
+    <link rel="stylesheet" href="../static/css/loading/zeroModal.css" th:href="@{/static/css/loading/zeroModal.css}">
 </head>
 <body>
 
@@ -91,8 +93,7 @@
                                             <img th:src="${user.getUserHeaderImgUrl()}"
                                                  src="https://unsplash.it/100/100?image=1005" alt=""
                                                  class="ui avatar image">
-                                            <div class="content"><a href="#" class="header"
-                                                                    th:text="${user.getUserNickname()}">黄鑫</a></div>
+                                            <div class="content"><a href="#" class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
                                         </div>
                                         <div class="item">
                                             <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd
@@ -154,31 +155,33 @@
                     这人很懒，什么也没留下~~</p>
             </div>
             <div class="ui attached segment">
-                <div class="ui header hobby">我的爱好<a th:if="${visitorId!=null and visitorId==user.getUserId()}"
-                                                    id="hobby" href="#"
-                                                    style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
+                <div class="ui header hobby">
+                    我的爱好
+                    <a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="hobby" href="#"
+                       style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
-                <div class="ui orange basic left pointing label">编程</div>
-                <div class="ui orange basic left pointing label">写作</div>
-                <div class="ui orange basic left pointing label">思考</div>
-                <div class="ui orange basic left pointing label">运动</div>
+                <div style="margin-bottom: 8px !important;" th:if="${userHobby!=null}" th:each="hobby:${userHobby}" class="ui orange basic left pointing label" th:text="${hobby}">
+                    编程
+                </div>
+                <p  class="m-text" th:if="${userHobby==null}">
+                    这人很懒，什么也没留下~~</p>
             </div>
             <div class="ui attached segment">
-                <div class="ui header tech">我的技术栈<a th:if="${visitorId!=null and visitorId==user.getUserId()}"
-                                                    id="thchnology" href="#"
-                                                    style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
+                <div class="ui header tech">
+                    我的技术栈
+                    <a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="thchnology" href="#"
+                       style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
-                <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
-                <div class="ui teal basic left pointing label m-margin-tb-tiny">JavaScript</div>
-                <div class="ui teal basic left pointing label m-margin-tb-tiny">Node</div>
-                <div class="ui teal basic left pointing label m-margin-tb-tiny">React</div>
-                <div class="ui teal basic left pointing label m-margin-tb-tiny">RN</div>
-                <div class="ui teal basic left pointing label m-margin-tb-tiny">MYSQL</div>
+                <div th:if="${userTech!=null}" th:each="tech:${userTech}"
+                     class="ui teal basic left pointing label m-margin-tb-tiny" th:text="${tech}">Java
+                </div>
+                <p  class="m-text" th:if="${userTech==null}">
+                    这人很懒，什么也没留下~~</p>
             </div>
             <div class="ui bottom attached segment">
-                <div class="ui header contact">联系我<a th:if="${visitorId!=null and visitorId==user.getUserId()}"
-                                                     id="contact-me" href="#"
-                                                     style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
+                <div class="ui header contact">
+                    联系我<a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="contact-me" href="#"
+                          style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
                 <a href="#"
                    th:if="${authorAccounts!=null and authorAccounts.getWechat()!=null and !#strings.isEmpty(authorAccounts.getWechat())}"
@@ -214,8 +217,10 @@
                 (authorAccounts.getGithub()==null||#strings.isEmpty(authorAccounts.getGithub())))}">这人很懒，什么也没留下~~</p>
             </div>
 
-            <div class="ui wechat-qr flowing popup transition hidden">
-                <img src="../static/images/wechat.jpg" th:src="@{${#strings.substring(authorAccounts.getWechat(),#strings.indexOf(authorAccounts.getWechat(),'=')+1,#strings.length(authorAccounts.getWechat()))}}" alt=""
+            <div class="ui wechat-qr flowing popup transition hidden" style="padding: 0 0 !important;">
+                <img src="../static/images/wechat.jpg"
+                     th:src="@{${#strings.substring(authorAccounts.getWechat(),#strings.indexOf(authorAccounts.getWechat(),'=')+1,#strings.length(authorAccounts.getWechat()))}}"
+                     alt=""
                      class="ui rounded image" style="width: 110px">
             </div>
         </div>
@@ -239,12 +244,12 @@
     </div>
     <div class="actions">
         <div id="about-cancel" class="ui button close">取消</div>
-        <div id="about-commit" class="ui green button">提交</div>
+        <div id="about-commit" class="ui green button">保存</div>
     </div>
 </div>
 
 <!--我的爱好修改-->
-<div class="ui  modal scrolling transition hidden hobby">
+<div class="ui modal scrolling transition hidden hobby">
     <i class="close icon"
        style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
     <div class="header">
@@ -253,20 +258,24 @@
     <div class="content">
         <div class="ui form">
             <div class="field">
-                <label>向大家介绍一下自己吧！</label>
-                <textarea id="hobby-me" th:text="${user.getUserDescription()}"></textarea>
+                <div class="ui large label" th:if="${userHobby!=null}" th:each="hobby:${userHobby}"
+                     th:text="${hobby}"></div>
+                <span id="hobby-add" style="color: #00c4ff;cursor: pointer"><i class="plus circle icon" style="color: #00c4ff !important;"></i>添加</span>
+                <div class="ui input hobby-input" style="width: unset !important;display: none">
+                    <input type="text" placeholder="多个“爱好”以逗号隔开">
+                </div>
             </div>
         </div>
     </div>
     <div class="actions">
         <div id="hobby-cancel" class="ui button close">取消</div>
-        <div id="hobby-commit" class="ui green button">提交</div>
+        <div id="hobby-commit" class="ui green button">保存</div>
     </div>
 </div>
 
 
 <!--我的技术栈修改-->
-<div class="ui  modal scrolling transition hidden tech">
+<div class="ui large modal scrolling transition hidden tech">
     <i class="close icon"
        style="position: absolute !important;top: -0.1rem !important;right: -0.1rem;!important;color: black !important;"></i>
     <div class="header">
@@ -275,14 +284,99 @@
     <div class="content">
         <div class="ui form">
             <div class="field">
-                <label>向大家介绍一下自己吧！</label>
-                <textarea id="tech-me" th:text="${user.getUserDescription()}"></textarea>
+                <div class="ui relaxed divided list">
+                    <div class="item">
+                        <div class="content">
+                            <span class="header" style="display: inline-block !important;">后端</span>
+                            <div style="display: inline-block !important;" class="description">共16个</div>
+                            <i class="chevron grey right icon" style="position: absolute;top:5px;right:5px"></i>
+                            <i class="chevron grey down icon"></i>
+                        </div>
+                        <div class="ui horizontal list">
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">Tom</div>
+                                    Top Contributor
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">Christian Rocha</div>
+                                    Admin
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">Matt</div>
+                                    Top Rated User
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="content">
+                            <span class="header">前端</span>
+                            <div class="description">共16个</div>
+                            <i class="chevron right icon"></i>
+                            <i class="chevron down icon"></i>
+                        </div>
+                        <div class="ui horizontal list">
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">Tom</div>
+                                    Top Contributor
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">Christian Rocha</div>
+                                    Admin
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">Matt</div>
+                                    Top Rated User
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="content">
+                            <span class="header">算法</span>
+                            <div class="description">共16个</div>
+                            <i class="chevron right icon"></i>
+                            <i class="chevron down icon"></i>
+                        </div>
+                        <div class="ui horizontal list">
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">Tom</div>
+                                    Top Contributor
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">Christian Rocha</div>
+                                    Admin
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">Matt</div>
+                                    Top Rated User
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
     <div class="actions">
         <div id="tech-cancel" class="ui button close">取消</div>
-        <div id="tech-commit" class="ui green button">提交</div>
+        <div id="tech-commit" class="ui green button">保存</div>
     </div>
 </div>
 
@@ -308,7 +402,9 @@
                 </div>
                 <div th:if="${authorAccounts!=null && authorAccounts.getWechat()!=null && !#strings.isEmpty(authorAccounts.getWechat())}"
                      class="ui  left icon input">
-                    <input id="wechat" style="padding-left: 14px !important;" th:value="${#strings.substring(authorAccounts.getWechat(),0,#strings.indexOf(authorAccounts.getWechat(),'='))}" type="text" placeholder="微信账号">
+                    <input id="wechat" style="padding-left: 14px !important;"
+                           th:value="${#strings.substring(authorAccounts.getWechat(),0,#strings.indexOf(authorAccounts.getWechat(),'='))}"
+                           type="text" placeholder="微信账号">
                     <div class="ui button img-upload">上传微信二维码名片</div>
                 </div>
                 <br/>
@@ -376,20 +472,22 @@
     </div>
     <div class="actions">
         <div id="contact-cancel" class="ui button close">取消</div>
-        <div id="contact-commit" class="ui green button">提交</div>
+        <div id="contact-commit" class="ui green button">保存</div>
     </div>
 </div>
-<div class="ui small second coupled modal transition hidden" >
-    <div class="header" >
+<div class="ui small second coupled modal transition hidden">
+    <div class="header">
         上传二维码图片
     </div>
-    <div class="content" >
+    <div class="content">
         <div class="ui from">
-            <input id="input_file"  name="categoryImg" style="position:absolute;opacity:0;height: 35px !important;width: 279px !important;padding: 0 !important;"
+            <input id="input_file" name="categoryImg"
+                   style="position:absolute;opacity:0;height: 35px !important;width: 171px !important;padding: 0 !important;cursor: pointer;"
                    onchange="show(this)" accept="image/*" type="file"/>
-            <button class="ui button"><i class="upload icon"></i>选择要上传的文件</button>
+            <button class="ui button" style="cursor: pointer;"><i class="upload icon"></i>选择要上传的文件</button>
             <div style="margin-top: 10px; ">
-                <img  id="pre-look" src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" style="width: 400px;height: 400px;margin-left: 150px">
+                <img id="pre-look" src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}"
+                     style="width: 400px;height: 400px;margin-left: 150px">
             </div>
         </div>
     </div>
@@ -401,7 +499,6 @@
         </div>
     </div>
 </div>
-<
 
 
 <div style="height: 25px"></div>
@@ -413,6 +510,8 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
+<script src="../static/js/loading/mustache.js" th:src="@{/static/js/loading/mustache.js}"></script>
+<script src="../static/js/loading/zeroModal.js" th:src="@{/static/js/loading/zeroModal.js}"></script>
 <script>
     $(document).ready(function () {
         if (detectZoom() != 125) {
@@ -424,7 +523,6 @@
         showModifyButton(".ui.header.tech");
         showModifyButton(".ui.header.contact");
         let contact_edit_success = localStorage.getItem("contact_edit_success");
-        //console.log(contact_edit_success);
         if (contact_edit_success) {
             showSuccessMessage("修改成功！");
             localStorage.removeItem("contact_edit_success");
@@ -434,13 +532,16 @@
 
 </script>
 
-<script>
+<script th:online="javascript" type="text/javascript">
     /***修改关于我的信息弹窗控制***/
     $('#about').click(function () {
-        $('.large.modal.about').modal('show');
+        $('.modal.about').modal({
+            closable: false
+        });
+        $('.modal.about').modal('show');
     });
     $('#about-cancel').click(function () {
-        $('.large.modal.about').modal('toggle');
+        $('.modal.about').modal('toggle');
     });
     $('#about-commit').click(function () {
         let about_me_info = $('#about-me').val();
@@ -454,12 +555,12 @@
                 if (response.success) {
                     $('#about-show').text(about_me_info);
                     $('#about-me').val(about_me_info);
-                    $('.large.modal.about').modal('toggle');
+                    $('.modal.about').modal('hide');
                     showSuccessMessage(response.message);
                 }
             },
             error: function () {
-                ('.large.modal.about').modal('toggle');
+                $('.modal.about').modal('toggle');
                 showErrorMessage("服务异常，请重试！");
             }
         });
@@ -467,21 +568,66 @@
 
     /***修改我的爱好弹窗控制***/
     $('#hobby').click(function () {
-        $('.large.modal.hobby').modal('show');
+        $('.modal.hobby').modal({
+            closable: false
+        });
+        $('.modal.hobby').modal('show');
     });
     $('#hobby-cancel').click(function () {
-        $('.large.modal.hobby').modal('toggle');
+        $('.modal.hobby').modal('hide');
+    });
+    $('#hobby-add').click(function () {
+        $('#hobby-add').hide();
+        $('.hobby-input').show();
+    });
+    $('.hobby-input').find('input').blur(function () {
+        $('#hobby-add').show();
+        $('.hobby-input').hide();
     });
     $('#hobby-commit').click(function () {
-
+        let inputHobby = $('.hobby-input').find('input').val() == null ? "" : $('.hobby-input').find('input').val();
+        console.log(inputHobby);
+        let hobby = "[[${user.getUserHobby()}]]";
+        if (hobby != null) {
+            hobby=hobby.toString().concat("," + inputHobby);
+        }else{
+            hobby=inputHobby;
+        }
+        console.log(hobby);
+        if (inputHobby != null && hobby != null) {
+            _loading(2);
+            $.ajax({
+                url: "/user/settingHobby",
+                method: "GET",
+                sync: false,
+                data: {hobby: hobby},
+                dataType: "JSON",
+                success: function (response) {
+                    _loadingClose();
+                    if (response.success) {
+                        showSuccessMessage("修改成功！");
+                        $('.modal.hobby').modal('hide');
+                    } else {
+                        showErrorMessage(response.message);
+                    }
+                },
+                error: function () {
+                    _loadingClose();
+                    showErrorMessage("服务异常，请稍后重试！")
+                }
+            })
+        }
     });
 
     /***修改我的技术栈弹窗控制***/
     $('#thchnology').click(function () {
-        $('.large.modal.tech').modal('show');
+        $('.modal.tech').modal({
+            closable: false
+        });
+        $('.modal.tech').modal('show');
     });
     $('#tech-cancel').click(function () {
-        $('.large.modal.tech').modal('toggle');
+        $('.modal.tech').modal('toggle');
     });
     $('#tech-commit').click(function () {
 
@@ -506,50 +652,53 @@
     });
 
     $('#contact-cancel').click(function () {
-        $('.modal.contact').modal('toggle');
+        $('.modal.contact').modal('hide');
     });
 
     //微信二维码上传框的取消/上传按钮按下后
     $('.weixin-upload-image-cancel.button').click(function () {
-        $('.second.modal').modal("toggle");
+        $('.second.modal').modal("hide");
         //延时
-        for(let i=0;i<800;i++){
-           //console.log(i);
+        for (let i = 0; i < 800; i++) {
         }
-        $('.contact.modal') .modal('show');
+        $('.contact.modal').modal('show');
     });
 
     //上传微信二维码，返回二维码的URL
     $('.weixin-upload-image-ok.button').click(function () {
         //获取图片的串
-        let imgByte64Str=$('#pre-look')[0].src;
-        if(imgByte64Str!=null&&imgByte64Str!=""&&imgByte64Str.toString().startsWith("data:image/jpeg;base64")){
+        let imgByte64Str = $('#pre-look')[0].src;
+        if (imgByte64Str != null && imgByte64Str != "" && imgByte64Str.toString().startsWith("data:image/jpeg;base64")) {
+            _loading(2);
             $.ajax({
-                url:"/upload/interface4",
-                method:"POST",
-                sync:false,
-                data:{imgByte64Str:imgByte64Str},
-                dataType:"json",
-                success:function (response) {
-                    if(response.success){
+                url: "/upload/interface4",
+                method: "POST",
+                sync: false,
+                data: {imgByte64Str: imgByte64Str},
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        _loadingClose();
                         //服务器返回上传后图片的URL
-                        let weixinImgUrl=response.message;
-                        localStorage.setItem("weixinImgUrl",weixinImgUrl);
+                        let weixinImgUrl = response.message;
+                        localStorage.setItem("weixinImgUrl", weixinImgUrl);
                         console.log(weixinImgUrl);
-                        $('.second.modal').modal("toggle");
+                        $('.second.modal').modal("hide");
                         //延时
-                        for(let i=0;i<800;i++){}
-                        $('.contact.modal') .modal('show');
+                        for (let i = 0; i < 800; i++) {
+                        }
+                        $('.contact.modal').modal('show');
                         showSuccessMessage("二维码上传成功！")
-                    }else{
+                    } else {
                         showErrorMessage("服务异常，请稍后重试！")
                     }
                 },
-                error:function () {
+                error: function () {
+                    _loadingClose();
                     showErrorMessage("服务异常，请稍后重试！")
                 }
             })
-        }else{
+        } else {
             showWarningMessage("请选择二维码图片");
         }
     });
@@ -558,18 +707,18 @@
     $('#contact-commit').click(function () {
         let github = $('#github').val() == null ? "" : $('#github').val();
         let wechat = $('#wechat').val() == null ? "" : $('#wechat').val();
-        let wechatQRImageUrl=localStorage.getItem("weixinImgUrl");
-        if(wechatQRImageUrl!=null&&wechatQRImageUrl.length>0){
+        let wechatQRImageUrl = localStorage.getItem("weixinImgUrl");
+        if (wechatQRImageUrl != null && wechatQRImageUrl.length > 0) {
             //微信账号和微信二维码的分隔是“:”
-            wechat=wechat.concat("="+wechatQRImageUrl);
+            wechat = wechat.concat("=" + wechatQRImageUrl);
         }
-        console.log(wechat);
         let qq = $('#qq').val() == null ? "" : $('#qq').val();
         let steam = $('#steam').val() == null ? "" : $('#steam').val();
         let twitter = $('#twitter').val() == null ? "" : $('#twitter').val();
         let weibo = $('#weibo').val() == null ? "" : $('#weibo').val();
         if (github != "" || wechat != "" || qq != "" || steam != "" || twitter != "" || weibo != "") {
             //内容不能全为空就提交
+            _loading(2);
             $.ajax({
                 url: "/user/settingContact",
                 method: "Get",
@@ -577,7 +726,7 @@
                 data: {github: github, wechat: wechat, qq: qq, steam: steam, twitter: twitter, weibo: weibo},
                 dataType: "json",     //服务器返回的数据类型
                 success: function (response) {
-                    $('.large.modal.contact').modal('toggle');
+                    $('.large.modal.contact').modal('hide');
                     if (response.success) {
                         localStorage.setItem("contact_edit_success", true);
                         //刷新页面
@@ -587,12 +736,13 @@
                     }
                 },
                 error: function () {
-                    $('.large.modal.contact').modal('toggle');
+                    _loadingClose();
+                    $('.large.modal.contact').modal('hide');
                     showErrorMessage("服务异常，请重试！");
                 }
             });
         } else {
-            $('.large.modal.contact').modal('toggle');
+            $('.large.modal.contact').modal('hide');
             showInfoMessage("没有任何内容可以提交！");
         }
     });
