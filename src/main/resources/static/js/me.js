@@ -175,7 +175,7 @@ function showWarningMessage(message) {
             template: message,
             autoclose: 4000,
             position: "top-center",
-            style: 'waring',
+            style: 'warning',
         });
     }
 }

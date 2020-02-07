@@ -93,7 +93,8 @@
                                             <img th:src="${user.getUserHeaderImgUrl()}"
                                                  src="https://unsplash.it/100/100?image=1005" alt=""
                                                  class="ui avatar image">
-                                            <div class="content"><a href="#" class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
+                                            <div class="content"><a href="#" class="header"
+                                                                    th:text="${user.getUserNickname()}">黄鑫</a></div>
                                         </div>
                                         <div class="item">
                                             <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd
@@ -160,10 +161,11 @@
                     <a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="hobby" href="#"
                        style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
-                <div style="margin-bottom: 8px !important;" th:if="${userHobby!=null}" th:each="hobby:${userHobby}" class="ui orange basic left pointing label" th:text="${hobby}">
+                <div style="margin-bottom: 8px !important;" th:if="${userHobby!=null}" th:each="hobby:${userHobby}"
+                     class="ui orange basic left pointing label" th:text="${hobby}">
                     编程
                 </div>
-                <p  class="m-text" th:if="${userHobby==null}">
+                <p class="m-text" th:if="${userHobby==null}">
                     这人很懒，什么也没留下~~</p>
             </div>
             <div class="ui attached segment">
@@ -172,10 +174,10 @@
                     <a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="thchnology" href="#"
                        style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
-                <div th:if="${userTech!=null}" th:each="tech:${userTech}"
+                <div th:if="${userTech!=null&&tech!=null&&!#strings.isEmpty(tech)}" th:each="tech:${userTech}"
                      class="ui teal basic left pointing label m-margin-tb-tiny" th:text="${tech}">Java
                 </div>
-                <p  class="m-text" th:if="${userTech==null}">
+                <p class="m-text" th:if="${userTech==null}">
                     这人很懒，什么也没留下~~</p>
             </div>
             <div class="ui bottom attached segment">
@@ -260,7 +262,8 @@
             <div class="field">
                 <div class="ui large label" th:if="${userHobby!=null}" th:each="hobby:${userHobby}"
                      th:text="${hobby}"></div>
-                <span id="hobby-add" style="color: #00c4ff;cursor: pointer"><i class="plus circle icon" style="color: #00c4ff !important;"></i>添加</span>
+                <span id="hobby-add" style="color: #00c4ff;cursor: pointer"><i class="plus circle icon"
+                                                                               style="color: #00c4ff !important;"></i>添加</span>
                 <div class="ui input hobby-input" style="width: unset !important;display: none">
                     <input type="text" placeholder="多个“爱好”以逗号隔开">
                 </div>
@@ -281,103 +284,1222 @@
     <div class="header">
         我的技术栈
     </div>
-    <div class="content">
+    <div class="content" style="padding-top: 0 !important;">
         <div class="ui form">
             <div class="field">
                 <div class="ui relaxed divided list">
+                    <!--后端-->
                     <div class="item">
-                        <div class="content">
-                            <span class="header" style="display: inline-block !important;">后端</span>
-                            <div style="display: inline-block !important;" class="description">共16个</div>
-                            <i class="chevron grey right icon" style="position: absolute;top:5px;right:5px"></i>
-                            <i class="chevron grey down icon"></i>
+                        <div id="back-end" class="content"
+                             style="padding: 24px  0 16px !important;position: relative !important;cursor: pointer">
+                            <span class="header"
+                                  style="display: inline-block !important;font-size: 16px !important;">后端</span>
+                            <div style="display: inline-block !important;" class="description">共18个相关标签</div>
+                            <i class="chevron grey right icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;"></i>
+                            <i class="chevron grey down icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;display: none"></i>
                         </div>
-                        <div class="ui horizontal list">
-                            <div class="item">
-                                <div class="content">
-                                    <div class="header">Tom</div>
-                                    Top Contributor
+                        <div id="back-end-list" class="ui horizontal list" style="display: none">
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Java</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Java" onclick="updateUserTech(this)">
+                                    <label></label>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="content">
-                                    <div class="header">Christian Rocha</div>
-                                    Admin
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Python</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Python" onclick="updateUserTech(this)">
+                                    <label></label>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="content">
-                                    <div class="header">Matt</div>
-                                    Top Rated User
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">C/C++</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="C/C++" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">PHP</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="PHP" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">c#/.net/asp</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="c#/.net/asp"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">R</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="R" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Swift</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Swift" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">分布式</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="分布式" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Spring</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Spring" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Spring Boot</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Spring Boot"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Redis</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Redis" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Linux</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Linux" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Go/GoLang</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Go/GoLang"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Elasticsearch</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Elasticsearch"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">MySQL</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="MySQL" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">架构</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="架构" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Spring Cloud</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Spring Cloud"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">MyBatis</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="MyBatis" onclick="updateUserTech(this)">
+                                    <label></label>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!--人工智能-->
                     <div class="item">
-                        <div class="content">
-                            <span class="header">前端</span>
-                            <div class="description">共16个</div>
-                            <i class="chevron right icon"></i>
-                            <i class="chevron down icon"></i>
+                        <div id="AI" class="content"
+                             style="padding: 24px  0 16px !important;position: relative !important;cursor: pointer">
+                            <span class="header"
+                                  style="display: inline-block !important;font-size: 16px !important;">人工智能</span>
+                            <div style="display: inline-block !important;" class="description">共12个相关标签</div>
+                            <i class="chevron grey right icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;"></i>
+                            <i class="chevron grey down icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;display: none"></i>
                         </div>
-                        <div class="ui horizontal list">
-                            <div class="item">
-                                <div class="content">
-                                    <div class="header">Tom</div>
-                                    Top Contributor
+                        <div id="AI-list" class="ui horizontal list" style="display: none">
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">TensorFlow</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="TensorFlow"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="content">
-                                    <div class="header">Christian Rocha</div>
-                                    Admin
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">神经网络</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="神经网络" onclick="updateUserTech(this)">
+                                    <label></label>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="content">
-                                    <div class="header">Matt</div>
-                                    Top Rated User
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">深度学习</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="深度学习" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">数据分析</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="数据分析" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Flink</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Flink" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">PyTorch</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="PyTorch" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">语音识别</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="语音识别" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">图像处理</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="图像处理" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">NLP</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="NLP" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">机器学习</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="机器学习" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">自然语言处理</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="自然语言处理" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">视觉/OpenCV</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="视觉/OpenCV"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!--算法-->
                     <div class="item">
-                        <div class="content">
-                            <span class="header">算法</span>
-                            <div class="description">共16个</div>
-                            <i class="chevron right icon"></i>
-                            <i class="chevron down icon"></i>
+                        <div id="Algorithm" class="content"
+                             style="padding: 24px  0 16px !important;position: relative !important;cursor: pointer">
+                            <span class="header"
+                                  style="display: inline-block !important;font-size: 16px !important;">算法</span>
+                            <div style="display: inline-block !important;" class="description">共12个相关标签</div>
+                            <i class="chevron grey right icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;"></i>
+                            <i class="chevron grey down icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;display: none"></i>
                         </div>
-                        <div class="ui horizontal list">
-                            <div class="item">
-                                <div class="content">
-                                    <div class="header">Tom</div>
-                                    Top Contributor
+                        <div id="Algorithm-list" class="ui horizontal list" style="display: none">
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">数据结构</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="数据结构" onclick="updateUserTech(this)">
+                                    <label></label>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="content">
-                                    <div class="header">Christian Rocha</div>
-                                    Admin
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 90% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">CV(computer vision)</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="CV(computer vision)"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="content">
-                                    <div class="header">Matt</div>
-                                    Top Rated User
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">聚集</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="聚集" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">scikit-learn</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="scikit-learn"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">推荐算法</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="推荐算法" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">集成学习</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="集成学习" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">回归</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="回归" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">分类</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="分类" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">caffe</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="caffe" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">迁移学习</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="迁移学习" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">排序算法</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="排序算法" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">mxnet</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="mxnet" onclick="updateUserTech(this)">
+                                    <label></label>
                                 </div>
                             </div>
                         </div>
                     </div>
-
+                    <!--大数据-->
+                    <div class="item">
+                        <div id="big-data" class="content"
+                             style="padding: 24px  0 16px !important;position: relative !important;cursor: pointer">
+                            <span class="header"
+                                  style="display: inline-block !important;font-size: 16px !important;">大数据</span>
+                            <div style="display: inline-block !important;" class="description">共6个相关标签</div>
+                            <i class="chevron grey right icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;"></i>
+                            <i class="chevron grey down icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;display: none"></i>
+                        </div>
+                        <div id="big-data-list" class="ui horizontal list" style="display: none">
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">hive</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="hive" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">hadoop</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="hadoop" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">storm</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="storm" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">数据仓库</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="数据仓库" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">ETL</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="ETL" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">spark</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="spark" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--运维-->
+                    <div class="item">
+                        <div id="operation-maintenance" class="content"
+                             style="padding: 24px  0 16px !important;position: relative !important;cursor: pointer">
+                            <span class="header"
+                                  style="display: inline-block !important;font-size: 16px !important;">运维</span>
+                            <div style="display: inline-block !important;" class="description">共11个相关标签</div>
+                            <i class="chevron grey right icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;"></i>
+                            <i class="chevron grey down icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;display: none"></i>
+                        </div>
+                        <div id="operation-maintenance-list" class="ui horizontal list" style="display: none">
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 90% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">自动化/DevOps</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="自动化/DevOps"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Graylog/ELK</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Graylog/ELK"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">安全</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="安全" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Linux/CentOS</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Linux/CentOS"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">系统架构</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="系统架构" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">网络</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="网络" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Docker</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Docker" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Kubernetes</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Kubernetes"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Jenkins</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Jenkins" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">运维开发</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="运维开发" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Nginx</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Nginx" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--测试-->
+                    <div class="item">
+                        <div id="test" class="content"
+                             style="padding: 24px  0 16px !important;position: relative !important;cursor: pointer">
+                            <span class="header"
+                                  style="display: inline-block !important;font-size: 16px !important;">测试</span>
+                            <div style="display: inline-block !important;" class="description">共4个相关标签</div>
+                            <i class="chevron grey right icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;"></i>
+                            <i class="chevron grey down icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;display: none"></i>
+                        </div>
+                        <div id="test-list" class="ui horizontal list" style="display: none">
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">selenium</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="selenium"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Jira</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Jira" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">postmam</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="postmam" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">测试用例</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="测试用例" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--前端-->
+                    <div class="item">
+                        <div id="front-end" class="content"
+                             style="padding: 24px  0 16px !important;position: relative !important;cursor: pointer">
+                            <span class="header"
+                                  style="display: inline-block !important;font-size: 16px !important;">前端</span>
+                            <div style="display: inline-block !important;" class="description">共13个相关标签</div>
+                            <i class="chevron grey right icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;"></i>
+                            <i class="chevron grey down icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;display: none"></i>
+                        </div>
+                        <div id="front-end-list" class="ui horizontal list" style="display: none">
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">WebPack</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="WebPack" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">前端框架</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="前端框架" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">TypeScript</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="TypeScript"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">JavaScript</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="JavaScript"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Vue.js</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Vue.js" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">ECMAScript 6</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="ECMAScript 6"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Node.js</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Node.js" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">XHTML</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="XHTML" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">HTTPS</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="HTTPS" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">小程序</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="小程序" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Flutter</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Flutter" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">CSS</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="CSS" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">React.js</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="React.js"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--数据库管理-->
+                    <div class="item">
+                        <div id="DBM" class="content"
+                             style="padding: 24px  0 16px !important;position: relative !important;cursor: pointer">
+                            <span class="header"
+                                  style="display: inline-block !important;font-size: 16px !important;">数据库管理</span>
+                            <div style="display: inline-block !important;" class="description">共3个相关标签</div>
+                            <i class="chevron grey right icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;"></i>
+                            <i class="chevron grey down icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;display: none"></i>
+                        </div>
+                        <div id="DBM-list" class="ui horizontal list" style="display: none">
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">数据库架构</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="数据库架构" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">数据库开发</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="数据库开发" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">数据仓库</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="数据仓库" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--iOS-->
+                    <div class="item">
+                        <div id="iOS" class="content"
+                             style="padding: 24px  0 16px !important;position: relative !important;cursor: pointer">
+                            <span class="header"
+                                  style="display: inline-block !important;font-size: 16px !important;">iOS</span>
+                            <div style="display: inline-block !important;" class="description">共9个相关标签</div>
+                            <i class="chevron grey right icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;"></i>
+                            <i class="chevron grey down icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;display: none"></i>
+                        </div>
+                        <div id="iOS-list" class="ui horizontal list" style="display: none">
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">SwiftUI</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="SwiftUI" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">RXSwift</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="RXSwift" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">React Native</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="React Native"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">XCode</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="XCode" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">WWDC</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="WWDC" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">CocoaPods</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="CocoaPods"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Swift</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Swift" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Object-C</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Object-C"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Flutter</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Flutter" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Android-->
+                    <div class="item">
+                        <div id="Android" class="content"
+                             style="padding: 24px  0 16px !important;position: relative !important;cursor: pointer">
+                            <span class="header"
+                                  style="display: inline-block !important;font-size: 16px !important;">Android</span>
+                            <div style="display: inline-block !important;" class="description">共6个相关标签</div>
+                            <i class="chevron grey right icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;"></i>
+                            <i class="chevron grey down icon"
+                               style="position: absolute;top:25px;right:5px;font-size: 20px !important;display: none"></i>
+                        </div>
+                        <div id="Android-list" class="ui horizontal list" style="display: none">
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Kotlin</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Kotlin" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">qradle</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="qradle" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Android Jetpack</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Android Jetpack"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">RxJava</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="RxJava" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Andriod Studio</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Andriod Studio"
+                                           onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                            <div class="item"
+                                 style="position: relative;width:235px;height:48px;margin: 2px 8px 8px 8px !important;-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);border-radius: 4px;">
+                                <div class="content"
+                                     style="padding:14px 5px !important;width: 50% !important;display: inline-block !important;">
+                                    <span style="font-size: 16px">Flutter</span>
+                                </div>
+                                <div class="ui toggle green checkbox" style="position: absolute;top: 12px;right:10px">
+                                    <input type="checkbox" name="public" value="Flutter" onclick="updateUserTech(this)">
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="actions">
-        <div id="tech-cancel" class="ui button close">取消</div>
-        <div id="tech-commit" class="ui green button">保存</div>
-    </div>
+</div>
 </div>
 
 <!--我的联系方式修改-->
@@ -513,6 +1635,8 @@
 <script src="../static/js/loading/mustache.js" th:src="@{/static/js/loading/mustache.js}"></script>
 <script src="../static/js/loading/zeroModal.js" th:src="@{/static/js/loading/zeroModal.js}"></script>
 <script>
+    let obj = window.document.location;
+    let BASE_PATH = obj.href.substring(0, obj.href.indexOf(obj.pathname));
     $(document).ready(function () {
         if (detectZoom() != 125) {
             showInfoMessage("您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%")
@@ -528,10 +1652,9 @@
             localStorage.removeItem("contact_edit_success");
         }
     });
-
-
 </script>
 
+<!--关于我的信息的修改控制-->
 <script th:online="javascript" type="text/javascript">
     /***修改关于我的信息弹窗控制***/
     $('#about').click(function () {
@@ -586,12 +1709,11 @@
     });
     $('#hobby-commit').click(function () {
         let inputHobby = $('.hobby-input').find('input').val() == null ? "" : $('.hobby-input').find('input').val();
-        console.log(inputHobby);
         let hobby = "[[${user.getUserHobby()}]]";
         if (hobby != null) {
-            hobby=hobby.toString().concat("," + inputHobby);
-        }else{
-            hobby=inputHobby;
+            hobby = hobby.toString().concat("," + inputHobby);
+        } else {
+            hobby = inputHobby;
         }
         console.log(hobby);
         if (inputHobby != null && hobby != null) {
@@ -628,9 +1750,6 @@
     });
     $('#tech-cancel').click(function () {
         $('.modal.tech').modal('toggle');
-    });
-    $('#tech-commit').click(function () {
-
     });
 
     /***修改我的联系方式弹窗控制***/
@@ -843,6 +1962,99 @@
         $('#more-btn').css("color", "inherit");
         $('#more-btn').addClass("basic")
     });
+</script>
+
+<script type="text/javascript" th:online="javascript">
+    $(document).ready(function () {
+        toggleTechList('#back-end', '#back-end-list');
+        toggleTechList('#AI', '#AI-list');
+        toggleTechList('#Algorithm', '#Algorithm-list');
+        toggleTechList('#big-data', '#big-data-list');
+        toggleTechList('#operation-maintenance', '#operation-maintenance-list');
+        toggleTechList('#test', '#test-list');
+        toggleTechList('#front-end', '#front-end-list');
+        toggleTechList('#DBM', '#DBM-list');
+        toggleTechList('#iOS', '#iOS-list');
+        toggleTechList('#Android', '#Android-list');
+        showUserTech();
+        $('.tech.modal').find('.icon.close').click(function () {
+            updateUserTech();
+            window.location.reload();
+        });
+
+    });
+
+
+    /***
+     * 控制具体技术列表的显示和隐藏
+     * @param mainList
+     * @param subList
+     */
+    function toggleTechList(mainList, subList) {
+        $(mainList).click(function () {
+            $(subList).toggle();
+            //判断subList是show状态还是hide来改变箭头的方向
+            if ($(subList).is(':visible')) {
+                $(mainList).find('.down').show();
+                $(mainList).find('.right').hide();
+            } else {
+                $(mainList).find('.down').hide();
+                $(mainList).find('.right').show();
+            }
+        });
+    }
+
+    function showUserTech() {
+        let techStr = "[[${user.getUserTech()}]]";
+        if (techStr != null && techStr.length > 0) {
+            let checkboxs = document.getElementsByName('public');
+            for (let i = 0; i < checkboxs.length; i++) {
+                if (techStr.indexOf(checkboxs[i].value) != -1) {
+                    checkboxs[i].checked = true;
+                }
+            }
+        }
+    }
+
+    /***
+     * AJAX更新用户技术栈
+     * @param checkBoxObj
+     */
+    function updateUserTech(checkBoxObj) {
+        let techStr = "";
+        let checkboxs = document.getElementsByName('public');
+        for (let i = 0; i < checkboxs.length; i++) {
+            if (checkboxs[i].checked) {
+                if(techStr!="") {
+                    techStr = techStr.concat("," + checkboxs[i].value);
+                }else{
+                    techStr=checkboxs[i].value;
+                }
+            }
+        }
+        $.ajax({
+            url: BASE_PATH + "/user/settingTech",
+            method: "GET",
+            sync: false,
+            data: {techStr: techStr},
+            dataType: "JSON",
+            success: function (response) {
+                if (response.success) {
+                    if ($(checkBoxObj).is(':checked')) {
+                        showSuccessMessage("添加成功！");
+                    } else {
+                        showSuccessMessage("取消成功！");
+                    }
+                } else {
+                    showErrorMessage(response.message);
+                }
+            },
+            error: function () {
+                showErrorMessage("服务异常，请重试！");
+            }
+        });
+    }
+
 </script>
 
 </html>

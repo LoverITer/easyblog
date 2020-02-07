@@ -101,6 +101,10 @@ public class ArticleController {
                     String[] techs = techStr.replaceAll("，", ",").split(",");
                     model.addAttribute("userTech", techs);
                 }
+                //帮助页面正常显示
+                if("".equals(author.getUserTech())){
+                    model.addAttribute("userTech", null);
+                }
                 //作者的各种联系方式
                 UserAccount authorAccounts = userAccount.getAccountByUserId(author.getUserId());
                 model.addAttribute("authorAccounts",authorAccounts);
