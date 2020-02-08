@@ -68,12 +68,14 @@ public class UserAccountImpl implements IUserAccountService {
     @Override
     public UserAccount getAccountByUserId(int userId) {
         UserAccount account=null;
-        if(userId<0){
+        if(userId>0){
             try {
                 account = userAccountMapper.getByUserId(userId);
             }catch (Exception e){
                 e.printStackTrace();
             }
+        }else{
+            throw new IllegalArgumentException("错误的查询参数：userId="+userId+"，必须大于0");
         }
         return account;
     }

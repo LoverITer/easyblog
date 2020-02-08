@@ -16,9 +16,7 @@ public class User implements Serializable {
     private String userName;
     private String userGender;
     private Date userBirthday;
-    private String userQQ;
     private String userPhone;
-    private String userWechart;
     private String userMail;
     private String userAddress;
     private Integer userScore;
@@ -35,18 +33,19 @@ public class User implements Serializable {
     private Integer userVisit;
     private String userJobPosition;
     private String userPrefession;
+    private String userHobby;
+    private String userTech;
 
     public User() {
     }
 
 
-    public User(String userNickname, String userPassword, String userName, String userGender, Date userBirthday, String userQQ, String userPhone, String userMail, String userAddress, int userScore, int userRank, String userHeaderImgUrl, String userDescription, String userRegisterIp, String userLastUpdateTime, Integer userLock, Integer userFreeze, Integer userPower,Integer userLevel,Integer userVisit) {
+    public User(String userNickname, String userPassword, String userName, String userGender, Date userBirthday,  String userPhone, String userMail, String userAddress, int userScore, int userRank, String userHeaderImgUrl, String userDescription, String userRegisterIp, String userLastUpdateTime, Integer userLock, Integer userFreeze, Integer userPower,Integer userLevel,Integer userVisit) {
         this.userNickname = userNickname;
         this.userPassword = userPassword;
         this.userName = userName;
         this.userGender = userGender;
         this.userBirthday = userBirthday;
-        this.userQQ = userQQ;
         this.userPhone = userPhone;
         this.userMail = userMail;
         this.userAddress = userAddress;
@@ -143,14 +142,6 @@ public class User implements Serializable {
         this.userBirthday = userBirthday;
     }
 
-    public String getUserQQ() {
-        return userQQ;
-    }
-
-    public void setUserQQ(String userQQ) {
-        this.userQQ = userQQ;
-    }
-
     public String getUserPhone() {
         return userPhone;
     }
@@ -159,12 +150,20 @@ public class User implements Serializable {
         this.userPhone = userPhone;
     }
 
-    public String getUserWechart() {
-        return userWechart;
+    public String getUserHobby() {
+        return userHobby;
     }
 
-    public void setUserWechart(String userWechart) {
-        this.userWechart = userWechart;
+    public void setUserHobby(String userHobby) {
+        this.userHobby = userHobby;
+    }
+
+    public String getUserTech() {
+        return userTech;
+    }
+
+    public void setUserTech(String userTech) {
+        this.userTech = userTech;
     }
 
     public String getUserMail() {
@@ -323,9 +322,7 @@ public class User implements Serializable {
                 ", userName='" + userName + '\'' +
                 ", userGender='" + userGender + '\'' +
                 ", userBirthday=" + userBirthday +
-                ", userQQ='" + userQQ + '\'' +
                 ", userPhone='" + userPhone + '\'' +
-                ", userWechart='" + userWechart + '\'' +
                 ", userMail='" + userMail + '\'' +
                 ", userAddress='" + userAddress + '\'' +
                 ", userScore=" + userScore +

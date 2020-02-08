@@ -264,12 +264,12 @@ public class CategoryAdminController {
                              RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
-            //判断改名是否为空
+            //判断编辑后的分类名是否为空
             if(StringUtil.isEmpty(categoryName)){
                 redirectAttributes.addFlashAttribute("error","专栏名称不可为空！");
                 return "redirect:/manage/category/edit?categoryId="+categoryId;
             }
-            //判断改名是否重复
+            //判断编辑后的分类名是否重复
             if(!oldCategoryName.equals(categoryName)) {
                 Category var0 = categoryService.getCategoryByUserIdAndName(user.getUserId(), categoryName);
                 if (Objects.nonNull(var0)) {

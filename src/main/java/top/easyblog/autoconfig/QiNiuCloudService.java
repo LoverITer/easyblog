@@ -32,20 +32,21 @@ public class QiNiuCloudService {
      * @return
      */
     private String getUpToken() {
-        Auth auth =Auth.create(qiNiuCloudProperties.getAccessKey(), qiNiuCloudProperties.getSecretKey());
+        Auth auth = Auth.create(qiNiuCloudProperties.getAccessKey(), qiNiuCloudProperties.getSecretKey());
         return auth.uploadToken(qiNiuCloudProperties.getBucketName(), null, 3600, new StringMap().put("insertOnly", 1));
     }
 
     /**
      * 本地文件上传
-     * @param filePath   文件路径
-     * @param fileName   文件名
-     * @return   返回文件的外链URL
+     *
+     * @param filePath 文件路径
+     * @param fileName 文件名
+     * @return 返回文件的外链URL
      * @throws IOException
      */
     public String upload(String filePath, String fileName) throws IOException {
         try {
-            Auth auth =Auth.create(qiNiuCloudProperties.getAccessKey(), qiNiuCloudProperties.getSecretKey());
+            Auth auth = Auth.create(qiNiuCloudProperties.getAccessKey(), qiNiuCloudProperties.getSecretKey());
             String token = auth.uploadToken(qiNiuCloudProperties.getBucketName());
             Response response = qiNiuCloudProperties.getUploadManager().put(filePath, fileName, token);
             log.info("return info：{}", response.bodyString());
@@ -57,7 +58,7 @@ public class QiNiuCloudService {
             if (response.isOK()) {
                 QiNiuCloudService.Ret ret = response.jsonToObject(QiNiuCloudService.Ret.class);
                 //如果不需要对图片进行样式处理，则使用以下方式即可
-                return qiNiuCloudProperties.getStyle()==null?"http://" + qiNiuCloudProperties.getDomain() + "/" + ret.key:"http://" + qiNiuCloudProperties.getDomain() + "/" + ret.key+"?"+qiNiuCloudProperties.getStyle();
+                return qiNiuCloudProperties.getStyle() == null ? ("http://" + qiNiuCloudProperties.getDomain() + "/" + ret.key) : ("http://" + qiNiuCloudProperties.getDomain() + "/" + ret.key + "?" + qiNiuCloudProperties.getStyle());
             }
         } catch (QiniuException e) {
             Response response = e.response;
@@ -90,7 +91,7 @@ public class QiNiuCloudService {
         } catch (IOException e) {
             throw new RuntimeException("上传图片失败");
         }
-        return qiNiuCloudProperties.getStyle()==null?"http://" + qiNiuCloudProperties.getDomain() + "/" + key:"http://" + qiNiuCloudProperties.getDomain() + "/" + key+"?"+qiNiuCloudProperties.getStyle();
+        return qiNiuCloudProperties.getStyle() == null ? ("http://" + qiNiuCloudProperties.getDomain() + "/" + key) : ("http://" + qiNiuCloudProperties.getDomain() + "/" + key + "?" + qiNiuCloudProperties.getStyle());
     }
 
     /**
@@ -105,8 +106,8 @@ public class QiNiuCloudService {
         DefaultPutRet putRet = null;
         try {
             Response response = qiNiuCloudProperties.getUploadManager().put(bytes, key, upToken);
-            int retry=3;
-            while (response.needRetry()&&retry>0){
+            int retry = 3;
+            while (response.needRetry() && retry > 0) {
                 retry--;
                 response = qiNiuCloudProperties.getUploadManager().put(bytes, key, upToken);
             }
@@ -131,10 +132,10 @@ public class QiNiuCloudService {
      *
      * @param imageUrl 文件URL
      */
-    public  void delete(String imageUrl) {
+    public void delete(String imageUrl) {
         String key = imageUrl.substring(imageUrl.lastIndexOf("/") + 1, imageUrl.length());
         // 实例化一个BucketManager对象
-        Auth auth =Auth.create(qiNiuCloudProperties.getAccessKey(), qiNiuCloudProperties.getSecretKey());
+        Auth auth = Auth.create(qiNiuCloudProperties.getAccessKey(), qiNiuCloudProperties.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, qiNiuCloudProperties.getConfiguration());
         try {
             // 调用delete方法移动文件

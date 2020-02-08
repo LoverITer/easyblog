@@ -385,7 +385,7 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/aboutMe")
-    public Result changeAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo,
+    public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo,
                                 HttpSession session) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
@@ -423,7 +423,6 @@ public class UserController {
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
              UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, user.getUserId());
-            System.out.println(account);
              //检查用户的account是否存在
             int res=userAccountService.updateAccountByUserId(account);
             if (res<=0) {
@@ -437,6 +436,48 @@ public class UserController {
                 result.setSuccess(false);
                 result.setMessage("修改失败！");
             }
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/settingHobby")
+    public Result setUserHobby(@RequestParam String hobby, HttpSession session){
+        Result result = new Result();
+        result.setMessage("请登录后重试！");
+        User user = (User) session.getAttribute("user");
+        if (Objects.nonNull(user)) {
+            User userHobby = new User();
+            userHobby.setUserId(user.getUserId());
+            userHobby.setUserHobby(hobby);
+            int res = userService.updateUserInfo(userHobby);
+            if(res<0){
+                result.setMessage("更新失败，请稍后重试！");
+                return result;
+            }
+            result.setSuccess(true);
+            result.setMessage("更新成功！");
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/settingTech")
+    public Result settingTech(HttpSession session,@RequestParam String techStr){
+        Result result = new Result();
+        result.setMessage("请登录后重试！");
+        User user = (User) session.getAttribute("user");
+        if (Objects.nonNull(user)) {
+            User userTech = new User();
+            userTech.setUserId(user.getUserId());
+            userTech.setUserTech(techStr);
+            int res = userService.updateUserInfo(userTech);
+            if(res<0){
+                result.setMessage("修改失败！请稍后重试！");
+                return result;
+            }
+            result.setSuccess(true);
+            result.setMessage("修改成功！");
         }
         return result;
     }

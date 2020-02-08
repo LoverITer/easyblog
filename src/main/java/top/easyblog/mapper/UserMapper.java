@@ -8,8 +8,6 @@ import top.easyblog.mapper.core.BaseMapper;
 @Repository
 public interface UserMapper extends BaseMapper<User> {
 
-    User getUserByUserQQAndPassword(@Param("user_qq") String userQQ, @Param("password") String password);
-
     User getUserByUserPhoneAndPassword(@Param("userPhone") String userPhone, @Param("password") String password);
 
     User getUserByUserEmailAndPassword(@Param("userEmail") String userEmail, @Param("password") String password);
@@ -19,7 +17,6 @@ public interface UserMapper extends BaseMapper<User> {
     User getUserByPhone(@Param("phone") String phone);
 
     User getUserByEmail(@Param("email") String email);
-
 
     int updateUserSelective(User user);
 
