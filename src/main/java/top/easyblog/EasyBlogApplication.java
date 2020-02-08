@@ -6,9 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 @EnableCaching
+@EnableScheduling
 @MapperScan(value = "top.easyblog.mapper")
 @SpringBootApplication
 public class EasyBlogApplication extends SpringBootServletInitializer {

@@ -57,6 +57,18 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public List<Article> getAllNoneFirstPicArticles() {
+        List<Article> articles=null;
+        try {
+            articles= articleMapper.getAllNoneFirstPicArticles();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return articles;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Cacheable(cacheNames = "article", condition = "#result!=null")
     @Override
     public Article getArticleById(int articleId, String flag) {
@@ -485,10 +497,10 @@ public class ArticleServiceImpl implements IArticleService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public int updateArticlesByCategoryName(String newCategoryName, String oldCategoryName, int userId) {
-        if(Objects.nonNull(newCategoryName)&&Objects.nonNull(oldCategoryName)&&userId>0){
-            try{
+        if (Objects.nonNull(newCategoryName) && Objects.nonNull(oldCategoryName) && userId > 0) {
+            try {
                 return articleMapper.updateArticlesByUserIdAndArticleCategory(newCategoryName, oldCategoryName, userId);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

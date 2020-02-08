@@ -281,6 +281,10 @@
         </where>
     </select>
 
+    <select id="getAllNoneFirstPicArticles" resultType="top.easyblog.bean.Article">
+        select * from article where article_first_picture is NULL
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete
         from article
@@ -409,7 +413,6 @@
             <if test="articleFirstPicture!=null">
                 article_first_picture=#{articleFirstPicture,jdbcType=VARCHAR},
             </if>
-            <if test="1==1">1=1</if>
         </set>
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>

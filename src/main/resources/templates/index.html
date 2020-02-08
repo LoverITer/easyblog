@@ -75,7 +75,7 @@
                         <a href="/web/html/14.html"
                            th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank">
                             <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
-                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{article.getArticleFirstPicture()}">
+                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}">
                         </a>
                         <span class="imginfo" th:text="${article.getArticleTopic()}">SpringBoot的自动配置原理</span>
                     </li>
@@ -101,7 +101,7 @@
                         <a href="/blog/7.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
                            target="_blank">
                             <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
-                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="${article.getArticleFirstPicture()}" >
+                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" >
                         </a>
                     </i>
                     <a href="/blog/7.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank"><b th:text="${article.getArticleTopic()}">安静地做一个爱设计的女子</b></a>
@@ -121,7 +121,7 @@
                      <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
                         th:title="${article.getArticleTopic()}" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                          <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
-                         <img th:if="${article.getArticleFirstPicture()!=null}" th:src="${article.getArticleFirstPicture()}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                         <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                      </a>
                     </span>
                     <p th:text="${#strings.abbreviate(article.getArticleContent(),150)}" class="blogtext">
@@ -152,7 +152,7 @@
                 <a href="#"
                    th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()})}">
                     <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
-                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}">
+                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}" th:src="@{${topicArticle.getArticleFirstPicture()}}">
                     <span th:text="${topicArticle.getArticleTopic()}">安静地做一个爱设计的女子</span></a>
             </section>
             <ul>
@@ -167,7 +167,7 @@
             <section class="topnews imgscale" th:if="${recommendTopic!=null}" th:each="topicArticle:${recommendTopic}">
                 <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()})}">
                     <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
-                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}">
+                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}" th:src="@{${topicArticle.getArticleFirstPicture()}}">
                     <span th:text="${topicArticle.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</span></a>
             </section>
             <ul>
@@ -175,7 +175,7 @@
                     <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" href="/web/html/14.html" th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank">
                         <i>
                             <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
-                            <img th:if="${article.getArticleFirstPicture()!=null}" src="http://www.yangqq.com/skin/852/images/banner01.jpg">
+                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}">
                         </i>
                         <p th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</p></a>
                 </li>
