@@ -7,8 +7,8 @@ import top.easyblog.bean.User;
 import top.easyblog.commons.enums.UserFreeze;
 import top.easyblog.commons.enums.UserLock;
 import top.easyblog.commons.enums.UserPower;
+import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
 import top.easyblog.commons.utils.EncryptUtil;
-import top.easyblog.commons.utils.FileUploadUtils;
 import top.easyblog.commons.utils.RegexUtil;
 import top.easyblog.config.web.Result;
 import top.easyblog.mapper.UserMapper;
@@ -102,7 +102,7 @@ public class UserServiceImpl implements IUserService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public boolean register(String nickname, String password, String account, String ipInfo) {
-        String headImageUrl = FileUploadUtils.defaultAvatar();
+        String headImageUrl = DefaultImageDispatcherUtils.defaultAvatar();
         try {
             User user = new User(nickname, password, null, null, null, null, null,  null, 0, 100000, headImageUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
             if (RegexUtil.isEmail(account)) {

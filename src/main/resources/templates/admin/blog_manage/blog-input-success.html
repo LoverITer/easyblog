@@ -10,6 +10,10 @@
 <link rel="bookmark" th:href="@{/static/favicon.ico}" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
 <link rel="stylesheet" href="..//css/me.css" th:href="@{/static/css/me.css}">
+<script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
+<link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+<!--加载动画和确认框特效-->
+<link rel="stylesheet" href="../static/css/loading/zeroModal.css" th:href="@{/static/css/loading/zeroModal.css}">
 </head>
 <body>
 
@@ -27,18 +31,35 @@
             <div style="padding: 10px 10px !important;">
                 <div style="margin: 16px auto 8px auto !important;font-size: 18px !important;color: #474747 !important;" th:text="${article.getArticleTopic()}">SpringMVC</div>
                 <div th:text="${#strings.abbreviate(article.getArticleContent(),500)}" style="color: #999 !important;font-size: 14px !important;">
-                    synchronized实现原理
-                    synchronized 是基于 Java 对象头和 Monitor 机制来实现的。
-                    1.	Java 对象头
-                    一个对象在堆内存中包含三部分：对象头，实例数据和对齐填充。其中 Java 对象头包含两部分：
-                    	<1>实例变量：存放类的属性数据信息，包括父类的属性信息，如果是数组的实例部分还包括数组的长度，这部分内存按4字节对齐。
-                    	<2>填充数据：由于虚拟机要求对象起始地址必须是 8 字节的整数倍。填充数据不是必须存在的，仅仅是为了字节对齐。
-                    	<3>对象头：对象头主要包括两部分数据：Mark Word（标记字段）、Class Point（类型指针）。其中 Class Point 是对象指向它的类元数据的指针，虚拟机通过这个指针来确定这个对象是哪个类的实例，Mark Word 用于存储对象自身的运行时数据，它是实现轻量级锁和偏向锁的关键。它还用于存储对象自身的运行时数据，如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等等
-                </div>
             </div>
         </div>
-        <span th:if="${article!=null}"><i class="green check icon"></i><a href="#" th:href="@{/article/details/}+${article.getArticleId()}" style="color: #3399ea !important;font-size: 14px !important;">文章发布成功查看文章<i class="chevron blue right icon"></i></a></span>
-        <span><a href="#" th:href="@{/manage/blog/post}" style="color: #3399ea !important;font-size: 14px !important;margin-left: 30px !important;">再写一篇</a></span>
+        <span th:if="${article!=null}"><i class="green check icon"></i><a href="#" th:href="@{/article/details/{articleId}(articleId=${article.getArticleId()})}" style="color: #3399ea !important;font-size: 14px !important;">文章发布成功&nbsp;查看文章<i class="chevron blue right icon"></i></a></span>
+        <span><a href="#" th:href="@{/manage/blog/post}" style="color: #3399ea !important;font-size: 14px !important;margin-left: 30px !important;">再写一篇<i class="chevron blue right icon"></i></a></span>
+        <span><a href="#" onclick="showUploadModal()" style="color: #3399ea !important;font-size: 14px !important;margin-left: 30px !important;" title="增加文章入口图片不仅仅会更美观些，还可以让访客能更快速的了解你的文章要义">为文章配首图<i class="chevron blue right icon"></i></a></span>
+        </div>
+</div>
+</div>
+
+<!--图片上传工具-->
+<div class="ui small second coupled modal transition hidden">
+    <div class="header">
+        上传文章首图
+    </div>
+    <div class="content">
+        <div class="ui from">
+            <input id="input_file" style="position:absolute;opacity:0;height: 35px !important;width: 117px !important;padding: 0 !important;cursor: pointer;" onchange="show(this)" accept="image/*" type="file"/>
+            <button class="ui button" style="cursor: pointer;"><i class="upload icon"></i>上传图片</button>
+            <div style="margin-top: 10px; ">
+                <img id="pre-look"  th:src="@{/static/images/upload.jpg}" style="width: 500px;height: 300px;margin-left: 100px">
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui  button article-upload-image-cancel">取消</div>
+        <div class="ui green button article-upload-image-ok">
+            <i class="checkmark  icon"></i>
+            上传
+        </div>
     </div>
 </div>
 
@@ -51,6 +72,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
+<script src="../static/js/loading/mustache.js" th:src="@{/static/js/loading/mustache.js}"></script>
+<script src="../static/js/loading/zeroModal.js" th:src="@{/static/js/loading/zeroModal.js}"></script>
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -90,10 +114,72 @@
     });
 
 </script>
-<script type="text/javascript">
+<script ype="text/javascript" th:online="javascript">
+
     $('.ui.dropdown').dropdown({
         on: 'hover'
     });
+
+    function showUploadModal() {
+        $('.second.modal').modal("show");
+        $('.second.modal').modal({
+            closable: false
+        });
+    }
+
+    $('.article-upload-image-cancel').click(function () {
+        $('.second.modal').modal("hide");
+    });
+
+    $('.article-upload-image-ok').click(function () {
+        let articleId = "[[${article.getArticleId()}]]";
+        if (articleId != "" && articleId > 0) {
+            //获取图片的base64串
+            let imgByte64Str = $('#pre-look')[0].src;
+            if (imgByte64Str != null && imgByte64Str != "" && imgByte64Str.toString().startsWith("data:image/jpeg;base64")) {
+                _loading(2);
+                $.ajax({
+                    url: "/manage/blog/upload_article_img",
+                    method: "POST",
+                    sync: false,
+                    data: {imgByte64Str: imgByte64Str, articleId: articleId},
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            _loadingClose();
+                            $('.second.modal').modal("hide");
+                            showSuccessMessage("上传成功！")
+                        } else {
+                            showErrorMessage("服务异常，请稍后重试！")
+                        }
+                    },
+                    error: function () {
+                        _loadingClose();
+                        showErrorMessage("服务异常，请稍后重试！")
+                    }
+                })
+            } else {
+                showWarningMessage("请选择图片");
+            }
+        } else {
+            showErrorMessage("参数错误！");
+            $('.second.modal').modal("hide");
+        }
+    });
+
+    //从本地选择图片后，页面显示
+    function show(obj) {
+        let rd = new FileReader(); //创建文件读取对象
+        let files = obj.files[0];  //获取file组件中的文件
+        rd.readAsDataURL(files);   //文件读取装换为base64类型
+        rd.onloadend = function (e) {
+            //加载完毕之后获取结果赋值给img
+            $('#pre-look').height(300);
+            $('#pre-look').width(450);
+            document.getElementById("pre-look").src = this.result;
+        };
+
+    }
 </script>
 </body>
 </html>

@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="../../../css/me.css" th:href="@{/static/css/me.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+    <!--加载动画和确认框特效-->
+    <link rel="stylesheet" href="../static/css/loading/zeroModal.css" th:href="@{/static/css/loading/zeroModal.css}">
 </head>
 <body>
 
@@ -203,29 +205,35 @@
                                             </span>
                                         </div>
                                         <div class="item">
-                                            <i class="calendar icon"></i> <span style="font-size: 12px !important;"
-                                                                                th:text="${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd  hh:mm:ss')}">2017-10-01</span>
+                                            <i class="calendar icon"></i>
+                                            <span style="font-size: 12px !important;" th:text="${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd  hh:mm:ss')}">2017-10-01</span>
                                         </div>
                                         <div class="item">
-                                            <i class="eye icon"></i> <span style="font-size: 12px !important;"
-                                                                           th:text="${article.getArticleClick()}">2342</span>
+                                            <i class="eye icon"></i>
+                                            <span style="font-size: 12px !important;" th:text="${article.getArticleClick()}">2342</span>
                                         </div>
                                         <div class="item">
-                                            <i class="comment alternate icon"></i> <span
-                                                style="font-size: 12px !important;"
-                                                th:text="${article.getArticleCommentNum()}">2342</span>
+                                            <i class="comment alternate icon"></i>
+                                            <span style="font-size: 12px !important;" th:text="${article.getArticleCommentNum()}">2342</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="right aligned five wide column">
                                     <div class="five  wide  column">
                                         <div class="ui horizontal list">
-                                            <div class="item"><a href="#"
-                                                                 th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}"
-                                                                 style="color: #349EDF">编辑</a></div>
-                                            <div class="item"><a href="#"
-                                                                 th:href="@{/manage/blog/delete(articleId=${article.getArticleId()})}"
-                                                                 style="color: #CA0C16">删除</a></div>
+                                            <div class="item">
+                                                <a href="#" onclick="editArticleFirstImg(this)" style="color: #349EDF" title="增加文章入口图片不仅仅会更美观些，还可以让访客能更快速的了解你的文章要义">
+                                                    配置文章首图
+                                                    <input class="articleId" type="text" hidden th:value="${article.getArticleId()}">
+                                                    <input class="articleFirstPic" type="text" hidden th:value="${article.getArticleFirstPicture()}">
+                                                </a>
+                                            </div>
+                                            <div class="item">
+                                                <a href="#" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}" style="color: #349EDF">编辑</a>
+                                            </div>
+                                            <div class="item">
+                                                <a href="#" th:href="@{/manage/blog/delete(articleId=${article.getArticleId()})}" style="color: #CA0C16">删除</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -235,34 +243,29 @@
                 </div>
             </div>
             <!--没有文章-->
-            <div class="ui bottom attached segment " th:if="${articlePages.getTotal()==0}"
-                 style="padding-top: 10rem !important;padding-left: 30rem !important;padding-bottom: 20rem !important;">
+            <div class="ui bottom attached segment " th:if="${articlePages.getTotal()==0}" style="padding-top: 10rem !important;padding-left: 30rem !important;padding-bottom: 20rem !important;">
                 <div style="color: grey !important;font-size: 14px !important;">没有符合条件的文章</div>
             </div>
             <div th:if="${articlePages.getTotal()<=20&&articlePages.getTotal()!=0}" class="ui bottom attached segment"
                  style="padding-top: 10em !important;padding-bottom: 10em !important;border-top: 1px #ccc solid"></div>
 
             <!--分页按钮-->
-            <div th:if="${articlePages.getTotal()>20}" class="ui bottom attached segment "
-                 style="border-top: 1px solid #ccc">
+            <div th:if="${articlePages.getTotal()>20}" class="ui bottom attached segment " style="border-top: 1px solid #ccc">
                 <div class="ui middle aligned two column grid">
                     <div  style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
                             <a th:href="@{/manage/blog/(page=${articlePages.getPrePage()})}">
-                                <button class="ui button"
-                                        style="background: white !important;font-weight: 100 !important;">上一页
-                                </button>
+                                <button class="ui button" style="background: white !important;font-weight: 100 !important;">上一页</button>
                             </a>
                             <a th:each="pageNo:${articlePages.getNavigatepageNums()}"
                                th:href="@{/manage/blog/(page=${pageNo})}">
-                                <button class="ui button pages"
-                                        style="background: white !important;font-weight: 100 !important;">
+                                <button class="ui button pages" style="background: white !important;font-weight: 100 !important;">
                                     [[${pageNo}]]
                                 </button>
                             </a>
                             <a th:href="@{/manage/blog/(page=${articlePages.getNextPage()})}">
-                                <button class="ui right button"
-                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                <button class="ui right button" style="background: white !important;font-weight: 100 !important;">
+                                    下一页
                                 </button>
                             </a>
                         </div>
@@ -272,12 +275,26 @@
         </div>
     </div>
 </div>
-<div style="position: fixed !important;z-index: 99999999 !important;" id="model1" class="ui small modal">
-    <div class="header" id="msg_header">删除</div>
-    <div id="msg" class="content">
+<!--图片上传工具-->
+<div class="ui small second coupled modal transition hidden">
+    <div class="header">
+        上传文章首图
+    </div>
+    <div class="content">
+        <div class="ui from">
+            <input id="input_file" style="position:absolute;opacity:0;height: 35px !important;width: 117px !important;padding: 0 !important;cursor: pointer;" onchange="show(this)" accept="image/*" type="file"/>
+            <button class="ui button" style="cursor: pointer;"><i class="upload icon"></i>上传图片</button>
+            <div style="margin-top: 10px; ">
+                <img id="pre-look"  th:src="@{/static/images/upload.jpg}" style="width: 500px;height: 300px;margin-left: 100px">
+            </div>
+        </div>
     </div>
     <div class="actions">
-        <div id="msg-btn" class="ui red button">知道了</div>
+        <div class="ui  button article-upload-image-cancel">取消</div>
+        <div class="ui green button article-upload-image-ok">
+            <i class="checkmark  icon"></i>
+            上传
+        </div>
     </div>
 </div>
 
@@ -289,12 +306,14 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
+<script src="../static/js/loading/mustache.js" th:src="@{/static/js/loading/mustache.js}"></script>
+<script src="../static/js/loading/zeroModal.js" th:src="@{/static/js/loading/zeroModal.js}"></script>
 <script type="text/javascript">
     //初始化
     $(document).ready(function () {
         toggleStatus();
         showCurrentPageNum();
-        alertDispException();
+        showPageZoomWarning();
         $('.ui.dropdown').dropdown({
             on: 'hover',
             clearable: true
@@ -312,16 +331,6 @@
         $('#all').css("cssText", "color: #349EDF !important");
     });
 
-    function alertDispException() {
-        if (detectZoom() != 125) {
-            spop({
-                template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
-                autoclose: 3000,
-                position: "top-center",
-                style: 'info',
-            });
-        }
-    }
 
     function showCurrentPageNum() {
         let obj = document.getElementsByClassName('pages');
@@ -389,6 +398,77 @@
         $('.topic').removeAttr('value');
         $('.topic').attr('placeholder','标题');
     }
+</script>
+<script>
 
+    /**
+     * 点击“配置文章首图”时把文章的ID记下来
+     * @param identityObj
+     */
+    function editArticleFirstImg(identityObj) {
+        sessionStorage.setItem("articleId", $(identityObj).find('.articleId').val());
+        let articleFirstPic = $(identityObj).find('.articleFirstPic').val();
+        if (articleFirstPic != null && articleFirstPic != "") {
+            $('#pre-look').attr('src',articleFirstPic);
+        }else{
+            $('#pre-look').attr('src','/static/images/upload.jpg');
+        }
+        $('.second.modal').modal("show");
+        $('.second.modal').modal({
+            closable:false
+        });
+    }
+
+    $('.article-upload-image-cancel').click(function () {
+        $('.second.modal').modal("hide");
+    });
+
+    $('.article-upload-image-ok').click(function () {
+        let articleId=sessionStorage.getItem("articleId");
+        //获取图片的base64串
+        let imgByte64Str = $('#pre-look')[0].src;
+        if (imgByte64Str != null && imgByte64Str != "" && imgByte64Str.toString().startsWith("data:image/jpeg;base64")) {
+            if(articleId!=""&&articleId>0) {
+                _loading(2);
+                $.ajax({
+                    url: "/manage/blog/upload_article_img",
+                    method: "POST",
+                    sync: false,
+                    data: {imgByte64Str: imgByte64Str, articleId: articleId},
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            _loadingClose();
+                            $('.second.modal').modal("hide");
+                            showSuccessMessage("上传成功！")
+                        } else {
+                            showErrorMessage("服务异常，请稍后重试！")
+                        }
+                    },
+                    error: function () {
+                        _loadingClose();
+                        showErrorMessage("服务异常，请稍后重试！")
+                    }
+                })
+            }else{
+                showWarningMessage("无法上传，请登录后重试！");
+            }
+        } else {
+            showWarningMessage("请选择图片");
+        }
+    });
+    //从本地选择图片后，页面显示
+    function show(obj) {
+        let rd = new FileReader(); //创建文件读取对象
+        let files = obj.files[0];  //获取file组件中的文件
+        rd.readAsDataURL(files);   //文件读取装换为base64类型
+        rd.onloadend = function (e) {
+            //加载完毕之后获取结果赋值给img
+            $('#pre-look').height(300);
+            $('#pre-look').width(450);
+            document.getElementById("pre-look").src = this.result;
+        };
+
+    }
 </script>
 </html>

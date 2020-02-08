@@ -1604,9 +1604,9 @@
     <div class="content">
         <div class="ui from">
             <input id="input_file" name="categoryImg"
-                   style="position:absolute;opacity:0;height: 35px !important;width: 171px !important;padding: 0 !important;cursor: pointer;"
+                   style="position:absolute;opacity:0;height: 35px !important;width: 117px !important;padding: 0 !important;cursor: pointer;"
                    onchange="show(this)" accept="image/*" type="file"/>
-            <button class="ui button" style="cursor: pointer;"><i class="upload icon"></i>选择要上传的文件</button>
+            <button class="ui button" style="cursor: pointer;"><i class="upload icon"></i>选择图片</button>
             <div style="margin-top: 10px; ">
                 <img id="pre-look" src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}"
                      style="width: 400px;height: 400px;margin-left: 150px">
@@ -1638,9 +1638,7 @@
     let obj = window.document.location;
     let BASE_PATH = obj.href.substring(0, obj.href.indexOf(obj.pathname));
     $(document).ready(function () {
-        if (detectZoom() != 125) {
-            showInfoMessage("您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%")
-        }
+        showPageZoomWarning();
         //控制“修改按钮的显示和隐藏”
         showModifyButton(".ui.header.about");
         showModifyButton(".ui.header.hobby");
@@ -1785,7 +1783,7 @@
 
     //上传微信二维码，返回二维码的URL
     $('.weixin-upload-image-ok.button').click(function () {
-        //获取图片的串
+        //获取图片的base64串
         let imgByte64Str = $('#pre-look')[0].src;
         if (imgByte64Str != null && imgByte64Str != "" && imgByte64Str.toString().startsWith("data:image/jpeg;base64")) {
             _loading(2);

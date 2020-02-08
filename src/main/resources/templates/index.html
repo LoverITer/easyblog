@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="../static/css/m.css" th:href="@{/static/css/m.css}">
     <script src="../static/js/jquery.min.js" th:href="@{/static/js/jquery.min.js}"></script>
     <script src="../static/js/comm.js" th:href="@{/static/js/comm.js}"></script>
+    <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
+    <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
     <!--[if lt IE 9]>
     <script src="js/modernizr.js"></script>
     <![endif]-->
@@ -28,7 +30,7 @@
         <nav>
             <ul id="starlist">
                 <li><a href="/" title="首页" th:href="@{/}">首页</a></li>
-                <li><a href="#">关于我</a></li>
+                <li><a href="#"  th:href="@{/article/home/667017}">关于我</a></li>
                 <li th:if="${user==null}">
                     <a href="#" th:href="@{/user/loginPage}">登录/注册</a>
                 </li>
@@ -72,10 +74,8 @@
                         th:each="article:${articles}">
                         <a href="/web/html/14.html"
                            th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank">
-                            <img th:if="${article.getArticleFirstPicture()==null}"
-                                 src="data:image/jpeg;base64,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">
-                            <img th:if="${article.getArticleFirstPicture()!=null}"
-                                 th:src="@{article.getArticleFirstPicture()}">
+                            <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{article.getArticleFirstPicture()}">
                         </a>
                         <span class="imginfo" th:text="${article.getArticleTopic()}">SpringBoot的自动配置原理</span>
                     </li>
@@ -100,40 +100,28 @@
                     <i class="ztpic">
                         <a href="/blog/7.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
                            target="_blank">
-                            <img th:if="${article.getArticleFirstPicture()==null}"
-                                 src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg">
-                            <img th:if="${article.getArticleFirstPicture()!=null}"
-                                 th:src="${article.getArticleFirstPicture()}"
-                                 src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg">
+                            <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="${article.getArticleFirstPicture()}" >
                         </a>
                     </i>
-                    <a href="/blog/7.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
-                       target="_blank"><b th:text="${article.getArticleTopic()}">安静地做一个爱设计的女子</b></a>
+                    <a href="/blog/7.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank"><b th:text="${article.getArticleTopic()}">安静地做一个爱设计的女子</b></a>
                     <span th:text="${#strings.abbreviate(article.getArticleContent(),50)}">自从入了这行，很多人跟我说可以做网络教程，我也有考虑，但最终没有实现，因为我觉得在这个教程泛滥的时代，直接做一套免费的原创个人博客模板更为实在。每当看到自己喜欢的配色图片</span>
-                    <a href="/blog/7.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
-                       target="_blank" class="readmore">阅读文章</a>
+                    <a href="/blog/7.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" class="readmore">阅读文章</a>
                 </li>
             </ul>
         </div>
         <div class="whitebg bloglist">
             <h2 class="htitle">最新博文</h2>
             <ul>
-                <li th:if="${newestArticlesPages!=null&&!#lists.isEmpty(newestArticlesPages.getList())}"
-                    th:each="article:${newestArticlesPages.getList()}">
+                <li th:if="${newestArticlesPages!=null&&!#lists.isEmpty(newestArticlesPages.getList())}" th:each="article:${newestArticlesPages.getList()}">
                     <h3 class="blogtitle">
-                        <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
-                           target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
+                        <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
                     </h3>
                     <span class="blogpic imgscale">
                      <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
                         th:title="${article.getArticleTopic()}" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
-                         <img th:if="${article.getArticleFirstPicture()==null}"
-                              src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg"
-                              th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
-                         <img th:if="${article.getArticleFirstPicture()!=null}"
-                              th:src="${article.getArticleFirstPicture()}"
-                              src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg"
-                              th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                         <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                         <img th:if="${article.getArticleFirstPicture()!=null}" th:src="${article.getArticleFirstPicture()}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                      </a>
                     </span>
                     <p th:text="${#strings.abbreviate(article.getArticleContent(),150)}" class="blogtext">
@@ -141,19 +129,15 @@
                     </p>
                     <p class="bloginfo">
                         <i class="avatar">
-                            <a href="#" th:href="@{/article/index/{userId}(userId=${article.getArticleUser()})}"
-                               target="_blank">
+                            <a href="#" th:href="@{/article/index/{userId}(userId=${article.getArticleUser()})}" target="_blank">
                                 <img src="#" th:src="@{${article.getUserHeaderImageUrl()}}" width="30px" height="30px">
                             </a>
                         </i>
                         <span></span>
                         <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2018-11-08</span>
-                        <span>【<a href="/xd/"
-                                  th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}"
-                                  target="_blank" th:text="${article.getArticleCategory()}">设计心得</a>】</span>
+                        <span>【<a href="/xd/" th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}" target="_blank" th:text="${article.getArticleCategory()}">设计心得</a>】</span>
                     </p>
-                    <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
-                       class="viewmore">阅读全文</a>
+                    <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" class="viewmore">阅读全文</a>
                 </li>
                 <!--10条 1栏目名称 18最新 5标签id-->
             </ul>
@@ -167,20 +151,14 @@
                      th:each="topicArticle:${famousSideBarTopArticle}">
                 <a href="#"
                    th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()})}">
-                    <img th:if="${topicArticle.getArticleFirstPicture()==null}"
-                         src="http://www.yangqq.com/skin/852/images/banner01.jpg">
-                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}"
-                         src="http://www.yangqq.com/skin/852/images/banner01.jpg">
+                    <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}">
                     <span th:text="${topicArticle.getArticleTopic()}">安静地做一个爱设计的女子</span></a>
             </section>
             <ul>
-                <li th:if="${visitRankingArticles!=null&&#lists.size(visitRankingArticles)>0}"
-                    th:each="article:${visitRankingArticles}">
+                <li th:if="${visitRankingArticles!=null&&#lists.size(visitRankingArticles)>0}" th:each="article:${visitRankingArticles}">
                     <i></i>
-                    <a href="#"
-                       th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
-                       th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!"
-                       target="_blank" th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</a>
+                    <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank" th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</a>
                 </li>
             </ul>
         </div>
@@ -188,21 +166,16 @@
             <h2 class="htitle">今日推荐</h2>
             <section class="topnews imgscale" th:if="${recommendTopic!=null}" th:each="topicArticle:${recommendTopic}">
                 <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()})}">
-                    <img th:if="${topicArticle.getArticleFirstPicture()==null}"
-                         src="http://www.yangqq.com/skin/852/images/banner01.jpg">
-                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}"
-                         src="http://www.yangqq.com/skin/852/images/banner01.jpg">
+                    <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}">
                     <span th:text="${topicArticle.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</span></a>
             </section>
             <ul>
                 <li th:if="${recommend!=null}" th:each="article:${recommend}">
-                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" href="/web/html/14.html"
-                       th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank">
+                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" href="/web/html/14.html" th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank">
                         <i>
-                            <img th:if="${article.getArticleFirstPicture()==null}"
-                                 src="http://www.yangqq.com/skin/852/images/banner01.jpg">
-                            <img th:if="${article.getArticleFirstPicture()!=null}"
-                                 src="http://www.yangqq.com/skin/852/images/banner01.jpg">
+                            <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                            <img th:if="${article.getArticleFirstPicture()!=null}" src="http://www.yangqq.com/skin/852/images/banner01.jpg">
                         </i>
                         <p th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</p></a>
                 </li>
@@ -255,4 +228,10 @@
     </a>
 </footer>
 </body>
+<script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
+<script>
+    $(document).ready(function () {
+        showPageZoomWarning();
+    })
+</script>
 </html>

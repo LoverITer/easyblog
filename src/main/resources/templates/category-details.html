@@ -142,15 +142,14 @@
 
                         <div class="five wide column">
                             <a target="_blank">
-                                <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
-                                     alt="" class="ui rounded image">
+                                <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" alt="" class="ui rounded image">
+                                <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" alt="" class="ui rounded image">
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div th:if="${!#lists.isEmpty(categoryArticles)&&categoryArticles.getTotal()<15&&categoryArticles.getTotal()>0}"
-                 class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
+            <div th:if="${!#lists.isEmpty(categoryArticles)&&categoryArticles.getTotal()<15&&categoryArticles.getTotal()>0}" class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
 
             <!--分页按钮-->
             <div th:if="${categoryArticles.getTotal()>15}" class="ui bottom attached segment"
@@ -210,12 +209,13 @@
     $(document).ready(function () {
         toggleStatus();
         showCurrentPageNum();
+        showPageZoomWarning();
     });
 
     function showCurrentPageNum() {
         var obj = document.getElementsByClassName('pages');
         var page = [[${categoryArticles.pageNum}]];
-        console.log(obj, page);
+        //console.log(obj, page);
         for (var i = 0; i < obj.length; i++) {
             if (obj[i].textContent == page) {
                 $(obj[i]).css('background', '#eee');

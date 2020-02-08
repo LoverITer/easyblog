@@ -120,7 +120,10 @@
                         </div>
                         <div class="five wide column">
                             <a  target="_blank">
-                                <img  src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"  alt="" class="ui rounded image">
+                                <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                     alt="" class="ui rounded image">
+                                <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}"
+                                     alt="" class="ui rounded image">
                             </a>
                         </div>
                     </div>
@@ -215,14 +218,7 @@
 <script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
 <script>
     $(document).ready(function () {
-        if (detectZoom() != 125) {
-            spop({
-                template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
-                autoclose: 4000,
-                position: "top-center",
-                style: 'info',
-            });
-        }
+        showPageZoomWarning();
     });
 </script>
 <script>

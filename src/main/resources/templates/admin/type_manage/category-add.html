@@ -37,8 +37,7 @@
                         <div class="ui form">
                             <div class="inline field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏名称：</label>
-                                <input id="category-name" name="categoryName" type="text"
-                                       style="width: 340px !important;" placeholder="请输入分类专栏名称">
+                                <input id="category-name" name="categoryName" type="text" style="width: 340px !important;" placeholder="请输入分类专栏名称">
                             </div>
                         </div>
                     </div>
@@ -46,10 +45,8 @@
                         <div class="ui form">
                             <div class="inline  field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏简介：</label>
-                                <textarea th:if="${categoryDesc==null}" name="categoryDesc" style="width: 340px !important;" rows="5"
-                                          placeholder="输入分类专栏简介"></textarea>
-                                <textarea th:if="${categoryDesc!=null}" name="categoryDesc" style="width: 340px !important;" rows="5"
-                                          placeholder="输入分类专栏简介" th:text="${categoryDesc}"></textarea>
+                                <textarea th:if="${categoryDesc==null}" name="categoryDesc" style="width: 340px !important;" rows="5" placeholder="输入分类专栏简介"></textarea>
+                                <textarea th:if="${categoryDesc!=null}" name="categoryDesc" style="width: 340px !important;" rows="5" placeholder="输入分类专栏简介" th:text="${categoryDesc}"></textarea>
                             </div>
                         </div>
                     </div>
@@ -57,11 +54,8 @@
                         <div class="ui form">
                             <div class="inline  field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏配图：</label>
-                                <input id="input_file"  name="categoryImg"
-                                       style="position:absolute;opacity:0;height: 120px !important;padding: 0 !important;"
-                                       onchange="show(this)" accept="image/*" type="file"/>
-                                <img id="pre-look"  style="width: 338px;height: 120px;"
-                                     th:src="@{/static/images/upload.jpg}"/>
+                                <input id="input_file"  name="categoryImg" style="position:absolute;opacity:0;height: 120px !important;padding: 0 !important;" onchange="show(this)" accept="image/*" type="file"/>
+                                <img id="pre-look"  style="width: 338px;height: 120px;" th:src="@{/static/images/upload.jpg}"/>
                             </div>
                         </div>
                     </div>
@@ -88,14 +82,7 @@
 <script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
 <script>
     $(document).ready(function () {
-        if (detectZoom() != 125) {
-            spop({
-                template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
-                autoclose: 4000,
-                position: "top-center",
-                style: 'info',
-            });
-        }
+        showPageZoomWarning();
     });
 </script>
 <script>
