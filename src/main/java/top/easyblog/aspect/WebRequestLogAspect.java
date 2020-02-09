@@ -19,7 +19,7 @@ public class WebRequestLogAspect {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Pointcut(value = "execution(* org.easyblog.controller.*.*(..))")
+    @Pointcut(value = "execution(* top.easyblog.controller.*.*(..))")
     public void log() {}
 
 

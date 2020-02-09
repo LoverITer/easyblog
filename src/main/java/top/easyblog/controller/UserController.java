@@ -186,10 +186,19 @@ public class UserController {
             result.setMessage("验证码填写不正确或验证码已过期!");
         } else {
             try {
-                userService.register(nickname, EncryptUtil.getInstance().SHA1(password, "user"), account, ip + " " + ipInfo);
-                result.setSuccess(true);
-                result.setMessage("注册成功!");
-                log.info("用户：{}注册成功,{}", account, new Date());
+                int userId = userService.register(nickname, EncryptUtil.getInstance().SHA1(password, "user"), account, ip + " " + ipInfo);
+                if(userId>0) {
+                    UserAccount userAccount = new UserAccount();
+                    userAccount.setAccountUser(userId);
+                    int res = userAccountService.createAccount(userAccount);
+                    if(res>0) {
+                        result.setSuccess(true);
+                        result.setMessage("注册成功!");
+                        log.info("用户：{}注册成功,{}", account, new Date());
+                    }else{
+                        log.info("用户：{}注册失败,{}", account, new Date());
+                    }
+                }
             } catch (Exception e) {
                 log.error(e.getMessage());
                 result.setMessage("服务异常，请重试！");

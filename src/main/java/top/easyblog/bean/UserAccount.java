@@ -21,19 +21,19 @@ public class UserAccount implements Serializable {
     private String steam;      //steam
     private String twitter;    //twitter
     private String weibo;       //微博
-    private Integer userId;         //用户id
+    private Integer accountUser;         //用户id
 
     public UserAccount() {
     }
 
-    public UserAccount(String github, String wechat, String qq, String steam, String twitter, String weibo, Integer userId) {
+    public UserAccount(String github, String wechat, String qq, String steam, String twitter, String weibo, Integer accountUser) {
         this.github = github;
         this.wechat = wechat;
         this.qq = qq;
         this.steam = steam;
         this.twitter = twitter;
         this.weibo = weibo;
-        this.userId = userId;
+        this.accountUser = accountUser;
     }
 
     public Integer getAccountId() {
@@ -44,12 +44,12 @@ public class UserAccount implements Serializable {
         this.accountId = accountId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getAccountUser() {
+        return accountUser;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setAccountUser(Integer accountUser) {
+        this.accountUser = accountUser;
     }
 
     public String getGithub() {
@@ -110,7 +110,7 @@ public class UserAccount implements Serializable {
                 ", steam='" + steam + '\'' +
                 ", twitter='" + twitter + '\'' +
                 ", weibo='" + weibo + '\'' +
-                ", userId=" + userId +
+                ", accountUser=" + accountUser +
                 '}';
     }
 }

@@ -2,15 +2,17 @@ package top.easyblog.controller.admin;
 
 
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import top.easyblog.autoconfig.QiNiuCloudService;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
-import top.easyblog.commons.utils.FileUploadUtils;
+import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
@@ -32,12 +34,14 @@ public class ArticleAdminController {
     private final ArticleServiceImpl articleService;
     private final CategoryServiceImpl categoryService;
     private final UserServiceImpl userService;
+    private final QiNiuCloudService qiNiuCloudService;
     private static final String PREFIX = "admin/blog_manage";
 
-    public ArticleAdminController(ArticleServiceImpl articleService, CategoryServiceImpl categoryService, UserServiceImpl userService, UserServiceImpl userService1, CommentServiceImpl commentService) {
+    public ArticleAdminController(ArticleServiceImpl articleService, CategoryServiceImpl categoryService, UserServiceImpl userService, UserServiceImpl userService1, CommentServiceImpl commentService, QiNiuCloudService qiNiuCloudService) {
         this.articleService = articleService;
         this.categoryService = categoryService;
         this.userService = userService1;
+        this.qiNiuCloudService = qiNiuCloudService;
     }
 
     @GetMapping(value = "/")
@@ -143,8 +147,8 @@ public class ArticleAdminController {
     @ResponseBody
     @PostMapping(value = "/saveArticle/{userId}")
     public Result publishArticle(@RequestBody Article article,
-                              @PathVariable(value = "userId") Integer userId,
-                              HttpSession session) {
+                                 @PathVariable(value = "userId") Integer userId,
+                                 HttpSession session) {
         User user = (User) session.getAttribute("user");
         Result result = new Result();
         result.setSuccess(false);
@@ -157,7 +161,7 @@ public class ArticleAdminController {
                     //处理用户文章分类
                     if (Objects.isNull(category)) {
                         //数据库中用户没有这个分类就新建分类
-                        category = new Category(userId, article.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1", "");
+                        category = new Category(userId, article.getArticleCategory(), DefaultImageDispatcherUtils.defaultCategoryImage(), 1, 0, 0, "1", "");
                         categoryService.saveCategory(category);
                     } else {
                         //数据库中用户有这个分类就更新该分类下的文章的数量
@@ -165,7 +169,7 @@ public class ArticleAdminController {
                         category0.setCategoryId(category.getCategoryId());
                         int num = articleService.countUserArticleInCategory(userId, article.getArticleCategory());
                         //id=-1标志这是一篇新文章
-                        if(article.getArticleId()==-1) {
+                        if (article.getArticleId() == -1) {
                             category0.setCategoryArticleNum(num + 1);
                         }
                         categoryService.updateByPKSelective(category0);
@@ -208,7 +212,7 @@ public class ArticleAdminController {
                     result.setSuccess(true);
                     result.setMessage(article.getArticleId().toString());  //把文章的ID返回给页面
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 result.setMessage("服务异常，请重试！");
             }
         }
@@ -223,7 +227,6 @@ public class ArticleAdminController {
                                      @RequestBody Article article,
                                      HttpServletRequest request) {
         Result result = new Result();
-        result.setSuccess(false);
         result.setMessage("请登录后再操作！");
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
@@ -233,10 +236,10 @@ public class ArticleAdminController {
                 //尝试更新文章
                 if (article.getArticleId() != -1) {
                     String categoryName = article.getArticleCategory();
-                    if(Objects.nonNull(categoryName)){
+                    if (Objects.nonNull(categoryName)) {
                         Category category = categoryService.getCategoryByUserIdAndName(userId, categoryName);
-                        if(Objects.isNull(category)){
-                            categoryService.saveCategory(new Category(userId, article.getArticleCategory(), FileUploadUtils.defaultCategoryImage(), 1, 0, 0, "1", ""));
+                        if (Objects.isNull(category)) {
+                            categoryService.saveCategory(new Category(userId, article.getArticleCategory(), DefaultImageDispatcherUtils.defaultCategoryImage(), 1, 0, 0, "1", ""));
                         }
                     }
                     //让数据库自动分配ID
@@ -254,10 +257,10 @@ public class ArticleAdminController {
                     if (createRes > 0) {
                         result.setSuccess(true);
                         result.setMessage(article.getArticleId().toString());
-                    }else{
+                    } else {
                         result.setMessage("服务异常，请尝试重新提交！");
                     }
-                }else{
+                } else {
                     result.setSuccess(true);
                     result.setMessage(article.getArticleId().toString());
                 }
@@ -406,35 +409,63 @@ public class ArticleAdminController {
 
 
     @GetMapping(value = "/public")
-    public String publicBlogPage(Model model,
-                                 HttpSession session,
-                                 @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+    public String publicBlogPage(Model model, HttpSession session,  @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
         return getArticles(model, "0", session, "/blog-public", pageParam);
     }
 
     @GetMapping(value = "/private")
-    public String privateBlogPage(Model model,
-                                  HttpSession session,
-                                  @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+    public String privateBlogPage(Model model,HttpSession session,  @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
         return getArticles(model, "1", session, "/blog-private", pageParam);
     }
 
     @GetMapping(value = "/draft")
-    public String draftBlog(Model model,
-                            HttpSession session,
-                            @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+    public String draftBlog(Model model, HttpSession session, @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
         return getArticles(model, "2", session, "/blog-draft-box", pageParam);
     }
 
     @GetMapping(value = "/dash")
-    public String dashBlogPage(Model model,
-                               HttpSession session,
-                               @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+    public String dashBlogPage(Model model, HttpSession session, @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
         return getArticles(model, "3", session, "/blog-dash", pageParam);
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/upload_article_img")
+    public Result editArticleFirstImg(HttpSession session, @RequestParam long articleId, @RequestParam String imgByte64Str) {
+        Result result = new Result();
+        result.setMessage("请登录后在操作！");
+        User user = (User) session.getAttribute("user");
+        if (Objects.nonNull(user)) {
+            try {
+                if (Objects.nonNull(imgByte64Str) && articleId > 0) {
+                    //把base64字符串转换为字节数组
+                    byte[] imageBytes = Base64.decodeBase64(imgByte64Str.replace("data:image/jpeg;base64,", ""));
+                    String imageName = System.currentTimeMillis() + UUID.randomUUID().toString() + ".jpg";
+                    String imageUrl = qiNiuCloudService.putBase64Image(imageBytes, imageName);
+                    if (Objects.nonNull(imageUrl)) {
+                        Article article = new Article();
+                        article.setArticleId(articleId);
+                        article.setArticleFirstPicture(imageUrl);
+                        int res = articleService.updateSelective(article);
+                        if (res <= 0) {
+                            result.setMessage("上传失败，请重试！");
+                            return result;
+                        }
+                        result.setMessage("上传成功！");
+                        result.setSuccess(true);
+                    }
+                } else {
+                    result.setMessage("参数非法");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                result.setMessage("服务异常，请稍后重试！");
+            }
+        }
+        return result;
     }
 
 

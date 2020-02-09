@@ -19,6 +19,9 @@ public interface IArticleService {
 
     Article getArticleById(int articleId,String flag);
 
+
+    List<Article> getAllNoneFirstPicArticles();
+
     /**
      * 获得某个用户的最新文章
      * @param userId

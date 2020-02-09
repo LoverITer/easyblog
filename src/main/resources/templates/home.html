@@ -113,7 +113,9 @@
 
                         <div class="five wide column">
                             <a target="_blank">
-                                <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                     alt="" class="ui rounded image">
+                                <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}"
                                      alt="" class="ui rounded image">
                             </a>
                         </div>
@@ -149,7 +151,7 @@
                                                    href="#"
                                                    style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
-                <p id="about-show" class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}"
+                <p id="about-show" style="word-break:break-all;" class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}"
                    th:text="${user.getUserDescription()}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环.
                     希望结识可以共同成长的小伙伴.</p>
                 <p id="about-show" class="m-text" th:if="${#strings.isEmpty(user.getUserDescription())}">
@@ -220,7 +222,7 @@
             </div>
 
             <div class="ui wechat-qr flowing popup transition hidden" style="padding: 0 0 !important;">
-                <img src="../static/images/wechat.jpg"
+                <img th:if="${authorAccounts.getWechat()!=null&&!#strings.isEmpty(authorAccounts.getWechat())&&#strings.indexOf(authorAccounts.getWechat(),'=')!=-1}"
                      th:src="@{${#strings.substring(authorAccounts.getWechat(),#strings.indexOf(authorAccounts.getWechat(),'=')+1,#strings.length(authorAccounts.getWechat()))}}"
                      alt=""
                      class="ui rounded image" style="width: 110px">
@@ -1604,9 +1606,9 @@
     <div class="content">
         <div class="ui from">
             <input id="input_file" name="categoryImg"
-                   style="position:absolute;opacity:0;height: 35px !important;width: 171px !important;padding: 0 !important;cursor: pointer;"
+                   style="position:absolute;opacity:0;height: 35px !important;width: 117px !important;padding: 0 !important;cursor: pointer;"
                    onchange="show(this)" accept="image/*" type="file"/>
-            <button class="ui button" style="cursor: pointer;"><i class="upload icon"></i>选择要上传的文件</button>
+            <button class="ui button" style="cursor: pointer;"><i class="upload icon"></i>选择图片</button>
             <div style="margin-top: 10px; ">
                 <img id="pre-look" src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}"
                      style="width: 400px;height: 400px;margin-left: 150px">
@@ -1638,9 +1640,7 @@
     let obj = window.document.location;
     let BASE_PATH = obj.href.substring(0, obj.href.indexOf(obj.pathname));
     $(document).ready(function () {
-        if (detectZoom() != 125) {
-            showInfoMessage("您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%")
-        }
+        showPageZoomWarning();
         //控制“修改按钮的显示和隐藏”
         showModifyButton(".ui.header.about");
         showModifyButton(".ui.header.hobby");
@@ -1650,6 +1650,11 @@
         if (contact_edit_success) {
             showSuccessMessage("修改成功！");
             localStorage.removeItem("contact_edit_success");
+        }
+        let hobby_success=sessionStorage.getItem("hobby-success");
+        if(hobby_success){
+            showSuccessMessage("修改成功！");
+            sessionStorage.removeItem("hobby-success");
         }
     });
 </script>
@@ -1727,8 +1732,10 @@
                 success: function (response) {
                     _loadingClose();
                     if (response.success) {
-                        showSuccessMessage("修改成功！");
                         $('.modal.hobby').modal('hide');
+                        sessionStorage.setItem("hobby-success",true);
+                        //刷新页面
+                        window.location.reload();
                     } else {
                         showErrorMessage(response.message);
                     }
@@ -1785,7 +1792,7 @@
 
     //上传微信二维码，返回二维码的URL
     $('.weixin-upload-image-ok.button').click(function () {
-        //获取图片的串
+        //获取图片的base64串
         let imgByte64Str = $('#pre-look')[0].src;
         if (imgByte64Str != null && imgByte64Str != "" && imgByte64Str.toString().startsWith("data:image/jpeg;base64")) {
             _loading(2);
@@ -1801,7 +1808,7 @@
                         //服务器返回上传后图片的URL
                         let weixinImgUrl = response.message;
                         localStorage.setItem("weixinImgUrl", weixinImgUrl);
-                        console.log(weixinImgUrl);
+                        //console.log(weixinImgUrl);
                         $('.second.modal').modal("hide");
                         //延时
                         for (let i = 0; i < 800; i++) {
@@ -2054,7 +2061,6 @@
             }
         });
     }
-
 </script>
 
 </html>

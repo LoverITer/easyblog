@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.bean.Category;
 import top.easyblog.commons.pagehelper.PageParam;
-import top.easyblog.commons.utils.FileUploadUtils;
+import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
 import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.service.ICategoryService;
@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements ICategoryService {
         List<Category> categories = categoryMapper.getSelective(userId);
         categories.forEach(ele -> {
             if (ele.getCategoryImageUrl() == null || "".equals(ele.getCategoryImageUrl())) {
-                ele.setCategoryImageUrl(FileUploadUtils.defaultCategoryImage());
+                ele.setCategoryImageUrl(DefaultImageDispatcherUtils.defaultCategoryImage());
             }
         });
         return categories;
@@ -74,7 +74,7 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public int saveCategory(int userId, String categoryName) {
         if (userId > 0 && categoryName != null) {
-            Category category = new Category(userId, categoryName, FileUploadUtils.defaultCategoryImage(), 0, 0, 0, "1","");
+            Category category = new Category(userId, categoryName, DefaultImageDispatcherUtils.defaultCategoryImage(), 0, 0, 0, "1","");
             return categoryMapper.insertSelective(category);
         }
         return -1;

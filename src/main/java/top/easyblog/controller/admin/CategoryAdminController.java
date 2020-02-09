@@ -15,7 +15,7 @@ import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
-import top.easyblog.commons.utils.FileUploadUtils;
+import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
@@ -223,7 +223,7 @@ public class CategoryAdminController {
             Category category = new Category(user.getUserId(), categoryName, "", 0, 0, 0, "1", categoryDesc);
             if (categoryImg.isEmpty()) {
                 //用户新建分类的时用户没有上传图片，系统随机分配一张
-                category.setCategoryImageUrl(FileUploadUtils.defaultCategoryImage());
+                category.setCategoryImageUrl(DefaultImageDispatcherUtils.defaultCategoryImage());
             } else {
                 //上传到七牛云图床，返回图片URL
                 try {

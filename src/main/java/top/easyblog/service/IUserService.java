@@ -37,7 +37,7 @@ public interface IUserService {
      * @param ipInfo  ip地址信息
      * @return
      */
-    boolean register(String nickname, String password, String account, String ipInfo);
+    int register(String nickname, String password, String account, String ipInfo);
 
 
     int updateUserInfo(String account, String newPassword);

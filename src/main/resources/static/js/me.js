@@ -28,6 +28,17 @@ function detectZoom() {
 }
 
 /**
+ * 当页面的缩放比例不是100%显示此提示
+ */
+function showPageZoomWarning() {
+    //sessionStorage.getItem("isReload") 检测页面是否第一次加载，只在第一次加载的时候提示
+    if (detectZoom() != 125 && !sessionStorage.getItem("isReload")) {
+        showInfoMessage("您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%");
+        sessionStorage.setItem("isReload", true);
+    }
+}
+
+/**
  * 高亮显示当前的页码，条件是将需要高亮显示的元素中加入pages类
  */
 function showCurrentPageNum(page) {
@@ -86,7 +97,7 @@ function inputList(inputObj, listObj) {
 /**
  * 自动根据Cookie填充用户名和密码
  **/
-function autoFillUserAccountByCookie(usernameInput,passwordInput) {
+function autoFillUserAccountByCookie(usernameInput, passwordInput) {
     //记住密码功能
     let str = getCookie("USER-COOKIE");
     //console.log(str);
@@ -201,7 +212,7 @@ function _loadingClose() {
  * @private
  */
 function _error(message) {
-    zeroModal.error(message+"!");
+    zeroModal.error(message + "!");
 }
 
 /**
@@ -209,18 +220,18 @@ function _error(message) {
  * @private
  */
 function _success(message) {
-    zeroModal.success(message+'!');
+    zeroModal.success(message + '!');
 }
 
 function _alert1(message) {
-    zeroModal.alert(message+"!");
+    zeroModal.alert(message + "!");
 }
 
 function _alert2() {
     zeroModal.alert({
         content: '操作提示!',
         contentDetail: '请选择数据后再进行操作',
-        okFn: function() {
+        okFn: function () {
             alert('ok callback');
         }
     });
@@ -232,7 +243,7 @@ function _alert2() {
  * @private
  */
 function _confirmBase(message) {
-    zeroModal.confirm(message, function() {
+    zeroModal.confirm(message, function () {
         alert('ok');
     });
 }
@@ -243,15 +254,15 @@ function _confirmBase(message) {
  * @param optionDetail   确认操作详细说明
  * @private
  */
-function _confirmWithDetail(option,optionDetail) {
+function _confirmWithDetail(option, optionDetail) {
     zeroModal.confirm({
-        content: option+'？',
-        contentDetail: optionDetail+'。',
-        okFn: function() {
+        content: option + '？',
+        contentDetail: optionDetail + '。',
+        okFn: function () {
             //确认按钮按下
 
         },
-        cancelFn: function() {
+        cancelFn: function () {
             //取消按钮按下
 
         }
@@ -264,18 +275,18 @@ function _confirmWithDetail(option,optionDetail) {
  * @param obj   显示/不显示的按钮
  * @param passwordObj   密码框
  */
-function passwordDisplayToggle(obj,passwordObj) {
+function passwordDisplayToggle(obj, passwordObj) {
     $(obj).click(function () {
-        if($(this).hasClass('password-hide')){
+        if ($(this).hasClass('password-hide')) {
             $(this).removeClass('password-hide');
             $(this).addClass('password-show');
-            $(passwordObj).attr('type','text');
-            let value=$(passwordObj).val();
+            $(passwordObj).attr('type', 'text');
+            let value = $(passwordObj).val();
             $(passwordObj).val(value);
-        }else{
+        } else {
             $(this).removeClass('password-show');
             $(this).addClass('password-hide');
-            $(passwordObj).attr('type','password');
+            $(passwordObj).attr('type', 'password');
         }
     });
 }
@@ -284,13 +295,14 @@ function passwordDisplayToggle(obj,passwordObj) {
  * 控制一个元素结点的显示和隐藏
  * @param identity  标识元素结点的class
  */
-function showModifyButton(identity){
+function showModifyButton(identity) {
     $(identity).hover(function () {
-            $('a',this).show();
+            $('a', this).show();
         },
         function () {
-            $('a',this).hide();
+            $('a', this).hide();
         });
 }
+
 
 

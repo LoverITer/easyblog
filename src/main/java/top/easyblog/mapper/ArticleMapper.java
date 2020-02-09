@@ -79,6 +79,13 @@ public  interface ArticleMapper extends BaseMapper<Article> {
 
 
     /**
+     * 获得所有没有首图的文章
+     * @return
+     */
+    List<Article> getAllNoneFirstPicArticles();
+
+
+    /**
      * 获得所有用户最近文章
      * @return
      */
