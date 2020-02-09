@@ -143,7 +143,7 @@ public class ArticleController {
                     //更新用户的访问量
                     User user1 = new User();
                     user1.setUserId(author.getUserId());
-                    user1.setUserVisit(author.getUserVisit() + 1);
+                    user1.setUserVisit(author.getUserVisit()+1);
                     userService.updateUserInfo(user1);
                     //更新文章的访问量
                     Article article1 = new Article();
@@ -156,6 +156,7 @@ public class ArticleController {
             }
             return PAGE404;
         }catch (Exception e){
+            e.printStackTrace();
             return "redirect:/error/error";
         }
     }

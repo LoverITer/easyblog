@@ -17,7 +17,7 @@ public class ServiceLogAspect {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Pointcut(value = "execution(* org.easyblog.service.*.*(..))")
+    @Pointcut(value = "execution(* top.easyblog.service.*.*(..))")
     public void log() {
     }
 

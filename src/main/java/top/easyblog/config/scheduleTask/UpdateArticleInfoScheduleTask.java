@@ -1,4 +1,4 @@
-package top.easyblog.commons.scheduleTask;
+package top.easyblog.config.scheduleTask;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
