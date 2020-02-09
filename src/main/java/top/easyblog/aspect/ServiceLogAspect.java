@@ -26,7 +26,7 @@ public class ServiceLogAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.info(new ServiceLog(classMethod, joinPoint.getArgs()).toString());
+        log.info(classMethod);
     }
 
     @AfterReturning(pointcut = "log()", returning = "result")

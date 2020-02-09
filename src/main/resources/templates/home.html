@@ -113,7 +113,9 @@
 
                         <div class="five wide column">
                             <a target="_blank">
-                                <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                     alt="" class="ui rounded image">
+                                <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}"
                                      alt="" class="ui rounded image">
                             </a>
                         </div>
@@ -149,7 +151,7 @@
                                                    href="#"
                                                    style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
-                <p id="about-show" class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}"
+                <p id="about-show" style="word-break:break-all;" class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}"
                    th:text="${user.getUserDescription()}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环.
                     希望结识可以共同成长的小伙伴.</p>
                 <p id="about-show" class="m-text" th:if="${#strings.isEmpty(user.getUserDescription())}">
@@ -220,7 +222,7 @@
             </div>
 
             <div class="ui wechat-qr flowing popup transition hidden" style="padding: 0 0 !important;">
-                <img src="../static/images/wechat.jpg"
+                <img th:if="${authorAccounts.getWechat()!=null&&!#strings.isEmpty(authorAccounts.getWechat())&&#strings.indexOf(authorAccounts.getWechat(),'=')!=-1}"
                      th:src="@{${#strings.substring(authorAccounts.getWechat(),#strings.indexOf(authorAccounts.getWechat(),'=')+1,#strings.length(authorAccounts.getWechat()))}}"
                      alt=""
                      class="ui rounded image" style="width: 110px">
@@ -1649,6 +1651,11 @@
             showSuccessMessage("修改成功！");
             localStorage.removeItem("contact_edit_success");
         }
+        let hobby_success=sessionStorage.getItem("hobby-success");
+        if(hobby_success){
+            showSuccessMessage("修改成功！");
+            sessionStorage.removeItem("hobby-success");
+        }
     });
 </script>
 
@@ -1725,8 +1732,10 @@
                 success: function (response) {
                     _loadingClose();
                     if (response.success) {
-                        showSuccessMessage("修改成功！");
                         $('.modal.hobby').modal('hide');
+                        sessionStorage.setItem("hobby-success",true);
+                        //刷新页面
+                        window.location.reload();
                     } else {
                         showErrorMessage(response.message);
                     }
@@ -1799,7 +1808,7 @@
                         //服务器返回上传后图片的URL
                         let weixinImgUrl = response.message;
                         localStorage.setItem("weixinImgUrl", weixinImgUrl);
-                        console.log(weixinImgUrl);
+                        //console.log(weixinImgUrl);
                         $('.second.modal').modal("hide");
                         //延时
                         for (let i = 0; i < 800; i++) {
@@ -2052,7 +2061,6 @@
             }
         });
     }
-
 </script>
 
 </html>

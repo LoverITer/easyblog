@@ -119,7 +119,9 @@
 
                             <div class="five wide column">
                                 <a href="#" target="_blank">
-                                    <img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                    <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                         alt="" class="ui rounded image">
+                                    <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}"
                                          alt="" class="ui rounded image">
                                 </a>
                             </div>

@@ -101,7 +101,7 @@ public class UserServiceImpl implements IUserService {
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
-    public boolean register(String nickname, String password, String account, String ipInfo) {
+    public int register(String nickname, String password, String account, String ipInfo) {
         String headImageUrl = DefaultImageDispatcherUtils.defaultAvatar();
         try {
             User user = new User(nickname, password, null, null, null, null, null,  null, 0, 100000, headImageUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
@@ -110,11 +110,11 @@ public class UserServiceImpl implements IUserService {
             } else if (RegexUtil.isMobile(account)) {
                 user.setUserPhone(account);
             }
-            return userMapper.save(user) > 0;
+            return userMapper.save(user);
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+        return -1;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
