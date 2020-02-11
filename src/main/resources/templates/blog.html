@@ -76,7 +76,7 @@
                 </div>
                 <!--文章主体开始-->
                 <div class="ui attached padded segment" style="padding:10px 15px 0 15px !important;">
-                    <div  id="content" th:utext="${article.getArticleContent()}" style="padding:0 10px !important;" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large"></div>
+                    <div  id="content" th:utext="${article.getArticleContent()}" style="padding:0 10px !important;font-size: 1.1rem !important;" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large"></div>
                     <!--赞赏-->
                     <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui center aligned basic segment">
                         <button id="payButton" class="ui orange basic circular button">赞赏</button>
