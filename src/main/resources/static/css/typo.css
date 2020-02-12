@@ -52,7 +52,7 @@
 .typo blockquote {
   position: relative;
   display: block;
-  font-size: 14px;
+  font-size: 15px;
   color: #999;
   font-weight: 400;
   background: #eef0f4;
@@ -275,7 +275,7 @@
 
 /* 在文章中，应该还原 ul 和 ol 的样式 */
 .typo ul, .typo-ul {
-  margin-left: 1.3em;
+  margin-left: -1em;
   list-style: disc;
 }
 

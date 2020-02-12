@@ -9,39 +9,44 @@ EasyBlog
 Features
 --------
  
-- Be awesome
-- Make things faster
-- EasyBlog will make it easy to write a blog .
+- Be awesome.
+- Make things faster.
+- EasyBlog will make it easy to write a blog.
 
 How to use it?
 ------------
-#### 项目首页：www.easyblog.top
+#### 项目首页地址：www.easyblog.top
 #### 项目运行效果演示： 
-分类专栏页面：
-<a href="https://sm.ms/image/YPxiMNZqVEl4aBT" target="_blank"><img src="https://i.loli.net/2019/10/11/YPxiMNZqVEl4aBT.png" ></a>
+##### 项目首页
+<img src="http://image.easyblog.top/1581419401975088bf0a7-2215-4364-8343-7cb56dec4751.png">
 
-归档页面：
-<a href="https://sm.ms/image/tuR3FMr1zWvOE7n" target="_blank"><img src="https://i.loli.net/2019/10/11/tuR3FMr1zWvOE7n.png" ></a>
+##### 登录/注册页面
+<img src="http://image.easyblog.top/15814197771404e2f80e8-c4d3-4156-bf3e-1b3578cf6161.jpg">
 
-博客详情页面：
-<a href="https://sm.ms/image/esrvMJHADWiXmbI" target="_blank"><img src="https://i.loli.net/2019/10/11/esrvMJHADWiXmbI.png" ></a>
+##### 文章内容页面
+<img src="http://image.easyblog.top/158141986451400a9fde4-a91d-4850-a1e6-95ad455d2756.png">
 
-博客内容页面：
-<a href="https://sm.ms/image/XYJFAK1RWTrCOgj" target="_blank"><img src="https://i.loli.net/2019/10/11/XYJFAK1RWTrCOgj.png" ></a>
+##### 文章分类专栏页面
+<img src="http://image.easyblog.top/158142018903330c50b98-a5e8-444b-92ec-789e1b6a489d.png" >
 
-个人主页页面：
-<a href="https://sm.ms/image/6MefkaCWbFBARyH" target="_blank"><img src="https://i.loli.net/2019/10/11/6MefkaCWbFBARyH.png" ></a>
+##### 文章归档页面
+<img src="http://image.easyblog.top/15814203243294ed6e732-edcb-4604-b7fc-5d5d7a73bb2c.png" >
 
-我的个人信息页面：
-<a href="https://sm.ms/image/hOMnJDLcXmStzKB" target="_blank"><img src="https://i.loli.net/2019/10/11/hOMnJDLcXmStzKB.png" ></a>
+##### 博客详情页面
+<img src="http://image.easyblog.top/1581420469583b059dab2-15a4-44a7-a96f-cdece5b88f8e.png" >
+
+##### 个人主页页面
+<img src="http://image.easyblog.top/15814205516631953da39-8f35-493c-9ac7-86ccfd28297f.png" >
+
+##### 个人信息设置页面
+<img src="http://image.easyblog.top/1581420657904c0357c2f-9391-426d-a1d0-05dae4ecd043.png" >
 
 
-博客编辑以及发布页面：
-<a href="https://sm.ms/image/1IiWlgxGC9NkEh3" target="_blank"><img src="https://i.loli.net/2019/10/11/1IiWlgxGC9NkEh3.png" ></a>
+##### 文章编辑以及发布页面
+<img src="http://image.easyblog.top/15814208027537f962c90-9fbd-4e0a-8a0e-ea4b31dc0291.png" >
 
-博客管理页面：
-<a href="https://sm.ms/image/PoWvSwpLD5nIG3O" target="_blank"><img src="https://i.loli.net/2019/10/11/PoWvSwpLD5nIG3O.png" ></a>
-    
+##### 博客管理页面
+<img src="http://image.easyblog.top/1581420877327788dfd73-0e33-4625-ad00-295b4b2f2cfe.png" >
  
 Contribute
 ----------
