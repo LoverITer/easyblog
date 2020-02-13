@@ -63,6 +63,11 @@
 }
 
 .typo li{
+  font-size: 16px;
+  color: #4d4d4d;
+  line-height: 24px;
+  overflow-wrap: break-word;
+  word-break: break-all;
   margin-top: 8px;
 }
 
@@ -275,7 +280,6 @@
 
 /* 在文章中，应该还原 ul 和 ol 的样式 */
 .typo ul, .typo-ul {
-  margin-left: -1em;
   list-style: disc;
 }
 
