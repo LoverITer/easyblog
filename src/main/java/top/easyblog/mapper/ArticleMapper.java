@@ -9,6 +9,9 @@ import top.easyblog.mapper.core.BaseMapper;
 
 import java.util.List;
 
+/**
+ * @author Huangxin
+ */
 @Repository
 public  interface ArticleMapper extends BaseMapper<Article> {
 

@@ -172,7 +172,7 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor = Exception.class)
     @Override
     public List<Article> getMostFamousArticles(int limit) {
         List<Article> articles = null;

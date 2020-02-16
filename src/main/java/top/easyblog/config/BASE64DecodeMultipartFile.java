@@ -4,6 +4,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
+/**
+ * @author Administrator
+ */
 public class BASE64DecodeMultipartFile implements MultipartFile {
 
     private final byte[]  imageContent;

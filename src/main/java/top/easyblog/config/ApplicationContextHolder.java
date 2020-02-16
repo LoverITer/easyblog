@@ -12,8 +12,10 @@ public class ApplicationContextHolder implements ApplicationContextAware {
     /**
      * 实现ApplicationContextAware接口的context注入函数, 将其存入静态变量.
      */
+    @java.lang.Override
     public void setApplicationContext(ApplicationContext applicationContext) {
-        ApplicationContextHolder.applicationContext = applicationContext; // NOSONAR
+        // NOSONAR
+        ApplicationContextHolder.applicationContext = applicationContext;
     }
 
     /**
