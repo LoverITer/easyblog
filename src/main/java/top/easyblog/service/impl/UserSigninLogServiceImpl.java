@@ -12,32 +12,35 @@ import top.easyblog.service.IUserSigninLogService;
 
 import java.util.List;
 
+/**
+ * @author huangxin
+ */
 @Service
 public class UserSigninLogServiceImpl implements IUserSigninLogService {
 
     @Autowired
     private UserSigninLogMapper userSigninLogMapper;
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int saveSigninLog(UserSigninLog log) {
         try {
             return userSigninLogMapper.save(log);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.getMessage();
             return -1;
         }
     }
 
 
-    @Transactional(isolation =Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "user_login_info",condition = "#result!=null&&#result.size()>0")
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+    @Cacheable(cacheNames = "user_login_info", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<UserSigninLog> getUserLoginInfo(int userId, int num) {
-        if(userId>0){
-            try{
-                return userSigninLogMapper.getUserLoginInfo(userId,num);
-            }catch (Exception e){
+        if (userId > 0) {
+            try {
+                return userSigninLogMapper.getUserLoginInfo(userId, num);
+            } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }

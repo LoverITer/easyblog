@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author huangxin
+ */
 public class UserPhoneLog implements Serializable {
 
     private static final long serialVersionUID = 7393331110726779645L;

@@ -12,7 +12,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * @author Administrator
+ * @author huangxin
  */
 @Configuration
 public class RedisConfig<T> {

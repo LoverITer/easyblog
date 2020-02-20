@@ -24,6 +24,7 @@ import java.util.Objects;
 
 /***
  * 用户账户设置后台管理——修改以及查看个人信息
+ * @author huangxin
  */
 @Controller
 @RequestMapping(value = "/manage/account")

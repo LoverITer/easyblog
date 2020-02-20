@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * @author huangxin
+ */
 @Controller
 @RequestMapping(value = "/upload")
 public class FileUploadController {

@@ -6,6 +6,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author huangxin
+ */
 @Component
 public class SendEmailUtil {
 

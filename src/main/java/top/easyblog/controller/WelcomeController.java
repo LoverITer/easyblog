@@ -17,6 +17,9 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @author huangxin
+ */
 @Controller
 @RequestMapping(value = "/")
 public class WelcomeController {

@@ -20,6 +20,9 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @author huangxin
+ */
 @Controller
 @RequestMapping("/article")
 public class ArticleController {
@@ -46,7 +49,7 @@ public class ArticleController {
     public String index(@PathVariable("userId") int userId,
                         @RequestParam(value = "articleType", defaultValue = "3") int articleType,
                         Model model,
-                        @RequestParam(value = "page",defaultValue = "1") int page) {
+                        @RequestParam(value = "page", defaultValue = "1") int page) {
         try {
             ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, userId, articleType + "");
             final User user = userService.getUser(userId);
@@ -61,7 +64,7 @@ public class ArticleController {
                 model.addAttribute("displayOnlyOriginal", "0");
             }
             return "user_home";
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return "/error/error";
         }
     }
@@ -69,13 +72,14 @@ public class ArticleController {
 
     /**
      * 关于我页面
+     *
      * @param userId
      * @param model
      * @param session
      * @return
      */
     @RequestMapping(value = "/home/{userId}")
-    public String homePage(@PathVariable("userId") int userId,Model model, HttpSession session) {
+    public String homePage(@PathVariable("userId") int userId, Model model, HttpSession session) {
         try {
             User author = userService.getUser(userId);
             author.setUserPassword(null);
@@ -92,47 +96,47 @@ public class ArticleController {
                 model.addAttribute("user", author);
                 String hobbyStr;
                 String techStr;
-                if(Objects.nonNull(hobbyStr=author.getUserHobby())) {
+                if (Objects.nonNull(hobbyStr = author.getUserHobby())) {
                     //先用英文的逗号切分
                     String[] hobbies = hobbyStr.replaceAll("，", ",").split(",");
-                    model.addAttribute("userHobby",hobbies);
+                    model.addAttribute("userHobby", hobbies);
                 }
-                if(Objects.nonNull(techStr=author.getUserTech())) {
+                if (Objects.nonNull(techStr = author.getUserTech())) {
                     String[] techs = techStr.replaceAll("，", ",").split(",");
                     model.addAttribute("userTech", techs);
                 }
                 //帮助页面正常显示
-                if("".equals(author.getUserTech())){
+                if ("".equals(author.getUserTech())) {
                     model.addAttribute("userTech", null);
                 }
                 //作者的各种联系方式
                 UserAccount authorAccounts = userAccount.getAccountByUserId(author.getUserId());
-                model.addAttribute("authorAccounts",authorAccounts);
+                model.addAttribute("authorAccounts", authorAccounts);
                 //登录的访客的信息
                 User visitor = (User) session.getAttribute("user");
-                if(visitor!=null) {
+                if (visitor != null) {
                     model.addAttribute("visitorId", visitor.getUserId());
                 }
                 return "home";
             }
             return PAGE404;
-        }catch (Exception e){
+        } catch (Exception e) {
             return "redirect:/error";
         }
     }
 
 
     @GetMapping(value = "/details/{articleId}")
-    public String articleDetails(@PathVariable("articleId") int articleId,HttpSession session, Model model) {
+    public String articleDetails(@PathVariable("articleId") int articleId, HttpSession session, Model model) {
         try {
             //根据id拿到文章
-            Article article = articleServiceImpl.getArticleById(articleId,"html");
+            Article article = articleServiceImpl.getArticleById(articleId, "html");
             if (Objects.nonNull(article)) {
                 model.addAttribute("article", article);
                 List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
                 model.addAttribute("articleComments", articleComments);
-                User user = (User)session.getAttribute("user");
-                if(Objects.nonNull(user)) {
+                User user = (User) session.getAttribute("user");
+                if (Objects.nonNull(user)) {
                     model.addAttribute("userId", user.getUserId());
                 }
                 User author = userService.getUser(article.getArticleUser());
@@ -143,7 +147,7 @@ public class ArticleController {
                     //更新用户的访问量
                     User user1 = new User();
                     user1.setUserId(author.getUserId());
-                    user1.setUserVisit(author.getUserVisit()+1);
+                    user1.setUserVisit(author.getUserVisit() + 1);
                     userService.updateUserInfo(user1);
                     //更新文章的访问量
                     Article article1 = new Article();
@@ -155,7 +159,7 @@ public class ArticleController {
                 }
             }
             return PAGE404;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/error/error";
         }

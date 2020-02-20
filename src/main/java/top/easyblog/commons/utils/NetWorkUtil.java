@@ -13,6 +13,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Objects;
 
+/**
+ * @author huangxin
+ */
 public final class NetWorkUtil {
 
     private static Logger log = LoggerFactory.getLogger(NetWorkUtil.class);

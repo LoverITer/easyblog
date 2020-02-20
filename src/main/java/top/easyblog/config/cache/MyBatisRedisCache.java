@@ -15,13 +15,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 使用Redis作为MyBatis的二级缓存
+ *
+ * @author huangxin
  */
 public class MyBatisRedisCache implements Cache {
 
     private final String id;
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
-    private RedisTemplate<String, Object> redisTemplate =null;
-    private static final long EXPIRE_TIME_IN_MINUTES = 30; // redis过期时间
+    private RedisTemplate<String, Object> redisTemplate = null;
+    /**
+     * redis过期时间
+     */
+    private static final long EXPIRE_TIME_IN_MINUTES = 30;
 
 
     public MyBatisRedisCache(final String id) {
@@ -60,7 +65,7 @@ public class MyBatisRedisCache implements Cache {
      */
     @Override
     public Object getObject(Object key) {
-        if(Objects.nonNull(key)) {
+        if (Objects.nonNull(key)) {
             RedisTemplate<String, Object> redisTemplate = getRedisTemplate();
             ValueOperations<String, Object> opsForValue = redisTemplate.opsForValue();
             return opsForValue.get(key.toString());
@@ -70,7 +75,7 @@ public class MyBatisRedisCache implements Cache {
 
     @Override
     public Object removeObject(Object o) {
-        if(Objects.nonNull(o)) {
+        if (Objects.nonNull(o)) {
             RedisTemplate<String, Object> redisTemplate = getRedisTemplate();
             return redisTemplate.delete(o.toString());
         }
@@ -95,7 +100,7 @@ public class MyBatisRedisCache implements Cache {
                 return connection.dbSize();
             }
         });
-        return size!=null?size.intValue():0;
+        return size != null ? size.intValue() : 0;
     }
 
     @Override

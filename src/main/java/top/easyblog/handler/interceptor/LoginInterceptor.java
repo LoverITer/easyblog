@@ -12,6 +12,7 @@ import java.util.Objects;
 
 /**
  * 非法访问拦截器
+ * @author huangxin
  */
 
 @Component
@@ -31,7 +32,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
         }
-        //如果仅仅是查看一下别人的博客，分类...都一律放行
+        //如果仅仅是浏览一下的博客，分类...都一律放行
         return true;
     }
 

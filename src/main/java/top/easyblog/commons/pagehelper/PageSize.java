@@ -2,6 +2,8 @@ package top.easyblog.commons.pagehelper;
 
 /**
  * 分页的大小
+ *
+ * @author huangxin
  */
 public enum PageSize {
     /**
@@ -17,13 +19,12 @@ public enum PageSize {
     /**
      * 最大的页面大小
      */
-    MAX_PAGE_SIZE(20)
-
-    ;
+    MAX_PAGE_SIZE(20);
 
     private int pageSize;
-    PageSize(int pageSize){
-        this.pageSize=pageSize;
+
+    PageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     public int getPageSize() {

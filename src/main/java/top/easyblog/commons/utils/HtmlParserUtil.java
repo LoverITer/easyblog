@@ -2,13 +2,30 @@ package top.easyblog.commons.utils;
 
 import java.util.regex.Pattern;
 
+/**
+ * @author huangxin
+ */
 public class HtmlParserUtil {
-
-    private static final String regEx_script = "<script[^>]*?>[\\s\\S]*?</script>"; //匹配所有的<script></script>以及里面的内容
-    private static final String regEx_style = "<style[^>]*?>[\\s\\S]*?</style>"; //匹配所有的<style></style>以及里面的内容
-    private static final String regEx_html = "<[^>]+>";       //匹配替换其他的HTML元素
-    private static final String regEx_space = "\\s*|\t|\r|\n";   //匹配空格回车换行符
-    private static final String regEx_pre = "<code [^>]*?>[\\s\\S]*?</code>";  //匹配所有的<code></code>以及里面的内容
+    /**
+     * 匹配所有的<script></script>以及里面的内容
+     */
+    private static final String regEx_script = "<script[^>]*?>[\\s\\S]*?</script>";
+    /**
+     * 匹配所有的<style></style>以及里面的内容
+     */
+    private static final String regEx_style = "<style[^>]*?>[\\s\\S]*?</style>";
+    /**
+     * 匹配替换其他的HTML元素
+     */
+    private static final String regEx_html = "<[^>]+>";
+    /**
+     * 匹配空格回车换行符
+     */
+    private static final String regEx_space = "\\s*|\t|\r|\n";
+    /**
+     * 匹配所有的<code></code>以及里面的内容
+     */
+    private static final String regEx_pre = "<code [^>]*?>[\\s\\S]*?</code>";
 
     /**
      * @param htmlStr
@@ -29,7 +46,8 @@ public class HtmlParserUtil {
     }
 
     /**
-     *转化HTML为text
+     * 转化HTML为text
+     *
      * @param htmlStr
      * @return
      */

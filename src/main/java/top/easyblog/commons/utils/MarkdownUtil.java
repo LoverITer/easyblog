@@ -5,6 +5,7 @@ import top.easyblog.markdown.MarkdownParser;
 
 /**
  * Markdown文本转成HTML文本的工具类
+ * @author huangxin
  */
 public class MarkdownUtil {
 

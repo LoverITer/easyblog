@@ -9,16 +9,21 @@ import top.easyblog.handler.interceptor.LoginInterceptor;
 
 import javax.servlet.MultipartConfigElement;
 
+/**
+ * @author huangxin
+ */
 @EnableWebMvc
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
 
     @Bean
-    public MultipartConfigElement multipartConfigElement(){
+    public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize(DataSize.ofMegabytes(5));   //单个文件最大5MB
-        factory.setMaxRequestSize(DataSize.ofMegabytes(10));   //一次请求最大10MB
+        //单个文件最大5MB
+        factory.setMaxFileSize(DataSize.ofMegabytes(5));
+        //一次请求最大10MB
+        factory.setMaxRequestSize(DataSize.ofMegabytes(10));
         return factory.createMultipartConfig();
     }
 
@@ -27,12 +32,16 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         final InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
         registration.addPathPatterns("/**");
-        /**排除拦截classpath:/static下的所有静态资源**/
+        /**
+         * 排除拦截classpath:/static下的所有静态资源
+         */
         registration.excludePathPatterns("/static/**");
         registration.excludePathPatterns("/error");
         registration.excludePathPatterns("/**.*.html");
         registration.excludePathPatterns("/");
-        /*****排除拦截器对登录、注销、去登录页、查看文章请求的拦截*****/
+        /**
+         * 排除拦截器对登录、注销、去登录页、查看文章请求的拦截
+         */
         registration.excludePathPatterns("/login");
         registration.excludePathPatterns("/logout");
         registration.excludePathPatterns("/user/**");
@@ -42,7 +51,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/upload/**").addResourceLocations("file:D:/upload/");;
+        registry.addResourceHandler("/upload/**").addResourceLocations("file:D:/upload/");
         WebMvcConfigurer.super.addResourceHandlers(registry);
     }
 

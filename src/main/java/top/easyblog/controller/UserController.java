@@ -33,7 +33,9 @@ import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.Objects;
 
-
+/**
+ * @author huangxin
+ */
 @Controller
 @RequestMapping("/user")
 public class UserController {

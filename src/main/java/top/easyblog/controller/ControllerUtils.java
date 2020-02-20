@@ -15,7 +15,9 @@ import top.easyblog.service.impl.UserAttentionImpl;
 import java.util.List;
 import java.util.Objects;
 
-
+/**
+ * @author huangxin
+ */
 class ControllerUtils {
 
     private static Logger log = LoggerFactory.getLogger(ControllerUtils.class);

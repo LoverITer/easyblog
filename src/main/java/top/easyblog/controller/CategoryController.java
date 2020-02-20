@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author huangxin
+ */
 @Controller
 @RequestMapping(value = "/category/details")
 public class CategoryController {

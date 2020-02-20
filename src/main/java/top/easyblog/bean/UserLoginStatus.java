@@ -1,5 +1,9 @@
 package top.easyblog.bean;
 
+
+/**
+ * @author huangxin
+ */
 public enum UserLoginStatus {
 
     /**

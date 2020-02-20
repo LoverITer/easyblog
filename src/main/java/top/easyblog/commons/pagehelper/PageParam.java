@@ -2,6 +2,9 @@ package top.easyblog.commons.pagehelper;
 
 import java.util.Objects;
 
+/**
+ * @author huangxin
+ */
 public class PageParam {
 
     private Integer page;

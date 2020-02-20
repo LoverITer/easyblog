@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * @author huangxin
+ */
 @Controller
 @RequestMapping(value = "/manage/uc")
 public class UserCenterController {

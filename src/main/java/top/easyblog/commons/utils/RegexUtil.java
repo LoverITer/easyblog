@@ -4,6 +4,9 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author huangxin
+ */
 public class RegexUtil {
 
     /**
@@ -25,6 +28,7 @@ public class RegexUtil {
      * Integer正则表达式 ^-?(([1-9]\d*$)|0)
      */
     public static final String INTEGER = "^-?(([1-9]\\d*$)|0)";
+
     /**
      * 正整数正则表达式 >=0 ^[1-9]\d*|0$
      */

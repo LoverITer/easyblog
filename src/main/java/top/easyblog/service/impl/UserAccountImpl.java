@@ -23,7 +23,7 @@ public class UserAccountImpl implements IUserAccountService {
         this.userAccountMapper = userAccountMapper;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Override
     public boolean isAccountEmpty(int userId) {
         if (userId > 0) {
@@ -37,7 +37,7 @@ public class UserAccountImpl implements IUserAccountService {
         return true;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Override
     public int createAccount(UserAccount account) {
         if(account!=null){
@@ -50,7 +50,7 @@ public class UserAccountImpl implements IUserAccountService {
         return 0;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Override
     public int updateAccountByUserId(UserAccount account) {
         if(Objects.nonNull(account)){
@@ -64,7 +64,7 @@ public class UserAccountImpl implements IUserAccountService {
         return 0;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Override
     public UserAccount getAccountByUserId(int userId) {
         UserAccount account=null;

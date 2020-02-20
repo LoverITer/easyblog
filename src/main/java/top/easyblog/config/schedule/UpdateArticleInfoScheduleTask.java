@@ -1,4 +1,4 @@
-package top.easyblog.config.scheduleTask;
+package top.easyblog.config.schedule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +13,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-/**
+/**定时更新系统数据文章的信息
  * @author HuangXin
  * @since 2020/2/8 21:50
- * 定时更新系统数据文章的信息
+ *
  */
 @Configuration
 @Component

@@ -11,7 +11,11 @@ import top.easyblog.mapper.core.BaseMapper;
  */
 @Repository
 public interface UserAccountMapper extends BaseMapper<UserAccount> {
-
+    /**
+     *
+     * @param account
+     * @return
+     */
     int updateSelective(UserAccount account);
 
     /**

@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @author huangxin
+ */
 @CacheConfig(keyGenerator = "keyGenerator", cacheManager = "cacheManager")
 @Service
 public class ArticleServiceImpl implements IArticleService {
@@ -42,7 +45,7 @@ public class ArticleServiceImpl implements IArticleService {
         this.userMapper = userMapper;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @CachePut(cacheNames = "article", condition = "#result>0")
     @Override
     public int saveArticle(Article article) {
@@ -56,19 +59,19 @@ public class ArticleServiceImpl implements IArticleService {
         return 0;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public List<Article> getAllNoneFirstPicArticles() {
-        List<Article> articles=null;
+        List<Article> articles = null;
         try {
-            articles= articleMapper.getAllNoneFirstPicArticles();
+            articles = articleMapper.getAllNoneFirstPicArticles();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return articles;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Cacheable(cacheNames = "article", condition = "#result!=null")
     @Override
     public Article getArticleById(int articleId, String flag) {
@@ -88,7 +91,7 @@ public class ArticleServiceImpl implements IArticleService {
         return article;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Cacheable(cacheNames = "userArticles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Article> getUserNewestArticles(int userId, int limit) {
@@ -102,7 +105,7 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public List<Article> getYouMayAlsoLikeArticles() {
         List<Article> articles = new ArrayList<>();
@@ -119,7 +122,7 @@ public class ArticleServiceImpl implements IArticleService {
         return articles;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public List<Article> getAllHistoryFamousArticles(int limit) {
         List<Article> articles = null;
@@ -133,7 +136,7 @@ public class ArticleServiceImpl implements IArticleService {
         return articles;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public PageInfo<Article> getAllUserNewestArticlesPage(PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
@@ -172,7 +175,7 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor = Exception.class)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public List<Article> getMostFamousArticles(int limit) {
         List<Article> articles = null;
@@ -187,7 +190,7 @@ public class ArticleServiceImpl implements IArticleService {
         return articles;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<ArticleCounter> getUserAllArticleArchives(int userId) {
@@ -205,7 +208,7 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Article> getUserArticles(int userId, String articleType) {
@@ -223,7 +226,7 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public PageInfo getUserArticlesPage(int userId, String articleType, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
@@ -250,7 +253,7 @@ public class ArticleServiceImpl implements IArticleService {
         return pageInfo;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Article> getUserArticlesMonthly(int userId, String year, String month) {
@@ -264,7 +267,7 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public PageInfo<Article> getUserArticlesMonthlyPage(int userId, String year, String month, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
@@ -284,7 +287,7 @@ public class ArticleServiceImpl implements IArticleService {
         return pageInfo;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Cacheable(cacheNames = "articles", condition = "#result!=null&&result.size()>0")
     @Override
     public List<Article> getUserArticlesMonthlyOrderByClickNum(int userId, String year, String month) {
@@ -298,6 +301,7 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public PageInfo<Article> getUserArticlesMonthlyOrderByClickNumPage(int userId, String year, String month, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
@@ -317,7 +321,7 @@ public class ArticleServiceImpl implements IArticleService {
         return pageInfo;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Cacheable(cacheNames = "articles", condition = "#result!=null&&result.size()>0")
     @Override
     public List<Article> getByCategoryAndUserId(int userId, int categoryId) {
@@ -331,6 +335,7 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public PageInfo<Article> getByCategoryAndUserIdPage(int userId, int categoryId, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
@@ -351,7 +356,7 @@ public class ArticleServiceImpl implements IArticleService {
         return pageInfo;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Article> getArticlesSelective(Article article, String year, String month) {
@@ -365,13 +370,13 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public PageInfo<Article> getArticlesSelectivePage(Article article, PageParam pageParam) {
         return getArticlesSelectivePage(article, null, null, pageParam);
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public PageInfo<Article> getArticlesSelectivePage(Article article, String year, String month, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
         if (Objects.nonNull(article)) {
@@ -390,7 +395,7 @@ public class ArticleServiceImpl implements IArticleService {
         return pageInfo;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Cacheable(cacheNames = "articles", condition = "#result!=null&&result.size()>0")
     @Override
     public List<Article> getArticleByTopic(String query) {
@@ -404,6 +409,7 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public PageInfo<Article> getArticleByTopicPage(String query, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
@@ -423,7 +429,7 @@ public class ArticleServiceImpl implements IArticleService {
         return pageInfo;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "article")
     @Override
     public void deleteByUserIdAndTitle(int userId, String title) {
@@ -436,7 +442,7 @@ public class ArticleServiceImpl implements IArticleService {
         }
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public void deleteByPK(int articleId) {
         if (articleId > 0) {
@@ -455,7 +461,7 @@ public class ArticleServiceImpl implements IArticleService {
         }
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int countUserArticleInCategory(int userId, String categoryName) {
         if (userId > 0 && StringUtil.isNotEmpty(categoryName)) {
@@ -468,7 +474,7 @@ public class ArticleServiceImpl implements IArticleService {
         return 0;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int countSelective(Article article) {
         if (Objects.nonNull(article)) {
@@ -481,7 +487,7 @@ public class ArticleServiceImpl implements IArticleService {
         return 0;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int updateSelective(Article article) {
         if (Objects.nonNull(article)) {
@@ -494,7 +500,7 @@ public class ArticleServiceImpl implements IArticleService {
         return 0;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int updateArticlesByCategoryName(String newCategoryName, String oldCategoryName, int userId) {
         if (Objects.nonNull(newCategoryName) && Objects.nonNull(oldCategoryName) && userId > 0) {

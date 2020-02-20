@@ -5,6 +5,8 @@ import java.io.Serializable;
 
 /**
  * 用于映射文章表的统计信息
+ *
+ * @author huangxin
  */
 public class ArticleCounter implements Serializable {
 
