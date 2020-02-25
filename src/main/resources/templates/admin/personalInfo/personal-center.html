@@ -453,7 +453,7 @@
 <!--警告框-->
 <div class="am-modal am-modal-alert" tabindex="-1" id="up-modal-alert">
     <div class="am-modal-dialog">
-        <div class="am-modal-hd">信息</div>
+        <div class="am-modal-hd">上传成功！</div>
         <div style="color: black !important;padding-top: 10px !important;font-size: 16px !important;" class="am-modal-bd"  id="alert_content">
         </div>
         <div class="am-modal-footer">
@@ -507,12 +507,7 @@
                 }
             },
             error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
+                showErrorMessage('服务异常，请稍后重试！')
             }
         });
     });
@@ -630,4 +625,7 @@
         district: district
     });
 </script>
+<script th:src="@{/static/js/amazeui.min.js}"></script>
+<script th:src="@{/static/js/cropper.min.js}"></script>
+<script th:src="@{/static/js/custom_up_img.js}"></script>
 </html>
