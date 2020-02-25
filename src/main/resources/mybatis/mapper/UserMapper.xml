@@ -3,7 +3,7 @@
 <mapper namespace="top.easyblog.mapper.UserMapper">
 
     <!--添加一条记录-->
-    <insert id="save" useGeneratedKeys="true" keyColumn="user_id">
+    <insert id="save" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id">
         insert into user (user_nickname, user_password, user_name, user_gender, user_birthday, user_phone,
                           user_mail, user_address, user_score, user_rank, user_headerImg_url,
                           user_description, user_register_time, user_register_ip,

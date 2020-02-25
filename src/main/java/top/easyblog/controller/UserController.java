@@ -15,10 +15,7 @@ import top.easyblog.bean.UserLoginStatus;
 import top.easyblog.bean.UserSigninLog;
 import top.easyblog.commons.email.Email;
 import top.easyblog.commons.email.SendEmailUtil;
-import top.easyblog.commons.utils.AESCrypt;
-import top.easyblog.commons.utils.EncryptUtil;
-import top.easyblog.commons.utils.NetWorkUtil;
-import top.easyblog.commons.utils.SendMessageUtil;
+import top.easyblog.commons.utils.*;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.IUserAccountService;
 import top.easyblog.service.impl.UserEmailLogServiceImpl;
@@ -185,19 +182,28 @@ public class UserController {
         } else if (userService.getUser(account) != null) {
             result.setMessage("此邮箱/手机号已经注册了!");
         } else if (Objects.isNull(captcha) || !captcha.equals(captchaCode)) {
-            result.setMessage("验证码填写不正确或验证码已过期!");
+            result.setMessage("验证码不正确或验证码已过期!");
         } else {
             try {
-                int userId = userService.register(nickname, EncryptUtil.getInstance().SHA1(password, "user"), account, ip + " " + ipInfo);
-                if(userId>0) {
+                User user = new User();
+                user.setUserNickname(nickname);
+                user.setUserPassword(EncryptUtil.getInstance().SHA1(password, "user"));
+                if (RegexUtil.isEmail(account)) {
+                    user.setUserMail(account);
+                } else if (RegexUtil.isPhone(account)) {
+                    user.setUserPhone(account);
+                }
+                user.setUserRegisterIp(ip + " " + ipInfo);
+                int var0 = userService.register(user);
+                if (var0 > 0) {
                     UserAccount userAccount = new UserAccount();
-                    userAccount.setAccountUser(userId);
-                    int res = userAccountService.createAccount(userAccount);
-                    if(res>0) {
+                    userAccount.setAccountUser(user.getUserId());
+                    int var1 = userAccountService.createAccount(userAccount);
+                    if (var1 > 0) {
                         result.setSuccess(true);
                         result.setMessage("注册成功!");
                         log.info("用户：{}注册成功,{}", account, new Date());
-                    }else{
+                    } else {
                         log.info("用户：{}注册失败,{}", account, new Date());
                     }
                 }
@@ -397,7 +403,7 @@ public class UserController {
     @ResponseBody
     @GetMapping(value = "/aboutMe")
     public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo,
-                                HttpSession session) {
+                                 HttpSession session) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
         User user = (User) session.getAttribute("user");
@@ -433,12 +439,12 @@ public class UserController {
         result.setMessage("请登录后重试！");
         User user = (User) session.getAttribute("user");
         if (Objects.nonNull(user)) {
-             UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, user.getUserId());
-             //检查用户的account是否存在
-            int res=userAccountService.updateAccountByUserId(account);
-            if (res<=0) {
+            UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, user.getUserId());
+            //检查用户的account是否存在
+            int res = userAccountService.updateAccountByUserId(account);
+            if (res <= 0) {
                 //如果没有就创建一个
-               res=userAccountService.createAccount(account);
+                res = userAccountService.createAccount(account);
             }
             if (res > 0) {
                 result.setSuccess(true);
@@ -453,7 +459,7 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/settingHobby")
-    public Result setUserHobby(@RequestParam String hobby, HttpSession session){
+    public Result setUserHobby(@RequestParam String hobby, HttpSession session) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
         User user = (User) session.getAttribute("user");
@@ -462,7 +468,7 @@ public class UserController {
             userHobby.setUserId(user.getUserId());
             userHobby.setUserHobby(hobby);
             int res = userService.updateUserInfo(userHobby);
-            if(res<0){
+            if (res < 0) {
                 result.setMessage("更新失败，请稍后重试！");
                 return result;
             }
@@ -474,7 +480,7 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/settingTech")
-    public Result settingTech(HttpSession session,@RequestParam String techStr){
+    public Result settingTech(HttpSession session, @RequestParam String techStr) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
         User user = (User) session.getAttribute("user");
@@ -483,7 +489,7 @@ public class UserController {
             userTech.setUserId(user.getUserId());
             userTech.setUserTech(techStr);
             int res = userService.updateUserInfo(userTech);
-            if(res<0){
+            if (res < 0) {
                 result.setMessage("修改失败！请稍后重试！");
                 return result;
             }

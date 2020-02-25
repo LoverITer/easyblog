@@ -277,6 +277,7 @@ function _confirmWithDetail(option, optionDetail) {
  */
 function passwordDisplayToggle(obj, passwordObj) {
     $(obj).click(function () {
+        console.log(1111111);
         if ($(this).hasClass('password-hide')) {
             $(this).removeClass('password-hide');
             $(this).addClass('password-show');

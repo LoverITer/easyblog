@@ -44,7 +44,15 @@ public interface IUserService {
      * @param ipInfo   ip地址信息
      * @return int
      */
+    @Deprecated
     int register(String nickname, String password, String account, String ipInfo);
+
+    /**
+     * 新增一条用户信息
+     * @param user  用户对象
+     * @return
+     */
+    int register(User user);
 
     /**
      * 根据用户Id更新用户密码

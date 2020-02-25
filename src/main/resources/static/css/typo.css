@@ -271,6 +271,10 @@
 }
 
 .typo h4, .typo-h4 {
+  line-height: 1.8;
+  padding-left: 10px;
+  margin: 0 auto 10px;
+  border-left: 10px solid #55895B;
   font-size: 1.4em;
 }
 
@@ -304,11 +308,14 @@
 }
 
 .typo table th, .typo-table th {
-  background: #fbfbfb;
+  background: #f1f1f1;
 }
 
 .typo table thead th, .typo-table thead th {
+  font-size: 16px;
   background: #f1f1f1;
+  text-align: center;
+  font-weight: 700;
 }
 
 .typo table caption {

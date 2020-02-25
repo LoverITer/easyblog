@@ -1,6 +1,7 @@
 package top.easyblog.commons.utils;
 
-import top.easyblog.markdown.Markdown2HTMLParser;
+
+import top.easyblog.markdown.Markdown2HtmlParser;
 import top.easyblog.markdown.MarkdownParser;
 
 /**
@@ -72,7 +73,7 @@ public class MarkdownUtil {
      * @return  HTML文本
      */
     public static String markdownToHtmlExtensions(String markdown){
-        MarkdownParser parser=new Markdown2HTMLParser();
+        MarkdownParser parser=new Markdown2HtmlParser();
         return parser.render2Html(markdown);
     }
 

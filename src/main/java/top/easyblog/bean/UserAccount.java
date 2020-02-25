@@ -13,15 +13,23 @@ public class UserAccount implements Serializable {
 
 
     private static final long serialVersionUID = -5577288584992137710L;
+    /**id**/
     @Id
-    private Integer accountId;   //id
-    private String github;     //github
-    private String wechat;    //微信
-    private String qq;         //qq
-    private String steam;      //steam
-    private String twitter;    //twitter
-    private String weibo;       //微博
-    private Integer accountUser;         //用户id
+    private Integer accountId;
+    /**github**/
+    private String github;
+    /**微信**/
+    private String wechat;
+    /**QQ**/
+    private String qq;
+    /**steam***/
+    private String steam;
+    /**twitter**/
+    private String twitter;
+    /**微博**/
+    private String weibo;
+    /**用户id**/
+    private Integer accountUser;
 
     public UserAccount() {
     }
