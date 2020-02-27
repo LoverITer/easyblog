@@ -11,6 +11,10 @@ import top.easyblog.service.ICategoryCareService;
 
 import java.util.List;
 
+
+/**
+ * @author huangxin
+ */
 @CacheConfig(keyGenerator = "keyGenerator", cacheManager = "cacheManager")
 @Service
 public class CategoryCareServiceImpl implements ICategoryCareService {
@@ -22,14 +26,14 @@ public class CategoryCareServiceImpl implements ICategoryCareService {
     }
 
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Cacheable(cacheNames = "getCategoryCare", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<CategoryCare> getCategoryCare(int categoryId) {
        return categoryCareMapper.getCategoryCareByCategoryId(categoryId);
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Cacheable(cacheNames = "saveCareInfo", condition = "#result>0")
     @Override
     public int saveCareInfo(int careUserId, int categoryId) {
@@ -42,6 +46,7 @@ public class CategoryCareServiceImpl implements ICategoryCareService {
         }
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Override
     public boolean deleteCareInfo(int userId, int categoryId) {
         try {

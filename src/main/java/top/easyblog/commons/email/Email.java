@@ -1,5 +1,8 @@
 package top.easyblog.commons.email;
 
+/**
+ * @author huangxin
+ */
 public class Email {
 
     private String subject;

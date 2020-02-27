@@ -2,6 +2,8 @@ package top.easyblog.commons.enums;
 
 /**
  * 文章的类型
+ *
+ * @author huangxin
  */
 public enum ArticleType {
     /**

@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author huangxin
+ */
 public class UserComment implements Serializable {
 
     private static final long serialVersionUID = 6652860225449766128L;

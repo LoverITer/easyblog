@@ -16,6 +16,9 @@ import top.easyblog.service.impl.*;
 
 import java.util.Objects;
 
+/**
+ * @author huangxin
+ */
 @Controller
 @RequestMapping(value = "/archives/details")
 public class ArchivesController {

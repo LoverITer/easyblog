@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ *@author huangxin
+ */
 public class Category implements Serializable {
 
     private static final long serialVersionUID = 8690952682535328046L;

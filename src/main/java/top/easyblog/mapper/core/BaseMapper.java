@@ -4,14 +4,17 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * @author Huangxin
+ */
 public interface BaseMapper<T> {
 
     /**
      * 添加一条记录
      * @param t  插入对记录
-     * @return    当前最新插入记录的id
+     * @return    自增主键Id
      */
-    int save(T t) ;
+    Integer save(T t) ;
 
 
     /**

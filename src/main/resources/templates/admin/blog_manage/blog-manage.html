@@ -427,7 +427,7 @@
         let articleId=sessionStorage.getItem("articleId");
         //获取图片的base64串
         let imgByte64Str = $('#pre-look')[0].src;
-        if (imgByte64Str != null && imgByte64Str != "" && imgByte64Str.toString().startsWith("data:image/jpeg;base64")) {
+        if (imgByte64Str != null && imgByte64Str != "") {
             if(articleId!=""&&articleId>0) {
                 _loading(2);
                 $.ajax({

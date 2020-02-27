@@ -9,15 +9,40 @@ import top.easyblog.mapper.core.BaseMapper;
 
 import java.util.List;
 
+/**
+ * @author Huangxin
+ */
 @Repository
 public  interface ArticleMapper extends BaseMapper<Article> {
 
+    /**
+     *
+     * @param record
+     * @return
+     */
     int saveSelective(Article record);
 
+    /**
+     *
+     * @param record
+     * @return
+     */
     int updateByPrimaryKeySelective(Article record);
 
+    /**
+     *
+     * @param record
+     * @return
+     */
     int updateByPrimaryKeyWithContent(Article record);
 
+    /**
+     *
+     * @param newArticleCategory
+     * @param oldArticleCategory
+     * @param userId
+     * @return
+     */
     int updateArticlesByUserIdAndArticleCategory(@Param(value = "newArticleCategory") String newArticleCategory,@Param(value = "oldArticleCategory") String oldArticleCategory,@Param(value = "userId") int userId);
 
     /**
@@ -170,7 +195,11 @@ public  interface ArticleMapper extends BaseMapper<Article> {
      */
     List<Article> getByCategoryAndUserId(@Param("userId") int userId, @Param("categoryId") int categoryId);
 
-
+    /**
+     *
+     * @param query
+     * @return
+     */
     List<Article> getUsersArticleByQueryString(@Param("query") String query);
 
 

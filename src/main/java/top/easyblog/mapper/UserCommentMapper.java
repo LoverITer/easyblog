@@ -7,10 +7,16 @@ import top.easyblog.mapper.core.BaseMapper;
 
 import java.util.List;
 
-
+/**
+ * @author huangxin
+ */
 @Repository
 public interface UserCommentMapper extends BaseMapper<UserComment> {
-
+    /**
+     *
+     * @param record
+     * @return
+     */
     int saveSelective(UserComment record);
 
     /**
@@ -20,8 +26,18 @@ public interface UserCommentMapper extends BaseMapper<UserComment> {
      */
     int countReceivedComment(@Param("receivedUser") int receivedId);
 
+    /**
+     *
+     * @param record
+     * @return
+     */
     int updateByPrimaryKeySelective(UserComment record);
 
+    /**
+     *
+     * @param record
+     * @return
+     */
     int updateByPrimaryKeyWithContent(UserComment record);
 
     /**

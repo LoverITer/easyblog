@@ -10,7 +10,7 @@
 
     <insert id="save" parameterType="top.easyblog.bean.UserAccount">
         insert into user_account (account_user, github, wechat, weibo, twitter, steam, qq)
-        values (#{userId}, #{github,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{weibo,jdbcType=VARCHAR},
+        values (#{accountUser}, #{github,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{weibo,jdbcType=VARCHAR},
                 #{twitter,jdbcType=VARCHAR}, #{steam,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR})
     </insert>
 
@@ -24,7 +24,7 @@
     <select id="getByUserId" parameterType="integer" resultType="top.easyblog.bean.UserAccount">
         select *
         from user_account
-        where account_user = #{userId}
+        where account_user = #{accountUser}
     </select>
 
     <update id="updateByPrimaryKey" parameterType="top.easyblog.bean.UserAccount">
@@ -35,7 +35,7 @@
             weibo=#{weibo},
             twitter=#{twitter},
             steam=#{steam}
-        where account_user = #{accountId,jdbcType=INTEGER}
+        where account_user = #{accountUser,jdbcType=INTEGER}
     </update>
 
     <update id="updateSelective" parameterType="top.easyblog.bean.UserAccount">
@@ -51,7 +51,7 @@
         <where>
             <choose>
                 <when test="accountId!=null and account>0">account_id=#{accountId,jdbcType=INTEGER}</when>
-                <when test="userId!=null and userId>0">account_user=#{userId,jdbcType=INTEGER}</when>
+                <when test="userId!=null and userId>0">account_user=#{accountUser,jdbcType=INTEGER}</when>
                 <when test="1==1">1=1</when>
             </choose>
         </where>

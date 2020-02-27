@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 /**
  * 向页面返回JSON格式信息
+ * @author huangxin
  */
 public class Result implements Serializable {
 

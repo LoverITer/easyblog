@@ -13,6 +13,11 @@ import top.easyblog.commons.utils.NetWorkUtil;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
+/**
+ * controller层日志切面
+ *
+ * @author huangxin
+ */
 @Aspect
 @Component
 public class WebAdminRequestLogAspect {
@@ -20,7 +25,8 @@ public class WebAdminRequestLogAspect {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Pointcut(value = "execution(* top.easyblog.controller.*.*.*(..))")
-    public void log() {}
+    public void log() {
+    }
 
 
     @Before(value = "log()")
@@ -31,13 +37,13 @@ public class WebAdminRequestLogAspect {
         String ip = NetWorkUtil.getUserIp(request);
         String url = request.getRequestURL().toString();
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.info(new RequestLog(url, ip+" "+NetWorkUtil.getLocation(request,ip), classMethod, joinPoint.getArgs()).toString());
+        log.info(new RequestLog(url, ip + " " + NetWorkUtil.getLocation(request, ip), classMethod, joinPoint.getArgs()).toString());
     }
 
     @AfterReturning(pointcut = "log()", returning = "result")
     public void afterReturn(JoinPoint joinPoint, Object result) {
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.info(classMethod + " has done successfully.result value {}",result);
+        log.info(classMethod + " has done successfully.result value {}", result);
     }
 
     @AfterThrowing(pointcut = "log()", throwing = "throwable")

@@ -120,10 +120,8 @@
                         </div>
                         <div class="five wide column">
                             <a  target="_blank">
-                                <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
-                                     alt="" class="ui rounded image">
-                                <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}"
-                                     alt="" class="ui rounded image">
+                                <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" style="max-width: 280px;max-height: 160px;min-height: 155.9px;min-width: 277px" class="ui rounded image">
+                                <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" style="max-width: 280px;max-height: 160px;min-height: 155.9px;min-width: 277px" class="ui rounded image">
                             </a>
                         </div>
                     </div>

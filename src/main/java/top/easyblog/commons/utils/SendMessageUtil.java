@@ -9,10 +9,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
+/**
+ * @author huangxin
+ */
 public class SendMessageUtil {
 
 
-    private static final Logger log= LoggerFactory.getLogger(SendMessageUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(SendMessageUtil.class);
     private static final String SMS_Url = "http://sms.webchinese.cn/web_api/";
 
     /**
@@ -26,12 +29,14 @@ public class SendMessageUtil {
 
         HttpClient client = new HttpClient();
         PostMethod post = new PostMethod(SMS_Url);
-        post.addRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=gbk");// 在头文件中设置转码
+        // 在头文件中设置转码
+        post.addRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=gbk");
 
         //设置参数
         NameValuePair[] data = {
                 new NameValuePair("Uid", Uid),
-                new NameValuePair("Key", Key),//秘钥
+                //秘钥
+                new NameValuePair("Key", Key),
                 new NameValuePair("smsMob", sendPhoneNum),
                 new NameValuePair("smsText", desc)
         };
@@ -48,9 +53,6 @@ public class SendMessageUtil {
         Header[] headers = post.getResponseHeaders();
         int statusCode = post.getStatusCode();
         log.info("statusCode:" + statusCode);
-       /* for (Header h : headers) {
-            System.out.println(h.toString());
-        }*/
 
         String result = "";
         try {
@@ -112,9 +114,8 @@ public class SendMessageUtil {
     }
 
     /**
-     *
-     * @param code  产生的随机码的位数
-     * @return  code位随机码
+     * @param code 产生的随机码的位数
+     * @return code位随机码
      */
     public static String getRandomCode(Integer code) {
         Random random = new Random();

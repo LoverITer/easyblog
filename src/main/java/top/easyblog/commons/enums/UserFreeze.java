@@ -2,6 +2,7 @@ package top.easyblog.commons.enums;
 
 /**
  * 用户账号的状态
+ * @author huangxin
  */
 public enum UserFreeze {
 

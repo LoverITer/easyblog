@@ -16,6 +16,9 @@ import top.easyblog.service.impl.CommentServiceImpl;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
+/**
+ * @author huangxin
+ */
 @Controller
 @RequestMapping(value = "/comment")
 public class CommentController {

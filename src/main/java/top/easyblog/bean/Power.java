@@ -4,6 +4,9 @@ import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 
+/**
+ *@author huangxin
+ */
 public class Power implements Serializable {
 
     private static final long serialVersionUID = 6025381966973267562L;

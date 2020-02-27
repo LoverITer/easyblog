@@ -7,15 +7,38 @@ import top.easyblog.mapper.core.BaseMapper;
 
 import java.util.List;
 
+/**
+ * @author huangxin
+ */
 @Repository
 public interface CategoryMapper extends BaseMapper<Category> {
-
+    /**
+     *
+     * @param record
+     * @return
+     */
     int insertSelective(Category record);
 
+    /**
+     *
+     * @param record
+     * @return
+     */
     int updateByPrimaryKeySelective(Category record);
 
+    /**
+     *
+     * @param userId
+     * @param categoryName
+     * @return
+     */
     Category getCategoryByUserIdAndName(@Param("userId") int userId, @Param("categoryName") String categoryName);
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     List<Category> getSelective(@Param("id") int id);
 
     /**
@@ -33,7 +56,11 @@ public interface CategoryMapper extends BaseMapper<Category> {
     List<Category> getUserAllDeletedCategory(@Param("userId") int userId);
 
 
-
+    /**
+     *
+     * @param category
+     * @return
+     */
     int countSelective(@Param("category") Category category);
 
 }

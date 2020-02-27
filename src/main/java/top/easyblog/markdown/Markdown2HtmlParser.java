@@ -12,7 +12,7 @@ import com.vladsch.flexmark.util.data.DataHolder;
  * @since 2020/1/24 12:00
  * Markdown 渲染为HTML的具体实现
  */
-public class Markdown2HTMLParser extends AbstractMarkdownParser {
+public class Markdown2HtmlParser extends AbstractMarkdownParser {
     @Override
     public String render2Html(String markdown) {
         DataHolder OPTIONS = PegdownOptionsAdapter.flexmarkOptions(

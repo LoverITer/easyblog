@@ -120,19 +120,18 @@
 <script th:online="javascript" type="text/javascript">
     var maxtime = 60;
     var timeOut;
-    let passwordToggle=document.getElementById('register-password-display-toggle');
     //console.log(passwordToggle.style.top);
     $(document).ready(function () {
+        sendEmail();
+        passwordDisplayToggle($('#login-password-display-toggle'),$('#password'));
+        passwordDisplayToggle($('#register-password-display-toggle'),$('#pass'));
+        //显示服务器返回的信息
+        showInfoMessage("[[${error}]]");
         //自动补全邮箱
         inputList($("#username"),$("#mails"));
         inputList($("#phone-mail"),$("#r-mails"));
         //自动填写账号密码
         autoFillUserAccountByCookie($('#username'),$('#password'));
-        //显示服务器返回的信息
-        showInfoMessage("[[${error}]]");
-        sendEmail();
-        passwordDisplayToggle($('#login-password-display-toggle'),$('#password'));
-        passwordDisplayToggle($('#register-password-display-toggle'),$('#pass'));
     });
 
     $('#login-btn').click(function () {
@@ -141,13 +140,13 @@
     });
 
     /**
-     * 发送邮件
+     * 发送验证码
      */
     function sendEmail() {
         $('#code-btn').click(function () {
-            var str = $('#phone-mail').val();
-            var mail_reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
-            var phone_reg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(199))+\d{8})$/;
+            let str = $('#phone-mail').val();
+            let mail_reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+            let phone_reg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(199))+\d{8})$/;
             if (phone_reg.test(str)) {
                 //判断是手机，就通过ajax异步请求给用户的这个手机发送验证码
                 $.ajax({
@@ -172,7 +171,7 @@
                     async: true,
                     data: {email: str, option: "register"},
                     dataType: "text",
-                    success: function () {
+                    success: function (result) {
                         showInfoMessage('验证码已发送到您的邮箱，请注意查收！');
                         timeOut = setInterval('countDown()', 1000);   //倒计时，并设置按钮不可用
                     },
@@ -390,12 +389,14 @@
                 method: "GET",
                 sync: true,
                 data: {nickname: nickname, pwd: password, account: account, code: code},
-                dataType: "text",
+                dataType: "json",
                 success: function (result) {
                     _loadingClose();
                     if(result.success) {
+                        console.log('注册成功');
                         window.location.href = "/user/register-success";
                     }else{
+                        console.log('注册失败');
                         showErrorMessage(result.message);
                     }
                 },

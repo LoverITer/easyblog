@@ -3,10 +3,6 @@ body {
     background: url("../images/bg.png");
 }
 
-.h1, .h2, .h3, .h4, .h5, .h6, a, abbr, body, cite, dd, dl, dt, h1, h2, h3, h4, h5, h6, iframe, input, li, object, ol, p, pre, span, ul {
-    font-family: 'Microsoft YaHei','SF Pro Display',Roboto,Noto,Arial,'PingFang SC',sans-serif;
-}
-
 .m-padded-no {
     padding-bottom: 0 !important;
     padding-top: 0 !important;

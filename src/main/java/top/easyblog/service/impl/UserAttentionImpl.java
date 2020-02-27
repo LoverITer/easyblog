@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Objects;
 
 
+/**
+ * @author huangxin
+ */
 @Service
 public class UserAttentionImpl implements IUserAttentionService {
 
@@ -27,7 +30,7 @@ public class UserAttentionImpl implements IUserAttentionService {
     }
 
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public List<UserAttention> getAllUserAttentionInfo(UserAttention userAttention) {
         if (Objects.nonNull(userAttention)) {
@@ -57,7 +60,7 @@ public class UserAttentionImpl implements IUserAttentionService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int deleteByPK(int id) {
         if (id > 0) {
@@ -71,8 +74,8 @@ public class UserAttentionImpl implements IUserAttentionService {
         return 0;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Cacheable(cacheNames = "userAttention",key = "#userId",condition = "#result>0")
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+    @Cacheable(cacheNames = "userAttention", key = "#userId", condition = "#result>0")
     @Override
     public int countAttentionNumOfMe(int userId) {
         if (userId > 0) {

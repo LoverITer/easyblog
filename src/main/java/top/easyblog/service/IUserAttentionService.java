@@ -4,29 +4,35 @@ import top.easyblog.bean.UserAttention;
 
 import java.util.List;
 
+/**
+ * @author huanxin
+ */
 public interface IUserAttentionService {
 
 
-   /**
-    * 选择性的查询用户的关注信息
-    * @param userAttention
-    * @return
-    */
-   List<UserAttention> getAllUserAttentionInfo(UserAttention userAttention);
+    /**
+     * 选择性的查询用户的关注信息
+     *
+     * @param userAttention UserAttention对象
+     * @return List
+     */
+    List<UserAttention> getAllUserAttentionInfo(UserAttention userAttention);
 
-   /**
-    * 通过主键删除一个关注信息
-    * @param id
-    * @return
-    */
-   int deleteByPK(int id);
+    /**
+     * 通过主键删除一个关注信息
+     *
+     * @param id UserAttention Id
+     * @return int
+     */
+    int deleteByPK(int id);
 
 
-   /**
-    * 统计我的好友数
-    * @param userId
-    * @return
-    */
-   int countAttentionNumOfMe(int userId);
+    /**
+     * 统计我的好友数
+     *
+     * @param userId 用户Id
+     * @return int
+     */
+    int countAttentionNumOfMe(int userId);
 
 }

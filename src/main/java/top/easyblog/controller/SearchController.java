@@ -11,6 +11,9 @@ import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
 import top.easyblog.service.impl.ArticleServiceImpl;
 
+/**
+ * @author huangxin
+ */
 @RequestMapping(value = "/search")
 @Controller
 public class SearchController {

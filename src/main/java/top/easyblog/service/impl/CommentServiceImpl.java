@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @author huangxin
+ */
 @Service
 public class CommentServiceImpl implements ICommentService {
 
@@ -36,7 +39,7 @@ public class CommentServiceImpl implements ICommentService {
         this.articleService = articleService;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Override
     public int save(UserComment comment) {
         if (Objects.nonNull(comment)) {
@@ -50,7 +53,7 @@ public class CommentServiceImpl implements ICommentService {
         return 0;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Cacheable(cacheNames = "comments", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<UserComment> getComment(int userId, String flag) {

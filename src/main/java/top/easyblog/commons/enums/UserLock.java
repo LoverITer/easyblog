@@ -1,5 +1,9 @@
 package top.easyblog.commons.enums;
 
+/**
+ *@author huangxin
+ */
+
 public enum UserLock {
     /**
      * 不锁定账户

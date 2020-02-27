@@ -2,6 +2,7 @@ package top.easyblog.handler.exception;
 
 /**
  * 分页参数异常
+ * @author huangxin
  */
 public class IllegalPageParameterException extends IllegalArgumentException{
 

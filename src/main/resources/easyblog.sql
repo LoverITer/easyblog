@@ -1,5 +1,3 @@
-
-
 use easyblog;
 
 create table user
@@ -14,8 +12,8 @@ create table user
     user_phone            varchar(12)    default '' comment '用户手机',
     user_mail             varchar(256)   default '' comment '用户email',
     user_address          varchar(256)   default '' comment '用户地址',
-    user_score            int        default 0 comment '用户积分',
-    user_rank             int        default 0 comment '用户排名',
+    user_score            int            default 0 comment '用户积分',
+    user_rank             int            default 0 comment '用户排名',
     user_headerImg_url    varchar(1024)  default '' comment '用户头像',
     user_description      varchar(300)   default '' comment '用户自我描述',
     user_register_time    datetime     not null comment '用户注册时间',
@@ -24,7 +22,7 @@ create table user
     user_last_update_time datetime     not null comment '用户上次更改信息时间',
     user_lock             boolean      not null comment '是否锁定账户',
     user_freeze           boolean      not null comment '是否冻结账户',
-    user_power            int      not null comment '用户权限',
+    user_power            int          not null comment '用户权限',
     foreign key (user_power) references user_power (power_id)
 ) ENGINE = INNODB
   default charset = UTF8MB4;
@@ -41,7 +39,7 @@ create table user_power
 
 create table power
 (
-    power_id int     not null auto_increment comment '权限ID',
+    power_id int         not null auto_increment comment '权限ID',
     name     varchar(30) not null comment '权限名',
     primary key (power_id)
 ) ENGINE = INNODB
@@ -66,7 +64,7 @@ create table user_mail_log
  */
 create table user_phone_log
 (
-    log_id   int   not null auto_increment comment '日志记录主键',
+    log_id   int      not null auto_increment comment '日志记录主键',
     user_id  int      not null comment '用户id',
     context  text comment '日志内容',
     log_time datetime not null comment '记录日志时间',
@@ -166,12 +164,13 @@ create table user_attention
     id             smallint NOT NULL AUTO_INCREMENT COMMENT '自增ID',
     user_id        int      NOT NULL COMMENT '用户ID',
     attention_id   int      NOT NULL COMMENT '关注的ID',
-    attention_time datetime    not null comment '关注时间',
+    attention_time datetime not null comment '关注时间',
     foreign key (user_id) references user (user_id),
     foreign key (attention_id) references user (user_id),
     PRIMARY KEY (id)
 ) ENGINE = INNODB
   default charset = UTF8MB4;
+
 
 
 

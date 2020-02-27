@@ -16,6 +16,9 @@ import top.easyblog.service.IUserService;
 
 import java.util.Objects;
 
+/**
+ * @author huangxin
+ */
 @Service
 public class UserServiceImpl implements IUserService {
 
@@ -26,7 +29,7 @@ public class UserServiceImpl implements IUserService {
         this.userMapper = userMapper;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public User checkUser(String username, String password) {
         User user = null;
@@ -39,7 +42,7 @@ public class UserServiceImpl implements IUserService {
         return user;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public Result isAuthorized(User user, String inputOldPWD) {
         User var0 = getUser(user.getUserId());
         Result result = new Result();
@@ -56,7 +59,7 @@ public class UserServiceImpl implements IUserService {
         return result;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public Result isNewPasswordSameOldPassword(String inputOldPWD, String newPWD) {
         Result result = new Result();
         result.setSuccess(false);
@@ -78,7 +81,7 @@ public class UserServiceImpl implements IUserService {
         return result;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public User getUser(String queryStr) {
         User user = null;
@@ -92,19 +95,50 @@ public class UserServiceImpl implements IUserService {
         return user;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public User getUser(long uid) {
         return userMapper.getByPrimaryKey(uid);
     }
 
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int register(String nickname, String password, String account, String ipInfo) {
         String headImageUrl = DefaultImageDispatcherUtils.defaultAvatar();
         try {
-            User user = new User(nickname, password, null, null, null, null, null,  null, 0, 100000, headImageUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
+
+            /**
+             * (String userNickname,
+             *             String userPassword,
+             *             String userName,
+             *             String userGender,
+             *             Date userBirthday,
+             *             String userPhone,
+             *             String userMail,
+             *             String userAddress,
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *             int userScore,
+             *             int userRank,
+             *             String userHeaderImgUrl,
+             *             String userDescription,
+             *             String userRegisterIp,
+             *             String userLastUpdateTime,
+             *             Integer userLock,
+             *             Integer userFreeze,
+             *             Integer userPower,
+             *             Integer userLevel,
+             *             Integer userVisit)
+             */
+            User user = new User(nickname, password, null, null, null, null, null, null, 0, 100000, headImageUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
             if (RegexUtil.isEmail(account)) {
                 user.setUserMail(account);
             } else if (RegexUtil.isMobile(account)) {
@@ -117,7 +151,27 @@ public class UserServiceImpl implements IUserService {
         return -1;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
+    public int register(User user) {
+        String headImageUrl = DefaultImageDispatcherUtils.defaultAvatar();
+        try {
+            user.setUserScore(0);
+            user.setUserRank(1000000);
+            user.setUserDescription(null);
+            user.setUserHeaderImgUrl(headImageUrl);
+            user.setUserLock(UserLock.UNLOCK.getStatus());
+            user.setUserFreeze(UserFreeze.UNFREEZE.getStatus());
+            user.setUserPower(2);
+            user.setUserLevel(0);
+            user.setUserVisit(0);
+            return userMapper.save(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int updateUserInfo(String account, String newPassword) {
         try {
@@ -135,7 +189,7 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int updateUserInfo(User user) {
         if (Objects.nonNull(user)) {
@@ -149,7 +203,7 @@ public class UserServiceImpl implements IUserService {
         return 0;
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int deleteUserByPK(int userId) {
         if (userId > 0) {

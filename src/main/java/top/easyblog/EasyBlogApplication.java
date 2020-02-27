@@ -9,6 +9,9 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 
+/**
+ * @author Huangxin
+ */
 @EnableCaching
 @EnableScheduling
 @MapperScan(value = "top.easyblog.mapper")

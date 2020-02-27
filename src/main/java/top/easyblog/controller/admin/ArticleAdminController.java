@@ -26,6 +26,7 @@ import java.util.*;
 
 /**
  * 后台博客管理
+ * @author huangxin
  */
 @Controller
 @RequestMapping(value = "/manage/blog")

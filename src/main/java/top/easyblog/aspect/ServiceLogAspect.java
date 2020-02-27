@@ -11,6 +11,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Arrays;
 
+/**
+ * service层日志切面
+ * @author huangxin
+ */
 @Aspect
 @Component
 public class ServiceLogAspect {

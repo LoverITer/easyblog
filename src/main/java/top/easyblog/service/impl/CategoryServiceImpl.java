@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * @author huangxin
+ */
 @CacheConfig(keyGenerator = "keyGenerator", cacheManager = "cacheManager")
 @Service
 public class CategoryServiceImpl implements ICategoryService {
@@ -31,7 +34,7 @@ public class CategoryServiceImpl implements ICategoryService {
         this.categoryMapper = categoryMapper;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Cacheable(cacheNames = "getUserAllCategory", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Category> getUserAllViableCategory(int userId) {
@@ -44,7 +47,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return categories;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Cacheable(cacheNames = "category", condition = "#result!=null")
     @Override
     public Category getCategory(int categoryId) {
@@ -69,7 +72,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @CachePut(cacheNames = "category", condition = "#result>0")
     @Override
     public int saveCategory(int userId, String categoryName) {
@@ -81,7 +84,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @CachePut(cacheNames = "category", condition = "#result>0")
     @Override
     public int saveCategory(Category category) {
@@ -97,7 +100,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
 
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Cacheable(cacheNames = "categories",condition = "#result!=null&&#reslut.size>0")
     @Override
     public List<Category> getUserAllCategories(int userId) {
@@ -111,7 +114,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Override
     public PageInfo<Category> getUserAllCategoriesPage(int userId, PageParam pageParam) {
         PageInfo<Category> pageInfo=null;
@@ -131,7 +134,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return pageInfo;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Cacheable(cacheNames = "categories",condition = "#result!=null&&#reslut.size>0")
     @Override
     public List<Category> getUserAllDeletedCategory(int userId) {
@@ -146,7 +149,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Override
     public PageInfo<Category> getUserAllDeletedCategoryPage(int userId, PageParam pageParam) {
         PageInfo<Category> pageInfo=null;
@@ -166,7 +169,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return pageInfo;
     }
 
-    @Transactional(isolation=Isolation.REPEATABLE_READ)
+    @Transactional(isolation=Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @CachePut(cacheNames = "category", condition = "#result>0")
     @Override
     public int updateByPKSelective(Category category) {
@@ -180,7 +183,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return 0;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @CachePut(cacheNames = "category", condition = "#result>0")
     @Override
     public int updateCategoryInfo(int categoryId, Map<String, Object> params) {
@@ -217,7 +220,7 @@ public class CategoryServiceImpl implements ICategoryService {
         }
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @CacheEvict(cacheNames = "category",condition = "#result>0")
     @Override
     public int deleteCategoryByCondition(Category category) {
@@ -231,7 +234,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return 0;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Override
     public int countSelective(Category category) {
         if(Objects.nonNull(category)){

@@ -3,6 +3,7 @@ package top.easyblog.commons.enums;
 
 /**
  * 用户权限
+ * @author huangxin
  */
 public enum UserPower {
 

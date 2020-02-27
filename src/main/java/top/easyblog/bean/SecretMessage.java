@@ -3,6 +3,9 @@ package top.easyblog.bean;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author huangxin
+ */
 public class SecretMessage implements Serializable {
 
     private static final long serialVersionUID = 4752651054600038840L;

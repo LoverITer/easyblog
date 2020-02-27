@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * @author huangxin
+ */
 public class UserAttention implements Serializable {
 
     private static final long serialVersionUID = -3911799858589965008L;
