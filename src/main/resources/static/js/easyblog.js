@@ -296,34 +296,59 @@ function showModifyButton(identity) {
  * 向服务器发送AJAX请求检查检查用户的登录情况用于判断显示头像还是显示登录按钮
  */
 function toggleStatus(userId) {
-    $.ajax({
-        url: "/user/checkUserStatus",
-        method: "GET",
-        sync: true,
-        data: {userId: userId},
-        dataType: "json",
-        success: function (response) {
-            if(response.success) {
-                $('#header-images').show();
-                $('#login-btn').hide();
-            }else{
-                $('#header-images').hide();
-                $('#login-btn').show();
+    console.log(userId);
+    if(userId>=0) {
+        $.ajax({
+            url: "/user/checkUserStatus",
+            method: "GET",
+            sync: true,
+            data: {userId: userId},
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    console.log('用户登录了');
+                    if($('#login-btn').css('display')!="none"){
+                        $('#login-btn').css("cssText",'display:none !important;margin-left: 1em !important;');
+                    }
+                    if($('#header-images').css('display')=="none"){
+                        $('#header-images').css("cssText",'display:block !important;margin-left: 1em !important;');
+                    }
+                } else {
+                    console.log('用户没登录');
+                    if($('#header-images').css('display')!="none"){
+                        $('#header-images').css("cssText",'display:none !important;margin-left: 1em !important;');
+                    }
+                    if($('#login-btn').css('display')=="none"){
+                        $('#login-btn').css("cssText",'display:flex !important;margin-left: 1em !important;');
+                    }
+                }
+            },
+            error: function () {
+                if($('#header-images').css('display')!="none"){
+                    $('#header-images').css("cssText",'display:none !important;margin-left: 1em !important;');
+                }
+                if($('#login-btn').css('display')=="none"){
+                    $('#login-btn').css("cssText",'display:flex !important;margin-left: 1em !important;');
+                }
             }
-        },
-        error: function () {
-            showErrorMessage("服务异常，请重试！")
+        });
+    }else{
+        if($('#header-images').css('display')!="none"){
+            $('#header-images').css("cssText",'display:none !important;margin-left: 1em !important;');
         }
-    });
+        if($('#login-btn').css('display')=="none"){
+            $('#login-btn').css("cssText",'display:flex !important;margin-left: 1em !important;');
+        }
+    }
 }
 
 
 /**
- * 用户退出AJAX请求
+ * 用户退出登录AJAX请求
  * @param userId
  */
 function logOut(userId){
-    console.log("userid:"+userId);
+    //console.log("userid:"+userId);
     $('#logout').click(function () {
         $.ajax({
             url: "/user/logout",
@@ -333,8 +358,9 @@ function logOut(userId){
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    sessionStorage.removeItem("user");
                     toggleStatus();
+                    $('#header-images').toggle();
+                    $('#login-btn').toggle();
                 }
             },
             error: function () {

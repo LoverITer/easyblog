@@ -31,7 +31,7 @@
             </div>
 
             <!--我的头像-->
-            <div   id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
+            <div th:if="${user!=null}"  id="header-images"  class="right m-menu-padding m-mobile-hide menu" style="display: none !important;">
                 <div class="ui dropdown  item ">
                     <div class="text">
                         <a href="#"  th:href="@{/manage/uc/profile}">
@@ -53,8 +53,8 @@
                     </div>
                 </div>
             </div>
-
-            <div  id="login-btn" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;font-size: 16px !important;">
+             <!--登录按钮-->
+            <div  id="login-btn" class="right m-mobile-hide menu m-menu-padding" style="display: flex !important;">
                 <a href="#" target="_blank" th:href="@{/user/loginPage}" style="font-size: inherit" class="m-item item m-mobile-hide">登录/注册</a>
             </div>
         </div>

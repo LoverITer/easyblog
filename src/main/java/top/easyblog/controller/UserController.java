@@ -1,6 +1,5 @@
 package top.easyblog.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.util.StringUtil;
 import org.slf4j.Logger;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserAccount;
-import top.easyblog.bean.UserLoginStatus;
 import top.easyblog.bean.UserSigninLog;
 import top.easyblog.commons.email.Email;
 import top.easyblog.commons.email.SendEmailUtil;
@@ -32,6 +30,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.Executor;
+
+import static top.easyblog.bean.UserLoginStatus.LOGIN;
+import static top.easyblog.bean.UserLoginStatus.UNLOGIN;
 
 /**
  * @author huangxin
@@ -361,6 +362,9 @@ public class UserController {
     public Result logout(@RequestParam int userId) {
         Result result = new Result();
         result.setMessage(AJAX_ERROR);
+        if(userId<=0){
+            return result;
+        }
         Long expire = redisUtil.getExpire("user-" + userId, 1);
         if (Objects.nonNull(expire) && expire > 0) {
             Boolean res=redisUtil.delete(1, "user-" + userId);
@@ -376,13 +380,10 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "/checkUserStatus")
     public Result checkUserLoginStatus(@RequestParam int userId) {
-        System.out.println("userId:"+userId);
         Result result = new Result();
-        result.setMessage(UserLoginStatus.UNLOGIN.getStatus() + "");
-        User user = JSON.parseObject(redisUtil.hget("user-" + userId, "user", 1).toString(), User.class);
-        System.out.println(user.toString());
-        if (Objects.nonNull(redisUtil.hHasKey("user-" + userId, "user", 1))) {
-            result.setMessage(UserLoginStatus.LOGIN.getStatus() + "");
+        result.setMessage(UNLOGIN.getStatus() + "");
+        if (redisUtil.hHasKey("user-" + userId, "user", 1)) {
+            result.setMessage(LOGIN.getStatus() + "");
             result.setSuccess(true);
         }
         return result;
