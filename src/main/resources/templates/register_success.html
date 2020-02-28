@@ -46,7 +46,10 @@
 <script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script>
     $(document).ready(function () {
+        let userId=$('#userId').val();
         showPageZoomWarning();
+        toggleStatus(userId);
+        logOut(userId);
     });
 </script>
 <script type="text/javascript">

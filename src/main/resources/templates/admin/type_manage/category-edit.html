@@ -89,15 +89,13 @@
 <script src="../../../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script th:online="javascript">
     $(document).ready(function () {
+        let userId=$('#userId').val();
         showPageZoomWarning();
-        var msg="[[${error}]]";
+        toggleStatus(userId);
+        logOut(userId);
+        let msg="[[${error}]]";
         if(msg!="") {
-            spop({
-                template: msg,
-                autoclose: 2000,
-                position: "top-center",
-                style: 'info',
-            });
+            showErrorMessage(msg)
         }
     });
 </script>

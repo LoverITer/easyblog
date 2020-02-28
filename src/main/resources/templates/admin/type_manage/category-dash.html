@@ -135,11 +135,6 @@
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="../../../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script>
-    $(document).ready(function () {
-        showPageZoomWarning();
-    });
-</script>
-<script>
     $('#add-btn').mouseenter(function () {
         $('#add-btn').removeClass("basic");
     })
@@ -149,7 +144,10 @@
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
-        toggleStatus();
+        let userId=$('#userId').val();
+        showPageZoomWarning();
+        toggleStatus(userId);
+        logOut(userId);
         showCurrentPageNum();
     });
 
@@ -162,43 +160,6 @@
             }
         }
     }
-
-
-    function toggleStatus() {
-        var user = sessionStorage.getItem("user");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-        setTimeout(toggleStatus, 500);
-    }
-    <!--退出操作异步请求-->
-    $('#logout').click(function () {
-        $.ajax({
-            url: "/user/logout",
-            method: "GET",
-            sync: true,
-            data: {userId: $('#userId').val()},
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    sessionStorage.removeItem("user");
-                    window.location.href = "/user/loginPage";
-                }
-            },
-            error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
-            }
-        });
-    });
 </script>
 <script th:inline="javascript">
     $(document).ready(function () {

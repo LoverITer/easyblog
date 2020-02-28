@@ -311,7 +311,9 @@
 <script type="text/javascript">
     //初始化
     $(document).ready(function () {
-        toggleStatus();
+        let userId=$('#userId').val();
+        toggleStatus(userId);
+        logOut(userId);
         showCurrentPageNum();
         showPageZoomWarning();
         $('.ui.dropdown').dropdown({
@@ -342,41 +344,6 @@
         }
     }
 
-    function toggleStatus() {
-        var user = sessionStorage.getItem("user");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-    }
-
-    <!--退出操作异步请求-->
-    $('#logout').click(function () {
-        $.ajax({
-            url: "/user/logout",
-            method: "GET",
-            sync: true,
-            data: {userId: $('#userId').val()},
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    sessionStorage.removeItem("user");
-                    window.location.href = "/user/loginPage";
-                }
-            },
-            error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
-            }
-        });
-    });
 
     function restoreSearch() {
         $('.year').find('input').removeAttr('value');
