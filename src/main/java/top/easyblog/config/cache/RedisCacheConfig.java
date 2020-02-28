@@ -33,7 +33,7 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
     public KeyGenerator keyGenerator() {
         return (obj, method, params) -> {
             StringBuilder sb = new StringBuilder();
-            sb.append(obj.getClass().getName()+"@"); // 类
+            sb.append(obj.getClass().getName()).append("@"); // 类
             if(Objects.nonNull(params)&&params.length>0) {
                 for (Object param : params) {
                     sb.append(param.hashCode()); // 参数名的hashcode
@@ -46,11 +46,14 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
     }
 
 
-    // 配置缓存管理器
+    /**
+     * 配置缓存管理器
+     */
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofSeconds(60*5)) // 5分钟缓存失效
+                // 5分钟缓存失效
+                .entryTtl(Duration.ofSeconds(60*5))
                 //不缓存null值
                 .disableCachingNullValues()
                 // 设置key的序列化方式

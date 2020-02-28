@@ -236,17 +236,20 @@ public class ArticleServiceImpl implements IArticleService {
                     if (ArticleType.Unlimited.getArticleType().equals(articleType)) {
                         //这里特别注意，pageHelper只会对紧跟的第一条语句起作用
                         PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
-                        List<Article> articles = articleMapper.getUserAllArticles(userId);  //得到用户的所有文章
+                        //得到用户的所有文章
+                        List<Article> articles = articleMapper.getUserAllArticles(userId);
                         pageInfo = new PageInfo<>(parseMarkdowns2Text(articles));
                     } else {
                         PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
-                        List<Article> articles = articleMapper.getUserArticlesSelective(userId, articleType);//根据option
+                        //根据option
+                        List<Article> articles = articleMapper.getUserArticlesSelective(userId, articleType);
                         pageInfo = new PageInfo<>(parseMarkdowns2Text(articles));
                     }
                 } else {
                     throw new IllegalPageParameterException();
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
                 throw new RuntimeException("分页查询异常");
             }
         }

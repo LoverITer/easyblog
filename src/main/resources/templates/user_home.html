@@ -119,9 +119,11 @@
 
                             <div class="five wide column">
                                 <a href="#" target="_blank">
-                                    <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                    <img th:if="${article.getArticleFirstPicture()==null}"
+                                         src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
                                          alt="" class="ui rounded image">
-                                    <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}"
+                                    <img th:if="${article.getArticleFirstPicture()!=null}"
+                                         th:src="@{${article.getArticleFirstPicture()}}"
                                          alt="" class="ui rounded image">
                                 </a>
                             </div>
@@ -142,32 +144,44 @@
                 <!--content footer ,每页默认显示15条-->
                 <div th:if="${articlePages.getTotal()>15}" class="ui bottom attached segment">
                     <div class="ui middle aligned two column grid">
-                        <div  style="margin: 5px auto;float: left !important;">
+                        <div style="margin: 5px auto;float: left !important;">
                             <div class="ui buttons">
-                                <a th:if="${displayOnlyOriginal=='1'}" th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${articlePages.getPrePage()})}">
-                                    <button class="ui  button" style="background: white !important;font-weight: 100 !important;">上一页
+                                <a th:if="${displayOnlyOriginal=='1'}"
+                                   th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${articlePages.getPrePage()})}">
+                                    <button class="ui  button"
+                                            style="background: white !important;font-weight: 100 !important;">上一页
                                     </button>
                                 </a>
-                                <a th:if="${displayOnlyOriginal=='0'}" th:href="@{/article/index/{id}(id=${user.getUserId()},page=${articlePages.getPrePage()})}">
-                                    <button class="ui  button" style="background: white !important;font-weight: 100 !important;">上一页
+                                <a th:if="${displayOnlyOriginal=='0'}"
+                                   th:href="@{/article/index/{id}(id=${user.getUserId()},page=${articlePages.getPrePage()})}">
+                                    <button class="ui  button"
+                                            style="background: white !important;font-weight: 100 !important;">上一页
                                     </button>
                                 </a>
-                                <a th:if="${displayOnlyOriginal=='1'}" th:each="pageNo:${articlePages.getNavigatepageNums()}" th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${pageNo})}">
-                                    <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
+                                <a th:if="${displayOnlyOriginal=='1'}"
+                                   th:each="pageNo:${articlePages.getNavigatepageNums()}"
+                                   th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${pageNo})}">
+                                    <button class="ui button pages"
+                                            style="background: white !important;font-weight: 100 !important;">
                                         [[${pageNo}]]
                                     </button>
                                 </a>
-                                <a th:if="${displayOnlyOriginal=='0'}" th:each="pageNo:${articlePages.getNavigatepageNums()}" th:href="@{/article/index/{id}(id=${user.getUserId()},page=${pageNo})}">
-                                    <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
+                                <a th:if="${displayOnlyOriginal=='0'}"
+                                   th:each="pageNo:${articlePages.getNavigatepageNums()}"
+                                   th:href="@{/article/index/{id}(id=${user.getUserId()},page=${pageNo})}">
+                                    <button class="ui button pages"
+                                            style="background: white !important;font-weight: 100 !important;">
                                         [[${pageNo}]]
                                     </button>
                                 </a>
-                                <a th:if="${displayOnlyOriginal=='1'}" th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${articlePages.getNextPage()})}">
+                                <a th:if="${displayOnlyOriginal=='1'}"
+                                   th:href="@{/article/index/{id}(id=${user.getUserId()},articleType=0,page=${articlePages.getNextPage()})}">
                                     <button class="ui  button"
                                             style="background: white !important;font-weight: 100 !important;"> 下一页
                                     </button>
                                 </a>
-                                <a th:if="${displayOnlyOriginal=='0'}" th:href="@{/article/index/{id}(id=${user.getUserId()},page=${articlePages.getNextPage()})}">
+                                <a th:if="${displayOnlyOriginal=='0'}"
+                                   th:href="@{/article/index/{id}(id=${user.getUserId()},page=${articlePages.getNextPage()})}">
                                     <button class="ui button"
                                             style="background: white !important;font-weight: 100 !important;"> 下一页
                                     </button>
@@ -195,12 +209,7 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
-<script>
-    $(document).ready(function () {
-        showPageZoomWarning();
-    });
-</script>
+<script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script>
     $('#msg-btn').click(function () {
         $('.ui.modal').modal('hide');
@@ -217,61 +226,25 @@
 <script type="text/javascript" th:online="javascript">
 
     $(document).ready(function () {
-        toggleStatus();
+        let userId=$('#userId').val();
+        showPageZoomWarning();
+        toggleStatus(userId);
+        logOut(userId);
         showCurrentPageNum();
     });
 
     function showCurrentPageNum() {
-        let obj=document.getElementsByClassName('pages');
-        let page=[[${articlePages.pageNum}]];
-        for(let i=0;i<obj.length;i++){
-            if(obj[i].textContent==page){
-                $(obj[i]).css('background','#eee');
+        let obj = document.getElementsByClassName('pages');
+        let page = [[${articlePages.pageNum}]];
+        for (let i = 0; i < obj.length; i++) {
+            if (obj[i].textContent == page) {
+                $(obj[i]).css('background', '#eee');
             }
         }
     }
-
-    /**
-     * 检查用户的登录情况——显示按钮和头像
-     */
-    function toggleStatus() {
-        var user = sessionStorage.getItem("user");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-    }
-
-    <!--退出操作异步请求-->
-    $('#logout').click(function () {
-        $.ajax({
-            url: "/user/logout",
-            method: "GET",
-            sync: true,
-            data: {userId: $('#userId').val()},
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    sessionStorage.removeItem("user");
-                    toggleStatus();
-                }
-            },
-            error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
-            }
-        });
-    });
 
 </script>
-<script >
+<script>
     //只看原创按钮是否按下
     $('#checkbox').click(function () {
         if ($('#checkbox').is(":checked")) {

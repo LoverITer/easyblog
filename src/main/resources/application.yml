@@ -21,11 +21,12 @@ spring:
     username: huangxin9830@qq.com  #发送邮件的账户名
     properties:      #properties的值应该是一个Map
       mail.smpt.ssl: true       #设置使用SSL安全协议
-
+  cache:
+    ehcache:
+      config: classpath:ehcache-spring.xml   # ehcache缓存配置文件的位置
 mybatis:
   config-location: classpath:/mybatis/mybatis-config.xml
   mapper-locations: classpath:/mybatis/mapper/*.xml
-
 pagehelper:
   helper-dialect: mysql
   reasonable: true

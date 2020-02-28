@@ -9,9 +9,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     #url: jdbc:mysql://121.36.49.86:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
-    url: jdbc:mysql://192.168.92.128:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.92.136:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
     username: root
-    password: 123456
+    password: 95162437hx$
     #password: huangxin@95162437
     druid:
       stat-view-servlet:
@@ -55,7 +55,7 @@ spring:
     restart:
       additional-paths: src/main/java
   redis:
-    host: 192.168.92.128
+    host: 192.168.92.136
     port: 6379
     database: 0
     timeout: 10000
@@ -67,6 +67,8 @@ spring:
         max-idle: 8
         max-wait: 5000ms
       shutdown-timeout: 100ms
+#  session:
+#    store-type: redis # 共享session存储在redis
   servlet:
     multipart:
       max-file-size: 5MB

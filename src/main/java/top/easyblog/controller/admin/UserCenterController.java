@@ -4,7 +4,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import top.easyblog.autoconfig.QiNiuCloudService;
+import top.easyblog.autoconfig.qiniu.QiNiuCloudService;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserAttention;
 import top.easyblog.commons.utils.CalendarUtil;

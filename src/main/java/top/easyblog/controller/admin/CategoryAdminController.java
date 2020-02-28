@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Encoder;
-import top.easyblog.autoconfig.QiNiuCloudService;
+import top.easyblog.autoconfig.qiniu.QiNiuCloudService;
 import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
 import top.easyblog.commons.pagehelper.PageParam;

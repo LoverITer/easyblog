@@ -1,5 +1,5 @@
 /*
-me.js
+easyblog.js
 (c) 2019-2020 by HuangXin. All rights reserved.
 */
 /**
@@ -52,20 +52,6 @@ function showCurrentPageNum(page) {
     }
 }
 
-/**
- * 不断检查用户的登录情况
- */
-function toggleStatus() {
-    var user = sessionStorage.getItem("user");
-    if (user != null) {
-        $('#header-images').show();
-        $('#login-btn').hide();
-    } else {
-        $('#header-images').hide();
-        $('#login-btn').show();
-    }
-    setTimeout(toggleStatus, 500);
-}
 
 /**
  * 邮箱补全
@@ -303,6 +289,59 @@ function showModifyButton(identity) {
         function () {
             $('a', this).hide();
         });
+}
+
+
+/**
+ * 向服务器发送AJAX请求检查检查用户的登录情况用于判断显示头像还是显示登录按钮
+ */
+function toggleStatus(userId) {
+    $.ajax({
+        url: "/user/checkUserStatus",
+        method: "GET",
+        sync: true,
+        data: {userId: userId},
+        dataType: "json",
+        success: function (response) {
+            if(response.success) {
+                $('#header-images').show();
+                $('#login-btn').hide();
+            }else{
+                $('#header-images').hide();
+                $('#login-btn').show();
+            }
+        },
+        error: function () {
+            showErrorMessage("服务异常，请重试！")
+        }
+    });
+}
+
+
+/**
+ * 用户退出AJAX请求
+ * @param userId
+ */
+function logOut(userId){
+    console.log("userid:"+userId);
+    $('#logout').click(function () {
+        $.ajax({
+            url: "/user/logout",
+            method: "GET",
+            sync: true,
+            data: {userId: userId},
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    sessionStorage.removeItem("user");
+                    toggleStatus();
+                }
+            },
+            error: function () {
+                showErrorMessage("服务异常，请重试！");
+            }
+        });
+    });
 }
 
 

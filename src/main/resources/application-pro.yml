@@ -57,6 +57,8 @@ spring:
         max-idle: 5         # 连接池的最大空闲连接
         min-idle: 0         # 连接池的最小空闲连接
       shutdown-timeout: 1200           # 连接超时时间(ms)
+#  session:
+#    store-type: redis # 共享session存储在redis
   thymeleaf:
     cache: false
 logging:

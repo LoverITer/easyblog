@@ -1,4 +1,4 @@
-package top.easyblog.autoconfig;
+package top.easyblog.autoconfig.qiniu;
 
 import com.qiniu.common.Zone;
 import com.qiniu.storage.Configuration;

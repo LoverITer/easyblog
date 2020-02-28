@@ -103,7 +103,7 @@
             <i class="bookmark icon"></i><strong>最新文章</strong>
         </div>
         <div class="ui segment" th:each="article:${newestArticles}">
-            <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target class="m-black m-text-thin" th:text="${article.articleTopic}"></a>
+            <a href="#" th:if="${article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target class="m-black m-text-thin" th:text="${article.articleTopic}"></a>
         </div>
     </div>
     <!--归档-->

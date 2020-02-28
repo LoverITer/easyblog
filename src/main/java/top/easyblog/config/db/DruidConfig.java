@@ -13,9 +13,12 @@ import javax.sql.DataSource;
 @Configuration
 public class DruidConfig {
 
-    //配置Druid的其他属性
+    /**
+     * 让Spring boot去加载这些属性，完成对连接池的初始化
+     * @return
+     */
     @Bean
-    @ConfigurationProperties(prefix = "spring.datasource")   //让Spring boot去加载这些属性，完成对连接池的初始化
+    @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource druid(){
         return new DruidDataSource();
     }

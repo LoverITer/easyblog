@@ -1,4 +1,4 @@
-package top.easyblog.autoconfig;
+package top.easyblog.autoconfig.qiniu;
 
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
