@@ -1,8 +1,10 @@
 package top.easyblog.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserAccount;
-import top.easyblog.bean.UserLoginStatus;
 import top.easyblog.bean.UserSigninLog;
 import top.easyblog.commons.email.Email;
 import top.easyblog.commons.email.SendEmailUtil;
@@ -26,9 +27,12 @@ import top.easyblog.service.impl.UserSigninLogServiceImpl;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.Executor;
+
+import static top.easyblog.bean.UserLoginStatus.LOGIN;
+import static top.easyblog.bean.UserLoginStatus.UNLOGIN;
 
 /**
  * @author huangxin
@@ -37,13 +41,22 @@ import java.util.Objects;
 @RequestMapping("/user")
 public class UserController {
 
-
-    private final UserServiceImpl userService;
-    private final UserEmailLogServiceImpl userEmailLogService;
-    private final UserPhoneLogServiceImpl userPhoneLogService;
-    private final SendEmailUtil emailUtil;
-    private final UserSigninLogServiceImpl userSigninLogService;
-    private final IUserAccountService userAccountService;
+    @Autowired
+    private UserServiceImpl userService;
+    @Autowired
+    private UserEmailLogServiceImpl userEmailLogService;
+    @Autowired
+    private UserPhoneLogServiceImpl userPhoneLogService;
+    @Autowired
+    private SendEmailUtil emailUtil;
+    @Autowired
+    private UserSigninLogServiceImpl userSigninLogService;
+    @Autowired
+    private IUserAccountService userAccountService;
+    @Autowired
+    RedisUtils redisUtil;
+    @Autowired
+    private Executor executor;
 
     /***ajax异步请求成功标志***/
     private static final String AJAX_SUCCESS = "OK";
@@ -52,23 +65,17 @@ public class UserController {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public UserController(UserServiceImpl userService, UserEmailLogServiceImpl userEmailLogService, UserPhoneLogServiceImpl userPhoneLogService, SendEmailUtil emailUtil, UserSigninLogServiceImpl userSigninLogService, IUserAccountService userAccountService) {
-        this.userService = userService;
-        this.userEmailLogService = userEmailLogService;
-        this.userPhoneLogService = userPhoneLogService;
-        this.emailUtil = emailUtil;
-        this.userSigninLogService = userSigninLogService;
-        this.userAccountService = userAccountService;
-    }
 
     @GetMapping("/loginPage")
-    public String toLoginPage(HttpServletRequest request, HttpSession session) {
+    public String toLoginPage(HttpServletRequest request) {
         //把用户登录前的地址存下来
-        if (null == session.getAttribute("Referer")) {
+        String refererUrl = (String) redisUtil.get("Referer-" + NetWorkUtil.getUserIp(request), 1);
+        if (Objects.isNull(refererUrl)) {
             String referUrl = request.getHeader("Referer");
-            String baseUrl = request.getScheme()    //当前链接使用的协议
-                    + "://" + request.getServerName()   //服务器地址
-                    + ":" + request.getServerPort()   //端口号
+            //服务器的根路径
+            String baseUrl = request.getScheme()
+                    + "://" + request.getServerName()
+                    + ":" + request.getServerPort()
                     + request.getContextPath() + "/";
             if (StringUtil.isNotEmpty(referUrl) &&
                     !referUrl.contains("/login") &&
@@ -77,7 +84,8 @@ public class UserController {
                     !referUrl.contains("change_password") &&
                     !referUrl.contains("/article/index") &&
                     !referUrl.equalsIgnoreCase(baseUrl)) {
-                session.setAttribute("Referer", referUrl);
+                //存到Redis中
+                redisUtil.set("Referer-" + NetWorkUtil.getUserIp(request), referUrl, 1);
             }
         }
         return "login";
@@ -97,30 +105,35 @@ public class UserController {
     @GetMapping(value = "/captcha-code2phone")
     public String sendCaptchaCode2Phone(@RequestParam("phone") String phone,
                                         @RequestParam("option") String option,
-                                        HttpSession session) {
+                                        HttpServletRequest request) {
 
         String code = SendMessageUtil.getRandomCode(6);
         if ("register".equals(option)) {
             String content = "您正在申请手机注册，验证码为：" + code + "，5分钟内有效！";
-            return sendMessage(phone, code, content, session);
+            return sendMessage(phone, code, content, request);
         } else if ("modify-pwd".equals(option)) {
             String content = "您正在通过手机找回密码，验证码为：" + code + "，5分钟内有效！";
-            return sendMessage(phone, code, content, session);
+            return sendMessage(phone, code, content, request);
         }
         return AJAX_ERROR;
 
     }
 
-    private String sendMessage(String phone, String code, String content, HttpSession session) {
+    private String sendMessage(String phone, String code, String content, HttpServletRequest request) {
 
         try {
-            session.setAttribute("captcha-code", code);
+            String captchaCode = (String) redisUtil.get("captcha-code-" + phone, 1);
+            if (Objects.nonNull(captchaCode)) {
+                redisUtil.delete(1, "captcha-code-" + phone);
+            }
+            //短信验证码5分钟有效
+            redisUtil.set("captcha-code-" + phone, code, 5, 1);
             log.info("向{}发送验证码:{}", phone, code);
-            session.setMaxInactiveInterval(60 * 5);    //验证码5分钟有效
             SendMessageUtil.send("loveIT", "d41d8cd98f00b204e980", phone, content);
             userPhoneLogService.saveSendCaptchaCode2User(phone, content);
         } catch (Exception e) {
             userPhoneLogService.saveSendCaptchaCode2User(phone, "短信发送异常！");
+            redisUtil.delete(1, "captcha-code-" + phone);
             log.error("短信发送异常" + e.getMessage());
             return AJAX_ERROR;
         }
@@ -130,32 +143,31 @@ public class UserController {
     @ResponseBody
     @GetMapping(value = "/captcha-code2mail")
     public String sendCaptchaCode2Email(@RequestParam("email") String email,
-                                        @RequestParam("option") String option,
-                                        HttpSession session) {
+                                        @RequestParam("option") String option) {
         String code = SendMessageUtil.getRandomCode(6);
-        System.out.println(option);
         if ("register".equals(option)) {
             String content = "您正在申请邮箱注册，验证码为：" + code + "，60秒内有效！";
-            return sendEmail(email, content, code, session);
+            return sendEmail(email, content, code);
         } else if ("modify-pwd".equals(option)) {
             String content = "您正在通过邮箱找回密码，验证码为：" + code + "，60秒内有效！";
-            return sendEmail(email, content, code, session);
+            return sendEmail(email, content, code);
         }
         return AJAX_SUCCESS;
     }
 
-    private String sendEmail(String email, String content, String code, HttpSession session) {
+    private String sendEmail(String email, String content, String code) {
         try {
-            if (session.getAttribute("captcha-code") != null) {
-                session.removeAttribute("captcha-code");
+            String captchaCode = (String) redisUtil.get("captcha-code-" + email, 1);
+            if (Objects.nonNull(captchaCode)) {
+                redisUtil.delete(1, "captcha-code-" + email);
             }
             log.info("向" + email + "发送验证码：" + code);
-            session.setAttribute("captcha-code", code);
-            session.setMaxInactiveInterval(60);
+            redisUtil.set("captcha-code-" + email, code, 60, 1);
             Email e = new Email("验证码", email, content, null);
             emailUtil.send(e);
             userEmailLogService.saveSendCaptchaCode2User(email, content);
         } catch (Exception e) {
+            redisUtil.delete(1, "captcha-code-" + email);
             userEmailLogService.saveSendCaptchaCode2User(email, "邮件发送异常！");
             log.error("邮件发送异常" + e.getMessage());
             return AJAX_ERROR;
@@ -170,9 +182,8 @@ public class UserController {
                            @RequestParam(value = "pwd", defaultValue = "") String password,
                            @RequestParam(value = "account", defaultValue = "") String account,
                            @RequestParam(value = "code", defaultValue = "") String captchaCode,
-                           HttpServletRequest request,
-                           HttpSession session) {
-        String captcha = (String) session.getAttribute("captcha-code");
+                           HttpServletRequest request) {
+        String captcha = (String) redisUtil.get("captcha-code-" + account, 1);
         String ip = NetWorkUtil.getUserIp(request);
         String ipInfo = NetWorkUtil.getLocation(request, ip);
         Result result = new Result();
@@ -290,24 +301,25 @@ public class UserController {
         User user = userService.checkUser(username, EncryptUtil.getInstance().SHA1(password, "user"));
         String ip = NetWorkUtil.getUserIp(request);
         String location = NetWorkUtil.getLocation(request, ip);
-        HttpSession session = request.getSession();
         try {
             if (user != null) {
                 user.setUserPassword(null);
-                //会话信息，如果没有退出15天有效
-                if (Objects.isNull(session.getAttribute("user"))) {
-                    session.setAttribute("user", user);
-                    session.setMaxInactiveInterval(60 * 60 * 24 * 15);
+                //会话信息，如果没有主动会话信息退出15天有效
+                if (Objects.isNull(redisUtil.hget("user-" + user.getUserId(), "user", 1))) {
+                    redisUtil.hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), 1);
+                    redisUtil.expire("user-" + user.getUserId(), 60 * 60 * 24 * 15, 1);
                 }
                 // 保存用户名密码一个月
                 if ("on".equals(remember)) {
-                    boolean newCookie = true;   //是否创建一个新的Cookie
+                    //是否创建一个新的Cookie
+                    boolean newCookie = true;
                     Cookie[] cookies = request.getCookies();
                     for (Cookie ck : cookies) {
                         if ("USER-COOKIE".equals(ck.getName())) {
                             newCookie = false;
                         }
                     }
+                    //已经登录过，并且Cookie还没有过期
                     if (newCookie) {
                         //使用AES对密码进行加密保存 :用户名-密码密文
                         Cookie ck = new Cookie("USER-COOKIE", username + "-" + AESCrypt.encryptECB(password, "1a2b3c4d5e6f7g8h"));
@@ -317,11 +329,13 @@ public class UserController {
                         response.addCookie(ck);
                     }
                 }
-                new Thread(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功"))).start();
+
+                executor.execute(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功")));
                 // 跳转到用户登录前的页面
-                String refererUrl = (String) session.getAttribute("Referer");
+                String refererUrl = (String) redisUtil.get("Referer-" + NetWorkUtil.getUserIp(request), 1);
                 if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
-                    session.removeAttribute("Referer");
+                    //登录成功后删除对应的key
+                    redisUtil.delete(1, "Referer-" + NetWorkUtil.getUserIp(request));
                     return "redirect:" + refererUrl;
                 }
                 return "redirect:/article/index/" + user.getUserId();
@@ -330,13 +344,14 @@ public class UserController {
                 return "redirect:/user/loginPage";
             }
         } catch (Exception e) {
-            session.removeAttribute("user");
-            new Thread(() -> {
+            executor.execute(() -> {
                 if (Objects.nonNull(user)) {
+                    redisUtil.delete(1, "user-"+user.getUserId());
                     userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录失败"));
                 }
-            }).start();
+            });
             redirectAttributes.addFlashAttribute("error", "服务异常，请重试！");
+            log.error(e.getMessage());
             return "redirect:/user/loginPage";
         }
     }
@@ -344,26 +359,34 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/logout")
-    public Result logout(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        if (session != null) {
-            session.removeAttribute("user");
-        }
+    public Result logout(@RequestParam int userId) {
         Result result = new Result();
-        result.setSuccess(true);
-        result.setMessage(AJAX_SUCCESS);
+        result.setMessage(AJAX_ERROR);
+        if(userId<=0){
+            return result;
+        }
+        Long expire = redisUtil.getExpire("user-" + userId, 1);
+        if (Objects.nonNull(expire) && expire > 0) {
+            Boolean res=redisUtil.delete(1, "user-" + userId);
+            if(res!=null&&res){
+                result.setSuccess(true);
+                result.setMessage(AJAX_SUCCESS);
+            }
+        }
         return result;
     }
 
 
     @ResponseBody
     @RequestMapping(value = "/checkUserStatus")
-    public int checkUserLoginStatus(HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
-        if (Objects.nonNull(user)) {
-            return UserLoginStatus.LOGIN.getStatus();
+    public Result checkUserLoginStatus(@RequestParam int userId) {
+        Result result = new Result();
+        result.setMessage(UNLOGIN.getStatus() + "");
+        if (redisUtil.hHasKey("user-" + userId, "user", 1)) {
+            result.setMessage(LOGIN.getStatus() + "");
+            result.setSuccess(true);
         }
-        return UserLoginStatus.UNLOGIN.getStatus();
+        return result;
     }
 
     /**
@@ -375,11 +398,11 @@ public class UserController {
     @RequestMapping("/modifyPwd")
     public Result modifyPassword(@RequestParam("account") String account,
                                  @RequestParam("newPassword") String newPassword,
-                                 @RequestParam(value = "code", defaultValue = "") String code,
-                                 HttpSession session) {
+                                 @RequestParam(value = "code", defaultValue = "") String code) {
         Result result = new Result();
         result.setSuccess(false);
-        if (!code.equals(session.getAttribute("captcha-code"))) {
+        String captchaCode = (String) redisUtil.get("captcha-code-" + account, 1);
+        if (!code.equalsIgnoreCase(captchaCode)) {
             result.setMessage("验证码错误！");
         } else if (Objects.isNull(newPassword)) {
             result.setMessage("请填写新密码！");
@@ -387,14 +410,14 @@ public class UserController {
             result.setMessage("请填写您的账号！");
         } else {
             try {
-                new Thread(() -> userService.updateUserInfo(account, EncryptUtil.getInstance().SHA1(newPassword, "user"))).start();
+                executor.execute(() -> userService.updateUserInfo(account, EncryptUtil.getInstance().SHA1(newPassword, "user")));
                 result.setSuccess(true);
                 result.setMessage("密码修改成功，正在跳转到登录页面...");
             } catch (Exception e) {
                 result.setMessage("抱歉，服务异常，请重试！");
                 return result;
             } finally {
-                session.removeAttribute("captcha-code");
+                redisUtil.delete(1, "captcha-code-" + account);
             }
         }
         return result;
@@ -402,11 +425,10 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/aboutMe")
-    public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo,
-                                 HttpSession session) {
+    public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo, @RequestParam int userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = (User) session.getAttribute("user");
+        User user = (User) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.nonNull(user)) {
             user.setUserDescription(aboutMeInfo);
             try {
@@ -434,10 +456,10 @@ public class UserController {
                                  @RequestParam String weibo,
                                  @RequestParam String twitter,
                                  @RequestParam String steam,
-                                 HttpSession session) {
+                                 @RequestParam int userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = (User) session.getAttribute("user");
+        User user = (User) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.nonNull(user)) {
             UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, user.getUserId());
             //检查用户的account是否存在
@@ -459,10 +481,10 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/settingHobby")
-    public Result setUserHobby(@RequestParam String hobby, HttpSession session) {
+    public Result setUserHobby(@RequestParam String hobby, @RequestParam int userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = (User) session.getAttribute("user");
+        User user = (User) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.nonNull(user)) {
             User userHobby = new User();
             userHobby.setUserId(user.getUserId());
@@ -480,10 +502,10 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/settingTech")
-    public Result settingTech(HttpSession session, @RequestParam String techStr) {
+    public Result settingTech(@RequestParam String techStr, @RequestParam int userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = (User) session.getAttribute("user");
+        User user = (User) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.nonNull(user)) {
             User userTech = new User();
             userTech.setUserId(user.getUserId());

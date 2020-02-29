@@ -113,20 +113,19 @@
 <script src="../static/js/jigsaw.js" th:src="@{/static/js/jigsaw.js}"></script>
 <script src="../static/js/aes.js" type="text/javascript" th:src="@{/static/js/aes.js}"></script>
 <script src="../static/js/mode-ecb.js" type="text/javascript" th:src="@{/static/js/mode-ecb.js}"></script>
-<script src="../static/js/me.js" th:src="@{/static/js/me.js}"></script>
+<script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script src="../static/js/loading/mustache.js" th:src="@{/static/js/loading/mustache.js}"></script>
 <script src="../static/js/loading/zeroModal.js" th:src="@{/static/js/loading/zeroModal.js}"></script>
 <!--发送验证码-->
 <script th:online="javascript" type="text/javascript">
     var maxtime = 60;
     var timeOut;
-    //console.log(passwordToggle.style.top);
     $(document).ready(function () {
         sendEmail();
         passwordDisplayToggle($('#login-password-display-toggle'),$('#password'));
         passwordDisplayToggle($('#register-password-display-toggle'),$('#pass'));
         //显示服务器返回的信息
-        showInfoMessage("[[${error}]]");
+        showErrorMessage("[[${error}]]");
         //自动补全邮箱
         inputList($("#username"),$("#mails"));
         inputList($("#phone-mail"),$("#r-mails"));

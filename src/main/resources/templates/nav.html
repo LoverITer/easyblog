@@ -23,19 +23,19 @@
             </div>
 
             <div class="right m-item m-mobile-hide menu " style="margin: 1.7em 0 auto 2em !important;">
-                <a target="_blank" href="#"  th:unless="${session.user!=null}" th:href="@{/manage/blog/post}"
+                <a target="_blank" href="#"  th:unless="${user==null}" th:href="@{/manage/blog/post}"
                    style="color :rgb(0,183,173);font-size: 17px"><i class="paint brush icon" style="color: inherit !important;"></i>写博客</a>
-                <a target="_blank" href="#"  th:unless="${session.user==null}"
-                   th:href="@{/manage/blog/post(userId=${#session.getAttribute('user').getUserId()})}"
+                <a target="_blank" href="#"  th:unless="${user!=null}"
+                   th:href="@{/manage/blog/post(userId=${user.getUserId()})}"
                    style="color :rgb(0,183,173);font-size: 17px"><i class="paint brush icon" style="color: inherit !important;"></i>写博客</a>
             </div>
 
             <!--我的头像-->
-            <div  th:if="${session.user!=null}" id="header-images" th:hidden="hidden" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
+            <div th:if="${user!=null}"  id="header-images"  class="right m-menu-padding m-mobile-hide menu" style="display: none !important;">
                 <div class="ui dropdown  item ">
                     <div class="text">
                         <a href="#"  th:href="@{/manage/uc/profile}">
-                        <img class="ui medium circular image image-42x42" style="max-height: none !important;" th:src="@{${#session.getAttribute('user').getUserHeaderImgUrl()}}"/>
+                        <img class="ui medium circular image image-42x42" style="max-height: none !important;" th:src="@{${user.getUserHeaderImgUrl()}}"/>
                         </a>
                     </div>
                     <div class="menu">
@@ -44,7 +44,7 @@
                         <a href="#" th:href="@{/manage/uc/profile}" class="item"><i class="user icon"></i>个人中心</a>
                         <a href="#" th:href="@{/manage/account/reset/password}" class="item"><i class="cogs icon"></i>账号设置</a>
                         <div class="divider"></div>
-                        <a href="#" th:href="@{/article/index/{uid}(uid=${#session.getAttribute('user').getUserId()})}"
+                        <a href="#" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}"
                            class="item"><i class="archive icon"></i>我的博客</a>
                         <a href="#" th:href="@{/manage/blog/}" class="item"><i class="edit icon"></i>管理博客</a>
                         <div class="divider"></div>
@@ -53,8 +53,8 @@
                     </div>
                 </div>
             </div>
-
-            <div  id="login-btn" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;font-size: 16px !important;">
+             <!--登录按钮-->
+            <div  id="login-btn" class="right m-mobile-hide menu m-menu-padding" style="display: flex !important;">
                 <a href="#" target="_blank" th:href="@{/user/loginPage}" style="font-size: inherit" class="m-item item m-mobile-hide">登录/注册</a>
             </div>
         </div>
@@ -62,7 +62,7 @@
     <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
         <i class="sidebar icon"></i>
     </a>
-    <input id="userId" hidden="hidden" th:if="${session.user!=null}" th:value="${#session.getAttribute('user').getUserId()}">
+    <input id="userId" hidden="hidden" th:if="${user!=null}" th:value="${user.getUserId()}">
 </nav>
 
 </body>
