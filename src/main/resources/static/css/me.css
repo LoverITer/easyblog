@@ -21,8 +21,8 @@ body {
 }
 
 .m-padded-tb-mini {
-    padding-top: 0.1em !important;
-    padding-bottom: 0.1em !important;
+    padding-top: 0.5em !important;
+    padding-bottom: 0.5em !important;
 }
 
 .m-padded-tb-tiny {
@@ -41,7 +41,7 @@ body {
 }
 
 .m-padded-tb-large {
-    padding-top: 2em !important;
+    padding-top: 1em !important;
     padding-bottom: 2em !important;
 }
 
@@ -504,6 +504,15 @@ span.count {
 }
 
 @media screen and (max-width: 768px) {
+
+    .m-mobile-pading{
+        padding-left: 10px !important;
+    }
+
+    .m-full-line{
+        min-width: 100% !important;
+    }
+
     .m-font-size{
         font-size: 5px !important;
     }
@@ -513,6 +522,7 @@ span.count {
     }
 
     .m-mobile-show {
+        margin-inside: 10px !important;
         display: block !important;
     }
 
@@ -559,7 +569,8 @@ span.count {
 
     .header{
         max-height: 42px !important;
-        max-width: 42px !important;
+        max-width: 100px !important;
+        font-size: 15px !important;
         border-radius: 30px !important;
     }
 }

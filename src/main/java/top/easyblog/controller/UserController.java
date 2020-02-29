@@ -1,5 +1,6 @@
 package top.easyblog.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.util.StringUtil;
 import org.slf4j.Logger;
@@ -31,7 +32,6 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-import static top.easyblog.bean.UserLoginStatus.LOGIN;
 import static top.easyblog.bean.UserLoginStatus.UNLOGIN;
 
 /**
@@ -244,7 +244,6 @@ public class UserController {
     @GetMapping(value = "/checkEmailNotExist")
     public Result checkUserEmailNotExist(@RequestParam(value = "email", defaultValue = "") String email) {
         Result result = new Result();
-        result.setSuccess(false);
         if (!"".equals(email)) {
             if (Objects.isNull(userService.getUser(email))) {
                 result.setSuccess(true);
@@ -258,7 +257,6 @@ public class UserController {
     @GetMapping(value = "/checkEmailExist")
     public Result checkUserEmailExist(@RequestParam(value = "email", defaultValue = "") String email) {
         Result result = new Result();
-        result.setSuccess(false);
         if (!"".equals(email)) {
             if (!Objects.isNull(userService.getUser(email))) {
                 result.setSuccess(true);
@@ -271,7 +269,6 @@ public class UserController {
     @GetMapping(value = "/checkPhone")
     public Result checkUserPhone(@RequestParam(value = "phone", defaultValue = "") String phone) {
         Result result = new Result();
-        result.setSuccess(false);
         if (!"".equals(phone)) {
             User user = userService.getUser(phone);
             if (user == null) {
@@ -284,10 +281,7 @@ public class UserController {
     @ResponseBody
     @GetMapping(value = "/checkPassword")
     public Result checkPassword(@RequestParam("password") String password) {
-        Result result = new Result();
-        result.setSuccess(true);
-        result = userService.isPasswordLegal(password);
-        return result;
+        return userService.isPasswordLegal(password);
     }
 
 
@@ -383,7 +377,7 @@ public class UserController {
         Result result = new Result();
         result.setMessage(UNLOGIN.getStatus() + "");
         if (redisUtil.hHasKey("user-" + userId, "user", 1)) {
-            result.setMessage(LOGIN.getStatus() + "");
+            result.setMessage((String) redisUtil.hget("user-" + userId, "user", 1));
             result.setSuccess(true);
         }
         return result;
@@ -425,10 +419,14 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/aboutMe")
-    public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo, @RequestParam int userId) {
+    public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo, @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = (User) redisUtil.hget("user-" + userId, "user", 1);
+        String userJsonStr= (String) redisUtil.hget("user-" + userId, "user", 1);
+        if(Objects.isNull(userJsonStr)||userJsonStr.length()<=0){
+            return result;
+        }
+        User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.nonNull(user)) {
             user.setUserDescription(aboutMeInfo);
             try {
@@ -456,13 +454,17 @@ public class UserController {
                                  @RequestParam String weibo,
                                  @RequestParam String twitter,
                                  @RequestParam String steam,
-                                 @RequestParam int userId) {
+                                 @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = (User) redisUtil.hget("user-" + userId, "user", 1);
+        String userJsonStr= (String) redisUtil.hget("user-" + userId, "user", 1);
+        if(Objects.isNull(userJsonStr)||userJsonStr.length()<=0){
+            return result;
+        }
+        User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.nonNull(user)) {
-            UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, user.getUserId());
-            //检查用户的account是否存在
+            UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, userId);
+            //尝试更新用户的account
             int res = userAccountService.updateAccountByUserId(account);
             if (res <= 0) {
                 //如果没有就创建一个
@@ -481,10 +483,14 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/settingHobby")
-    public Result setUserHobby(@RequestParam String hobby, @RequestParam int userId) {
+    public Result setUserHobby(@RequestParam String hobby, @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = (User) redisUtil.hget("user-" + userId, "user", 1);
+        String userJsonStr= (String) redisUtil.hget("user-" + userId, "user", 1);
+        if(Objects.isNull(userJsonStr)||userJsonStr.length()<=0){
+            return result;
+        }
+        User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.nonNull(user)) {
             User userHobby = new User();
             userHobby.setUserId(user.getUserId());
@@ -500,12 +506,18 @@ public class UserController {
         return result;
     }
 
+
+
     @ResponseBody
     @GetMapping(value = "/settingTech")
-    public Result settingTech(@RequestParam String techStr, @RequestParam int userId) {
+    public Result settingTech(@RequestParam String techStr, @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = (User) redisUtil.hget("user-" + userId, "user", 1);
+        String userJsonStr= (String) redisUtil.hget("user-" + userId, "user", 1);
+        if(Objects.isNull(userJsonStr)||userJsonStr.length()<=0){
+            return result;
+        }
+        User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.nonNull(user)) {
             User userTech = new User();
             userTech.setUserId(user.getUserId());

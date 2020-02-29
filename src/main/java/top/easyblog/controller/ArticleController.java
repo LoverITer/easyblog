@@ -1,6 +1,8 @@
 package top.easyblog.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +16,9 @@ import top.easyblog.bean.UserComment;
 import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
+import top.easyblog.commons.utils.RedisUtils;
 import top.easyblog.service.impl.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +36,8 @@ public class ArticleController {
     private final CommentServiceImpl commentService;
     private final UserAttentionImpl userAttention;
     private final UserAccountImpl userAccount;
+    @Autowired
+    RedisUtils redisUtil;
     private final String PAGE404 = "redirect:/error/404";
 
     public ArticleController(CategoryServiceImpl categoryServiceImpl, UserServiceImpl userService, ArticleServiceImpl articleServiceImpl, CommentServiceImpl commentService, UserAttentionImpl userAttention, UserAccountImpl userAccount) {
@@ -73,13 +77,13 @@ public class ArticleController {
     /**
      * 关于我页面
      *
-     * @param userId
+     * @param userId     用户Id
      * @param model
-     * @param session
+     * @param visitorUId 访问者用户Id
      * @return
      */
     @RequestMapping(value = "/home/{userId}")
-    public String homePage(@PathVariable("userId") int userId, Model model, HttpSession session) {
+    public String homePage(@PathVariable("userId") int userId, Model model, @RequestParam(required = false) Integer visitorUId) {
         try {
             User author = userService.getUser(userId);
             author.setUserPassword(null);
@@ -112,10 +116,16 @@ public class ArticleController {
                 //作者的各种联系方式
                 UserAccount authorAccounts = userAccount.getAccountByUserId(author.getUserId());
                 model.addAttribute("authorAccounts", authorAccounts);
-                //登录的访客的信息
-                User visitor = (User) session.getAttribute("user");
-                if (visitor != null) {
-                    model.addAttribute("visitorId", visitor.getUserId());
+                //从Redis中查用户的登录信息
+                User visitor = null;
+                if (Objects.nonNull(visitorUId) && visitorUId > 0) {
+                    String userJsonStr = (String) redisUtil.hget("user-" + visitorUId, "user", 1);
+                    if (Objects.nonNull(userJsonStr)) {
+                        visitor = JSON.parseObject(userJsonStr, User.class);
+                    }
+                }
+                if (Objects.nonNull(visitor)) {
+                    model.addAttribute("visitorUId", visitorUId);
                 }
                 return "home";
             }
@@ -127,7 +137,7 @@ public class ArticleController {
 
 
     @GetMapping(value = "/details/{articleId}")
-    public String articleDetails(@PathVariable("articleId") int articleId, HttpSession session, Model model) {
+    public String articleDetails(@PathVariable("articleId") int articleId, Model model, @RequestParam(required = false) Integer visitorUId) {
         try {
             //根据id拿到文章
             Article article = articleServiceImpl.getArticleById(articleId, "html");
@@ -135,9 +145,16 @@ public class ArticleController {
                 model.addAttribute("article", article);
                 List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
                 model.addAttribute("articleComments", articleComments);
-                User user = (User) session.getAttribute("user");
-                if (Objects.nonNull(user)) {
-                    model.addAttribute("userId", user.getUserId());
+                //从Redis中查用户的登录信息
+                User visitor = null;
+                if (Objects.nonNull(visitorUId) && visitorUId > 0) {
+                    String userJsonStr = (String) redisUtil.hget("user-" + visitorUId, "user", 1);
+                    if (Objects.nonNull(userJsonStr)) {
+                        visitor = JSON.parseObject(userJsonStr, User.class);
+                    }
+                }
+                if (Objects.nonNull(visitor)) {
+                    model.addAttribute("userId", visitor.getUserId());
                 }
                 User author = userService.getUser(article.getArticleUser());
                 //更新文章作者的信息

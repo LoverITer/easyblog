@@ -84,13 +84,9 @@
                                     <span th:case="1">转载</span>
                                     <span th:case="2">翻译</span>
                                 </button>
-                                <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
-                                   th:text="${article.getArticleTopic()}"
-                                   class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
-                                <p class="m-text"
-                                   style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;"
-                                   th:text="${#strings.abbreviate(article.getArticleContent(),150)}">
-                                    正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
+                                <a href="#" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui header m-inline-block m-margin-top-small m-margin-bottom-small"></a>
+                                <a href="#" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui header m-inline-block m-margin-top-small m-margin-bottom-small"></a>
+                                <p class="m-text" style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;" th:text="${#strings.abbreviate(article.getArticleContent(),150)}">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
                                 </p>
                                 <div class="ui stackable grid">
                                     <div class="eleven wide column">

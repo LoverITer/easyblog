@@ -212,6 +212,7 @@
 <script>
     $(document).ready(function () {
         let userId=$('#userId').val();
+        showModifyButton('.editArticle');
         showPageZoomWarning();
         toggleStatus(userId);
         logOut(userId);
@@ -288,12 +289,7 @@
                 })
             }
         } else {
-            spop({
-                template: '您还未登录，请登录后再发表评论！',
-                autoclose: 3000,
-                position: "top-center",
-                style: 'info',
-            });
+            showInfoMessage('您还未登录，请登录后再发表评论！');
         }
 
     });
