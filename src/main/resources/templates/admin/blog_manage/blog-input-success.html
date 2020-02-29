@@ -78,41 +78,11 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        toggleStatus();
+        let userId=$('#userId').val();
+        showPageZoomWarning();
+        toggleStatus(userId);
+        logOut(userId);
     });
-
-    function toggleStatus() {
-        var user = sessionStorage.getItem("user");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-    }
-
-    <!--退出操作异步请求-->
-    $('#logout').click(function () {
-        $.ajax({
-            url: "/user/logout",
-            method: "GET",
-            sync: true,
-            data: {userId: $('#userId').val()},
-            dataType: "text",
-            success: function (result) {
-                if (result == "OK") {
-                    sessionStorage.removeItem("user");
-                    $("#login-btn").show();
-                    $('#header-images').hide();
-                }
-            },
-            error: function () {
-                alert("服务异常，请重试！")
-            }
-        });
-    });
-
 </script>
 <script ype="text/javascript" th:online="javascript">
 

@@ -473,45 +473,14 @@
 <script src="js/distpicker.data.js" th:src="@{/static/js/distpicker.data.js}"></script>
 <script src="js/distpicker.js" th:src="@{/static/js/distpicker.js}"></script>
 <script src="js/distpicker.main.js" th:src="@{/static/js/distpicker.main.js}"></script>
-<script type="text/javascript" th:online="javascript">
-
+<script type="text/javascript">
     $(document).ready(function () {
-        toggleStatus();
+        let userId=$('#userId').val();
+        showPageZoomWarning();
+        toggleStatus(userId);
+        logOut(userId);
         $('.ui.selection.dropdown').css('cssText','min-width:446px !important');
     });
-
-
-    function toggleStatus() {
-        let user = sessionStorage.getItem("user");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-    }
-
-    <!--退出操作异步请求-->
-    $('#logout').click(function () {
-        $.ajax({
-            url: "/user/logout",
-            method: "GET",
-            sync: true,
-            data: {userId: $('#userId').val()},
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    sessionStorage.removeItem("user");
-                    window.location.href = "/user/loginPage";
-                }
-            },
-            error: function () {
-                showErrorMessage('服务异常，请稍后重试！')
-            }
-        });
-    });
-
 </script>
 <script type="text/javascript">
     $(function () {

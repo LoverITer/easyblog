@@ -210,11 +210,6 @@
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
 <script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script>
-    $(document).ready(function () {
-        showPageZoomWarning();
-    });
-</script>
-<script>
     $(".topic").each(function () {
         var str = $(this).text();
         var key = $('#query').val();
@@ -236,8 +231,10 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        toggleStatus();
-        showCurrentPageNum();
+        let userId=$('#userId').val();
+        showPageZoomWarning();
+        toggleStatus(userId);
+        logOut(userId);
     });
 
     function showCurrentPageNum() {
@@ -250,31 +247,6 @@
         }
     }
 
-
-    <!--退出操作异步请求-->
-    $('#logout').click(function () {
-        $.ajax({
-            url: "/user/logout",
-            method: "GET",
-            sync: true,
-            data: {userId: $('#userId').val()},
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    sessionStorage.removeItem("user");
-                    toggleStatus();
-                }
-            },
-            error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
-            }
-        });
-    });
 </script>
 </body>
 </html>

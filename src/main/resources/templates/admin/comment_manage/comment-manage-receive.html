@@ -163,69 +163,12 @@
 <script src="../../../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script>
     $(document).ready(function () {
-        if (detectZoom() != 125) {
-            spop({
-                template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
-                autoclose: 4000,
-                position: "top-center",
-                style: 'info',
-            });
-        }
-    });
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        toggleStatus();
-        showCurrentPageNum();
+        let userId=$('#userId').val();
         showPageZoomWarning();
+        toggleStatus(userId);
+        logOut(userId);
+        showCurrentPageNum();
     });
-
-    function showCurrentPageNum() {
-        let obj = document.getElementsByClassName('pages');
-        let page = [[${commentsPage.pageNum}]];
-        for (let i = 0; i < obj.length; i++) {
-            if (obj[i].textContent == page) {
-                $(obj[i]).css('background', '#eee');
-            }
-        }
-    }
-
-    function toggleStatus() {
-        var user = sessionStorage.getItem("user");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-    }
-
-    <!--退出操作异步请求-->
-    $('#logout').click(function () {
-        $.ajax({
-            url: "/user/logout",
-            method: "GET",
-            sync: true,
-            data: {userId: $('#userId').val()},
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    sessionStorage.removeItem("user");
-                    window.location.href = "/user/loginPage";
-                }
-            },
-            error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
-            }
-        });
-    });
-
 </script>
 <script type="text/javascript">
     function deleteComment(obj) {

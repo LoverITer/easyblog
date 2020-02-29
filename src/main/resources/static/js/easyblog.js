@@ -359,8 +359,6 @@ function logOut(userId){
             success: function (response) {
                 if (response.success) {
                     toggleStatus();
-                    $('#header-images').toggle();
-                    $('#login-btn').toggle();
                 }
             },
             error: function () {

@@ -124,15 +124,13 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="../../../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
-<script>
-    $(document).ready(function () {
-        showPageZoomWarning();
-    });
-</script>
 <script type="text/javascript">
 
     $(document).ready(function () {
-        toggleStatus();
+        let userId=$('#userId').val();
+        showPageZoomWarning();
+        toggleStatus(userId);
+        logOut(userId);
         showCurrentPageNum();
     });
 
