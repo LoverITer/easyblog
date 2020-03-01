@@ -102,9 +102,9 @@ pre[class*="language-"] {
 }
 
 .comment,.comment span{
-    color:#35994d !important;
-    font-style: italic !important;
-    font-family: Monaco,Menlo,Consolas,"Courier New",monospace !important;
+    color:#35994d;
+    font-style: italic ;
+    font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
 }
 
 .comment.token.keyword span{

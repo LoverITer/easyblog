@@ -283,10 +283,10 @@ function passwordDisplayToggle(obj, passwordObj) {
  */
 function showModifyButton(identity) {
     $(identity).hover(function () {
-            $('a', this).show();
+            $('a.toggle-btn', this).show();
         },
         function () {
-            $('a', this).hide();
+            $('a.toggle-btn', this).hide();
         });
 }
 

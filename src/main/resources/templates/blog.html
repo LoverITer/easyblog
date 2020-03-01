@@ -29,8 +29,7 @@
     <div class="ui" style="max-width: 96em!important;margin: auto !important;">
         <div class="ui stackable grid">
             <!--左边的卡片-->
-            <div class="four wide column"
-                 style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
+            <div class="four wide column m-mobile-hide" style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
                 <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
                 <!--最新文章-->
                 <div th:replace="~{userinfo_sidebar::sidebar_newest_article}"></div>
@@ -46,30 +45,32 @@
 
             <!--右边文章-->
             <div class="twelve wide column" style="padding-top: 0 !important;">
-                <div class="ui top attached segment" style="padding-top: 5px !important;">
-                    <!--内容-->
-                    <div class="ui left aligned basic segment editArticle" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
-                        <div th:switch="${article.getArticleType()}" class="ui red basic label m-inline-block" style="margin-right: 10px">
-                            <span th:case="0">原创</span>
-                            <span th:case="1">转载</span>
-                            <span th:case="2">翻译</span>
-                        </div>
-                        <h2 class="ui left aligned header m-inline-block" th:text="${article.getArticleTopic()}"></h2>
-                        <a target="_blank" style="float: right;margin: 25px 10px;font-size:15px;display: none" th:if="${userId!=null&&userId==article.getArticleUser()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}">修改文章</a>
+                <div class="ui top attached segment editArticle" style="padding: 20px 10px 5px !important;">
+                    <!--标题-->
+                    <div class="ui left aligned basic segment" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
+                        <h2 style="max-width: 100% !important;margin-bottom: 5px !important;" class="ui left aligned  m-article-title" th:text="${article.getArticleTopic()}"></h2>
+                        <a target="_blank" class="m-article-quick-edit-btn m-mobile-hide toggle-btn"  th:if="${userId!=null&&userId==article.getArticleUser()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}">修改文章</a>
                     </div>
                     <div class="ui horizontal link list">
                         <div class="item">
+                            <div th:switch="${article.getArticleType()}" class="ui red mini basic label" style="margin-right: 5px">
+                                <span th:case="0">原创</span>
+                                <span th:case="1">转载</span>
+                                <span th:case="2">翻译</span>
+                            </div>
+                        </div>
+                        <div class="item" style="margin-left: 0 !important;">
                             <a href="#" th:href="@{/article/index/{userId}(userId=${user.getUserId()})}" >
-                                <img th:src="@{${user.getUserHeaderImgUrl()}}" src="https://unsplash.it/100/100?image=1005" alt="${user.getUserNickname()}" class="ui avatar image" style="display: inline-block">
-                                <div class="content" style="display: inline-block">
+                                <img th:src="@{${user.getUserHeaderImgUrl()}}" src="https://unsplash.it/100/100?image=1005" alt="${user.getUserNickname()}" class="ui avatar image m-mobile-hide" style="display: inline-block">
+                                <div class="content m-article-title-info-font" style="display: inline-block">
                                     <a th:text="${user.getUserNickname()}" style="color: #333"></a>
                                 </div>
                             </a>
                         </div>
-                        <div class="item" style="color: #858585">
+                        <div class="item m-article-title-info-font" style="color: #858585">
                             <i class="calendar icon"></i> [[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd hh:mm:ss')}]]
                         </div>
-                        <div class="item" style="color: #858585">
+                        <div class="item m-article-title-info-font" style="color: #858585">
                             <i class="eye icon"></i> [[${article.getArticleClick()}]]
                         </div>
                     </div>
@@ -98,12 +99,12 @@
                 </div>
                 <!--文章主体结束-->
                 <!--声明信息-->
-                <div th:if="${article.getArticleType()=='0'}" class="ui attached positive message">
+                <div th:if="${article.getArticleType()=='0'}" class="ui attached positive message bottom">
                     <!--博客信息-->
                     <div class="ui middle aligned grid">
                         <div class="sixteen wide column">
                             <ul class="list">
-                                <li>作者：[[${user.getUserNickname()}]]</li>
+                                <li>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：[[${user.getUserNickname()}]]</li>
                                 <li>发表时间：[[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd hh:mm:ss')}]]</li>
                                 <li>版权声明：本文为博主原创文章，遵循<a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="font-size: 16px"> CC 4.0 BY-SA</a> 版权协议，转载请附上原文出处链接和本声明。</li>
                                 <li>原文链接：<a th:href="${#httpServletRequest.getRequestURL()}" th:text="${#httpServletRequest.getRequestURL()}"></a></li>
@@ -113,7 +114,7 @@
                 </div>
                 <div class="divider"></div>
                 <!--留言信息-->
-                <div style="margin-top: 1em !important;" id="comment-container" class="ui bottom attached segment">
+                <div style="margin-top: 1em !important;border-radius: 5px !important;" id="comment-container" class="ui attached segment">
                     <!--留言区域列表-->
                     <div id="commentForm" class="ui form" style="padding-bottom: 15px !important;">
                         <!--默认存放文章作者的ID,评论默认发送给文章的作者-->
@@ -125,10 +126,10 @@
                         </div>
                         <div id="commentBtn" class="ui grid" style="display:none !important;margin-bottom: 3em;">
                             <div class="five column row" style="padding-bottom: 0 !important;">
-                                    <div class="column" style="position: absolute;top: 32px;right: 5.5em !important;">
+                                    <div class="m-comment-words-counter-location">
                                         <span style="color: #999999 !important;">还能输入<em id="num_txt">500</em>个字符</span>
                                     </div>
-                                    <div class="m-inline-block  m-margin-bottom-small m-mobile-wide" style="position: absolute;top: 20px;right: 12px !important;">
+                                    <div class="m-inline-block  m-margin-bottom-small m-comment-publish_btn-location" style="position: absolute;top: 20px;right: 12px !important;">
                                         <button id="publish-comment-btn" class="ui  button m-mobile-wide" style="background-color: #ca0c16 !important;color: #FFFFFF !important;">
                                             <i class="edit icon"></i>
                                             发布评论
@@ -140,26 +141,27 @@
                     <!--留言信息-->
                     <div th:if="${articleComments!=null&&!#lists.isEmpty(articleComments)}" class="ui threaded comments"
                          style="max-width: none !important;border: none !important;margin: unset !important;">
-                        <div th:each="comment:${articleComments}" class="comment">
+                        <div th:each="comment:${articleComments}" class="comment" style="padding-top: 0 !important;">
                             <a th:href="@{/article/index/{sendUserId}(sendUserId=${comment.getCommentSend()})}" class="avatar">
                                 <img th:src="@{${comment.getSendUserNicknameHeadImgUrl()}}" src="https://unsplash.it/100/100?image=1005">
                             </a>
                             <!--父评论内容-->
                             <div class="content" style="border-bottom: 1px dashed #e0e0e0;max-width: 95%">
-                                <a th:href="@{/article/index/{sendUserId}(sendUserId=${comment.getCommentSend()})}" class="author" style="font-family: 'PingFangSC-Semibold' !important;font-style: normal !important;color: #2e2e2e !important;font-size: 14px !important;" th:text="${comment.getSendUserNickname()}" >Elliot Fu</a>
+                                <a th:href="@{/article/index/{sendUserId}(sendUserId=${comment.getCommentSend()})}" class="author m-comment-font-user" th:text="${comment.getSendUserNickname()}">Elliot Fu</a>
                                 <div class="metadata">
-                                    <span class="date" th:text="${#dates.format(comment.getCommentTime(),'yyyy-MM-dd HH:mm')}" style="font-family: 'PingFangSC-Semibold' !important;font-style: normal !important;color: #999 !important;font-size: 13px !important;" >Yesterday at 12:30AM</span>
+                                    <span class="date m-comment-font-user-other" th:text="${#dates.format(comment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
                                 </div>
                                 <div class="text">
-                                    <p th:text="${comment.getCommentContent()}" style="font-family: 'PingFangSC-Semibold' !important;font-style: normal !important;font-size: 14px !important;line-height: 22px !important;"></p>
+                                    <!--style="font-family: 'PingFangSC-Semibold' !important;font-style: normal !important;font-size: 14px !important;line-height: 22px !important;"-->
+                                    <p th:text="${comment.getCommentContent()}" class="m-comment-font-user" ></p>
                                 </div>
                                 <!--th:if="${user!=null&&user.getUserId()!=comment.getCommentSend()}"-->
-                                <div  class="actions" style="position: absolute;right:12em;top:5px;cursor: pointer;">
-                                    <a style="color: #0e90d2 !important;font-size: 14px !important;font-style: normal !important;font-family: 'PingFangSC-Semibold' !important;" class="reply" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
+                                <div  class="actions m-comment-location-replay">
+                                    <a  class="reply m-comment-font-btn" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
                                        onclick="changeInfo(this)">回复</a>
                                 </div>
-                                <div th:if="${comment.getChildComment()!=null&&!#lists.isEmpty(comment.getChildComment())}" class="" style="position: absolute;right:3em;top:5px;cursor: pointer;">
-                                    <a style="color: #0e90d2 !important;font-size: 14px !important;font-style: normal !important;font-family: 'PingFangSC-Semibold' !important;" class="reply" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
+                                <div th:if="${comment.getChildComment()!=null&&!#lists.isEmpty(comment.getChildComment())}" class="m-comment-location-see-comment">
+                                    <a class="reply m-comment-font-btn" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
                                        onclick="toggleChildComment(this)" th:title="${#lists.size(comment.getChildComment())}">查看回复([[${#lists.size(comment.getChildComment())}]])</a>
                                 </div>
                             </div>
@@ -170,19 +172,19 @@
                                         <img th:src="@{${childComment.getSendUserNicknameHeadImgUrl()}}" src="https://unsplash.it/100/100?image=1005">
                                     </a>
                                     <div class="content">
-                                        <a th:href="@{/article/index/{sendUserId}(sendUserId=${childComment.getCommentSend()})}" class="author"
-                                           th:text="${childComment.getSendUserNickname()}" style="font-family: 'PingFangSC-Semibold'!important;font-style: normal !important;color: #2e2e2e !important;font-size: 14px !important;">Jenny Hess</a>
-                                        <span style="font-family: 'PingFangSC-Semibold' !important;font-size: 13px !important;font-style: normal !important;color: #999 !important;">回复</span>
-                                        <span th:text="${childComment.getReceivedUserNickname()}" style="font-family: 'PingFangSC-Semibold' !important;font-size: 14px !important;font-style: normal !important;color: #2e2e2e  !important;"></span>
+                                        <a th:href="@{/article/index/{sendUserId}(sendUserId=${childComment.getCommentSend()})}" class="author m-comment-font-user"
+                                           th:text="${childComment.getSendUserNickname()}">Jenny Hess</a>
+                                        <span class="m-comment-font-user-other">回复</span>
+                                        <span th:text="${childComment.getReceivedUserNickname()}" class="m-comment-font-user"></span>
                                         <div class="metadata">
-                                            <span class="date m-comment-font" th:text="${#dates.format(childComment.getCommentTime(),'yyyy-MM-dd HH:mm')}" style="font-family: 'PingFangSC-Semibold' !important;font-size: 13px !important;font-style: normal !important;color: #999 !important;">Yesterday at 12:30AM</span>
+                                            <span class="date m-comment-font-user-other" th:text="${#dates.format(childComment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
                                         </div>
                                         <div class="text">
-                                            <p th:text="${childComment.getCommentContent()}" style="font-family: 'PingFangSC-Semibold' !important;font-style: normal !important;font-size: 14px !important;line-height: 22px !important;"></p>
+                                            <p th:text="${childComment.getCommentContent()}" class="m-comment-font-user"></p>
                                         </div>
                                         <div  class="actions">
-                                            <a th:value="${childComment.getCommentSend()}+@{/}+${childComment.getSendUserNickname()}+@{/}+${childComment.getCommentId()}" onclick="changeInfo(this)" class="reply m-comment-font"
-                                               style="color: #0e90d2 !important;font-size: 14px !important;position: absolute;right:1.3em;top:5px;cursor: pointer;">回复</a>
+                                            <a th:value="${childComment.getCommentSend()}+@{/}+${childComment.getSendUserNickname()}+@{/}+${childComment.getCommentId()}" onclick="changeInfo(this)" class="reply  m-comment-font-btn m-child_comment-location-replay"
+                                               style="position: absolute;right:1.3em;top:5px;cursor: pointer;">回复</a>
                                         </div>
                                     </div>
                                 </div>

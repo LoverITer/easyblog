@@ -496,20 +496,208 @@ span.count {
     font-size: 12px !important;
 }
 
-.m-comment-font {
-    font-size: 16px !important;
-    color: #999;
-    font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+.m-comment-font-user {
+    font-family: 'PingFangSC-Semibold' !important;
     font-style: normal !important;
+    color: #2e2e2e !important;
+    font-size: 14px !important;
 }
 
-@media screen and (max-width: 991px) {
+.m-comment-font-user-other {
+    font-family: 'PingFangSC-Semibold' !important;
+    font-style: normal !important;
+    color: #999 !important;
+    font-size: 13px !important;
+}
+
+.m-comment-font-btn {
+    color: #0e90d2 !important;
+    font-size: 14px !important;
+    font-style: normal !important;
+    font-family: 'PingFangSC-Semibold' !important;
+}
+
+.m-comment-location-see-comment{
+    position: absolute;
+    right: 3em;
+    top: 5px;
+    cursor: pointer;
+}
+
+.m-comment-location-replay{
+    position: absolute;
+    right: 12em;
+    top: 5px;
+    cursor: pointer;
+}
+
+.m-child_comment-location-replay{
+    position: absolute;
+    right: 1.3em;
+    top: 5px;
+    cursor: pointer;
+}
+
+.m-article-title {
+    font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+    font-size: 25px !important;
+    line-height: 32px !important;
+    word-wrap: break-word !important;
+    color: #4d4d4d !important;
+}
+
+.m-article-list-title{
+    font-size: 18px !important;
+    font-weight: 800;
+    color: #4d4d4d !important;
+    letter-spacing: 0 !important;
+    text-align: left !important;
+    line-height: 28px !important;
+    word-wrap: break-word !important;
+    font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+}
+
+.m-column_article_desc{
+    font-size: 14px;
+    color: #999;
+    letter-spacing: 0;
+    text-align: left;
+    line-height: 22px;
+    margin-bottom: 8px;
+    word-break: break-word;
+}
+
+
+
+
+.m-article-quick-edit-btn {
+    font-size: 15px;
+    position: absolute !important;
+    top: 5.3em !important;
+    right: 2em !important;
+    display: none;
+}
+
+
+.m-comment-words-counter-location{
+    position: absolute;
+    top: 32px;
+    right: 10.2em !important;
+}
+
+
+.m-comment-publish_btn-location{
+    position: absolute;
+    top: 20px;
+    right: 12px !important;
+}
+
+.m-column_article_title{
+    margin-bottom: 8px;
+}
+
+.m-article-type{
+    color: #ca0c16;
+    border: 1px solid #f4ced0;
+}
+
+span.m-article-type{
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 2px;
+    vertical-align: 1px;
+    margin-right: 8px;
+    margin-top: 3px;
+}
+
+/**Small Monitor*/
+@media screen and (min-width: 992px) and (max-width: 1200px) {
     .m-mobile-margin-left {
         margin-left: 72% !important;
     }
 }
 
+/**Tablet*/
+@media screen and (min-width: 768px) and (max-width: 991px){
+    .m-mobile-margin-left {
+        margin-left: 72% !important;
+    }
+}
+
+/**Mobile*/
 @media screen and (max-width: 768px) {
+
+    .m-comment-location-see-comment{
+        position: absolute;
+        right: -.5em;
+        top: 0;
+        cursor: pointer;
+    }
+
+    .m-comment-location-replay{
+        position: absolute;
+        right: 6.5em;
+        top: 1px;
+        cursor: pointer;
+    }
+
+    .m-child_comment-location-replay{
+        position: absolute;
+        right: 1.3em;
+        top: 5px;
+        cursor: pointer;
+    }
+
+
+    .m-comment-font-btn {
+        color: #0e90d2 !important;
+        font-size: 12px !important;
+        font-style: normal !important;
+        font-family: 'PingFangSC-Semibold' !important;
+    }
+
+    .m-comment-font-user {
+        font-family: 'PingFangSC-Semibold' !important;
+        font-style: normal !important;
+        color: #2e2e2e !important;
+        font-size: 12px !important;
+    }
+
+    .m-comment-font-user-other {
+        font-family: 'PingFangSC-Semibold' !important;
+        font-style: normal !important;
+        color: #999 !important;
+        font-size: 12px !important;
+    }
+
+    .m-article-title {
+        font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+        font-size: 14px !important;
+        line-height: 22px !important;
+        word-wrap: break-word !important;
+        color: #4d4d4d !important;
+    }
+
+    .m-article-list-title{
+        font-size: 18px !important;
+        font-weight: 800;
+        color: #4d4d4d !important;
+        letter-spacing: 0 !important;
+        text-align: left !important;
+        line-height: 28px !important;
+        word-wrap: break-word !important;
+        font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+
+    }
+
+    .m-article-title-info-font {
+        font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+        font-size: 12px !important;
+    }
 
     .m-mobile-pading {
         padding-left: 10px !important;
@@ -543,7 +731,7 @@ span.count {
     }
 
     .m-mobile-wide {
-        width: 100% !important;
+        width: auto !important;
     }
 
     .m-mobile-width-pwdBar {

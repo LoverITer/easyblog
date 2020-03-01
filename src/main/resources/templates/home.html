@@ -142,7 +142,7 @@
         <div class="four wide column m-mobile-hide">
             <div class="ui attached segment">
                 <div class="ui header about">关于我
-                    <a th:if="${visitorUId!=null and visitorUId==user.getUserId()}" id="about" href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
+                    <a class="toggle-btn" th:if="${visitorUId!=null and visitorUId==user.getUserId()}" id="about" href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
                 <p id="about-show" style="word-break:break-all;" class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}"
                    th:text="${user.getUserDescription()}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环.
@@ -152,7 +152,7 @@
             <div class="ui attached segment">
                 <div class="ui header hobby">
                     我的爱好
-                    <a th:if="${visitorUId!=null and visitorUId==user.getUserId()}" id="hobby" href="#"
+                    <a class="toggle-btn" th:if="${visitorUId!=null and visitorUId==user.getUserId()}" id="hobby" href="#"
                        style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
                 <div style="margin-bottom: 8px !important;" th:if="${userHobby!=null}" th:each="hobby:${userHobby}"
@@ -165,7 +165,7 @@
             <div class="ui attached segment">
                 <div class="ui header tech">
                     我的技术栈
-                    <a th:if="${visitorUId!=null and visitorUId==user.getUserId()}" id="thchnology" href="#"
+                    <a class="toggle-btn" th:if="${visitorUId!=null and visitorUId==user.getUserId()}" id="thchnology" href="#"
                        style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
                 <div th:if="${userTech!=null&&tech!=null&&!#strings.isEmpty(tech)}" th:each="tech:${userTech}"
@@ -176,7 +176,7 @@
             </div>
             <div class="ui bottom attached segment">
                 <div class="ui header contact">
-                    联系我<a th:if="${visitorUId!=null and visitorUId==user.getUserId()}" id="contact-me" href="#"
+                    联系我<a class="toggle-btn" th:if="${visitorUId!=null and visitorUId==user.getUserId()}" id="contact-me" href="#"
                           style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
                 <a href="#"

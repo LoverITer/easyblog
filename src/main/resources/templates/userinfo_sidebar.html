@@ -8,7 +8,7 @@
 <body>
 
 <!--左边的卡片-->
-<div class="four wide column">
+<div class="four wide column m-mobile-hide">
     <input id="userId" hidden="hidden" th:if="${#session.getAttribute('user')}!=null" th:value="${#session.getAttribute('user').getUserId()}">
     <!--用户信息区域-->
     <div class="ui segments" th:fragment="sidebar_userinfo" style="padding-right: 0 !important;">
