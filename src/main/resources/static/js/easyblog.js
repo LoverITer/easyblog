@@ -142,7 +142,7 @@ function showSuccessMessage(message) {
     if (message != "") {
         spop({
             template: message,
-            autoclose: 4000,
+            autoclose: 3000,
             position: "top-center",
             style: 'success',
         });
@@ -263,7 +263,6 @@ function _confirmWithDetail(option, optionDetail) {
  */
 function passwordDisplayToggle(obj, passwordObj) {
     $(obj).click(function () {
-        //console.log(1111111);
         if ($(this).hasClass('password-hide')) {
             $(this).removeClass('password-hide');
             $(this).addClass('password-show');
@@ -296,11 +295,9 @@ function showModifyButton(identity) {
  * 向服务器发送AJAX请求检查检查用户的登录情况用于判断显示头像还是显示登录按钮
  */
 function toggleStatus(userId) {
-    //console.log(userId);
-    let userJSONStr = sessionStorage.getItem("user");
-    //console.log(userJSONStr);
+    let userJSONStr = localStorage.getItem("user");
+    console.log(userJSONStr);
     if (userJSONStr != null && userJSONStr !== "0" && userJSONStr !== "undefined") {
-        //console.log("用户没有退出，session还在");
         changeUserLogState2Login();
     } else if (userId >= 0) {
         $.ajax({
@@ -312,7 +309,7 @@ function toggleStatus(userId) {
             success: function (response) {
                 if (response.success) {
                     //console.log('用户登录了');
-                    sessionStorage.setItem("user", response.message);
+                    localStorage.setItem("user", response.message);
                     changeUserLogState2Login();
                 } else {
                     //console.log('用户没登录');
@@ -368,7 +365,7 @@ function logOut(userId) {
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    sessionStorage.removeItem("user");
+                    localStorage.removeItem("user");
                     changeUserLogState2LogOut();
                     window.location.reload();
                 }

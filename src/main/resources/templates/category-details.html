@@ -121,12 +121,10 @@
                                             <img th:src="${user.getUserHeaderImgUrl()}"
                                                  src="https://unsplash.it/100/100?image=1005" alt=""
                                                  class="ui avatar image">
-                                            <div class="content"><a href="#" class="header"
-                                                                    th:text="${user.getUserNickname()}">黄鑫</a></div>
+                                            <div class="content"><a href="#" class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
                                         </div>
                                         <div class="item">
-                                            <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd
-                                            hh:mm:ss')}]]
+                                            <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd hh:mm:ss')}]]
                                         </div>
                                         <div class="item">
                                             <i class="eye icon"></i>[[${article.getArticleClick()}]]
