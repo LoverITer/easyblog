@@ -117,7 +117,7 @@
                     <!--留言区域列表-->
                     <div id="commentForm" class="ui form" style="padding-bottom: 15px !important;">
                         <!--默认存放文章作者的ID,评论默认发送给文章的作者-->
-                        <input id="sendCommentTo" type="hidden" th:value="${user.getUserId()}">
+                        <input id="sendCommentTo" type="hidden" th:value="${article.getArticleUser()}">
                         <input id="articleId" type="hidden" th:value="${article.getArticleId()}">
                         <input id="pid" type="hidden" value="0">
                         <div class="comment">
@@ -146,39 +146,42 @@
                             </a>
                             <!--父评论内容-->
                             <div class="content" style="border-bottom: 1px dashed #e0e0e0;max-width: 95%">
-                                <a th:href="@{/article/index/{sendUserId}(sendUserId=${comment.getCommentSend()})}" class="author"
-                                   th:text="${comment.getSendUserNickname()}">Elliot Fu</a>
+                                <a th:href="@{/article/index/{sendUserId}(sendUserId=${comment.getCommentSend()})}" class="author" style="font-family: 'PingFangSC-Semibold' !important;font-style: normal !important;color: #2e2e2e !important;font-size: 14px !important;" th:text="${comment.getSendUserNickname()}" >Elliot Fu</a>
                                 <div class="metadata">
-                                    <span class="date" th:text="${#dates.format(comment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
+                                    <span class="date" th:text="${#dates.format(comment.getCommentTime(),'yyyy-MM-dd HH:mm')}" style="font-family: 'PingFangSC-Semibold' !important;font-style: normal !important;color: #999 !important;font-size: 13px !important;" >Yesterday at 12:30AM</span>
                                 </div>
                                 <div class="text">
-                                    <p th:text="${comment.getCommentContent()}"></p>
+                                    <p th:text="${comment.getCommentContent()}" style="font-family: 'PingFangSC-Semibold' !important;font-style: normal !important;font-size: 14px !important;line-height: 22px !important;"></p>
                                 </div>
                                 <!--th:if="${user!=null&&user.getUserId()!=comment.getCommentSend()}"-->
-                                <div  class="actions" style="position: absolute;right:5em;top:5px;cursor: pointer;">
-                                    <a style="color: #0e90d2 !important;font-size: 14px !important;" class="reply" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
+                                <div  class="actions" style="position: absolute;right:12em;top:5px;cursor: pointer;">
+                                    <a style="color: #0e90d2 !important;font-size: 14px !important;font-style: normal !important;font-family: 'PingFangSC-Semibold' !important;" class="reply" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
                                        onclick="changeInfo(this)">回复</a>
+                                </div>
+                                <div th:if="${comment.getChildComment()!=null&&!#lists.isEmpty(comment.getChildComment())}" class="" style="position: absolute;right:3em;top:5px;cursor: pointer;">
+                                    <a style="color: #0e90d2 !important;font-size: 14px !important;font-style: normal !important;font-family: 'PingFangSC-Semibold' !important;" class="reply" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
+                                       onclick="toggleChildComment(this)" th:title="${#lists.size(comment.getChildComment())}">查看回复([[${#lists.size(comment.getChildComment())}]])</a>
                                 </div>
                             </div>
                             <!--子评论内容-->
-                            <div th:if="${comment.getChildComment()!=null&&!#lists.isEmpty(comment.getChildComment())}" class="comments" style="padding-bottom: 5px !important;padding-top: 38px !important;">
+                            <div th:if="${comment.getChildComment()!=null&&!#lists.isEmpty(comment.getChildComment())}" class="comments" style="padding-bottom: 5px !important;padding-top: 38px !important;display: none;">
                                 <div class="comment" th:each="childComment:${comment.getChildComment()}" style="border-bottom: 1px dashed #e0e0e0;max-width: 95%">
                                     <a th:href="@{/article/index/{sendUserId}(sendUserId=${childComment.getCommentSend()})}" class="avatar">
                                         <img th:src="@{${childComment.getSendUserNicknameHeadImgUrl()}}" src="https://unsplash.it/100/100?image=1005">
                                     </a>
                                     <div class="content">
                                         <a th:href="@{/article/index/{sendUserId}(sendUserId=${childComment.getCommentSend()})}" class="author"
-                                           th:text="${childComment.getSendUserNickname()}">Jenny Hess</a> <span
-                                            style="color: grey">回复</span> <span
-                                            th:text="${childComment.getReceivedUserNickname()}"></span>
+                                           th:text="${childComment.getSendUserNickname()}" style="font-family: 'PingFangSC-Semibold'!important;font-style: normal !important;color: #2e2e2e !important;font-size: 14px !important;">Jenny Hess</a>
+                                        <span style="font-family: 'PingFangSC-Semibold' !important;font-size: 13px !important;font-style: normal !important;color: #999 !important;">回复</span>
+                                        <span th:text="${childComment.getReceivedUserNickname()}" style="font-family: 'PingFangSC-Semibold' !important;font-size: 14px !important;font-style: normal !important;color: #2e2e2e  !important;"></span>
                                         <div class="metadata">
-                                            <span class="date" th:text="${#dates.format(childComment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
+                                            <span class="date m-comment-font" th:text="${#dates.format(childComment.getCommentTime(),'yyyy-MM-dd HH:mm')}" style="font-family: 'PingFangSC-Semibold' !important;font-size: 13px !important;font-style: normal !important;color: #999 !important;">Yesterday at 12:30AM</span>
                                         </div>
                                         <div class="text">
-                                            <p th:text="${childComment.getCommentContent()}"></p>
+                                            <p th:text="${childComment.getCommentContent()}" style="font-family: 'PingFangSC-Semibold' !important;font-style: normal !important;font-size: 14px !important;line-height: 22px !important;"></p>
                                         </div>
                                         <div  class="actions">
-                                            <a th:value="${childComment.getCommentSend()}+@{/}+${childComment.getSendUserNickname()}+@{/}+${childComment.getCommentId()}" onclick="changeInfo(this)" class="reply"
+                                            <a th:value="${childComment.getCommentSend()}+@{/}+${childComment.getSendUserNickname()}+@{/}+${childComment.getCommentId()}" onclick="changeInfo(this)" class="reply m-comment-font"
                                                style="color: #0e90d2 !important;font-size: 14px !important;position: absolute;right:1.3em;top:5px;cursor: pointer;">回复</a>
                                         </div>
                                     </div>
@@ -293,13 +296,25 @@
 
     <!--点击 回复 按钮后评论回复栏中的对应显示变化-->
     function changeInfo(obj) {
-        var values = $(obj).attr('value');
-        var array = values.split('/');
+        let values = $(obj).attr('value');
+        let array = values.split('/');
         $('#commentInput').attr('placeholder', '回复 ' + array[1]);
         $('#sendCommentTo').val(array[0]);
         $('#pid').val(array[2]);
         $('#commentInput').attr("rows", "10");
         $('#commentBtn').show();
+    }
+
+
+    function toggleChildComment(obj) {
+       let node=$(obj).parent().parent().next();
+       if(node.css('display')=='none'){
+           node.show();
+           $(obj).text('收起回复');
+       }else if(node.css('display')!='none'){
+           node.hide();
+           $(obj).text('查看回复('+$(obj).attr('title')+')');
+       }
     }
 </script>
 <script type="text/javascript">

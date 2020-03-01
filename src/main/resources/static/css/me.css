@@ -66,7 +66,7 @@ body {
     padding-right: 4em !important;
 }
 
-.border-bottom-only{
+.border-bottom-only {
     border-bottom: 1px dotted #DDDDDD;
     border-left: none !important;
     border-right: none !important;
@@ -236,7 +236,6 @@ body {
 }
 
 
-
 /*-----弹框-----*/
 #signup {
 
@@ -384,7 +383,7 @@ body {
 
 /*-----container*/
 
-.m-container-large{
+.m-container-large {
     max-width: 89em !important;
     margin: auto !important;
 }
@@ -404,7 +403,7 @@ body {
     margin: auto !important;
 }
 
-.m-menu-padding{
+.m-menu-padding {
     margin-left: 1em !important;
     font-size: 16px !important;
 }
@@ -493,8 +492,15 @@ span.count {
     border-right: none !important;
 }
 
-.m-font-size{
+.m-font-size {
     font-size: 12px !important;
+}
+
+.m-comment-font {
+    font-size: 16px !important;
+    color: #999;
+    font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+    font-style: normal !important;
 }
 
 @media screen and (max-width: 991px) {
@@ -505,15 +511,15 @@ span.count {
 
 @media screen and (max-width: 768px) {
 
-    .m-mobile-pading{
+    .m-mobile-pading {
         padding-left: 10px !important;
     }
 
-    .m-full-line{
+    .m-full-line {
         min-width: 100% !important;
     }
 
-    .m-font-size{
+    .m-font-size {
         font-size: 5px !important;
     }
 
@@ -567,7 +573,7 @@ span.count {
         margin-left: 0 !important;
     }
 
-    .header{
+    .header {
         max-height: 42px !important;
         max-width: 100px !important;
         font-size: 15px !important;
@@ -604,7 +610,7 @@ span.count {
     height: 100px !important;
 }
 
-.image-122x122{
+.image-122x122 {
     width: 122px !important;
     height: 122px !important;
 }
