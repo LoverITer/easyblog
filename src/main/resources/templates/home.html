@@ -30,7 +30,7 @@
                        user是文章的作者
                        visitor是访问者
                     -->
-                    <img th:src="${user.getUserHeaderImgUrl()}" src="https://img-blog.csdnimg.cn/20190927151132530.png"
+                    <img th:src="${user.getUserHeaderImgUrl()}" style="border-radius: 5px"  src="https://img-blog.csdnimg.cn/20190927151132530.png"
                          class="ui fluid top aligned  medium circular image image-100x100" alt="">
                 </div>
                 <div class="thirteen wide column m-mobile-pading">
@@ -70,7 +70,7 @@
                 <div th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
-                            <button th:switch="${article.getArticleType()}" class="ui mini red basic button  m-inline-block ">
+                            <button th:switch="${article.getArticleType()}" class="ui mini red basic button  m-inline-block m-mobile-hide">
                                 <span th:case="0">原创</span>
                                 <span th:case="1">转载</span>
                                 <span th:case="2">翻译</span>
@@ -83,7 +83,14 @@
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
-                                        <div class="item">
+                                        <div class="item m-mobile-show-only">
+                                            <button th:switch="${article.getArticleType()}" class="ui mini red basic button  m-inline-block m-mobile-show-only">
+                                                <span th:case="0">原创</span>
+                                                <span th:case="1">转载</span>
+                                                <span th:case="2">翻译</span>
+                                            </button>
+                                        </div>
+                                        <div class="item m-mobile-hide">
                                             <img th:src="${user.getUserHeaderImgUrl()}" src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
                                             <div class="content"><a href="#" class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
                                         </div>

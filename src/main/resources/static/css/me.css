@@ -614,6 +614,10 @@ span.m-article-type{
     margin-top: 3px;
 }
 
+.m-mobile-show-only{
+    display: none !important;
+}
+
 /**Small Monitor*/
 @media screen and (min-width: 992px) and (max-width: 1200px) {
     .m-mobile-margin-left {
@@ -630,6 +634,11 @@ span.m-article-type{
 
 /**Mobile*/
 @media screen and (max-width: 768px) {
+
+    .m-margin-left-massive{
+        margin-left: 1em !important;
+        margin-top: 1em !important;
+    }
 
     .m-comment-location-see-comment{
         position: absolute;
@@ -715,6 +724,10 @@ span.m-article-type{
         display: none !important;
     }
 
+    .m-mobile-show-only{
+        display: inline !important;
+    }
+
     .m-mobile-show {
         margin-inside: 10px !important;
         display: block !important;
@@ -761,12 +774,12 @@ span.m-article-type{
         margin-left: 0 !important;
     }
 
-    .header {
+   /* .header {
         max-height: 42px !important;
         max-width: 100px !important;
         font-size: 15px !important;
         border-radius: 30px !important;
-    }
+    }*/
 }
 
 .m-center {
