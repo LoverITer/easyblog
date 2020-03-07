@@ -31,7 +31,7 @@
             <!--header-->
             <div th:replace="~{blog-manage-header::header}"></div>
             <!--条件查询表单-->
-            <form th:action="@{/manage/blog/search}" method="GET" class="ui attached segment form"
+            <form th:action="@{/manage/blog/search(userId=${user.getUserId()})}" method="GET" class="ui attached segment form"
                   style="background-color: #f2f5f7">
                 <div class="inline fields stackable">
                     <span class="m-black m-inline-block m-mobile-hide">筛选：</span>
