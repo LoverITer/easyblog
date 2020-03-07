@@ -24,7 +24,7 @@
 <div class="m-container m-padded-tb-large">
     <div class="ui  stackable grid">
         <div class="twelve wide column" style="padding-top: 0 !important;">
-            <div class="ui stackable grid segment m-margin-top m-margin-bottom" style="margin-left: unset !important;margin-right: unset !important;">
+            <div class="ui stackable grid segment m-margin-top m-margin-bottom m-mobile-hide" style="margin-left: unset !important;margin-right: unset !important;">
                 <div class="three wide column" style="max-width: 130px !important;padding-right: 0 !important;">
                     <!--
                        user是文章的作者
@@ -70,38 +70,47 @@
                 <div th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
-                            <button th:switch="${article.getArticleType()}" class="ui mini red basic button  m-inline-block m-mobile-hide">
-                                <span th:case="0">原创</span>
-                                <span th:case="1">转载</span>
-                                <span th:case="2">翻译</span>
-                            </button>
-                            <a href="#" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui header m-inline-block m-margin-top-small m-margin-bottom-small"></a>
-                            <a href="#" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui header m-inline-block m-margin-top-small m-margin-bottom-small"></a>
-                            <p class="m-text" style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;" th:text="${#strings.abbreviate(article.getArticleContent(),100)}">
+                            <div class="ui stackable  grid">
+                                <div class="two wide column m-mobile-hide" style="max-width: 52px;padding-right: 0 !important;">
+                                    <div th:switch="${article.getArticleType()}" class="ui red mini basic label">
+                                        <span th:case="0">原创</span>
+                                        <span th:case="1">转载</span>
+                                        <span th:case="2">翻译</span>
+                                    </div>
+                                </div>
+                                <div class="fourteen wide column" style="padding-top: 0px !important;padding-left: 10px !important;">
+                                    <a href="#" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                    <a href="#" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                </div>
+                            </div>
+                            <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),100)}">
                                 正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
                             </p>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
-                                        <div class="item m-mobile-show-only">
-                                            <button th:switch="${article.getArticleType()}" class="ui mini red basic button  m-inline-block m-mobile-show-only">
+                                        <div class="item m-margin-left">
+                                            <div th:switch="${article.getArticleType()}" class="ui red mini basic label m-mobile-show-only">
                                                 <span th:case="0">原创</span>
                                                 <span th:case="1">转载</span>
                                                 <span th:case="2">翻译</span>
-                                            </button>
+                                            </div>
                                         </div>
-                                        <div class="item m-mobile-hide">
-                                            <img th:src="${user.getUserHeaderImgUrl()}" src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
-                                            <div class="content"><a href="#" class="header" th:text="${user.getUserNickname()}">黄鑫</a></div>
+                                        <div class="item m-margin-left">
+                                            <img th:src="${user.getUserHeaderImgUrl()}"
+                                                 src="https://unsplash.it/100/100?image=1005" alt=""
+                                                 class="ui avatar image m-mobile-hide">
+                                            <div class="content"><a href="#" class="m-comment-font-user"
+                                                                    th:text="${user.getUserNickname()}">黄鑫</a></div>
                                         </div>
-                                        <div class="item">
-                                            <i class="calendar icon"></i>
-                                            [[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd hh:mm:ss')}]]
+                                        <div class="item m-margin-left">
+                                            <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd
+                                            hh:mm:ss')}]]
                                         </div>
-                                        <div class="item">
+                                        <div class="item m-margin-left">
                                             <i class="eye icon"></i>[[${article.getArticleClick()}]]
                                         </div>
-                                        <div class="item">
+                                        <div class="item m-margin-left">
                                             <i class="comment alternate icon"></i>[[${article.getArticleCommentNum()}]]
                                         </div>
                                     </div>
@@ -125,16 +134,13 @@
             </div>
 
             <!--查看更多-->
-            <div th:if="${articleSize>15}" class="ui attached segment bottom " style="border-top: none !important;">
+            <div  class="ui attached segment bottom " style="border-top: none !important;">
                 <a href="#" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}">
-                    <button id="more-btn" class="ui negative basic button" style="margin-left: 40% !important;">查看更多
+                    <button id="more-btn" class="ui negative basic button m-look-more-margin">查看更多
                     </button>
                 </a>
             </div>
 
-            <div th:if="${articleSize<=15&&articleSize!=0}" class="ui attached segment bottom "
-                 style="border-top: none !important;">
-            </div>
 
             <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment"
                  style="border-top: none !important;">

@@ -52,7 +52,7 @@
                 <!--header-->
                 <div class="ui top attached segment">
                     <div class="ui middle aligned two column grid">
-                        <div class="column">
+                        <div class="left aligned column m-mobile-title-width">
                             <h3 class="ui teal header m-inline-block">TA的博客</h3>
                             <div class="ui checked checkbox m-inline-block m-margin-left">
                                 <input id="checkbox" type="checkbox" checked th:if="${displayOnlyOriginal=='1'}">
@@ -64,7 +64,7 @@
                                    th:href="@{/article/index/{id}(id=${user.getUserId()})}">查看全部</a>
                             </div>
                         </div>
-                        <div class="right aligned column">
+                        <div class="right aligned column m-mobile-info-width">
                             共 <h2 class="ui orange header m-inline-block m-text-thin"> [[${articlePages.total}]] </h2> 篇
                         </div>
                     </div>
@@ -78,34 +78,46 @@
                          style="padding-bottom: 20px !important;padding-top: 10px !important;">
                         <div class="ui mobile reversed stackable grid">
                             <div class="eleven wide column">
-                                <button th:switch="${article.getArticleType()}"
-                                        class="ui mini red basic button  m-inline-block ">
-                                    <span th:case="0">原创</span>
-                                    <span th:case="1">转载</span>
-                                    <span th:case="2">翻译</span>
-                                </button>
-                                <a href="#" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui header m-inline-block m-margin-top-small m-margin-bottom-small"></a>
-                                <a href="#" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui header m-inline-block m-margin-top-small m-margin-bottom-small"></a>
-                                <p class="m-text" style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;" th:text="${#strings.abbreviate(article.getArticleContent(),150)}">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
+                                <div class="ui stackable  grid">
+                                    <div class="two wide column m-mobile-hide" style="max-width: 52px;padding-right: 0 !important;">
+                                        <div th:switch="${article.getArticleType()}" class="ui red mini basic label">
+                                            <span th:case="0">原创</span>
+                                            <span th:case="1">转载</span>
+                                            <span th:case="2">翻译</span>
+                                        </div>
+                                    </div>
+                                    <div class="fourteen wide column" style="padding-top: 0px !important;padding-left: 10px !important;">
+                                        <a href="#" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                        <a href="#" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                    </div>
+                                </div>
+                                <p class="m-column_article_desc"  th:text="${#strings.abbreviate(article.getArticleContent(),150)}">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
                                 </p>
                                 <div class="ui stackable grid">
                                     <div class="eleven wide column">
                                         <div class="ui mini horizontal link list">
-                                            <div class="item">
+                                            <div class="item m-margin-left">
+                                                <div th:switch="${article.getArticleType()}" class="ui red mini basic label m-mobile-show-only">
+                                                    <span th:case="0">原创</span>
+                                                    <span th:case="1">转载</span>
+                                                    <span th:case="2">翻译</span>
+                                                </div>
+                                            </div>
+                                            <div class="item m-margin-left">
                                                 <img th:src="${user.getUserHeaderImgUrl()}"
                                                      src="https://unsplash.it/100/100?image=1005" alt=""
-                                                     class="ui avatar image">
-                                                <div class="content"><a href="#" class="header"
+                                                     class="ui avatar image m-mobile-hide">
+                                                <div class="content"><a href="#" class="m-comment-font-user"
                                                                         th:text="${user.getUserNickname()}">黄鑫</a></div>
                                             </div>
-                                            <div class="item">
+                                            <div class="item m-margin-left">
                                                 <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd
                                                 hh:mm:ss')}]]
                                             </div>
-                                            <div class="item">
+                                            <div class="item m-margin-left">
                                                 <i class="eye icon"></i>[[${article.getArticleClick()}]]
                                             </div>
-                                            <div class="item">
+                                            <div class="item m-margin-left">
                                                 <i class="comment alternate icon"></i>[[${article.getArticleCommentNum()}]]
                                             </div>
                                         </div>
@@ -115,12 +127,10 @@
 
                             <div class="five wide column">
                                 <a href="#" target="_blank">
-                                    <img th:if="${article.getArticleFirstPicture()==null}"
-                                         src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
-                                         alt="" class="ui rounded image">
-                                    <img th:if="${article.getArticleFirstPicture()!=null}"
-                                         th:src="@{${article.getArticleFirstPicture()}}"
-                                         alt="" class="ui rounded image">
+                                    <a  href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin m-mobile-icon-show"
+                                        th:text="${article.getArticleCategory()}" style="background: rgba(0,0,0,.3) !important;border-color: rgba(0,0,0,.1) !important;">认知升级</a>
+                                    <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" alt="" class="ui rounded image">
+                                    <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" alt="" class="ui rounded image">
                                 </a>
                             </div>
 

@@ -101,7 +101,7 @@
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
                             <div class="ui stackable  grid">
-                                    <div class="two wide column" style="max-width: 52px;padding-right: 0 !important;">
+                                    <div class="two wide column m-mobile-hide" style="max-width: 52px;padding-right: 0 !important;">
                                         <div th:switch="${article.getArticleType()}" class="ui red mini basic label">
                                             <span th:case="0">原创</span>
                                             <span th:case="1">转载</span>
@@ -120,6 +120,13 @@
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
+                                        <div class="item">
+                                            <div th:switch="${article.getArticleType()}" class="ui red mini basic label m-mobile-show-only">
+                                                <span th:case="0">原创</span>
+                                                <span th:case="1">转载</span>
+                                                <span th:case="2">翻译</span>
+                                            </div>
+                                        </div>
                                         <div class="item" style="margin-left: 0 !important;">
                                             <img th:src="${user.getUserHeaderImgUrl()}"
                                                  src="https://unsplash.it/100/100?image=1005" alt=""

@@ -618,6 +618,31 @@ span.m-article-type{
     display: none !important;
 }
 
+.m-article-sidebar-padding{
+    padding: 10px 5px 20px 20px !important;
+}
+
+.m-mobile-icon-show{
+    position: absolute;
+    top: 1.5em;
+    left: 1.5em;
+    z-index: 10000;
+    background: rgba(0,0,0,.3) !important;
+    font-size: 16px !important;
+}
+
+.m-mobile-title-width{
+    width: 60% !important;
+}
+
+.m-mobile-info-width{
+    width:40% !important;
+}
+
+.m-look-more-margin{
+    margin-left: 40% !important;
+}
+
 /**Small Monitor*/
 @media screen and (min-width: 992px) and (max-width: 1200px) {
     .m-mobile-margin-left {
@@ -635,8 +660,50 @@ span.m-article-type{
 /**Mobile*/
 @media screen and (max-width: 768px) {
 
+    .m-padded-tb-big {
+        padding-top: 1.5em !important;
+        padding-bottom: 5em !important;
+    }
+
+    .m-look-more-margin{
+        margin-left: 31% !important;
+    }
+
+    .m-mobile-title-width{
+        width: 60% !important;
+    }
+
+    .m-moblie-info-width{
+        width:40% !important;
+    }
+
+    .m-padded-tiny {
+        padding: 9.33px 13.328px !important;
+    }
+
+    .m-article-sidebar-padding{
+        padding: unset !important;
+    }
+
+    .m-mobile-icon-show{
+        position: absolute;
+        top: 1.5em;
+        left: 1.5em;
+        z-index: 10000;
+        background: rgba(0,0,0,.3) !important;
+        font-size: 16px !important;
+    }
+
+    .m-margin-left {
+        margin-left: .5em !important;
+    }
+
+    .m-margin-left-big {
+        margin-left: 2em !important;
+    }
+
     .m-margin-left-massive{
-        margin-left: 1em !important;
+        margin-left: .5em !important;
         margin-top: 1em !important;
     }
 
