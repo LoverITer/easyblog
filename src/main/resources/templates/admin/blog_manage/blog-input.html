@@ -510,7 +510,7 @@
                         if (result.success) {
                             localStorage.removeItem("articleId");
                             //跳转到成功页面
-                            window.location.href = "/manage/blog/success/" + articleId +"/"+userId;
+                            window.location.href = "/manage/blog/success/" + articleId+"/"+userId ;
                         } else {
                             showErrorMessage(result.message);
                         }

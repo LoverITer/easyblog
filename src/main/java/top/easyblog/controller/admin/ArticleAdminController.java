@@ -95,7 +95,6 @@ public class ArticleAdminController {
                                     @RequestParam(defaultValue = "") String articleTopic,
                                     @RequestParam(value = "page", defaultValue = "1") int pageNo,
                                     Model model) {
-
         //从Redis中查询出已经登录User的登录信息
         String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
@@ -334,10 +333,11 @@ public class ArticleAdminController {
         User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
+            Article article = articleService.getArticleById(articleId, "text");
+            model.addAttribute("article", article);
+            return PREFIX + "/blog-input-success";
         }
-        Article article = articleService.getArticleById(articleId, "text");
-        model.addAttribute("article", article);
-        return PREFIX + "/blog-input-success";
+        return "redirect:/usr/loginPage";
     }
 
 
@@ -354,6 +354,7 @@ public class ArticleAdminController {
         }
         User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.nonNull(user)) {
+            model.addAttribute("user", user);
             if (articleId < 0) {
                 return "redirect:" + request.getHeader("Referer");
             }
@@ -374,44 +375,44 @@ public class ArticleAdminController {
 
 
     @GetMapping(value = "/delete")
-    public String deleteArticle(@RequestParam("articleId") int articleId) {
+    public String deleteArticle(@RequestParam("articleId") int articleId,@RequestParam int userId) {
         try {
             //删除的文章暂时移动到垃圾桶
             updateArticle(articleId, "3");
         } catch (Exception e) {
             return "redirect:/error/error";
         }
-        return "redirect:/manage/blog/";
+        return "redirect:/manage/blog/?userId="+userId;
     }
 
 
     @GetMapping(value = "/deleteDraft")
-    public String deleteDraftArticle(@RequestParam("articleId") int articleId) {
+    public String deleteDraftArticle(@RequestParam("articleId") int articleId,@RequestParam int userId) {
         String updateStatus = deleteArticle2Dash(articleId);
-        return null == updateStatus ? "redirect:/manage/blog/draft" : updateStatus;
+        return Objects.isNull(updateStatus) ? "redirect:/manage/blog/draft?userId="+userId : updateStatus;
     }
 
     @GetMapping(value = "/deletePrivateArticle")
-    public String deletePrivateArticle(@RequestParam("articleId") int articleId) {
+    public String deletePrivateArticle(@RequestParam("articleId") int articleId,@RequestParam int userId) {
         String updateStatus = deleteArticle2Dash(articleId);
-        return null == updateStatus ? "redirect:/manage/blog/private" : updateStatus;
+        return Objects.isNull(updateStatus) ? "redirect:/manage/blog/private?userId="+userId: updateStatus;
     }
 
     @GetMapping(value = "/deletePublicArticle")
-    public String deletePublicArticle(@RequestParam("articleId") int articleId) {
+    public String deletePublicArticle(@RequestParam("articleId") int articleId,@RequestParam int userId) {
         String updateStatus = deleteArticle2Dash(articleId);
-        return null == updateStatus ? "redirect:/manage/blog/public" : updateStatus;
+        return Objects.isNull(updateStatus)? "redirect:/manage/blog/public?userId="+userId : updateStatus;
     }
 
 
     @GetMapping(value = "/recycleToDraft")
-    public String recycleArticleFromDash2Draft(int articleId) {
+    public String recycleArticleFromDash2Draft(@RequestParam int articleId,@RequestParam int userId) {
         try {
             updateArticle(articleId, "2");
         } catch (Exception e) {
             return "redirect:/error/error";
         }
-        return "redirect:/manage/blog/dash";
+        return "redirect:/manage/blog/dash?userId="+userId;
     }
 
     private String deleteArticle2Dash(int articleId) {
@@ -422,6 +423,16 @@ public class ArticleAdminController {
             return "redirect:/error/error";
         }
         return null;
+    }
+
+    @GetMapping(value = "/deleteComplete")
+    public String deleteComplete(@RequestParam("articleId") int articleId,@RequestParam int userId) {
+        try {
+            articleService.deleteByPK(articleId);
+        } catch (Exception e) {
+            return "redirect:/error/error";
+        }
+        return "redirect:/manage/blog/dash?userId="+userId;
     }
 
     private void updateArticle(int articleId, String destArticleStatus) {
@@ -460,15 +471,6 @@ public class ArticleAdminController {
         }
     }
 
-    @GetMapping(value = "/deleteComplete")
-    public String deleteComplete(@RequestParam("articleId") int articleId) {
-        try {
-            articleService.deleteByPK(articleId);
-        } catch (Exception e) {
-            return "redirect:/error/error";
-        }
-        return "redirect:/manage/blog/dash";
-    }
 
 
     @GetMapping(value = "/public")

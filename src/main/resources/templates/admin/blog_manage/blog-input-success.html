@@ -77,14 +77,15 @@
 <script src="../static/js/loading/zeroModal.js" th:src="@{/static/js/loading/zeroModal.js}"></script>
 <script type="text/javascript">
 
+    let userId=$('#userId').val();
+
     $(document).ready(function () {
-        let userId=$('#userId').val();
         showPageZoomWarning();
         toggleStatus(userId);
         logOut(userId);
     });
 </script>
-<script th:online="javascript">
+<script th:online="javascript" type="text/javascript">
 
     $('.ui.dropdown').dropdown({
         on: 'hover'
@@ -101,10 +102,10 @@
         $('.second.modal').modal("hide");
     });
 
-    let userId='[[${user.getUserId()}]';
-    let articleId = "[[${article.getArticleId()}]]";
 
     $('.article-upload-image-ok').click(function () {
+        let userId=$('#userId').val();
+        let articleId = "[[${article.getArticleId()}]]";
         console.log("userId:"+userId+",articleId:"+articleId);
         if (articleId != "" && articleId > 0) {
             //获取图片的base64串
