@@ -16,8 +16,6 @@ import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
 import top.easyblog.service.impl.UserServiceImpl;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
 /**
@@ -27,8 +25,8 @@ import java.util.Objects;
 @RequestMapping(value = "/manage/comment")
 public class CommentAdminController {
 
-    private static final String PREFIX="/admin/comment_manage/";
-    private static final String LOGIN_PAGE="redirect:/user/loginPage";
+    private static final String PREFIX = "/admin/comment_manage/";
+    private static final String LOGIN_PAGE = "redirect:/user/loginPage";
     private final CommentServiceImpl commentService;
 
 
@@ -36,76 +34,52 @@ public class CommentAdminController {
         this.commentService = commentService;
     }
 
-   /* @GetMapping(value = "/publish")
-    public String commentPublishListPage(HttpSession session, Model model){
-        User user = (User) session.getAttribute("user");
-        if(Objects.nonNull(user)){
-            List<UserComment> comments = commentService.getComment(user.getUserId(), "send");
-            model.addAttribute("comments",comments);
-            return PREFIX+"comment-manage-publish";
-        }
-       return LOGIN_PAGE;
-    }
-
-
-    @GetMapping(value = "/receive")
-    public String commentReceiveListPage(HttpSession session, Model model){
-        User user = (User) session.getAttribute("user");
-        if(Objects.nonNull(user)){
-            List<UserComment> comments = commentService.getComment(user.getUserId(), "receive");
-            model.addAttribute("comments",comments);
-            return PREFIX+"comment-manage-receive";
-        }
-        return LOGIN_PAGE;
-    }
-
-*/
-
     @GetMapping(value = "/publish")
-    public String commentPublishListPage(HttpSession session,
+    public String commentPublishListPage(@RequestParam Integer userId,
                                          Model model,
-                                         @RequestParam(value = "page",defaultValue = "1") int pageNo){
-        User user = (User) session.getAttribute("user");
-        if(Objects.nonNull(user)){
+                                         @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+        User user = User.getUserFromRedis(userId);
+        if (Objects.nonNull(user)) {
+            model.addAttribute("user", user);
             PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
             PageInfo<UserComment> commentsPage = commentService.getCommentPage(user.getUserId(), "send", pageParam);
-            model.addAttribute("commentsPage",commentsPage);
-            return PREFIX+"comment-manage-publish";
+            model.addAttribute("commentsPage", commentsPage);
+            return PREFIX + "comment-manage-publish";
         }
         return LOGIN_PAGE;
     }
 
 
     @GetMapping(value = "/receive")
-    public String commentReceiveListPage(HttpSession session,
-                                         Model model,
-                                         @RequestParam(value = "page",defaultValue = "1") int pageNo){
-        User user = (User) session.getAttribute("user");
-        if(Objects.nonNull(user)){
+    public String commentReceiveListPage(Model model,
+                                         @RequestParam Integer userId,
+                                         @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+        User user = User.getUserFromRedis(userId);
+        if (Objects.nonNull(user)) {
+            model.addAttribute("user", user);
             PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
             PageInfo<UserComment> commentsPage = commentService.getCommentPage(user.getUserId(), "receive", pageParam);
-            model.addAttribute("commentsPage",commentsPage);
-            return PREFIX+"comment-manage-receive";
+            model.addAttribute("commentsPage", commentsPage);
+            return PREFIX + "comment-manage-receive";
         }
         return LOGIN_PAGE;
     }
-
-
 
 
     @ResponseBody
     @GetMapping(value = "/delete")
-    public Result deleteComment(HttpSession session, @RequestParam int commentId, HttpServletRequest request){
-        User user = (User) session.getAttribute("user");
+    public Result deleteComment(@RequestParam Integer userId,
+                                @RequestParam int commentId) {
+        User user = User.getUserFromRedis(userId);
         Result result = new Result();
-        result.setSuccess(false);
-        result.setMessage("未登录");
-        if(Objects.nonNull(user)){
-            int var0 = commentService.deleteComment(commentId);
-            if(var0==1){
+        result.setMessage("请登录后再操作！");
+        if (Objects.nonNull(user)) {
+            //int var0 = commentService.deleteComment(commentId);
+            int var0=1;
+            if (var0 == 1) {
                 result.setSuccess(true);
             }
-            result.setMessage("删除失败");
+            result.setMessage("抱歉！删除失败");
             return result;
         }
         return result;

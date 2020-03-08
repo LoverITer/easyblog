@@ -57,10 +57,8 @@ public class ArticleAdminController {
                              @RequestParam(value = "userId") Integer userId,
                              @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         //从Redis中查询出已经登录User的登录信息
-        System.out.println("userId:" + userId);
         String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            System.out.println("userId:" + userId);
             //找不到直接重定位到登录页面
             return "redirect:/user/loginPage";
         }

@@ -42,12 +42,12 @@
                     <div class="ui grid">
                         <div class="row" style="padding-top: 10px !important;padding-bottom: 10px !important;">
                             <div class="two wide column" style="padding-right: 0 !important;">
-                                <a id="all" href="#" th:href="@{/manage/comment/receive}" class="m-black"
+                                <a id="all" href="#" th:href="@{/manage/comment/receive(userId=${user.getUserId()})}" class="m-black"
                                    style="color:#349EDF !important;font-size: 1.1rem !important;">我的文章评论</a>
                             </div>
                             <div class="two wide column"
                                  style="padding-right: 0 !important;padding-left: 0 !important;">
-                                <a id="public" href="#" th:href="@{/manage/comment/publish}"
+                                <a id="public" href="#" th:href="@{/manage/comment/publish(userId=${user.getUserId()})}"
                                    style="font-size: 1.1rem !important;" class="m-black">
                                     我发表的评论
                                 </a>
@@ -73,16 +73,14 @@
                                 <span style="color: black !important;" th:text="${comment.getInfo().get('userName')}">ABC</span> 在 <span
                                     style="color: black !important;"
                                     th:text="${#dates.format(comment.getCommentTime(),'yyyy年MM月dd日 hh:mm:ss')}">时间</span> 评论了
-                                我的文章 <a href="#" th:href="@{/article/details/{id}(id=${comment.getArticleId()})}"
+                                我的文章 <a href="#" th:href="@{/article/details/{id}(id=${comment.getArticleId()},visitorUId=${user.getUserId()})}"
                                         th:text="${comment.getInfo().get('article')}">你真的理解什么是财富自由吗？</a>
                             </span>
                                 </div>
                                 <div class="right aligned five wide column">
                                     <div class="five  wide  column" style="padding-bottom:  5px !important;">
                                         <div id="del-btn" style="display: none" class="ui horizontal list hide">
-                                            <div class="item"><a href="#" style="color: #CA0C16"
-                                                                 th:value="${comment.getCommentId()}"
-                                                                 onclick="deleteComment(this)">删除</a></div>
+                                            <div class="item"><a  style="color: #CA0C16;cursor: pointer;" th:value="${comment.getCommentId()}" onclick="deleteComment(this)">删除</a></div>
                                         </div>
                                     </div>
                                 </div>
@@ -121,21 +119,18 @@
                 <div class="ui middle aligned two column grid">
                     <div class="column" style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
-                            <a th:href="@{/manage/comment/receive(page=${commentsPage.getPrePage()})}">
-                                <button class="ui labeled icon button"
-                                        style="background: white !important;font-weight: 100 !important;">上一页
+                            <a th:href="@{/manage/comment/receive(page=${commentsPage.getPrePage()},userId=${user.getUserId()})}">
+                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
                                 </button>
                             </a>
                             <a th:each="pageNo:${commentsPage.getNavigatepageNums()}"
-                               th:href="@{/manage/comment/receive(page=${pageNo})}">
-                                <button class="ui button pages"
-                                        style="background: white !important;font-weight: 100 !important;">
+                               th:href="@{/manage/comment/receive(page=${pageNo},userId=${user.getUserId()})}">
+                                <button class="ui button pages" style="background: white !important;font-weight: 100 !important;">
                                     [[${pageNo}]]
                                 </button>
                             </a>
-                            <a th:href="@{/manage/comment/receive(page=${commentsPage.getNextPage()})}">
-                                <button class="ui right labeled icon button"
-                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                            <a th:href="@{/manage/comment/receive(page=${commentsPage.getNextPage()},userId=${user.getUserId()})}">
+                                <button class="ui right labeled icon button" style="background: white !important;font-weight: 100 !important;"> 下一页
                                 </button>
                             </a>
                         </div>
@@ -170,49 +165,31 @@
         showCurrentPageNum();
     });
 </script>
-<script type="text/javascript">
+<script type="text/javascript" th:online="javascript">
+    let userId="[[${user.getUserId()}]]";
     function deleteComment(obj) {
         //初始化提示框
         $('#msg-btn').click(function () {
             $('.ui.modal').modal('hide');
         });
-        var commentId = $(obj).attr("value");
+        let commentId = $(obj).attr("value");
         $.ajax({
             url: "/manage/comment/delete",
             method: "GET",
-            data: {commentId: commentId},
+            data: {commentId: commentId,userId:userId},
             sync: true,
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    $('#msg_header').html("提示");
-                    $('#msg').html("删除成功");
-                    $('.ui.modal').modal('show');
-                    /*window.location.href="/manage/comment/receive"*/
+                    showInfoMessage("删除成功！");
                     setTimeout("window.location.reload()", 1000);
                 } else {
-                    if ("未登录" == response.msg) {
-                        $('#msg_header').html("错误");
-                        $('#msg').html("请先登录后再操作");
-                        $('.ui.modal').modal('show');
-                        setTimeout('window.location.href="/user/loginPage"', 1000);
-                    } else {
-                        spop({
-                            template: '服务异常，请重试！',
-                            autoclose: 4000,
-                            position: "top-center",
-                            style: 'error',
-                        });
-                    }
+                    showInfoMessage(response.message);
+                    setTimeout('window.location.href="/user/loginPage"', 1000);
                 }
             },
             error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
+                showErrorMessage("服务异常，请重试！");
             }
         })
     }

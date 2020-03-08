@@ -6,6 +6,8 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import top.easyblog.bean.User;
+import top.easyblog.config.ApplicationContextHolder;
 import top.easyblog.config.redis.ObjectRedisTemplate;
 
 import java.util.List;
@@ -47,6 +49,20 @@ public class RedisUtils {
      * Redis数据库最小索引
      */
     private static final int MIN_DB_INDEX = 0;
+
+    /**
+     * redis读写工具类
+     */
+    private  static RedisUtils redisUtils = null;
+
+    public static RedisUtils getRedisUtils() {
+        if (Objects.isNull(redisUtils)) {
+            synchronized (User.class) {
+                redisUtils = ApplicationContextHolder.getBean("redisUtils");
+            }
+        }
+        return redisUtils;
+    }
 
 
     //=============================common============================
@@ -665,9 +681,9 @@ public class RedisUtils {
     }
 
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         RedisUtils redisUtil = new RedisUtils();
         redisUtil.set("user", "age:20", 1);
-    }
+    }*/
 
 }

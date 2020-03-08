@@ -29,20 +29,17 @@
             <div class="ui top attached segment " style="border-bottom: none !important;padding-bottom: 0 !important;">
                 <div class="four column row" style="padding-bottom: 0 !important;padding-left: 1.13rem !important;">
                     <div class="left floated column">
-                        <a style="color:#bbbbbb;font-size: 1rem !important;" href="#" th:href="@{/manage/category/list}">< 返回分类专栏</a>
+                        <a style="color:#bbbbbb;font-size: 1rem !important;" href="#" th:href="@{/manage/category/list(userId=${user.getUserId()})}">< 返回分类专栏</a>
                     </div>
                 </div>
-                <form class="ui form" method="post" th:action="@{/manage/category/saveEdit/{categoryId}(categoryId=${category.getCategoryId()})}"
-                      enctype="multipart/form-data">
+                <form class="ui form" method="post" th:action="@{/manage/category/saveEdit/{categoryId}/{userId}(categoryId=${category.getCategoryId()},userId=${user.getUserId()})}" enctype="multipart/form-data">
                     <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
                         <div class="ui form">
                             <div class="inline field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏名称：</label>
                                 <input name="oldCategoryName" type="hidden"  th:value="${category.getCategoryName()}">
-                                <input id="category-name" name="categoryName" type="text"
-                                       style="width: 340px !important;" th:value="${category.getCategoryName()}" placeholder="请输入分类专栏名称">
-                                <span hidden="hidden" id="category-name-msg"
-                                      style="color: #C92027 !important;margin-left: 10px !important;">不可为空</span>
+                                <input id="category-name" name="categoryName" type="text" style="width: 340px !important;" th:value="${category.getCategoryName()}" placeholder="请输入分类专栏名称">
+                                <span hidden="hidden" id="category-name-msg" style="color: #C92027 !important;margin-left: 10px !important;">不可为空</span>
                             </div>
                         </div>
                     </div>
@@ -50,8 +47,7 @@
                         <div class="ui form">
                             <div class="inline  field">
                                 <label style="color: #4f4f4f;font-size: 14px !important;">分类专栏简介：</label>
-                                <textarea name="categoryDesc" style="width: 340px !important;" rows="5"
-                                          th:text="${category.getCategoryDescription()}"   placeholder="输入分类专栏简介"></textarea>
+                                <textarea name="categoryDesc" style="width: 340px !important;" rows="5" th:text="${category.getCategoryDescription()}"   placeholder="输入分类专栏简介"></textarea>
                             </div>
                         </div>
                     </div>
@@ -109,44 +105,13 @@
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
-        toggleStatus();
+        let userId=$('#userId').val();
+        showPageZoomWarning();
+        toggleStatus(userId);
+        logOut(userId);
     });
 
-    function toggleStatus() {
-        var user = sessionStorage.getItem("user");
-        if (user != null) {
-            $('#header-images').show();
-            $('#login-btn').hide();
-        } else {
-            $('#header-images').hide();
-            $('#login-btn').show();
-        }
-        setTimeout(`toggleStatus()`, 500);
-    }
-    <!--退出操作异步请求-->
-    $('#logout').click(function () {
-        $.ajax({
-            url: "/user/logout",
-            method: "GET",
-            sync: true,
-            data: {userId: $('#userId').val()},
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    sessionStorage.removeItem("user");
-                    window.location.href = "/user/loginPage";
-                }
-            },
-            error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
-            }
-        });
-    });
+
 </script>
 <script>
     $('.menu.toggle').click(function () {

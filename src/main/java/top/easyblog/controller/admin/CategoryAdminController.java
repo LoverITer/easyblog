@@ -20,12 +20,12 @@ import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
 
-import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
 
 /**
  * 用户后台文章分类管理
+ *
  * @author huangxin
  */
 @Controller
@@ -35,11 +35,10 @@ public class CategoryAdminController {
     private static Logger log = LoggerFactory.getLogger(CategoryAdminController.class);
     private final String PREFIX = "/admin/type_manage/";
     private final String LOGIN_PAGE = "redirect:/user/loginPage";
-
-
     private final CategoryServiceImpl categoryService;
     private final QiNiuCloudService qiNiuCloudService;
     private final ArticleServiceImpl articleService;
+
 
     public CategoryAdminController(CategoryServiceImpl categoryService, QiNiuCloudService qiNiuCloudService, ArticleServiceImpl articleService) {
         this.categoryService = categoryService;
@@ -49,15 +48,15 @@ public class CategoryAdminController {
 
 
     @GetMapping(value = "/list")
-    public String categoryPage(HttpSession session,
+    public String categoryPage(@RequestParam(value = "userId") Integer userId,
                                Model model,
                                @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = (User) session.getAttribute("user");
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
+            model.addAttribute("user", user);
             PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
             PageInfo<Category> categoriesPage = categoryService.getUserAllCategoriesPage(user.getUserId(), pageParam);
             model.addAttribute("categoriesPage", categoriesPage);
-            model.addAttribute("userId", user.getUserId());
             putCategoryNumInModel(user, model);
             return PREFIX + "category-manage";
         }
@@ -68,10 +67,10 @@ public class CategoryAdminController {
     @RequestMapping(value = "/changeDisplay")
     public Result switchCategoryDisplay(@RequestParam(value = "categoryId") int categoryId,
                                         @RequestParam(value = "displayStatus") String displayStatus,
-                                        HttpSession session) {
-        final Result result = new Result();
-        result.setSuccess(false);
-        User user = (User) session.getAttribute("user");
+                                        @RequestParam(value = "userId") Integer userId) {
+        Result result = new Result();
+        result.setMessage("请登录后重试！");
+        User user = User.getUserFromRedis(userId);
         if (Objects.isNull(user)) {
             result.setMessage("请先登录后再操作");
             return result;
@@ -91,33 +90,34 @@ public class CategoryAdminController {
     }
 
     @GetMapping(value = "/delete")
-    public String deleteCategory(@RequestParam(value = "categoryId") int categoryId) {
+    public String deleteCategory(@RequestParam(value = "categoryId") int categoryId, @RequestParam(value = "userId") Integer userId) {
         if (categoryId > 0) {
             Category category = new Category();
             category.setCategoryId(categoryId);
             category.setDisplay("3");
             categoryService.updateByPKSelective(category);
-            return "redirect:/manage/category/list";
+            return "redirect:/manage/category/list?userId=" + userId;
         }
         return "/error/404";
     }
 
 
     @GetMapping(value = "/restore")
-    public String restoreCategory(@RequestParam int categoryId) {
+    public String restoreCategory(@RequestParam(value = "userId") Integer userId, @RequestParam int categoryId) {
         if (categoryId > 0) {
             final Category category = new Category();
             category.setCategoryId(categoryId);
             category.setDisplay("1");
             categoryService.updateByPKSelective(category);
-            return "redirect:/manage/category/dash";
+            return "redirect:/manage/category/dash?userId=" + userId;
         }
         return LOGIN_PAGE;
     }
 
 
     @GetMapping(value = "/deleteComplete")
-    public String deleteComplete(@RequestParam int categoryId,
+    public String deleteComplete(@RequestParam(value = "userId") Integer userId,
+                                 @RequestParam int categoryId,
                                  @RequestParam String imageUrl) {
         if (categoryId > 0) {
             final Category category = new Category();
@@ -130,7 +130,7 @@ public class CategoryAdminController {
                 }
             }
             categoryService.deleteCategoryByCondition(category);
-            return "redirect:/manage/category/dash";
+            return "redirect:/manage/category/dash?userId=" + userId;
         }
         return LOGIN_PAGE;
     }
@@ -139,16 +139,17 @@ public class CategoryAdminController {
     /**
      * 从分类管理首页删除的分类进入到垃圾箱中，垃圾箱页面
      *
-     * @param session
+     * @param userId
      * @param model
      * @return
      */
     @GetMapping(value = "/dash")
-    public String categoryDashBoxPage(HttpSession session,
-                                      Model model,
-                                      @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = (User) session.getAttribute("user");
+    public String deleteCategory2DashBoxPage(Model model,
+                                             @RequestParam(value = "userId") Integer userId,
+                                             @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
+            model.addAttribute("user", user);
             PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
             PageInfo<Category> categoriesPage = categoryService.getUserAllDeletedCategoryPage(user.getUserId(), pageParam);
             model.addAttribute("categoriesPage", categoriesPage);
@@ -183,21 +184,22 @@ public class CategoryAdminController {
     }
 
     @GetMapping(value = "/add")
-    public String categoryAddPage(HttpSession session) {
-        User user = (User) session.getAttribute("user");
+    public String categoryAddPage(@RequestParam(value = "userId") Integer userId, Model model) {
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
+            model.addAttribute("user", user);
             return PREFIX + "category-add";
         }
         return LOGIN_PAGE;
     }
 
     @PostMapping(value = "/saveAdd")
-    public String saveAdd(HttpSession session,
+    public String saveAdd(@RequestParam(value = "userId") Integer userId,
                           @RequestParam String categoryName,
                           @RequestParam(required = false, defaultValue = "") String categoryDesc,
                           @RequestParam(required = false) MultipartFile categoryImg,
                           RedirectAttributes attributes) {
-        User user = (User) session.getAttribute("user");
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             //用于回显
             attributes.addFlashAttribute("categoryDesc", categoryDesc);
@@ -213,13 +215,13 @@ public class CategoryAdminController {
             }
             if (StringUtil.isEmpty(categoryName)) {
                 attributes.addFlashAttribute("error", "专栏名称不能为空");
-                return "redirect:/manage/category/add";
+                return "redirect:/manage/category/add?userId=" + userId;
             }
             //已经存在该分类时，不能重复创建
             Category var0 = categoryService.getCategoryByUserIdAndName(user.getUserId(), categoryName);
             if (Objects.nonNull(var0)) {
-                attributes.addFlashAttribute("error", "专栏"+categoryName+"已存在！");
-                return "redirect:/manage/category/add";
+                attributes.addFlashAttribute("error", "专栏" + categoryName + "已存在！");
+                return "redirect:/manage/category/add?userId=" + userId;
             }
             Category category = new Category(user.getUserId(), categoryName, "", 0, 0, 0, "1", categoryDesc);
             if (categoryImg.isEmpty()) {
@@ -236,16 +238,17 @@ public class CategoryAdminController {
             }
             category.setCategoryName(categoryName);
             categoryService.saveCategory(category);
-            return "redirect:/manage/category/list";
+            return "redirect:/manage/category/list?userId=" + userId;
         }
         return LOGIN_PAGE;
     }
 
 
     @GetMapping(value = "/edit")
-    public String categoryEditor(HttpSession session, @RequestParam int categoryId, Model model) {
-        User user = (User) session.getAttribute("user");
+    public String categoryEditor(@RequestParam(value = "userId") Integer userId, @RequestParam int categoryId, Model model) {
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
+            model.addAttribute("user", user);
             final Category category = categoryService.getCategory(categoryId);
             model.addAttribute("category", category);
             return PREFIX + "category-edit";
@@ -254,8 +257,8 @@ public class CategoryAdminController {
     }
 
 
-    @PostMapping(value = "/saveEdit/{categoryId}")
-    public String saveEditor(HttpSession session,
+    @PostMapping(value = "/saveEdit/{categoryId}/{userId}")
+    public String saveEditor(@PathVariable(value = "userId") Integer userId,
                              @PathVariable("categoryId") int categoryId,
                              @RequestParam String oldCategoryName,
                              @RequestParam String categoryName,
@@ -263,26 +266,26 @@ public class CategoryAdminController {
                              @RequestParam String oldCategoryImg,
                              @RequestParam MultipartFile categoryImage,
                              RedirectAttributes redirectAttributes) {
-        User user = (User) session.getAttribute("user");
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             //判断编辑后的分类名是否为空
-            if(StringUtil.isEmpty(categoryName)){
-                redirectAttributes.addFlashAttribute("error","专栏名称不可为空！");
-                return "redirect:/manage/category/edit?categoryId="+categoryId;
+            if (StringUtil.isEmpty(categoryName)) {
+                redirectAttributes.addFlashAttribute("error", "专栏名称不可为空！");
+                return "redirect:/manage/category/edit?categoryId=" + categoryId + "&userId=" + userId;
             }
             //判断编辑后的分类名是否重复
-            if(!oldCategoryName.equals(categoryName)) {
+            if (!oldCategoryName.equals(categoryName)) {
                 Category var0 = categoryService.getCategoryByUserIdAndName(user.getUserId(), categoryName);
                 if (Objects.nonNull(var0)) {
                     //已经存在分类名
                     redirectAttributes.addFlashAttribute("error", "专栏" + categoryName + "已存在！");
-                    return "redirect:/manage/category/edit?categoryId=" + categoryId;
-                }else{
+                    return "redirect:/manage/category/edit?categoryId=" + categoryId + "&userId=" + userId;
+                } else {
                     //没有改分类名
                     int res = articleService.updateArticlesByCategoryName(categoryName, oldCategoryName, user.getUserId());
-                    if(res<=0){
-                        redirectAttributes.addFlashAttribute("error","发生未知异常！");
-                        return "redirect:/manage/category/edit?categoryId="+categoryId;
+                    if (res <= 0) {
+                        redirectAttributes.addFlashAttribute("error", "发生未知异常！");
+                        return "redirect:/manage/category/edit?categoryId=" + categoryId + "&userId=" + userId;
                     }
                 }
             }
@@ -304,13 +307,13 @@ public class CategoryAdminController {
                 }
                 int re = categoryService.updateByPKSelective(category);
                 if (re > 0) {
-                    return "redirect:/manage/category/list";
+                    return "redirect:/manage/category/list?userId=" + userId;
                 } else {
                     return "redirect:/error/404";
                 }
             } catch (Exception ex) {
                 redirectAttributes.addFlashAttribute("error", "抱歉！，服务异常，请重试！");
-                return "redirect:/manage/category/edit";
+                return "redirect:/manage/category/edit?userId=" + userId;
             }
         }
         return LOGIN_PAGE;
