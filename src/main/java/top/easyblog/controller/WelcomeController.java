@@ -1,6 +1,8 @@
 package top.easyblog.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +15,17 @@ import top.easyblog.commons.pagehelper.PageSize;
 import top.easyblog.commons.utils.CollectionUtils;
 import top.easyblog.service.IArticleService;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * @author huangxin
  */
+@Slf4j
 @Controller
 @RequestMapping(value = "/")
 public class WelcomeController {
@@ -31,9 +37,22 @@ public class WelcomeController {
     }
 
     @GetMapping(value = "/")
-    public String index(Model model, HttpSession session, @RequestParam(defaultValue = "1") int pageNo) {
-        User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
+    public String index(Model model, @RequestParam(defaultValue = "1") int pageNo, HttpServletRequest request)  {
+        try {
+            Cookie[] cookies = request.getCookies();
+            if (Objects.nonNull(cookies)) {
+                for (Cookie cookie : cookies) {
+                    if ("USER-INFO".equalsIgnoreCase(cookie.getName())) {
+                        String userJsonStr=URLDecoder.decode(cookie.getValue(), "utf-8");
+                        User user = JSON.parseObject(userJsonStr, User.class);
+                        model.addAttribute("user", user);
+                        break;
+                    }
+                }
+            }
+        }catch (UnsupportedEncodingException e){
+            log.error(e.getMessage());
+        }
         //查询最近1个月内的文章
         PageInfo<Article> newestArticlesPages = articleService.getAllUserNewestArticlesPage(new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize()));
         //查询访问量最高的19篇最近的文章用于首页大图、访问排行、特别推荐的显示

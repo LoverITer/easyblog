@@ -28,6 +28,7 @@ import top.easyblog.service.impl.UserSigninLogServiceImpl;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -303,6 +304,11 @@ public class UserController {
                     redisUtil.hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), 1);
                     redisUtil.expire("user-" + user.getUserId(), 60 * 60 * 24 * 15, 1);
                 }
+                Cookie userInfoCk = new Cookie("USER-INFO", URLEncoder.encode(JSONObject.toJSONString(user),"utf-8"));
+                //用户的登录信息一天有效
+                userInfoCk.setMaxAge(60 * 60 * 24);
+                userInfoCk.setPath("/");
+                response.addCookie(userInfoCk);
                 // 保存用户名密码一个月
                 if ("on".equals(remember)) {
                     //是否创建一个新的Cookie
@@ -311,6 +317,7 @@ public class UserController {
                     for (Cookie ck : cookies) {
                         if ("USER-COOKIE".equals(ck.getName())) {
                             newCookie = false;
+                            break;
                         }
                     }
                     //已经登录过，并且Cookie还没有过期
@@ -338,9 +345,10 @@ public class UserController {
                 return "redirect:/user/loginPage";
             }
         } catch (Exception e) {
+            log.error(e.getMessage());
             executor.execute(() -> {
                 if (Objects.nonNull(user)) {
-                    redisUtil.delete(1, "user-"+user.getUserId());
+                    redisUtil.delete(1, "user-" + user.getUserId());
                     userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录失败"));
                 }
             });
@@ -353,16 +361,24 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/logout")
-    public Result logout(@RequestParam int userId) {
+    public Result logout(@RequestParam int userId,HttpServletRequest request) {
         Result result = new Result();
         result.setMessage(AJAX_ERROR);
-        if(userId<=0){
+        if (userId <= 0) {
             return result;
         }
         Long expire = redisUtil.getExpire("user-" + userId, 1);
         if (Objects.nonNull(expire) && expire > 0) {
-            Boolean res=redisUtil.delete(1, "user-" + userId);
-            if(res!=null&&res){
+            Cookie[] cookies = request.getCookies();
+            for(Cookie cookie:cookies){
+                if("USER-INFO".equalsIgnoreCase(cookie.getName())){
+                    Cookie ck = new Cookie("USER-INFO", null);
+                    ck.setMaxAge(0);
+                    break;
+                }
+            }
+            Boolean res = redisUtil.delete(1, "user-" + userId);
+            if (res != null && res) {
                 result.setSuccess(true);
                 result.setMessage(AJAX_SUCCESS);
             }
@@ -422,8 +438,8 @@ public class UserController {
     public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo, @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        String userJsonStr= (String) redisUtil.hget("user-" + userId, "user", 1);
-        if(Objects.isNull(userJsonStr)||userJsonStr.length()<=0){
+        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
+        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
             return result;
         }
         User user = JSON.parseObject(userJsonStr, User.class);
@@ -457,8 +473,8 @@ public class UserController {
                                  @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        String userJsonStr= (String) redisUtil.hget("user-" + userId, "user", 1);
-        if(Objects.isNull(userJsonStr)||userJsonStr.length()<=0){
+        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
+        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
             return result;
         }
         User user = JSON.parseObject(userJsonStr, User.class);
@@ -486,8 +502,8 @@ public class UserController {
     public Result setUserHobby(@RequestParam String hobby, @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        String userJsonStr= (String) redisUtil.hget("user-" + userId, "user", 1);
-        if(Objects.isNull(userJsonStr)||userJsonStr.length()<=0){
+        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
+        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
             return result;
         }
         User user = JSON.parseObject(userJsonStr, User.class);
@@ -507,14 +523,13 @@ public class UserController {
     }
 
 
-
     @ResponseBody
     @GetMapping(value = "/settingTech")
     public Result settingTech(@RequestParam String techStr, @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        String userJsonStr= (String) redisUtil.hget("user-" + userId, "user", 1);
-        if(Objects.isNull(userJsonStr)||userJsonStr.length()<=0){
+        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
+        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
             return result;
         }
         User user = JSON.parseObject(userJsonStr, User.class);

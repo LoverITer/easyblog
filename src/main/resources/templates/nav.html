@@ -37,9 +37,9 @@
                         <img class="ui medium circular image image-42x42" style="max-height: none !important;" th:src="@{${user.getUserHeaderImgUrl()}}"/></a>
                     </div>
                     <div class="menu">
-                        <a href="#" th:href="@{/manage/uc/follow-list}" class="item"><i class="bookmark icon"></i>我的关注</a>
-                        <a href="#" th:href="@{/manage/uc/profile}" class="item"><i class="user icon"></i>个人中心</a>
-                        <a href="#" th:href="@{/manage/account/reset/password}" class="item"><i class="cogs icon"></i>账号设置</a>
+                        <a href="#" th:href="@{/manage/uc/follow-list(userId=${user.getUserId()})}" class="item"><i class="bookmark icon"></i>我的关注</a>
+                        <a href="#" th:href="@{/manage/uc/profile(userId=${user.getUserId()})}" class="item"><i class="user icon"></i>个人中心</a>
+                        <a href="#" th:href="@{/manage/account/reset/password(userId=${user.getUserId()})}" class="item"><i class="cogs icon"></i>账号设置</a>
                         <div class="divider"></div>
                         <a href="#" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}" class="item"><i class="archive icon"></i>我的博客</a>
                         <a href="#" th:href="@{/manage/blog/(userId=${user.getUserId()})}" class="item"><i class="edit icon"></i>管理博客</a>

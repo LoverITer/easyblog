@@ -100,13 +100,15 @@
             countdown--;
         }
     };
+
+    let userId="[[${user.getUserId()}]]";
     //发送验证码
     $('#code_btn').click(function () {
         $.ajax({
             url: "/manage/account/sendByEmail",
             method: 'GET',
             sync: true,
-            data: {email: $('#email').val()},
+            data: {email: $('#email').val(),userId:userId},
             dataType: "json",
             success: function (response) {
                 if (response.success) {
@@ -142,17 +144,17 @@
             url: "/manage/account/reset/email/save",
             method: 'GET',
             sync: true,
-            data: {email: $('#email').val(),code:$('#confirm_code').val()},
+            data: {email: $('#email').val(),code:$('#confirm_code').val(),userId:userId},
             dataType: "json",
             success: function (response) {
                 if (response.success) {
                     spop({
-                        template: response.msg,
+                        template: response.message,
                         autoclose: 3000,
                         position: "top-right",
                         style: 'success',
                     });
-                    setTimeout('window.location.href="/manage/account/reset/email"',2000);
+                    setTimeout('window.location.href="/manage/account/reset/email?userId="'+userId,2000);
                 } else {
                     spop({
                         template: response.msg,

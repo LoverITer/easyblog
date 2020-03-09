@@ -74,8 +74,7 @@ public class CommentAdminController {
         Result result = new Result();
         result.setMessage("请登录后再操作！");
         if (Objects.nonNull(user)) {
-            //int var0 = commentService.deleteComment(commentId);
-            int var0=1;
+            int var0 = commentService.deleteComment(commentId);
             if (var0 == 1) {
                 result.setSuccess(true);
             }

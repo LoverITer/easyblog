@@ -13,7 +13,6 @@ import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.UserAttentionImpl;
 import top.easyblog.service.impl.UserServiceImpl;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,10 +37,10 @@ public class UserCenterController {
     }
 
     @GetMapping(value = "/profile")
-    public String center(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
+    public String center(@RequestParam Integer userId, Model model) {
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
-            model.addAttribute("user", userService.getUser(user.getUserId()));
+            model.addAttribute("user", user);
             String str = user.getUserAddress();
             if (Objects.nonNull(str) && !"".equals(str)) {
                 String[] address = str.split(",");
@@ -56,12 +55,13 @@ public class UserCenterController {
     }
 
     @PostMapping(value = "/updateInfo")
-    public String updateUserInfo(HttpSession session, User user,
+    public String updateUserInfo(User user,
+                                 @RequestParam Integer userId,
                                  @RequestParam(value = "birthday", required = false) String birthday,
                                  @RequestParam(required = false) String country,
                                  @RequestParam(required = false) String city,
                                  @RequestParam(required = false) String county) {
-        User user1 = (User) session.getAttribute("user");
+        User user1 = User.getUserFromRedis(userId);
         if (Objects.nonNull(user1)) {
             if (Objects.nonNull(user)) {
                 if (Objects.nonNull(birthday)) {
@@ -81,9 +81,10 @@ public class UserCenterController {
 
 
     @GetMapping(value = "/follow-list")
-    public String care(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
+    public String care(@RequestParam Integer userId, Model model) {
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
+            model.addAttribute("user",user);
             UserAttention var0 = new UserAttention();
             var0.setAttentionId(user.getUserId());
             List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var0);
@@ -96,10 +97,10 @@ public class UserCenterController {
 
     @ResponseBody
     @RequestMapping(value = "/cancelAttention")
-    public Result cancelAttention(HttpSession session, @RequestParam(value = "attentionId") int attentionId) {
-        User user = (User) session.getAttribute("user");
+    public Result cancelAttention(@RequestParam Integer userId, @RequestParam(value = "attentionId") int attentionId) {
+        User user = User.getUserFromRedis(userId);
         Result result = new Result();
-        result.setSuccess(false);
+        result.setMessage("请登录后重试！");
         if (Objects.nonNull(user)) {
             int res = userAttentionService.deleteByPK(attentionId);
             if (res > 0) {
@@ -114,9 +115,10 @@ public class UserCenterController {
 
 
     @GetMapping(value = "/fans-list")
-    public String fans(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
+    public String fans(@RequestParam Integer userId, Model model) {
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
+            model.addAttribute("user",user);
             UserAttention var1 = new UserAttention();
             var1.setUserId(user.getUserId());
             List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var1);
@@ -129,10 +131,10 @@ public class UserCenterController {
 
     @ResponseBody
     @PostMapping(value = "/uploadImg", produces = "application/json;charset=UTF-8")
-    public Result changeHeaderImage(@RequestBody Map<String, String> map, HttpSession session) {
-        User user = (User) session.getAttribute("user");
+    public Result changeHeaderImage(@RequestBody Map<String, String> map, @RequestParam Integer userId) {
+        User user = User.getUserFromRedis(userId);
         Result result = new Result();
-        result.setSuccess(false);
+        result.setMessage("请登录后重试！");
         if (Objects.nonNull(user)) {
             try {
                 String image = map.get("image");
