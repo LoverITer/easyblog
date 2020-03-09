@@ -114,8 +114,7 @@
             <h2>修改资料</h2>
             <a class="modal_close" href="javascript: void(0)"></a>
         </div>
-        <form action="#" th:action="@{/manage/uc/updateInfo}" method="POST">
-            <input type="hidden" name="userId" th:value="${user.getUserId()}">
+        <form action="#" th:action="@{/manage/uc/updateInfo/{userId}(userId=${user.getUserId()})}" method="POST">
             <div class="ui doubling stackable grid container">
                 <!--昵称-->
                 <div class="row " style="margin-top: 15px !important;padding-bottom: 0 !important;">

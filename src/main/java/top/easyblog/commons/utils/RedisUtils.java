@@ -41,6 +41,25 @@ public class RedisUtils {
     @Autowired
     private ZSetOperations<String, Object> redisZSetOps;
 
+    /**Redis默认的16个数据库索引**/
+    public static final int DB_0 = 0;
+    public static final int DB_1 = 1;
+    public static final int DB_2 = 2;
+    public static final int DB_3 = 3;
+    public static final int DB_4 = 4;
+    public static final int DB_5 = 5;
+    public static final int DB_6 = 6;
+    public static final int DB_7 = 7;
+    public static final int DB_8 = 8;
+    public static final int DB_9 = 9;
+    public static final int DB_10 = 10;
+    public static final int DB_11 = 11;
+    public static final int DB_12 = 12;
+    public static final int DB_13 = 13;
+    public static final int DB_14 = 14;
+    public static final int DB_15 = 15;
+
+
     /**
      * Redis数据库最大索引
      */
@@ -53,7 +72,7 @@ public class RedisUtils {
     /**
      * redis读写工具类
      */
-    private  static RedisUtils redisUtils = null;
+    private static RedisUtils redisUtils = null;
 
     public static RedisUtils getRedisUtils() {
         if (Objects.isNull(redisUtils)) {

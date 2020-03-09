@@ -31,12 +31,12 @@
         <nav>
             <ul id="starlist">
                 <li><a href="/" title="首页" th:href="@{/}">首页</a></li>
-                <li><a href="#"  th:href="@{/article/home/667017}">关于我</a></li>
-                <li th:if="${user==null}"><a href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
+                <li><a href="#"  th:href="@{/article/home/}">关于我</a></li>
+                <li th:if="${user==null}"><a class="index_user_header" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
                 <li th:if="${user!=null}">
                     <div id="header-images" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
-                        <a href="#" th:href="@{/manage/uc/profile(userId=${user.getUserId()})}">
-                            <img style="max-height: 50px !important;max-width: 50px !important;border-radius: 30px !important;" th:src="@{${user.getUserHeaderImgUrl()}}"/>
+                        <a href="#" class="index_user_header" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}">
+                            <img style="max-height: 35px !important;max-width:35px !important;border-radius: 30px !important;" th:src="@{${user.getUserHeaderImgUrl()}}"/>
                         </a>
                     </div>
                 </li>

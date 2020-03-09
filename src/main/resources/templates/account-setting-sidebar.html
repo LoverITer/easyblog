@@ -9,10 +9,10 @@
 
 
 <!--左侧菜单栏-->
-<div th:fragment="sidebar" class="three wide column">
+<div th:fragment="sidebar" class="three wide column" th:if="${user!=null}">
     <div class="ui segments ">
         <div id="account1" class="ui segment border-bt-none m-a-bg-hover">
-            <a href="#" th:href="@{/manage/account//reset/password(userId=${user.getUserId()})}" target="" class="m-black m-text-thin m-text-spaced"
+            <a href="#" th:href="@{/manage/account/reset/password(userId=${user.getUserId()})}" target="" class="m-black m-text-thin m-text-spaced"
                style="color: inherit !important;font-size: 14px !important;padding-left: 20% !important;"><i
                     class="cogs  icon"></i>修改密码</a>
         </div>

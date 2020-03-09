@@ -296,7 +296,7 @@ function showModifyButton(identity) {
  */
 function toggleStatus(userId) {
     let userJSONStr = localStorage.getItem("user");
-    console.log(userJSONStr);
+    //console.log(userJSONStr);
     if (userJSONStr != null && userJSONStr !== "0" && userJSONStr !== "undefined") {
         changeUserLogState2Login();
     } else if (userId >= 0) {

@@ -23,6 +23,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 
 /***
@@ -40,6 +41,8 @@ public class UserAccountController {
     private final SendEmailUtil emailUtil;
     @Autowired
     private RedisUtils redisUtils;
+    @Autowired
+    private Executor executor;
 
     public UserAccountController(UserSigninLogServiceImpl userSigninLogService, UserServiceImpl userService, SendEmailUtil emailUtil) {
         this.userSigninLogService = userSigninLogService;
@@ -161,7 +164,7 @@ public class UserAccountController {
     public String bindPhonePage(@RequestParam Integer userId, Model model) {
         User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
-            model.addAttribute("user-"+userId, user);
+            model.addAttribute("user", user);
             return PREFIX + "account-setting-phone-add";
         }
         return LOGIN_PAGE;
@@ -171,7 +174,7 @@ public class UserAccountController {
     @GetMapping(value = "/bindPhone")
     public Result saveBindPhone(@RequestParam Integer userId, @RequestParam String phone, @RequestParam String code) {
         Result result = new Result();
-        result.setSuccess(false);
+        result.setMessage("请登录后重试！");
         User user = User.getUserFromRedis(userId);
         String realCode = (String) redisUtils.get("code-"+userId, 1);
         if (Objects.nonNull(user)) {
@@ -183,6 +186,7 @@ public class UserAccountController {
                         result.setMessage("服务异常，请重试！");
                         return result;
                     }
+                    executor.execute(() -> User.updateLoggedUserInfo(user));
                     result.setMessage("手机号绑定成功!");
                     result.setSuccess(true);
                     return result;
@@ -220,7 +224,7 @@ public class UserAccountController {
             String var0 = (String) redisUtils.get("code-" + userId, 1);
             if (Objects.nonNull(var0)) {
                 if (code.equals(var0)) {
-                    redisUtils.delete(1, "code-" + userId);
+                    redisUtils.delete(RedisUtils.DB_1, "code-" + userId);
                     result.setSuccess(true);
                     result.setMessage("OK");
                 } else {
@@ -230,7 +234,7 @@ public class UserAccountController {
                 result.setMessage("验证码已超时，请重新获取");
             }
         } else {
-            redisUtils.delete(1, "code-" + userId);
+            redisUtils.delete(RedisUtils.DB_1, "code-" + userId);
         }
         return result;
     }
@@ -270,9 +274,9 @@ public class UserAccountController {
         Result result = new Result();
         result.setSuccess(false);
         String code = SendMessageUtil.getRandomCode(6);
-        redisUtils.set("code-"+userId,code,1);
+        redisUtils.set("code-"+userId,code,RedisUtils.DB_1);
         //60s有效
-        redisUtils.expire("code-"+userId,60,1);
+        redisUtils.expire("code-"+userId,60,RedisUtils.DB_1);
         String content = "您正在修改已经绑定的邮箱，验证码为：" + code + "，60秒内有效！";
         Email e = new Email("验证码", email, content, null);
         emailUtil.send(e);

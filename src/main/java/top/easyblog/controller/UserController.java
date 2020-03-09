@@ -1,6 +1,5 @@
 package top.easyblog.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.util.StringUtil;
 import org.slf4j.Logger;
@@ -300,11 +299,11 @@ public class UserController {
             if (user != null) {
                 user.setUserPassword(null);
                 //会话信息，如果没有主动会话信息退出15天有效
-                if (Objects.isNull(redisUtil.hget("user-" + user.getUserId(), "user", 1))) {
-                    redisUtil.hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), 1);
-                    redisUtil.expire("user-" + user.getUserId(), 60 * 60 * 24 * 15, 1);
+                if (Objects.isNull(redisUtil.hget("user-" + user.getUserId(), "user", RedisUtils.DB_1))) {
+                    redisUtil.hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), RedisUtils.DB_1);
+                    redisUtil.expire("user-" + user.getUserId(), 60 * 60 * 24 * 15, RedisUtils.DB_1);
                 }
-                Cookie userInfoCk = new Cookie("USER-INFO", URLEncoder.encode(JSONObject.toJSONString(user),"utf-8"));
+                Cookie userInfoCk = new Cookie("USER-INFO", URLEncoder.encode(JSONObject.toJSONString(user), "utf-8"));
                 //用户的登录信息一天有效
                 userInfoCk.setMaxAge(60 * 60 * 24);
                 userInfoCk.setPath("/");
@@ -333,10 +332,10 @@ public class UserController {
 
                 executor.execute(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功")));
                 // 跳转到用户登录前的页面
-                String refererUrl = (String) redisUtil.get("Referer-" + NetWorkUtil.getUserIp(request), 1);
+                String refererUrl = (String) redisUtil.get("Referer-" + NetWorkUtil.getUserIp(request), RedisUtils.DB_1);
                 if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
                     //登录成功后删除对应的key
-                    redisUtil.delete(1, "Referer-" + NetWorkUtil.getUserIp(request));
+                    redisUtil.delete(RedisUtils.DB_1, "Referer-" + NetWorkUtil.getUserIp(request));
                     return "redirect:" + refererUrl;
                 }
                 return "redirect:/article/index/" + user.getUserId();
@@ -348,7 +347,7 @@ public class UserController {
             log.error(e.getMessage());
             executor.execute(() -> {
                 if (Objects.nonNull(user)) {
-                    redisUtil.delete(1, "user-" + user.getUserId());
+                    redisUtil.delete(RedisUtils.DB_1, "user-" + user.getUserId());
                     userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录失败"));
                 }
             });
@@ -361,28 +360,26 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/logout")
-    public Result logout(@RequestParam int userId,HttpServletRequest request) {
+    public Result logout(@RequestParam int userId, HttpServletRequest request) {
         Result result = new Result();
         result.setMessage(AJAX_ERROR);
         if (userId <= 0) {
             return result;
         }
-        Long expire = redisUtil.getExpire("user-" + userId, 1);
-        if (Objects.nonNull(expire) && expire > 0) {
-            Cookie[] cookies = request.getCookies();
-            for(Cookie cookie:cookies){
-                if("USER-INFO".equalsIgnoreCase(cookie.getName())){
-                    Cookie ck = new Cookie("USER-INFO", null);
-                    ck.setMaxAge(0);
-                    break;
-                }
-            }
-            Boolean res = redisUtil.delete(1, "user-" + userId);
-            if (res != null && res) {
-                result.setSuccess(true);
-                result.setMessage(AJAX_SUCCESS);
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if ("USER-INFO".equalsIgnoreCase(cookie.getName())) {
+                Cookie ck = new Cookie("USER-INFO", null);
+                ck.setMaxAge(0);
+                break;
             }
         }
+        Boolean res = redisUtil.delete(RedisUtils.DB_1, "user-" + userId);
+        if (res != null && res) {
+            result.setSuccess(true);
+            result.setMessage(AJAX_SUCCESS);
+        }
+
         return result;
     }
 
@@ -392,7 +389,7 @@ public class UserController {
     public Result checkUserLoginStatus(@RequestParam int userId) {
         Result result = new Result();
         result.setMessage(UNLOGIN.getStatus() + "");
-        if (redisUtil.hHasKey("user-" + userId, "user", 1)) {
+        if (redisUtil.hHasKey("user-" + userId, "user", RedisUtils.DB_1)) {
             result.setMessage((String) redisUtil.hget("user-" + userId, "user", 1));
             result.setSuccess(true);
         }
@@ -427,7 +424,7 @@ public class UserController {
                 result.setMessage("抱歉，服务异常，请重试！");
                 return result;
             } finally {
-                redisUtil.delete(1, "captcha-code-" + account);
+                redisUtil.delete(RedisUtils.DB_1, "captcha-code-" + account);
             }
         }
         return result;
@@ -438,11 +435,7 @@ public class UserController {
     public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo, @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            return result;
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             user.setUserDescription(aboutMeInfo);
             try {
@@ -473,11 +466,7 @@ public class UserController {
                                  @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            return result;
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, userId);
             //尝试更新用户的account
@@ -502,11 +491,7 @@ public class UserController {
     public Result setUserHobby(@RequestParam String hobby, @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            return result;
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             User userHobby = new User();
             userHobby.setUserId(user.getUserId());
@@ -528,11 +513,7 @@ public class UserController {
     public Result settingTech(@RequestParam String techStr, @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            return result;
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             User userTech = new User();
             userTech.setUserId(user.getUserId());

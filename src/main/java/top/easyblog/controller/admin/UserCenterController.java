@@ -1,6 +1,7 @@
 package top.easyblog.controller.admin;
 
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,8 @@ import top.easyblog.autoconfig.qiniu.QiNiuCloudService;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserAttention;
 import top.easyblog.commons.utils.CalendarUtil;
+import top.easyblog.commons.utils.CombineBeans;
+import top.easyblog.commons.utils.RedisUtils;
 import top.easyblog.commons.utils.UserProfessionUtil;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.UserAttentionImpl;
@@ -16,6 +19,7 @@ import top.easyblog.service.impl.UserServiceImpl;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 /**
  * @author huangxin
@@ -29,6 +33,10 @@ public class UserCenterController {
     private final UserServiceImpl userService;
     private final UserAttentionImpl userAttentionService;
     private final QiNiuCloudService qiNiuCloudService;
+    @Autowired
+    private RedisUtils redisUtils;
+    @Autowired
+    private Executor executor;
 
     public UserCenterController(UserServiceImpl userService, UserAttentionImpl userAttentionService, QiNiuCloudService qiNiuCloudService) {
         this.userService = userService;
@@ -54,15 +62,15 @@ public class UserCenterController {
         return LOGIN_PAGE;
     }
 
-    @PostMapping(value = "/updateInfo")
+    @PostMapping(value = "/updateInfo/{userId}")
     public String updateUserInfo(User user,
-                                 @RequestParam Integer userId,
+                                 @PathVariable Integer userId,
                                  @RequestParam(value = "birthday", required = false) String birthday,
                                  @RequestParam(required = false) String country,
                                  @RequestParam(required = false) String city,
                                  @RequestParam(required = false) String county) {
-        User user1 = User.getUserFromRedis(userId);
-        if (Objects.nonNull(user1)) {
+        User user1 = null;
+        if (Objects.nonNull(user1 = User.getUserFromRedis(userId))) {
             if (Objects.nonNull(user)) {
                 if (Objects.nonNull(birthday)) {
                     user.setUserBirthday(CalendarUtil.getInstance().getDate(birthday));
@@ -70,11 +78,13 @@ public class UserCenterController {
                 String address = country + "," + city + "," + county;
                 user.setUserAddress(address);
                 user.setUserId(user1.getUserId());
-                //页面提交过来的是用户的职业的代号，具体实啥职业需要转码
+                //页面提交过来的是用户的职业的代号，具体职业需要转码
                 user.setUserPrefession(UserProfessionUtil.getUserProfession(user.getUserPrefession()));
                 userService.updateUserInfo(user);
+                User user2 = CombineBeans.combine(user, user1);
+                executor.execute(() -> User.updateLoggedUserInfo(user2));
             }
-            return "redirect:/manage/uc/profile";
+            return "redirect:/manage/uc/profile?userId=" + userId;
         }
         return LOGIN_PAGE;
     }
@@ -84,7 +94,7 @@ public class UserCenterController {
     public String care(@RequestParam Integer userId, Model model) {
         User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
-            model.addAttribute("user",user);
+            model.addAttribute("user", user);
             UserAttention var0 = new UserAttention();
             var0.setAttentionId(user.getUserId());
             List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var0);
@@ -118,7 +128,7 @@ public class UserCenterController {
     public String fans(@RequestParam Integer userId, Model model) {
         User user = User.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
-            model.addAttribute("user",user);
+            model.addAttribute("user", user);
             UserAttention var1 = new UserAttention();
             var1.setUserId(user.getUserId());
             List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var1);
@@ -149,11 +159,11 @@ public class UserCenterController {
                 var0.setUserId(user.getUserId());
                 var0.setUserHeaderImgUrl(imageUrl);
                 userService.updateUserInfo(var0);
-                System.out.println(user.getUserHeaderImgUrl());
                 if (!user.getUserHeaderImgUrl().contains("static")) {
                     qiNiuCloudService.delete(user.getUserHeaderImgUrl());
-                    user.setUserHeaderImgUrl(imageUrl);
                 }
+                User user1 = CombineBeans.combine(var0, user);
+                executor.execute(() -> User.updateLoggedUserInfo(user1));
                 result.setSuccess(true);
                 result.setMessage("头像上传成功");
             } catch (Exception e) {
