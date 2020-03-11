@@ -128,10 +128,10 @@
                                             </div>
                                         </div>
                                         <div class="item" style="margin-left: 0 !important;">
-                                            <img th:src="${user.getUserHeaderImgUrl()}"
+                                            <img th:src="${author.getUserHeaderImgUrl()}"
                                                  src="https://unsplash.it/100/100?image=1005" alt=""
                                                  class="ui avatar image m-mobile-hide">
-                                            <div class="content"><a href="#" class="m-comment-font-user" th:text="${user.getUserNickname()}">黄鑫</a></div>
+                                            <div class="content"><a href="#" class="m-comment-font-user" th:text="${author.getUserNickname()}">黄鑫</a></div>
                                         </div>
                                         <div class="item">
                                             <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd hh:mm:ss')}]]
@@ -164,19 +164,19 @@
                 <div class="ui middle aligned two column grid">
                     <div  style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
-                            <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${user.getUserId()},page=${categoryArticles.getPrePage()})}">
+                            <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${author.getUserId()},page=${categoryArticles.getPrePage()})}">
                                 <button class="ui  button"
                                         style="background: white !important;font-weight: 100 !important;">上一页
                                 </button>
                             </a>
                             <a th:each="pageNo:${categoryArticles.getNavigatepageNums()}"
-                               th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${user.getUserId()},page=${pageNo})}">
+                               th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${author.getUserId()},page=${pageNo})}">
                                 <button class="ui button pages"
                                         style="background: white !important;font-weight: 100 !important;">
                                     [[${pageNo}]]
                                 </button>
                             </a>
-                            <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${user.getUserId()},page=${categoryArticles.getNextPage()})}">
+                            <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${author.getUserId()},page=${categoryArticles.getNextPage()})}">
                                 <button class="ui right button"
                                         style="background: white !important;font-weight: 100 !important;"> 下一页
                                 </button>
@@ -201,7 +201,7 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="userId" th:value="${userId}">
+<input type="hidden" id="userId" th:value="${author.getUserId()}">
 <div style="height: 25px"></div>
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>
@@ -302,7 +302,7 @@
                     changeBtn();
                 },
                 error: function (result) {
-                    alert(result.msg);
+                    showErrorMessage(result.message);
                 }
             })
         } else if ("取消关注" == btnHtml) {
@@ -317,7 +317,7 @@
                     changeBtn();
                 },
                 error: function (result) {
-                    alert(result.msg);
+                    showErrorMessage(result.message);
                 }
             })
         }

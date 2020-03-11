@@ -1,6 +1,5 @@
 package top.easyblog.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,8 +16,11 @@ import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
 import top.easyblog.commons.utils.RedisUtils;
+import top.easyblog.commons.utils.UserUtil;
+import top.easyblog.markdown.TextForm;
 import top.easyblog.service.impl.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,19 +51,33 @@ public class ArticleController {
         this.userAccount = userAccount;
     }
 
+    /**
+     * 访问个人博客首页
+     * 其中visitor是访问用户，author是文章或此博客页面的作者
+     *
+     * @param model
+     * @param userId      作者Id
+     * @param articleType 文章类型 0原创文章 1转载文章 2翻译文章  3全部文章
+     * @param page        分页参数-页数
+     * @return
+     */
     @RequestMapping(value = "/index/{userId}")
-    public String index(@PathVariable("userId") int userId,
+    public String index(Model model,
+                        HttpServletRequest request,
+                        @PathVariable("userId") int userId,
                         @RequestParam(value = "articleType", defaultValue = "3") int articleType,
-                        Model model,
                         @RequestParam(value = "page", defaultValue = "1") int page) {
+
+        User visitor = UserUtil.getUserFromCookie(request);
+        model.addAttribute("visitor",visitor);
         try {
             ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, userId, articleType + "");
-            final User user = userService.getUser(userId);
+            User author = userService.getUser(userId);
             PageParam pageParam = new PageParam(page, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
             PageInfo articlePages = articleServiceImpl.getUserArticlesPage(userId, articleType + "", pageParam);
             model.addAttribute("articlePages", articlePages);
-            user.setUserPassword(null);
-            model.addAttribute("user", user);
+            author.setUserPassword(null);
+            model.addAttribute("author", author);
             if (ArticleType.Original.getArticleType().equals(articleType + "")) {
                 model.addAttribute("displayOnlyOriginal", "1");
             } else if (ArticleType.Unlimited.getArticleType().equals(articleType + "")) {
@@ -97,9 +113,9 @@ public class ArticleController {
                     model.addAttribute("articles", articles.subList(0, 15));
                 }
                 model.addAttribute("articleSize", articleSize);
-                model.addAttribute("user", author);
-                String hobbyStr;
-                String techStr;
+                model.addAttribute("author", author);
+                String hobbyStr = "";
+                String techStr = "";
                 if (Objects.nonNull(hobbyStr = author.getUserHobby())) {
                     //先用英文的逗号切分
                     String[] hobbies = hobbyStr.replaceAll("，", ",").split(",");
@@ -117,16 +133,8 @@ public class ArticleController {
                 UserAccount authorAccounts = userAccount.getAccountByUserId(author.getUserId());
                 model.addAttribute("authorAccounts", authorAccounts);
                 //从Redis中查用户的登录信息
-                User visitor = null;
-                if (Objects.nonNull(visitorUId) && visitorUId > 0) {
-                    String userJsonStr = (String) redisUtil.hget("user-" + visitorUId, "user", 1);
-                    if (Objects.nonNull(userJsonStr)) {
-                        visitor = JSON.parseObject(userJsonStr, User.class);
-                    }
-                }
-                if (Objects.nonNull(visitor)) {
-                    model.addAttribute("visitorUId", visitorUId);
-                }
+                User visitor = UserUtil.getUserFromRedis(visitorUId);
+                model.addAttribute("visitor", visitor);
                 return "home";
             }
             return PAGE404;
@@ -136,31 +144,33 @@ public class ArticleController {
     }
 
 
+    /**
+     * 查看文章
+     *
+     * @param articleId  文章ID
+     * @param model
+     * @param visitorUId 访问者ID
+     * @return
+     */
     @GetMapping(value = "/details/{articleId}")
     public String articleDetails(@PathVariable("articleId") int articleId, Model model, @RequestParam(required = false) Integer visitorUId) {
         try {
             //根据id拿到文章
-            Article article = articleServiceImpl.getArticleById(articleId, "html");
+            Article article = articleServiceImpl.getArticleById(articleId, TextForm.HTML);
             if (Objects.nonNull(article)) {
                 model.addAttribute("article", article);
+                //文章评论
                 List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
                 model.addAttribute("articleComments", articleComments);
-                //从Redis中查用户的登录信息
-                User visitor = null;
-                if (Objects.nonNull(visitorUId) && visitorUId > 0) {
-                    String userJsonStr = (String) redisUtil.hget("user-" + visitorUId, "user", 1);
-                    if (Objects.nonNull(userJsonStr)) {
-                        visitor = JSON.parseObject(userJsonStr, User.class);
-                    }
-                }
-                if (Objects.nonNull(visitor)) {
-                    model.addAttribute("userId", visitor.getUserId());
-                }
+                //从Redis中查访客的登录信息
+                User visitor = UserUtil.getUserFromRedis(visitorUId);
+                model.addAttribute("visitor", visitor);
+
                 User author = userService.getUser(article.getArticleUser());
                 //更新文章作者的信息
                 if (Objects.nonNull(author)) {
                     author.setUserPassword(null);
-                    model.addAttribute("user", author);
+                    model.addAttribute("author", author);
                     //更新用户的访问量
                     User user1 = new User();
                     user1.setUserId(author.getUserId());

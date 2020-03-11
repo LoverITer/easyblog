@@ -20,6 +20,7 @@ import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.mapper.UserCommentMapper;
 import top.easyblog.mapper.UserMapper;
+import top.easyblog.markdown.TextForm;
 import top.easyblog.service.IArticleService;
 
 import java.util.ArrayList;
@@ -79,9 +80,9 @@ public class ArticleServiceImpl implements IArticleService {
         if (articleId > 0) {
             try {
                 article = articleMapper.getByPrimaryKey((long) articleId);
-                if ("html".equals(flag)) {
+                if (TextForm.HTML.equals(flag)) {
                     parseMarkdown2HTML(article);
-                } else if ("text".equals(flag)) {
+                } else if (TextForm.TXT.equals(flag)) {
                     parseMarkdown2Text(article);
                 }
             } catch (Exception e) {
@@ -215,9 +216,11 @@ public class ArticleServiceImpl implements IArticleService {
         if (userId > 0) {
             try {
                 if (ArticleType.Unlimited.getArticleType().equals(articleType)) {
-                    return parseMarkdowns2Text(articleMapper.getUserAllArticles(userId));  //得到用户的所有文章
+                    //得到用户的所有文章
+                    return parseMarkdowns2Text(articleMapper.getUserAllArticles(userId));
                 } else {
-                    return parseMarkdowns2Text(articleMapper.getUserArticlesSelective(userId, articleType));  //根据option
+                    //根据option
+                    return parseMarkdowns2Text(articleMapper.getUserArticlesSelective(userId, articleType));
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());

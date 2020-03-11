@@ -12,8 +12,10 @@ import top.easyblog.bean.User;
 import top.easyblog.commons.enums.ArticleType;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
+import top.easyblog.commons.utils.UserUtil;
 import top.easyblog.service.impl.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 /**
@@ -38,68 +40,71 @@ public class ArchivesController {
     }
 
 
-    @RequestMapping(value = {"/{userId}/{date}","orderByUpdateTime/{userId}/{date}"})
+    @RequestMapping(value = {"/{userId}/{date}", "orderByUpdateTime/{userId}/{date}"})
     public String archivesDefaultDetailsPage(@PathVariable("date") String date,
-                                      @PathVariable(value = "userId") int userId,
-                                      @RequestParam(value = "page",defaultValue = "1") int pageNo,
-                                      Model model) {
+                                             @PathVariable(value = "userId") int userId,
+                                             HttpServletRequest request,
+                                             @RequestParam(value = "page", defaultValue = "1") int pageNo,
+                                             Model model) {
         model.addAttribute("defaultOrderFlag", true);
         PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
         PageInfo<Article> articles = articleService.getUserArticlesMonthlyPage(userId, date.substring(0, 4), date.substring(5, 7), pageParam);
-        String page = orderArticles(model, userId, date, articles);
-        return page == null ? "archives" : page;
+        return orderArticles(model, request, userId, date, articles);
     }
 
 
     @GetMapping(value = {"orderByClickNum/{userId}/{date}"})
     public String archivesDetailsPageOrderByClickNum(@PathVariable("userId") int userId,
                                                      @PathVariable("date") String date,
-                                                     @RequestParam(value = "page",defaultValue = "1") int pageNo,
+                                                     @RequestParam(value = "page", defaultValue = "1") int pageNo,
+                                                     HttpServletRequest request,
                                                      Model model) {
         model.addAttribute("orderByClickNumFlag", true);
         PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
         PageInfo<Article> articles = articleService.getUserArticlesMonthlyOrderByClickNumPage(userId, date.substring(0, 4), date.substring(5, 7), pageParam);
-        String page=orderArticles(model,userId,date,articles);
-        return page==null?"archives":page;
+        return orderArticles(model, request, userId, date, articles);
     }
-
 
 
     @GetMapping(value = "orderByUpdateTime/{userId}/{date}")
     public String archivesDetailsPageOrderByUpdateTime(@PathVariable("userId") int userId,
                                                        @PathVariable("date") String date,
-                                                       @RequestParam(value = "page",defaultValue = "1") int pageNo,
+                                                       @RequestParam(value = "page", defaultValue = "1") int pageNo,
+                                                       HttpServletRequest request,
                                                        Model model) {
         model.addAttribute("orderByUpdateTimeFlag", true);
         PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
-        PageInfo<Article> articles = articleService.getUserArticlesMonthlyPage(userId, date.substring(0, 4), date.substring(5, 7),pageParam);
-        String page=orderArticles(model,userId,date,articles);
-        return page==null?"archives":page;
+        PageInfo<Article> articles = articleService.getUserArticlesMonthlyPage(userId, date.substring(0, 4), date.substring(5, 7), pageParam);
+        return orderArticles(model, request, userId, date, articles);
     }
 
     /**
      * 控制文章按指定规则排序
-     * @param model   ModelAndView对象
-     * @param userId  文章的用户的Id
-     * @param date    年月
-     * @param articles   文章分页的信息
-     * @return  正常情况下返回null（主调会根据null返回归档页面）
+     *
+     * @param model    ModelAndView对象
+     * @param userId   文章的用户的Id
+     * @param date     年月
+     * @param articles 文章分页的信息
+     * @return 正常情况下返回null（主调会根据null返回归档页面）
      */
-    private String orderArticles(Model model,int userId,String date,PageInfo<Article> articles){
-        try{
+    private String orderArticles(Model model, HttpServletRequest request, int userId, String date, PageInfo<Article> articles) {
+        try {
             ControllerUtils.getInstance(categoryServiceImpl, articleService, commentService, userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
             model.addAttribute("date", date);
             model.addAttribute("articlePages", articles);
-            User user = userService.getUser(userId);
-            if (Objects.nonNull(user)) {
-                model.addAttribute("user", user);
-            }else{
+            //作者信息
+            User author = userService.getUser(userId);
+            if (Objects.nonNull(author)) {
+                model.addAttribute("author", author);
+            } else {
                 return "redirect:/error/404";
             }
-        }catch (Exception e){
+            User visitor = UserUtil.getUserFromCookie(request);
+            model.addAttribute("visitor", visitor);
+        } catch (Exception e) {
             return "redirect:/error/error";
         }
-        return null;
+        return "archives";
     }
 
 }

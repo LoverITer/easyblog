@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return null;
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Cacheable(cacheNames = "category",condition = "#result!=null")
     @Override
     public Category getCategoryByUserIdAndName(int userId, String categoryName) {

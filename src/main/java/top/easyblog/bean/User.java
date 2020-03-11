@@ -1,13 +1,9 @@
 package top.easyblog.bean;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import top.easyblog.commons.enums.ArticleType;
-import top.easyblog.commons.utils.RedisUtils;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * @author Huangxin
@@ -318,40 +314,6 @@ public class User implements Serializable {
     public void setUserPower(Integer userPower) {
         this.userPower = userPower;
     }
-
-    /**
-     * 从Redis中查找指定Id的用户的登录信息
-     *
-     * @param userId  用户Id
-     * @return  User对象
-     */
-    public static User getUserFromRedis(Integer userId) {
-        //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) RedisUtils.getRedisUtils().hget("user-" + userId, "user", RedisUtils.DB_1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            return null;
-        }
-        return JSON.parseObject(userJsonStr, User.class);
-    }
-
-    /**
-     * 更新已经登录的用户存储在Redis中的信息
-     * @param user
-     * @return
-     */
-    public static boolean updateLoggedUserInfo(User user) {
-        try {
-            long expire = RedisUtils.getRedisUtils().getExpire("user-" + user.getUserId(), RedisUtils.DB_1) < 0 ? 60 * 60 * 24 * 15 : RedisUtils.getRedisUtils().getExpire("user-" + user.getUserId(), RedisUtils.DB_1);
-            RedisUtils.getRedisUtils().delete(RedisUtils.DB_1, "user-" + user.getUserId());
-            RedisUtils.getRedisUtils().hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), RedisUtils.DB_1);
-            RedisUtils.getRedisUtils().expire("user-" + user.getUserId(), expire, RedisUtils.DB_1);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 
     @Override
     public String toString() {

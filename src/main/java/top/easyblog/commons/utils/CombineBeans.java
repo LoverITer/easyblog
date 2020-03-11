@@ -1,7 +1,5 @@
 package top.easyblog.commons.utils;
 
-import top.easyblog.bean.User;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Objects;
@@ -56,13 +54,13 @@ public class CombineBeans {
     }
 
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         User user1 = new User();
         user1.setUserId(1234);
         user1.setUserHeaderImgUrl("24242424242");
         User user2 = new User();
         user2.setUserHeaderImgUrl("eeeeeeee");
         System.out.println(CombineBeans.combine(user1, user2));
-    }
+    }*/
 
 }

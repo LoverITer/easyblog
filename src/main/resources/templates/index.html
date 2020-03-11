@@ -21,6 +21,7 @@
     <![endif]-->
 </head>
 <body>
+
 <!--top begin-->
 <header id="header">
     <div class="navbox">
@@ -31,7 +32,10 @@
         <nav>
             <ul id="starlist">
                 <li><a href="/" title="首页" th:href="@{/}">首页</a></li>
-                <li><a href="#"  th:href="@{/article/home/}">关于我</a></li>
+                <li>
+                    <a href="#" th:if="${user==null||user.getUserId()!=667019}"  th:href="@{/article/home/667019}">关于我</a>
+                    <a href="#" th:if="${user!=null&&user.getUserId()==667019}"  th:href="@{/article/home/667019(visitorUId=667019)}">关于我</a>
+                </li>
                 <li th:if="${user==null}"><a class="index_user_header" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
                 <li th:if="${user!=null}">
                     <div id="header-images" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">

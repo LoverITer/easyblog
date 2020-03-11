@@ -1,5 +1,6 @@
 package top.easyblog.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.util.StringUtil;
 import org.slf4j.Logger;
@@ -24,10 +25,8 @@ import top.easyblog.service.impl.UserPhoneLogServiceImpl;
 import top.easyblog.service.impl.UserServiceImpl;
 import top.easyblog.service.impl.UserSigninLogServiceImpl;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -298,38 +297,24 @@ public class UserController {
         try {
             if (user != null) {
                 user.setUserPassword(null);
-                //会话信息，如果没有主动会话信息退出15天有效
-                if (Objects.isNull(redisUtil.hget("user-" + user.getUserId(), "user", RedisUtils.DB_1))) {
+                //会话信息，如果没有主动,会话信息15天有效
+                if (Objects.isNull(UserUtil.getUserFromRedis(user.getUserId()))) {
+                    //防止重复登录
                     redisUtil.hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), RedisUtils.DB_1);
                     redisUtil.expire("user-" + user.getUserId(), 60 * 60 * 24 * 15, RedisUtils.DB_1);
+                } else {
+                    redirectAttributes.addAttribute("message", "您已经登录过了，请不要重复登录！");
+                    return "redirect:/article/index/" + user.getUserId();
                 }
-                Cookie userInfoCk = new Cookie("USER-INFO", URLEncoder.encode(JSONObject.toJSONString(user), "utf-8"));
-                //用户的登录信息一天有效
-                userInfoCk.setMaxAge(60 * 60 * 24);
-                userInfoCk.setPath("/");
-                response.addCookie(userInfoCk);
+                //添加用户的登录信息到Cookie中
+                CookieUtil.addCookie(request, response, "USER-INFO", JSONObject.toJSONString(user), 60 * 60 * 24);
                 // 保存用户名密码一个月
                 if ("on".equals(remember)) {
-                    //是否创建一个新的Cookie
-                    boolean newCookie = true;
-                    Cookie[] cookies = request.getCookies();
-                    for (Cookie ck : cookies) {
-                        if ("USER-COOKIE".equals(ck.getName())) {
-                            newCookie = false;
-                            break;
-                        }
-                    }
-                    //已经登录过，并且Cookie还没有过期
-                    if (newCookie) {
-                        //使用AES对密码进行加密保存 :用户名-密码密文
-                        Cookie ck = new Cookie("USER-COOKIE", username + "-" + AESCrypt.encryptECB(password, "1a2b3c4d5e6f7g8h"));
-                        ck.setMaxAge(60 * 60 * 24 * 30);
-                        ck.setPath("/");
-                        // addCookie后，如果已经存在相同名字的cookie，则最新的覆盖旧的cookie
-                        response.addCookie(ck);
+                    Object value = CookieUtil.getCookieValue(request, "USER-COOKIE");
+                    if (Objects.isNull(value)) {
+                        CookieUtil.addCookie(request, response, "USER-COOKIE", username + "-" + AESCrypt.encryptECB(password, "1a2b3c4d5e6f7g8h"), 60 * 60 * 24 * 30);
                     }
                 }
-
                 executor.execute(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功")));
                 // 跳转到用户登录前的页面
                 String refererUrl = (String) redisUtil.get("Referer-" + NetWorkUtil.getUserIp(request), RedisUtils.DB_1);
@@ -360,20 +345,15 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/logout")
-    public Result logout(@RequestParam int userId, HttpServletRequest request) {
+    public Result logout(@RequestParam int userId, HttpServletRequest request, HttpServletResponse response) {
         Result result = new Result();
         result.setMessage(AJAX_ERROR);
         if (userId <= 0) {
             return result;
         }
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if ("USER-INFO".equalsIgnoreCase(cookie.getName())) {
-                Cookie ck = new Cookie("USER-INFO", null);
-                ck.setMaxAge(0);
-                break;
-            }
-        }
+        //退出前先删除本次登录的Cookie
+        CookieUtil.deleteCookie(request, response, "USER-INFO");
+        //删除Redis中保存的登录信息
         Boolean res = redisUtil.delete(RedisUtils.DB_1, "user-" + userId);
         if (res != null && res) {
             result.setSuccess(true);
@@ -390,7 +370,7 @@ public class UserController {
         Result result = new Result();
         result.setMessage(UNLOGIN.getStatus() + "");
         if (redisUtil.hHasKey("user-" + userId, "user", RedisUtils.DB_1)) {
-            result.setMessage((String) redisUtil.hget("user-" + userId, "user", 1));
+            result.setMessage(JSON.toJSONString(UserUtil.getUserFromRedis(userId)));
             result.setSuccess(true);
         }
         return result;
@@ -408,7 +388,7 @@ public class UserController {
                                  @RequestParam(value = "code", defaultValue = "") String code) {
         Result result = new Result();
         result.setSuccess(false);
-        String captchaCode = (String) redisUtil.get("captcha-code-" + account, 1);
+        String captchaCode = (String) redisUtil.get("captcha-code-" + account, RedisUtils.DB_1);
         if (!code.equalsIgnoreCase(captchaCode)) {
             result.setMessage("验证码错误！");
         } else if (Objects.isNull(newPassword)) {
@@ -417,7 +397,9 @@ public class UserController {
             result.setMessage("请填写您的账号！");
         } else {
             try {
-                executor.execute(() -> userService.updateUserInfo(account, EncryptUtil.getInstance().SHA1(newPassword, "user")));
+                executor.execute(() -> {
+                    userService.updateUserInfo(account, EncryptUtil.getInstance().SHA1(newPassword, "user"));
+                });
                 result.setSuccess(true);
                 result.setMessage("密码修改成功，正在跳转到登录页面...");
             } catch (Exception e) {
@@ -432,14 +414,20 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/aboutMe")
-    public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo, @RequestParam(defaultValue = "-1") Integer userId) {
+    public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo,
+                                 @RequestParam(defaultValue = "-1") Integer userId,
+                                 HttpServletResponse response,
+                                 HttpServletRequest request) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             user.setUserDescription(aboutMeInfo);
             try {
                 int res = userService.updateUserInfo(user);
+                executor.execute(() -> {
+                    UserUtil.updateLoggedUserInfo(user, request, response);
+                });
                 if (res < 0) {
                     result.setMessage("更新异常，请重试！");
                 } else {
@@ -466,7 +454,7 @@ public class UserController {
                                  @RequestParam(defaultValue = "-1") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, userId);
             //尝试更新用户的account
@@ -488,15 +476,22 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/settingHobby")
-    public Result setUserHobby(@RequestParam String hobby, @RequestParam(defaultValue = "-1") Integer userId) {
+    public Result setUserHobby(@RequestParam String hobby,
+                               @RequestParam(defaultValue = "-1") Integer userId,
+                               HttpServletResponse response,
+                               HttpServletRequest request) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             User userHobby = new User();
             userHobby.setUserId(user.getUserId());
             userHobby.setUserHobby(hobby);
             int res = userService.updateUserInfo(userHobby);
+            User user1 = CombineBeans.combine(userHobby, user);
+            executor.execute(() -> {
+                UserUtil.updateLoggedUserInfo(user1, request, response);
+            });
             if (res < 0) {
                 result.setMessage("更新失败，请稍后重试！");
                 return result;
@@ -510,15 +505,22 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/settingTech")
-    public Result settingTech(@RequestParam String techStr, @RequestParam(defaultValue = "-1") Integer userId) {
+    public Result settingTech(@RequestParam String techStr,
+                              @RequestParam(defaultValue = "-1") Integer userId,
+                              HttpServletResponse response,
+                              HttpServletRequest request) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             User userTech = new User();
             userTech.setUserId(user.getUserId());
             userTech.setUserTech(techStr);
             int res = userService.updateUserInfo(userTech);
+            User user1 = CombineBeans.combine(userTech, user);
+            executor.execute(() -> {
+                UserUtil.updateLoggedUserInfo(user1, request, response);
+            });
             if (res < 0) {
                 result.setMessage("修改失败！请稍后重试！");
                 return result;

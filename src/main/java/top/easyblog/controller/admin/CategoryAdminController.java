@@ -16,6 +16,7 @@ import top.easyblog.bean.User;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
 import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
+import top.easyblog.commons.utils.UserUtil;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
@@ -26,7 +27,7 @@ import java.util.Objects;
 /**
  * 用户后台文章分类管理
  *
- * @author huangxin
+ * @visitor huangxin
  */
 @Controller
 @RequestMapping(value = "/manage/category")
@@ -51,9 +52,10 @@ public class CategoryAdminController {
     public String categoryPage(@RequestParam(value = "userId") Integer userId,
                                Model model,
                                @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
             PageInfo<Category> categoriesPage = categoryService.getUserAllCategoriesPage(user.getUserId(), pageParam);
             model.addAttribute("categoriesPage", categoriesPage);
@@ -70,7 +72,7 @@ public class CategoryAdminController {
                                         @RequestParam(value = "userId") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.isNull(user)) {
             result.setMessage("请先登录后再操作");
             return result;
@@ -147,9 +149,10 @@ public class CategoryAdminController {
     public String deleteCategory2DashBoxPage(Model model,
                                              @RequestParam(value = "userId") Integer userId,
                                              @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
             PageInfo<Category> categoriesPage = categoryService.getUserAllDeletedCategoryPage(user.getUserId(), pageParam);
             model.addAttribute("categoriesPage", categoriesPage);
@@ -185,9 +188,10 @@ public class CategoryAdminController {
 
     @GetMapping(value = "/add")
     public String categoryAddPage(@RequestParam(value = "userId") Integer userId, Model model) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             return PREFIX + "category-add";
         }
         return LOGIN_PAGE;
@@ -199,7 +203,7 @@ public class CategoryAdminController {
                           @RequestParam(required = false, defaultValue = "") String categoryDesc,
                           @RequestParam(required = false) MultipartFile categoryImg,
                           RedirectAttributes attributes) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             //用于回显
             attributes.addFlashAttribute("categoryDesc", categoryDesc);
@@ -246,9 +250,10 @@ public class CategoryAdminController {
 
     @GetMapping(value = "/edit")
     public String categoryEditor(@RequestParam(value = "userId") Integer userId, @RequestParam int categoryId, Model model) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             final Category category = categoryService.getCategory(categoryId);
             model.addAttribute("category", category);
             return PREFIX + "category-edit";
@@ -266,7 +271,7 @@ public class CategoryAdminController {
                              @RequestParam String oldCategoryImg,
                              @RequestParam MultipartFile categoryImage,
                              RedirectAttributes redirectAttributes) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             //判断编辑后的分类名是否为空
             if (StringUtil.isEmpty(categoryName)) {

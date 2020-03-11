@@ -11,6 +11,7 @@ import top.easyblog.bean.User;
 import top.easyblog.bean.UserComment;
 import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
+import top.easyblog.commons.utils.UserUtil;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
@@ -38,9 +39,10 @@ public class CommentAdminController {
     public String commentPublishListPage(@RequestParam Integer userId,
                                          Model model,
                                          @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
             PageInfo<UserComment> commentsPage = commentService.getCommentPage(user.getUserId(), "send", pageParam);
             model.addAttribute("commentsPage", commentsPage);
@@ -54,9 +56,10 @@ public class CommentAdminController {
     public String commentReceiveListPage(Model model,
                                          @RequestParam Integer userId,
                                          @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
             PageInfo<UserComment> commentsPage = commentService.getCommentPage(user.getUserId(), "receive", pageParam);
             model.addAttribute("commentsPage", commentsPage);
@@ -70,7 +73,7 @@ public class CommentAdminController {
     @GetMapping(value = "/delete")
     public Result deleteComment(@RequestParam Integer userId,
                                 @RequestParam int commentId) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         Result result = new Result();
         result.setMessage("请登录后再操作！");
         if (Objects.nonNull(user)) {

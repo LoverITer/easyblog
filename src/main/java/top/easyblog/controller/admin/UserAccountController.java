@@ -15,6 +15,7 @@ import top.easyblog.commons.email.SendEmailUtil;
 import top.easyblog.commons.utils.EncryptUtil;
 import top.easyblog.commons.utils.RedisUtils;
 import top.easyblog.commons.utils.SendMessageUtil;
+import top.easyblog.commons.utils.UserUtil;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.UserServiceImpl;
 import top.easyblog.service.impl.UserSigninLogServiceImpl;
@@ -53,9 +54,10 @@ public class UserAccountController {
 
     @GetMapping(value = "/reset/password")
     public String resetPassword(@RequestParam Integer userId, Model model) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (user != null) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             return PREFIX + "account-setting-pwd";
         }
         return LOGIN_PAGE;
@@ -70,7 +72,7 @@ public class UserAccountController {
                                     @RequestParam String newPwdConfirm) {
         Result result = new Result();
         result.setMessage("请登录后重试");
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (user != null) {
             Result authorized = userService.isAuthorized(user, oldPwd);
             Result isSame = userService.isNewPasswordSameOldPassword(oldPwd, newPwd);
@@ -107,10 +109,11 @@ public class UserAccountController {
 
     @GetMapping(value = "/reset/phone")
     public String resetPhone(@RequestParam Integer userId, Model model) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             user.setUserPassword(null);
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             return PREFIX + "account-setting-phone";
         }
         return LOGIN_PAGE;
@@ -119,9 +122,10 @@ public class UserAccountController {
 
     @GetMapping(value = "/reset/phone/nextPage")
     public String resetPhoneNextPage(@RequestParam Integer userId, Model model) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (user != null) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             return PREFIX + "account-setting-phone-next";
         }
         return LOGIN_PAGE;
@@ -146,7 +150,7 @@ public class UserAccountController {
     @ResponseBody
     @GetMapping(value = "/reset/phone/next")
     public Result resetPhoneNext(@RequestParam Integer userId, @RequestParam String code) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         Result result = new Result();
         result.setMessage("请登录后再操作！");
         if (Objects.nonNull(user)) {
@@ -162,9 +166,10 @@ public class UserAccountController {
 
     @GetMapping(value = "/bindPhonePage")
     public String bindPhonePage(@RequestParam Integer userId, Model model) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             return PREFIX + "account-setting-phone-add";
         }
         return LOGIN_PAGE;
@@ -175,7 +180,7 @@ public class UserAccountController {
     public Result saveBindPhone(@RequestParam Integer userId, @RequestParam String phone, @RequestParam String code) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         String realCode = (String) redisUtils.get("code-"+userId, 1);
         if (Objects.nonNull(user)) {
             if (code.equals(realCode)) {
@@ -186,7 +191,7 @@ public class UserAccountController {
                         result.setMessage("服务异常，请重试！");
                         return result;
                     }
-                    executor.execute(() -> User.updateLoggedUserInfo(user));
+                    executor.execute(() -> UserUtil.updateLoggedUserInfo(user));
                     result.setMessage("手机号绑定成功!");
                     result.setSuccess(true);
                     return result;
@@ -205,10 +210,11 @@ public class UserAccountController {
 
     @GetMapping(value = "/reset/email")
     public String resetEmail(@RequestParam Integer userId, Model model) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             user.setUserPassword(null);
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             return PREFIX + "account-setting-mail";
         }
         return LOGIN_PAGE;
@@ -219,7 +225,7 @@ public class UserAccountController {
     public Result resetEmailNext(@RequestParam Integer userId, @RequestParam String code) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             String var0 = (String) redisUtils.get("code-" + userId, 1);
             if (Objects.nonNull(var0)) {
@@ -244,7 +250,7 @@ public class UserAccountController {
     public Result saveRestEmail(@RequestParam Integer userId, String email) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             User var0 = new User();
             var0.setUserId(user.getUserId());
@@ -259,9 +265,10 @@ public class UserAccountController {
 
     @GetMapping(value = "/reset/email/nextPage")
     public String toResetEmailNextPage(@RequestParam Integer userId, Model model) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             return PREFIX + "account-setting-mail-next";
         }
         return LOGIN_PAGE;
@@ -287,9 +294,10 @@ public class UserAccountController {
 
     @GetMapping(value = "/logs")
     public String loginLog(@RequestParam Integer userId, Model model) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (user != null) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             List<UserSigninLog> infos = userSigninLogService.getUserLoginInfo(user.getUserId(), 50);
             model.addAttribute("infos", infos);
             return PREFIX + "account-setting-signInLog";
@@ -299,9 +307,10 @@ public class UserAccountController {
 
     @GetMapping(value = "/accountDestroy")
     public String accountDestroyPage(@RequestParam Integer userId, Model model) {
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             return PREFIX + "account-setting-destroy";
         }
         return LOGIN_PAGE;
@@ -312,7 +321,7 @@ public class UserAccountController {
     public Result deleteAccount(@RequestParam Integer userId, @RequestParam String password, HttpServletRequest request) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = User.getUserFromRedis(userId);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             Cookie[] cookies = request.getCookies();
             for(Cookie cookie:cookies){

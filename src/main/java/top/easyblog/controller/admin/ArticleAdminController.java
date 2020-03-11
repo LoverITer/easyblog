@@ -16,7 +16,9 @@ import top.easyblog.commons.pagehelper.PageParam;
 import top.easyblog.commons.pagehelper.PageSize;
 import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
 import top.easyblog.commons.utils.RedisUtils;
+import top.easyblog.commons.utils.UserUtil;
 import top.easyblog.config.web.Result;
+import top.easyblog.markdown.TextForm;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
 import top.easyblog.service.impl.UserServiceImpl;
@@ -29,7 +31,7 @@ import java.util.concurrent.Executor;
 /**
  * 后台博客管理
  *
- * @author huangxin
+ * @visitor huangxin
  */
 @Controller
 @RequestMapping(value = "/manage/blog")
@@ -74,6 +76,7 @@ public class ArticleAdminController {
                 getShareInfo(model, user, "年", "月", "文章类型", "分类专栏");
                 putArticleNumToModel(user, model);
                 model.addAttribute("user", user);
+                model.addAttribute("visitor", user);
                 return PREFIX + "/blog-manage";
             } catch (Exception ex) {
                 return "/error/error";
@@ -158,6 +161,7 @@ public class ArticleAdminController {
             return "redirect:/user/loginPage";
         }
         model.addAttribute("user", user);
+        model.addAttribute("visitor", user);
         userId = userId == -1 ? user.getUserId() : userId;
         try {
             List<Category> categories = categoryService.getUserAllCategories(userId);
@@ -267,12 +271,7 @@ public class ArticleAdminController {
         Result result = new Result();
         result.setMessage("请登录后再操作！");
         //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            //找不到直接重定位到登录页面
-            return result;
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user) || userId != null) {
             try {
                 int updateRes = 0;
@@ -331,7 +330,8 @@ public class ArticleAdminController {
         User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
-            Article article = articleService.getArticleById(articleId, "text");
+            model.addAttribute("visitor", user);
+            Article article = articleService.getArticleById(articleId, TextForm.TXT);
             model.addAttribute("article", article);
             return PREFIX + "/blog-input-success";
         }
@@ -344,21 +344,16 @@ public class ArticleAdminController {
                               @RequestParam(value = "userId") Integer userId,
                               @RequestParam("articleId") int articleId,
                               HttpServletRequest request) {
-        //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            //找不到直接重定位到登录页面
-            return "redirect:/user/loginPage";
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             if (articleId < 0) {
                 return "redirect:" + request.getHeader("Referer");
             }
             try {
                 //得到文章
-                Article article = articleService.getArticleById(articleId, null);
+                Article article = articleService.getArticleById(articleId, TextForm.MARKDOWN);
                 model.addAttribute("article", article);
                 List<Category> categories = categoryService.getUserAllCategories(article.getArticleUser());
                 model.addAttribute("categories", categories);
@@ -444,6 +439,7 @@ public class ArticleAdminController {
         try {
             //文章作者信息
             model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             //文章作者的所有分类
             List<Category> categories = categoryService.getUserAllCategories(user.getUserId());
             model.addAttribute("categories", categories);
@@ -507,13 +503,7 @@ public class ArticleAdminController {
         if (Objects.isNull(userId)) {
             return result;
         }
-        //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            //找不到直接重定位到登录页面
-            return result;
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             try {
                 if (Objects.nonNull(imgByte64Str) && articleId > 0) {
@@ -560,12 +550,7 @@ public class ArticleAdminController {
                                String dest,
                                PageParam pageParam) {
         //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            //找不到直接重定位到登录页面
-            return "redirect:/user/loginPage";
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             try {
                 Article article = new Article();
@@ -575,6 +560,7 @@ public class ArticleAdminController {
                 model.addAttribute("articlePages", articlePages);
                 putArticleNumToModel(user, model);
                 model.addAttribute("user", user);
+                model.addAttribute("visitor", user);
                 return PREFIX + dest;
             } catch (Exception e) {
                 return "redirect:/error/error";
