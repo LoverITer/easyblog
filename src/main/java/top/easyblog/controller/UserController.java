@@ -3,8 +3,7 @@ package top.easyblog.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +35,7 @@ import static top.easyblog.bean.UserLoginStatus.UNLOGIN;
 /**
  * @author huangxin
  */
+@Slf4j
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -57,12 +57,10 @@ public class UserController {
     @Autowired
     private Executor executor;
 
-    /***ajax异步请求成功标志***/
+    /***ajax异步请求成功标志*/
     private static final String AJAX_SUCCESS = "OK";
-    /***ajax异步请求失败标志***/
+    /***ajax异步请求失败标志*/
     private static final String AJAX_ERROR = "FATAL";
-
-    private Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     @GetMapping("/loginPage")
@@ -90,16 +88,33 @@ public class UserController {
         return "login";
     }
 
+    /**
+     * 访问注册成功页面
+     *
+     * @return
+     */
     @GetMapping("/register-success")
     public String toRegisterSuccessPage() {
         return "register_success";
     }
 
+    /**
+     * 访问修改密码页面
+     *
+     * @return
+     */
     @GetMapping("/change_password")
     public String toChangePassword() {
         return "change_password";
     }
 
+    /**
+     * 发送登注册、找回密码的验证码到用户手机
+     *
+     * @param phone   手机号
+     * @param option  操作：register表示注册 modify-pwd表示修改密码
+     * @param request
+     */
     @ResponseBody
     @GetMapping(value = "/captcha-code2phone")
     public String sendCaptchaCode2Phone(@RequestParam("phone") String phone,
@@ -118,6 +133,14 @@ public class UserController {
 
     }
 
+    /**
+     * 发送消息到手机
+     *
+     * @param phone
+     * @param code
+     * @param content
+     * @param request
+     */
     private String sendMessage(String phone, String code, String content, HttpServletRequest request) {
 
         try {
@@ -139,6 +162,12 @@ public class UserController {
         return AJAX_SUCCESS;
     }
 
+    /**
+     * 发送登注册、找回密码的验证码到用户邮箱
+     *
+     * @param email  邮箱号
+     * @param option 操作：register表示注册 modify-pwd表示修改密码
+     */
     @ResponseBody
     @GetMapping(value = "/captcha-code2mail")
     public String sendCaptchaCode2Email(@RequestParam("email") String email,
@@ -154,19 +183,27 @@ public class UserController {
         return AJAX_SUCCESS;
     }
 
+    /**
+     * 发送邮件
+     *
+     * @param email   邮箱号
+     * @param content 邮件内容
+     * @param code    验证码
+     * @return
+     */
     private String sendEmail(String email, String content, String code) {
         try {
-            String captchaCode = (String) redisUtil.get("captcha-code-" + email, 1);
+            String captchaCode = (String) redisUtil.get("captcha-code-" + email, RedisUtils.DB_1);
             if (Objects.nonNull(captchaCode)) {
                 redisUtil.delete(1, "captcha-code-" + email);
             }
             log.info("向" + email + "发送验证码：" + code);
-            redisUtil.set("captcha-code-" + email, code, 60, 1);
+            redisUtil.set("captcha-code-" + email, code, 60, RedisUtils.DB_1);
             Email e = new Email("验证码", email, content, null);
             emailUtil.send(e);
             userEmailLogService.saveSendCaptchaCode2User(email, content);
         } catch (Exception e) {
-            redisUtil.delete(1, "captcha-code-" + email);
+            redisUtil.delete(RedisUtils.DB_1, "captcha-code-" + email);
             userEmailLogService.saveSendCaptchaCode2User(email, "邮件发送异常！");
             log.error("邮件发送异常" + e.getMessage());
             return AJAX_ERROR;
@@ -174,7 +211,15 @@ public class UserController {
         return AJAX_SUCCESS;
     }
 
-
+    /**
+     * 用户注册逻辑
+     *
+     * @param nickname    昵称
+     * @param password    密码
+     * @param account     用户账号
+     * @param captchaCode 输入的验证码
+     * @param request
+     */
     @ResponseBody
     @RequestMapping(value = "/register")
     public Result register(@RequestParam(value = "nickname", defaultValue = "") String nickname,
@@ -186,7 +231,6 @@ public class UserController {
         String ip = NetWorkUtil.getUserIp(request);
         String ipInfo = NetWorkUtil.getLocation(request, ip);
         Result result = new Result();
-        result.setSuccess(false);
         if (userService.getUser(nickname) != null) {
             result.setMessage("昵称已存在!");
         } else if (userService.getUser(account) != null) {
@@ -225,6 +269,11 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 检查用户的昵称是否存在,以及是否合法
+     *
+     * @param nickname 昵称
+     */
     @ResponseBody
     @GetMapping(value = "/checkNickname")
     public Result checkUserNickname(@RequestParam(value = "nickname", defaultValue = "") String nickname) {
@@ -239,6 +288,12 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 检查输入的邮箱不存在
+     *
+     * @param email
+     * @return
+     */
     @ResponseBody
     @GetMapping(value = "/checkEmailNotExist")
     public Result checkUserEmailNotExist(@RequestParam(value = "email", defaultValue = "") String email) {
@@ -252,6 +307,12 @@ public class UserController {
     }
 
 
+    /**
+     * 检查输入的邮箱存在
+     *
+     * @param email
+     * @return
+     */
     @ResponseBody
     @GetMapping(value = "/checkEmailExist")
     public Result checkUserEmailExist(@RequestParam(value = "email", defaultValue = "") String email) {
@@ -277,13 +338,29 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 检查用户的密码是否合法
+     *
+     * @param password
+     * @return
+     */
     @ResponseBody
     @GetMapping(value = "/checkPassword")
     public Result checkPassword(@RequestParam("password") String password) {
         return userService.isPasswordLegal(password);
     }
 
-
+    /**
+     * 用户登录逻辑
+     *
+     * @param username           用户的账号
+     * @param password           密码
+     * @param remember           "记住我"功能状态
+     * @param redirectAttributes
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "/login")
     public String login(@RequestParam(value = "username", defaultValue = "") String username,
                         @RequestParam(value = "password", defaultValue = "") String password,
@@ -297,17 +374,16 @@ public class UserController {
         try {
             if (user != null) {
                 user.setUserPassword(null);
-                //会话信息，如果没有主动,会话信息15天有效
+                //防止重复登录
                 if (Objects.isNull(UserUtil.getUserFromRedis(user.getUserId()))) {
-                    //防止重复登录
                     redisUtil.hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), RedisUtils.DB_1);
+                    //会话信息，如果没有主动,会话信息15天有效
                     redisUtil.expire("user-" + user.getUserId(), 60 * 60 * 24 * 15, RedisUtils.DB_1);
-                } else {
-                    redirectAttributes.addAttribute("message", "您已经登录过了，请不要重复登录！");
-                    return "redirect:/article/index/" + user.getUserId();
                 }
-                //添加用户的登录信息到Cookie中
-                CookieUtil.addCookie(request, response, "USER-INFO", JSONObject.toJSONString(user), 60 * 60 * 24);
+                if(Objects.isNull(CookieUtil.getCookieValue(request,"USER-INFO"))) {
+                    //添加用户的登录信息到Cookie中
+                    CookieUtil.addCookie(request, response, "USER-INFO", JSONObject.toJSONString(user), 60 * 60 * 24);
+                }
                 // 保存用户名密码一个月
                 if ("on".equals(remember)) {
                     Object value = CookieUtil.getCookieValue(request, "USER-COOKIE");
@@ -342,7 +418,13 @@ public class UserController {
         }
     }
 
-
+    /**
+     * 退出操作
+     *
+     * @param userId   用户ID
+     * @param request
+     * @param response
+     */
     @ResponseBody
     @RequestMapping(value = "/logout")
     public Result logout(@RequestParam int userId, HttpServletRequest request, HttpServletResponse response) {
@@ -359,11 +441,14 @@ public class UserController {
             result.setSuccess(true);
             result.setMessage(AJAX_SUCCESS);
         }
-
         return result;
     }
 
-
+    /**
+     * 检查用户的登录状态
+     *
+     * @param userId 用户Id
+     */
     @ResponseBody
     @RequestMapping(value = "/checkUserStatus")
     public Result checkUserLoginStatus(@RequestParam int userId) {
@@ -378,8 +463,6 @@ public class UserController {
 
     /**
      * 找回密码
-     *
-     * @return
      */
     @ResponseBody
     @RequestMapping("/modifyPwd")
@@ -412,6 +495,14 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 修改关于我的描述的内容
+     *
+     * @param aboutMeInfo 描述信息
+     * @param userId      用户Id
+     * @param response
+     * @param request
+     */
     @ResponseBody
     @GetMapping(value = "/aboutMe")
     public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo,
@@ -443,6 +534,17 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 设置我的联系方式
+     *
+     * @param github
+     * @param wechat
+     * @param qq
+     * @param weibo
+     * @param twitter
+     * @param steam
+     * @param userId
+     */
     @ResponseBody
     @GetMapping(value = "/settingContact")
     public Result settingContact(@RequestParam String github,
@@ -474,6 +576,14 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 修改用户爱好信息
+     *
+     * @param hobby    爱好信息
+     * @param userId   用户ID
+     * @param response
+     * @param request
+     */
     @ResponseBody
     @GetMapping(value = "/settingHobby")
     public Result setUserHobby(@RequestParam String hobby,
@@ -502,7 +612,14 @@ public class UserController {
         return result;
     }
 
-
+    /**
+     * 修改我的技术栈信息
+     *
+     * @param techStr  技术栈信息
+     * @param userId   用户ID
+     * @param response
+     * @param request
+     */
     @ResponseBody
     @GetMapping(value = "/settingTech")
     public Result settingTech(@RequestParam String techStr,

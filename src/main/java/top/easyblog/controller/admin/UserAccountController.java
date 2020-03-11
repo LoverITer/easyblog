@@ -12,16 +12,14 @@ import top.easyblog.bean.User;
 import top.easyblog.bean.UserSigninLog;
 import top.easyblog.commons.email.Email;
 import top.easyblog.commons.email.SendEmailUtil;
-import top.easyblog.commons.utils.EncryptUtil;
-import top.easyblog.commons.utils.RedisUtils;
-import top.easyblog.commons.utils.SendMessageUtil;
-import top.easyblog.commons.utils.UserUtil;
+import top.easyblog.commons.utils.*;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.UserServiceImpl;
 import top.easyblog.service.impl.UserSigninLogServiceImpl;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -138,9 +136,9 @@ public class UserAccountController {
         Result result = new Result();
         result.setSuccess(false);
         String code = SendMessageUtil.getRandomCode(6);
-        redisUtils.set("code-"+userId, code, 1);
+        redisUtils.set("code-"+userId, code, RedisUtils.DB_1);
         //60s有效
-        redisUtils.expire("code-"+userId, 60, 1);
+        redisUtils.expire("code-"+userId, 60, RedisUtils.DB_1);
         String content = "您正在修改绑定的手机，验证码为：" + code + "，60s内有效！";
         SendMessageUtil.send("loveIT", "d41d8cd98f00b204e980", phone, content);
         result.setSuccess(true);
@@ -154,7 +152,7 @@ public class UserAccountController {
         Result result = new Result();
         result.setMessage("请登录后再操作！");
         if (Objects.nonNull(user)) {
-            if (code.equals(redisUtils.get("code-"+userId, 1))) {
+            if (code.equals(redisUtils.get("code-"+userId, RedisUtils.DB_1))) {
                 result.setSuccess(true);
                 redisUtils.delete(1, "code-"+userId);
             } else {
@@ -177,11 +175,15 @@ public class UserAccountController {
 
     @ResponseBody
     @GetMapping(value = "/bindPhone")
-    public Result saveBindPhone(@RequestParam Integer userId, @RequestParam String phone, @RequestParam String code) {
+    public Result saveBindPhone(@RequestParam Integer userId,
+                                @RequestParam String phone,
+                                @RequestParam String code,
+                                HttpServletRequest request,
+                                HttpServletResponse response) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
         User user = UserUtil.getUserFromRedis(userId);
-        String realCode = (String) redisUtils.get("code-"+userId, 1);
+        String realCode = (String) redisUtils.get("code-"+userId, RedisUtils.DB_1);
         if (Objects.nonNull(user)) {
             if (code.equals(realCode)) {
                 try {
@@ -191,7 +193,7 @@ public class UserAccountController {
                         result.setMessage("服务异常，请重试！");
                         return result;
                     }
-                    executor.execute(() -> UserUtil.updateLoggedUserInfo(user));
+                    executor.execute(() -> UserUtil.updateLoggedUserInfo(user,request,response));
                     result.setMessage("手机号绑定成功!");
                     result.setSuccess(true);
                     return result;
@@ -227,7 +229,7 @@ public class UserAccountController {
         result.setMessage("请登录后重试！");
         User user = UserUtil.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
-            String var0 = (String) redisUtils.get("code-" + userId, 1);
+            String var0 = (String) redisUtils.get("code-" + userId, RedisUtils.DB_1);
             if (Objects.nonNull(var0)) {
                 if (code.equals(var0)) {
                     redisUtils.delete(RedisUtils.DB_1, "code-" + userId);
@@ -247,7 +249,10 @@ public class UserAccountController {
 
     @ResponseBody
     @GetMapping(value = "/reset/email/save")
-    public Result saveRestEmail(@RequestParam Integer userId, String email) {
+    public Result saveRestEmail(@RequestParam Integer userId,
+                                @RequestParam String email,
+                                HttpServletResponse response,
+                                HttpServletRequest request) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
         User user = UserUtil.getUserFromRedis(userId);
@@ -257,6 +262,7 @@ public class UserAccountController {
             var0.setUserMail(email);
             int res = userService.updateUserInfo(var0);
             if (res > 0) {
+                UserUtil.updateLoggedUserInfo(CombineBeans.combine(var0,user),request,response);
                 result.setSuccess(true);
             }
         }

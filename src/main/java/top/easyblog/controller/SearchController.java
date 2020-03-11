@@ -25,6 +25,13 @@ public class SearchController {
         this.articleService = articleService;
     }
 
+    /**
+     * 搜索结果显示
+     *
+     * @param query
+     * @param pageNo
+     * @param model
+     */
     @GetMapping("/details")
     public String showSearchResult(@RequestParam String query,
                                    @RequestParam(value = "page", defaultValue = "1") int pageNo,

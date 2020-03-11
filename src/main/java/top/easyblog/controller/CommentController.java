@@ -31,20 +31,25 @@ public class CommentController {
     @Autowired
     private Executor executor;
 
-  public CommentController(CommentServiceImpl commentService, ArticleServiceImpl articleService) {
+    public CommentController(CommentServiceImpl commentService, ArticleServiceImpl articleService) {
         this.commentService = commentService;
         this.articleService = articleService;
     }
 
+    /**
+     * 发表评论
+     *
+     * @param comment 评论信息
+     */
     @ResponseBody
     @PostMapping(value = "/publish", produces = "application/json;charset=UTF-8")
     public Result publishComment(@RequestBody UserComment comment) {
         Result result = new Result();
         result.setMessage("您还未登陆，请登录后重试！");
         //登录用户就是发评论者，如果没有登录不可以发评论
-        if (Objects.nonNull(comment)&&Objects.nonNull(comment.getCommentSend())&&Objects.nonNull(comment.getCommentReceived())) {
+        if (Objects.nonNull(comment) && Objects.nonNull(comment.getCommentSend()) && Objects.nonNull(comment.getCommentReceived())) {
             //更新文章的评论数
-            executor.execute(()->{
+            executor.execute(() -> {
                 Article article = new Article();
                 article.setArticleId(comment.getArticleId());
                 article.setArticleCommentNum(1);

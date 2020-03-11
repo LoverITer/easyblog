@@ -13,6 +13,8 @@ import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.UserAttentionImpl;
 import top.easyblog.service.impl.UserServiceImpl;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -66,7 +68,9 @@ public class UserCenterController {
                                  @RequestParam(value = "birthday", required = false) String birthday,
                                  @RequestParam(required = false) String country,
                                  @RequestParam(required = false) String city,
-                                 @RequestParam(required = false) String county) {
+                                 @RequestParam(required = false) String county,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) {
         User user1 = null;
         if (Objects.nonNull(user1 = UserUtil.getUserFromRedis(userId))) {
             if (Objects.nonNull(user)) {
@@ -80,7 +84,7 @@ public class UserCenterController {
                 user.setUserPrefession(UserProfessionUtil.getUserProfession(user.getUserPrefession()));
                 userService.updateUserInfo(user);
                 User user2 = CombineBeans.combine(user, user1);
-                executor.execute(() -> UserUtil.updateLoggedUserInfo(user2));
+                executor.execute(() -> UserUtil.updateLoggedUserInfo(user2, request, response));
             }
             return "redirect:/manage/uc/profile?userId=" + userId;
         }
@@ -139,9 +143,20 @@ public class UserCenterController {
         return LOGIN_PAGE;
     }
 
+    /**
+     * 更换用户头像
+     *
+     * @param map
+     * @param userId   用户Id
+     * @param request
+     * @param response
+     */
     @ResponseBody
     @PostMapping(value = "/uploadImg", produces = "application/json;charset=UTF-8")
-    public Result changeHeaderImage(@RequestBody Map<String, String> map, @RequestParam Integer userId) {
+    public Result changeHeaderImage(@RequestBody Map<String, String> map,
+                                    @RequestParam Integer userId,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response) {
         User user = UserUtil.getUserFromRedis(userId);
         Result result = new Result();
         result.setMessage("请登录后重试！");
@@ -163,7 +178,7 @@ public class UserCenterController {
                     qiNiuCloudService.delete(user.getUserHeaderImgUrl());
                 }
                 User user1 = CombineBeans.combine(var0, user);
-                executor.execute(() -> UserUtil.updateLoggedUserInfo(user1));
+                executor.execute(() -> UserUtil.updateLoggedUserInfo(user1, request, response));
                 result.setSuccess(true);
                 result.setMessage("头像上传成功");
             } catch (Exception e) {

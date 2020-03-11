@@ -85,7 +85,7 @@ public class ArchivesController {
      * @param userId   文章的用户的Id
      * @param date     年月
      * @param articles 文章分页的信息
-     * @return 正常情况下返回null（主调会根据null返回归档页面）
+     * @return 返回即将跳转的页面
      */
     private String orderArticles(Model model, HttpServletRequest request, int userId, String date, PageInfo<Article> articles) {
         try {

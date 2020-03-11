@@ -23,6 +23,12 @@ import java.util.Objects;
 @Slf4j
 public class UserUtil {
 
+    /**
+     * 从Cookie中获取登录用户的信息
+     *
+     * @param request
+     * @return
+     */
     public static User getUserFromCookie(HttpServletRequest request) {
         User user = null;
         try {
@@ -63,8 +69,8 @@ public class UserUtil {
     /**
      * 更新已经登录的用户存储在Redis中和本地Cookie的信息
      *
-     * @param user
-     * @return
+     * @param user 较新的用户信息
+     * @return 更新成功返回true, 更新失败返回false
      */
     public static boolean updateLoggedUserInfo(User user, HttpServletRequest request, HttpServletResponse response) {
         if (Objects.isNull(user)) {
@@ -77,6 +83,12 @@ public class UserUtil {
     }
 
 
+    /**
+     * 更新登录用户在Redis中的信息
+     *
+     * @param user 较新的用户信息
+     * @return 更新成功返回true, 更新失败返回false
+     */
     private static boolean updateLoggedUserInfoInRedis(User user) {
         try {
             long expire = RedisUtils.getRedisUtils().getExpire("user-" + user.getUserId(), RedisUtils.DB_1) < 0 ? 60 * 60 * 24 * 15 : RedisUtils.getRedisUtils().getExpire("user-" + user.getUserId(), RedisUtils.DB_1);
@@ -90,6 +102,14 @@ public class UserUtil {
         return false;
     }
 
+    /**
+     * 更新登录用户在Cookie中的信息
+     *
+     * @param request
+     * @param response
+     * @param user     较新的用户信息
+     * @return 更新成功返回true, 更新失败返回false
+     */
     private static boolean updateLoggedUserInfoInCookie(HttpServletRequest request, HttpServletResponse response, User user) {
         return CookieUtil.updateCookie(request, response, "USER-INFO", JSON.toJSONString(user), 60 * 60 * 24);
     }

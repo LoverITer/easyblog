@@ -52,14 +52,13 @@ public class ArticleController {
     }
 
     /**
-     * 访问个人博客首页
+     * 访问个人博客首页<br/>
      * 其中visitor是访问用户，author是文章或此博客页面的作者
      *
      * @param model
      * @param userId      作者Id
      * @param articleType 文章类型 0原创文章 1转载文章 2翻译文章  3全部文章
      * @param page        分页参数-页数
-     * @return
      */
     @RequestMapping(value = "/index/{userId}")
     public String index(Model model,
@@ -67,9 +66,8 @@ public class ArticleController {
                         @PathVariable("userId") int userId,
                         @RequestParam(value = "articleType", defaultValue = "3") int articleType,
                         @RequestParam(value = "page", defaultValue = "1") int page) {
-
         User visitor = UserUtil.getUserFromCookie(request);
-        model.addAttribute("visitor",visitor);
+        model.addAttribute("visitor", visitor);
         try {
             ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, userId, articleType + "");
             User author = userService.getUser(userId);
@@ -91,12 +89,12 @@ public class ArticleController {
 
 
     /**
-     * 关于我页面
+     * 访问关于我页面
      *
      * @param userId     用户Id
      * @param model
      * @param visitorUId 访问者用户Id
-     * @return
+     *
      */
     @RequestMapping(value = "/home/{userId}")
     public String homePage(@PathVariable("userId") int userId, Model model, @RequestParam(required = false) Integer visitorUId) {

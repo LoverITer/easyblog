@@ -51,7 +51,6 @@ public class CategoryController {
      * @param userId
      * @param model
      * @param pageNo
-     * @return
      */
     @GetMapping(value = "/{categoryId}/{userId}")
     public String categoryDetailsPage(Model model,
@@ -89,6 +88,14 @@ public class CategoryController {
         return "category-details";
     }
 
+
+    /**
+     * 关注分类
+     *
+     * @param categoryId
+     * @param userId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/care/{categoryId}")
     public Result careCategory(@PathVariable("categoryId") int categoryId,
@@ -111,6 +118,13 @@ public class CategoryController {
     }
 
 
+    /**
+     * 取消关注
+     *
+     * @param categoryId
+     * @param userId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/cancelCare/{categoryId}")
     public Result cancelCare(@PathVariable("categoryId") int categoryId,
@@ -119,7 +133,8 @@ public class CategoryController {
         result.setSuccess(false);
         result.setMessage("服务异常，请重试！");
         HashMap<String, Object> map = new HashMap<>(8);
-        map.put("categoryCareNum", -1);   //更新关注数
+        //更新关注数
+        map.put("categoryCareNum", -1);
         try {
             categoryServiceImpl.updateCategoryInfo(categoryId, map);
             categoryCareService.deleteCareInfo(userId, categoryId);
