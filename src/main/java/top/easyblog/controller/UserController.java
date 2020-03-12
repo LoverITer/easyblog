@@ -380,15 +380,15 @@ public class UserController {
                     //会话信息，如果没有主动,会话信息15天有效
                     redisUtil.expire("user-" + user.getUserId(), 60 * 60 * 24 * 15, RedisUtils.DB_1);
                 }
-                if(Objects.isNull(CookieUtil.getCookieValue(request,"USER-INFO"))) {
+                if(Objects.isNull(CookieUtils.getCookieValue(request,"USER-INFO"))) {
                     //添加用户的登录信息到Cookie中
-                    CookieUtil.addCookie(request, response, "USER-INFO", JSONObject.toJSONString(user), 60 * 60 * 24);
+                    CookieUtils.addCookie(request, response, "USER-INFO", JSONObject.toJSONString(user), 60 * 60 * 24);
                 }
                 // 保存用户名密码一个月
                 if ("on".equals(remember)) {
-                    Object value = CookieUtil.getCookieValue(request, "USER-COOKIE");
+                    Object value = CookieUtils.getCookieValue(request, "USER-COOKIE");
                     if (Objects.isNull(value)) {
-                        CookieUtil.addCookie(request, response, "USER-COOKIE", username + "-" + AESCrypt.encryptECB(password, "1a2b3c4d5e6f7g8h"), 60 * 60 * 24 * 30);
+                        CookieUtils.setCookie(request, response, "USER-COOKIE", username + "-" + AESCrypt.encryptECB(password, "1a2b3c4d5e6f7g8h"), 60 * 60 * 24 * 30);
                     }
                 }
                 executor.execute(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功")));
@@ -434,7 +434,7 @@ public class UserController {
             return result;
         }
         //退出前先删除本次登录的Cookie
-        CookieUtil.deleteCookie(request, response, "USER-INFO");
+        CookieUtils.deleteCookie(request, response, "USER-INFO");
         //删除Redis中保存的登录信息
         Boolean res = redisUtil.delete(RedisUtils.DB_1, "user-" + userId);
         if (res != null && res) {

@@ -1,9 +1,11 @@
 @charset "utf-8";
 @media screen and (min-width: 1200px) {
+    .index_user_login{ position: absolute;min-width: 70px;left: 56em; }
     .index_user_header{ padding-top: 8px !important;;    position: absolute;min-width: 70px;left: 56em; }
     .copyright{margin-left: 290px}
 }
 @media screen and (min-width: 1024px) and (max-width: 1199px) {
+    .index_user_login{ position: absolute;min-width: 70px;left: 56em; }
     .index_user_header{ padding-top: 8px !important;; position: absolute;min-width: 70px;left: 56em; }
     .navbox { width: 96% }
      #starlist li a { padding: 0 10px; }
@@ -20,6 +22,7 @@
 }
 @media screen and (max-width: 1023px) {
     /*header*/
+    .index_user_login{ position: absolute;min-width: 70px;left: 56em; }
     .index_user_header{ padding-top: 8px !important;;    position: absolute;min-width: 70px;left: 56em; }
     header { position: fixed; z-index: 999 }
     nav { width: 100%; height: auto; background: rgba(0,0,0,0.5); margin-top: 18px; position: fixed; z-index: 999; top: 42px; }
@@ -54,6 +57,8 @@
     .copyright{margin-left: 260px}
 }
 @media only screen and (max-width: 768px) {
+    .banbox { width: 100%; overflow: hidden; float: left; border-radius: 3px; margin-bottom: 20px; padding-top: 0;}
+    .index_user_login{ padding-top: 8px;position: unset; }
     .index_user_header{ padding-top: 8px;position: unset; }
     .zhuanti li { padding: 15px; }
     .bplist a img { width: 96% }
@@ -75,7 +80,7 @@
     .headline ul li { width: 49%; float: left; }
     .headline ul li:last-child { float: right }
     .headline ul li span { padding: 0 20px }
-    .banbox { width: 100% }
+    .banbox { width: 100% ;padding-top: 0;}
     .fader { height: 200px; }
     .newspic { width: 100%; height: auto }
     .newspic li { width: 49%; float: left }

@@ -37,9 +37,9 @@ public class UserUtil {
                 for (Cookie cookie : cookies) {
                     if ("USER-INFO".equalsIgnoreCase(cookie.getName())) {
                         String userJsonStr = URLDecoder.decode(cookie.getValue(), String.valueOf(CharsetUtil.UTF_8));
-                        user = JSON.parseObject(userJsonStr, User.class);
-                        if (Objects.nonNull(user)) {
-                            user.setUserPassword(null);
+                        if (Objects.nonNull(userJsonStr)) {
+                            user = JSON.parseObject(userJsonStr, User.class);
+                            Objects.requireNonNull(user, "user must not be null").setUserPassword(null);
                         }
                     }
                 }
@@ -111,7 +111,7 @@ public class UserUtil {
      * @return 更新成功返回true, 更新失败返回false
      */
     private static boolean updateLoggedUserInfoInCookie(HttpServletRequest request, HttpServletResponse response, User user) {
-        return CookieUtil.updateCookie(request, response, "USER-INFO", JSON.toJSONString(user), 60 * 60 * 24);
+        return CookieUtils.updateCookie(request, response, "USER-INFO", JSON.toJSONString(user), 60 * 60 * 24);
     }
 
 }

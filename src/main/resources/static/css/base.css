@@ -75,8 +75,8 @@ nav { float: left; height: 50px; line-height: 50px; text-align: center; }
 /*lbox*/
 .lbox { width: 75%; float: left; overflow: hidden }
 /*banner*/
-.banbox { width: 100%; overflow: hidden; float: left; border-radius: 3px; margin-bottom: 20px }
-.banner { width: 100%;overflow: hidden; float: left; }
+.banbox { width: 100%; overflow: hidden; float: left; border-radius: 3px; margin-bottom: 20px;padding-top: 10px }
+.banner { width: 100%;overflow: hidden; float: left;}
 .fader { position: relative; width: 100%; height: 450px; /*padding-top: 50%;*/ font-family: "futura", arial; overflow: hidden; }
 .fader .slide { position: absolute; width: 100%; height:100%;top: 0; z-index: 1; opacity: 0; }
 .fader .slide img { width: 100%; height: 450px; margin: auto; }
@@ -184,7 +184,7 @@ a.viewmore { display: block; right: 10px; bottom: 20px; position: absolute; padd
 .links li a { display: block; }
 .links li:hover { background: #f7f7f7 }
 /*rbox*/
-.rbox { width: 23.5%; float: right; overflow: hidden; }
+.rbox { width: 23.5%; float: right; overflow: hidden; padding-top: 10px !important;}
 .card { box-shadow: 0px 1px 0px rgba(255,255,255,.1), inset 0px 1px 1px rgba(0,0,0,.7); border-radius: 3px; background: url(../images/quote-bg.png) no-repeat top right rgba(42,42,42,1); height: 260px; overflow: hidden; margin-bottom: 20px }
 .card h2 { font-size: 22px; margin: 10px; color: #89919a; font-weight: normal; padding-bottom: 10px; }
 .card p { font-size: 12px; padding: 0 0 0 20px; line-height: 28px; text-shadow: 0px 1px 2px rgba(0,0,0,.5); color: #d0d2d4; -webkit-animation: animations2 5s ease-in-out 5s; -moz-animation: animations2 5s ease-in-out 5s; -o-animation: animations2 5s ease-in-out 5s; -ms-animation: animations2 5s ease-in-out 5s; animation: animations2 5s ease-in-out 5s; }

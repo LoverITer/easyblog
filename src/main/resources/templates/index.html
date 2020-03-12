@@ -36,7 +36,7 @@
                     <a href="#" th:if="${user==null||user.getUserId()!=667019}"  th:href="@{/article/home/667019}">关于我</a>
                     <a href="#" th:if="${user!=null&&user.getUserId()==667019}"  th:href="@{/article/home/667019(visitorUId=667019)}">关于我</a>
                 </li>
-                <li th:if="${user==null}"><a class="index_user_header" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
+                <li th:if="${user==null}"><a class="index_user_login" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
                 <li th:if="${user!=null}">
                     <div id="header-images" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
                         <a href="#" class="index_user_header" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}">
