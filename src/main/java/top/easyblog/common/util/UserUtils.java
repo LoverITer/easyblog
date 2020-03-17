@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -21,7 +21,7 @@ import java.util.Objects;
  * @since ：2020/03/10 20:09
  */
 @Slf4j
-public class UserUtil {
+public class UserUtils {
 
     /**
      * 从Cookie中获取登录用户的信息

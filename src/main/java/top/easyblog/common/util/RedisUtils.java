@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

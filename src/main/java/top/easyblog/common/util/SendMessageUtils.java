@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -12,10 +12,10 @@ import java.util.Random;
 /**
  * @author huangxin
  */
-public class SendMessageUtil {
+public class SendMessageUtils {
 
 
-    private static final Logger log = LoggerFactory.getLogger(SendMessageUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(SendMessageUtils.class);
     private static final String SMS_Url = "http://sms.webchinese.cn/web_api/";
 
     /**

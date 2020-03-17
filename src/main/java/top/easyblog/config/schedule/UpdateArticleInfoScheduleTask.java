@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.easyblog.bean.Article;
-import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
+import top.easyblog.common.util.DefaultImageDispatcherUtils;
 import top.easyblog.service.IArticleService;
 
 import java.util.Date;

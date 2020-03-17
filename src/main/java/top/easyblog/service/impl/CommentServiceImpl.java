@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserComment;
-import top.easyblog.commons.pagehelper.PageParam;
+import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserCommentMapper;

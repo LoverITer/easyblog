@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserComment;
-import top.easyblog.commons.pagehelper.PageParam;
-import top.easyblog.commons.pagehelper.PageSize;
-import top.easyblog.commons.utils.UserUtil;
+import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.common.pagehelper.PageSize;
+import top.easyblog.common.util.UserUtils;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
@@ -39,7 +39,7 @@ public class CommentAdminController {
     public String commentPublishListPage(@RequestParam Integer userId,
                                          Model model,
                                          @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -56,7 +56,7 @@ public class CommentAdminController {
     public String commentReceiveListPage(Model model,
                                          @RequestParam Integer userId,
                                          @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -73,7 +73,7 @@ public class CommentAdminController {
     @GetMapping(value = "/delete")
     public Result deleteComment(@RequestParam Integer userId,
                                 @RequestParam int commentId) {
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         Result result = new Result();
         result.setMessage("请登录后再操作！");
         if (Objects.nonNull(user)) {

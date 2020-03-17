@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,27 +8,27 @@ import java.util.Objects;
 /**
  * @author huangxin
  */
-public class CalendarUtil {
+public class CalendarUtils {
 
 
-    volatile private static CalendarUtil calendarUtil = null;
+    volatile private static CalendarUtils calendarUtils = null;
     private static final ThreadLocal<SimpleDateFormat> threadLocal=new ThreadLocal<>();
     private final Object lock=new Object();
 
-    private CalendarUtil() {
+    private CalendarUtils() {
 
     }
 
     //DCL双检查锁
-    public static CalendarUtil getInstance() {
-        if (Objects.isNull(calendarUtil)) {
-            synchronized (CalendarUtil.class) {
-                if (Objects.isNull(calendarUtil)) {
-                    calendarUtil = new CalendarUtil();
+    public static CalendarUtils getInstance() {
+        if (Objects.isNull(calendarUtils)) {
+            synchronized (CalendarUtils.class) {
+                if (Objects.isNull(calendarUtils)) {
+                    calendarUtils = new CalendarUtils();
                 }
             }
         }
-        return calendarUtil;
+        return calendarUtils;
     }
 
     /**
@@ -43,7 +43,7 @@ public class CalendarUtil {
      */
     public Date getDate(String dateStr){
         Calendar calendar=Calendar.getInstance();
-        if(RegexUtil.isDate(dateStr)){
+        if(RegexUtils.isDate(dateStr)){
             int year=1971;
             int month=1;
             int day=1;

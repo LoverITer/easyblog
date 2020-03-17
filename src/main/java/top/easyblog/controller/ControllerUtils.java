@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.ArticleCounter;
 import top.easyblog.bean.Category;
-import top.easyblog.commons.enums.ArticleType;
+import top.easyblog.common.enums.ArticleType;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;

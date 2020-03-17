@@ -12,11 +12,11 @@ import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserAccount;
 import top.easyblog.bean.UserComment;
-import top.easyblog.commons.enums.ArticleType;
-import top.easyblog.commons.pagehelper.PageParam;
-import top.easyblog.commons.pagehelper.PageSize;
-import top.easyblog.commons.utils.RedisUtils;
-import top.easyblog.commons.utils.UserUtil;
+import top.easyblog.common.enums.ArticleType;
+import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.common.pagehelper.PageSize;
+import top.easyblog.common.util.RedisUtils;
+import top.easyblog.common.util.UserUtils;
 import top.easyblog.markdown.TextForm;
 import top.easyblog.service.impl.*;
 
@@ -66,7 +66,7 @@ public class ArticleController {
                         @PathVariable("userId") int userId,
                         @RequestParam(value = "articleType", defaultValue = "3") int articleType,
                         @RequestParam(value = "page", defaultValue = "1") int page) {
-        User visitor = UserUtil.getUserFromCookie(request);
+        User visitor = UserUtils.getUserFromCookie(request);
         model.addAttribute("visitor", visitor);
         try {
             ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, userId, articleType + "");
@@ -131,7 +131,7 @@ public class ArticleController {
                 UserAccount authorAccounts = userAccount.getAccountByUserId(author.getUserId());
                 model.addAttribute("authorAccounts", authorAccounts);
                 //从Redis中查用户的登录信息
-                User visitor = UserUtil.getUserFromRedis(visitorUId);
+                User visitor = UserUtils.getUserFromRedis(visitorUId);
                 model.addAttribute("visitor", visitor);
                 return "home";
             }
@@ -161,7 +161,7 @@ public class ArticleController {
                 List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
                 model.addAttribute("articleComments", articleComments);
                 //从Redis中查访客的登录信息
-                User visitor = UserUtil.getUserFromRedis(visitorUId);
+                User visitor = UserUtils.getUserFromRedis(visitorUId);
                 model.addAttribute("visitor", visitor);
 
                 User author = userService.getUser(article.getArticleUser());

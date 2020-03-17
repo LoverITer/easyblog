@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.bean.*;
-import top.easyblog.commons.enums.ArticleType;
-import top.easyblog.commons.pagehelper.PageParam;
-import top.easyblog.commons.utils.HtmlParserUtil;
-import top.easyblog.commons.utils.MarkdownUtil;
+import top.easyblog.common.enums.ArticleType;
+import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.common.util.HtmlParserUtils;
+import top.easyblog.common.util.MarkdownUtils;
 import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.CategoryMapper;
@@ -541,7 +541,7 @@ public class ArticleServiceImpl implements IArticleService {
     private Article parseMarkdown2Text(Article article) {
         if (Objects.nonNull(article)) {
             String htmlContent = parseMarkdown2HTML(article).getArticleContent();
-            String textContent = HtmlParserUtil.HTML2Text(htmlContent);
+            String textContent = HtmlParserUtils.HTML2Text(htmlContent);
             article.setArticleContent(textContent);
         }
         return article;
@@ -555,7 +555,7 @@ public class ArticleServiceImpl implements IArticleService {
      */
     private Article parseMarkdown2HTML(Article article) {
         if (Objects.nonNull(article)) {
-            article.setArticleContent(MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent()));
+            article.setArticleContent(MarkdownUtils.markdownToHtmlExtensions(article.getArticleContent()));
         }
         return article;
     }

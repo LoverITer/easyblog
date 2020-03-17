@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
@@ -14,7 +14,7 @@ import java.security.SecureRandom;
 /**
  * @author huangxin
  */
-public class EncryptUtil {
+public class EncryptUtils {
     private static final String MD5 = "MD5";
     private static final String SHA1 = "SHA1";
     private static final String HmacMD5 = "HmacMD5";
@@ -29,18 +29,18 @@ public class EncryptUtil {
     /**AES*/
     private int keysizeAES = 128;
 
-    volatile private static EncryptUtil me;
+    volatile private static EncryptUtils me;
 
-    private EncryptUtil(){
+    private EncryptUtils(){
         //单例
     }
 
     //DCL双检查锁
-    public static EncryptUtil getInstance(){
+    public static EncryptUtils getInstance(){
         if (me==null) {
-            synchronized (EncryptUtil.class) {
+            synchronized (EncryptUtils.class) {
                 if(me == null){
-                    me = new EncryptUtil();
+                    me = new EncryptUtils();
                 }
             }
         }

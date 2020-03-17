@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import top.easyblog.commons.utils.NetWorkUtil;
+import top.easyblog.common.util.NetWorkUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -34,10 +34,10 @@ public class WebRequestLogAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;
         HttpServletRequest request = attributes.getRequest();
-        String ip = NetWorkUtil.getUserIp(request);
+        String ip = NetWorkUtils.getUserIp(request);
         String url = request.getRequestURL().toString();
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.info(new RequestLog(url, ip + " " + NetWorkUtil.getLocation(request, ip), classMethod, joinPoint.getArgs()).toString());
+        log.info(new RequestLog(url, ip + " " + NetWorkUtils.getLocation(request, ip), classMethod, joinPoint.getArgs()).toString());
     }
 
     @AfterReturning(pointcut = "log()", returning = "result")

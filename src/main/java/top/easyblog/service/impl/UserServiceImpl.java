@@ -4,12 +4,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.bean.User;
-import top.easyblog.commons.enums.UserFreeze;
-import top.easyblog.commons.enums.UserLock;
-import top.easyblog.commons.enums.UserPower;
-import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
-import top.easyblog.commons.utils.EncryptUtil;
-import top.easyblog.commons.utils.RegexUtil;
+import top.easyblog.common.enums.UserFreeze;
+import top.easyblog.common.enums.UserLock;
+import top.easyblog.common.enums.UserPower;
+import top.easyblog.common.util.DefaultImageDispatcherUtils;
+import top.easyblog.common.util.EncryptUtils;
+import top.easyblog.common.util.RegexUtils;
 import top.easyblog.config.web.Result;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.service.IUserService;
@@ -33,9 +33,9 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User checkUser(String username, String password) {
         User user = null;
-        if (RegexUtil.isEmail(username)) {
+        if (RegexUtils.isEmail(username)) {
             user = userMapper.getUserByUserEmailAndPassword(username, password);
-        } else if (RegexUtil.isPhone(username)) {
+        } else if (RegexUtils.isPhone(username)) {
             user = userMapper.getUserByUserPhoneAndPassword(username, password);
         }
 
@@ -48,7 +48,7 @@ public class UserServiceImpl implements IUserService {
         Result result = new Result();
         result.setSuccess(false);
         if (var0 != null) {
-            if (EncryptUtil.getInstance().SHA1(inputOldPWD, "user").equals(var0.getUserPassword())) {
+            if (EncryptUtils.getInstance().SHA1(inputOldPWD, "user").equals(var0.getUserPassword())) {
                 result.setSuccess(true);
             } else {
                 result.setMessage("旧密码输入错误");
@@ -85,9 +85,9 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User getUser(String queryStr) {
         User user = null;
-        if (RegexUtil.isMobile(queryStr)) {
+        if (RegexUtils.isMobile(queryStr)) {
             user = userMapper.getUserByPhone(queryStr);
-        } else if (RegexUtil.isEmail(queryStr)) {
+        } else if (RegexUtils.isEmail(queryStr)) {
             user = userMapper.getUserByEmail(queryStr);
         } else {
             user = userMapper.getUserByNickname(queryStr);
@@ -139,9 +139,9 @@ public class UserServiceImpl implements IUserService {
              *             Integer userVisit)
              */
             User user = new User(nickname, password, null, null, null, null, null, null, 0, 100000, headImageUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
-            if (RegexUtil.isEmail(account)) {
+            if (RegexUtils.isEmail(account)) {
                 user.setUserMail(account);
-            } else if (RegexUtil.isMobile(account)) {
+            } else if (RegexUtils.isMobile(account)) {
                 user.setUserPhone(account);
             }
             return userMapper.save(user);
@@ -176,9 +176,9 @@ public class UserServiceImpl implements IUserService {
     public int updateUserInfo(String account, String newPassword) {
         try {
             User user = new User();
-            if (RegexUtil.isEmail(account)) {
+            if (RegexUtils.isEmail(account)) {
                 user.setUserMail(account);
-            } else if (RegexUtil.isPhone(account)) {
+            } else if (RegexUtils.isPhone(account)) {
                 user.setUserPhone(account);
             }
             user.setUserPassword(newPassword);

@@ -3,7 +3,7 @@ package top.easyblog.service;
 import com.github.pagehelper.PageInfo;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.ArticleCounter;
-import top.easyblog.commons.pagehelper.PageParam;
+import top.easyblog.common.pagehelper.PageParam;
 
 import java.util.List;
 

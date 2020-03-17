@@ -1,4 +1,4 @@
-package top.easyblog.commons.pagehelper;
+package top.easyblog.common.pagehelper;
 
 import java.util.Objects;
 

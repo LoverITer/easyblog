@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 
 import top.easyblog.markdown.Markdown2HtmlParser;
@@ -8,7 +8,7 @@ import top.easyblog.markdown.MarkdownParser;
  * Markdown文本转成HTML文本的工具类
  * @author huangxin
  */
-public class MarkdownUtil {
+public class MarkdownUtils {
 
     /**
      * 增加扩展[标题锚点，表格生成]

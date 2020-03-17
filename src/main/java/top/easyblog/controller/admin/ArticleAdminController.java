@@ -12,11 +12,11 @@ import top.easyblog.autoconfig.qiniu.QiNiuCloudService;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
-import top.easyblog.commons.pagehelper.PageParam;
-import top.easyblog.commons.pagehelper.PageSize;
-import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
-import top.easyblog.commons.utils.RedisUtils;
-import top.easyblog.commons.utils.UserUtil;
+import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.common.pagehelper.PageSize;
+import top.easyblog.common.util.DefaultImageDispatcherUtils;
+import top.easyblog.common.util.RedisUtils;
+import top.easyblog.common.util.UserUtils;
 import top.easyblog.config.web.Result;
 import top.easyblog.markdown.TextForm;
 import top.easyblog.service.impl.ArticleServiceImpl;
@@ -271,7 +271,7 @@ public class ArticleAdminController {
         Result result = new Result();
         result.setMessage("请登录后再操作！");
         //从Redis中查询出已经登录User的登录信息
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user) || userId != null) {
             try {
                 int updateRes = 0;
@@ -344,7 +344,7 @@ public class ArticleAdminController {
                               @RequestParam(value = "userId") Integer userId,
                               @RequestParam("articleId") int articleId,
                               HttpServletRequest request) {
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -503,7 +503,7 @@ public class ArticleAdminController {
         if (Objects.isNull(userId)) {
             return result;
         }
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             try {
                 if (Objects.nonNull(imgByte64Str) && articleId > 0) {
@@ -550,7 +550,7 @@ public class ArticleAdminController {
                                String dest,
                                PageParam pageParam) {
         //从Redis中查询出已经登录User的登录信息
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             try {
                 Article article = new Article();
