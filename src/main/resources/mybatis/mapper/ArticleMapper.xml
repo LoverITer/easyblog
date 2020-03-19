@@ -371,7 +371,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.bean.Article">
+    <update id="updateByPrimaryKeySelective" flushCache="true" parameterType="top.easyblog.bean.Article">
         update article
         <set>
             <if test="articleUser != null">

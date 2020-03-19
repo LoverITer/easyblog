@@ -12,6 +12,7 @@ import top.easyblog.mapper.core.BaseMapper;
 @Repository
 public interface UserAccountMapper extends BaseMapper<UserAccount> {
     /**
+     * 选择性更新用户的其他战账户信息
      *
      * @param account
      * @return
@@ -20,9 +21,10 @@ public interface UserAccountMapper extends BaseMapper<UserAccount> {
 
     /**
      * 通过用户id查询用户的其他账号
-     * @param userId
+     *
+     * @param accountUser
      * @return
      */
-    UserAccount getByUserId(@Param("userId") int userId);
+    UserAccount getByUserId(@Param("accountUser") int accountUser);
 
 }

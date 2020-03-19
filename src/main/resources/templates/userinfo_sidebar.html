@@ -8,23 +8,19 @@
 <body>
 
 <!--左边的卡片-->
-<div class="four wide column">
-    <input id="userId" hidden="hidden" th:if="${#session.getAttribute('user')}!=null" th:value="${#session.getAttribute('user').getUserId()}">
+<div class="four wide column m-mobile-hide">
     <!--用户信息区域-->
     <div class="ui segments" th:fragment="sidebar_userinfo" style="padding-right: 0 !important;">
         <div class="ui equal width center aligned padded grid">
             <div class="row" style="padding-bottom: 0 !important;">
                 <div class="four wide column" style="padding-right: 0 !important;">
-                    <a href="#" th:if="${user!=null}" th:href="@{/article/index/{id}(id=${user.getUserId()})}" class="m-black">
-                        <img class="ui top avatar aligned tiny image medium circular"
-                             style="width: 55px !important;height: 55px !important;"
-                             th:if="${user!=null}"
-                             th:src="@{${user.getUserHeaderImgUrl()}}"/>
+                    <a href="#" th:if="${author!=null}" th:href="@{/article/index/{id}(id=${author.getUserId()})}" class="m-black">
+                        <img class="ui top avatar aligned tiny image medium circular" style="width: 55px !important;height: 55px !important;" th:if="${author!=null}" th:src="@{${author.getUserHeaderImgUrl()}}"/>
                     </a>
                 </div>
                 <div class="twelve wide column grid" style="padding-left: 0!important;">
                     <div class=" m-margin-bottom">
-                        <div  style="float: left !important;font-size: 16px" th:text="${user.getUserNickname()}"></div>
+                        <div style="float: left !important;font-size: 16px" th:text="${author.getUserNickname()}"></div>
                     </div>
                     <div style="clear: both !important;"></div>
                     <div class=" m-margin-bottom"></div>
@@ -35,14 +31,15 @@
                         <button class="ui left floated  mini red basic button">
                             <a href="#" style="color: red;font-size: 12px;">关注</a>
                         </button>
-                        <a href="#" th:if="${user!=null}" th:href="@{/article/home/{id}(id=${user.getUserId()})}" class="float-right" style="color: #3399ea;font-size: 12px !important;">TA的个人主页&nbsp;></a>
+                        <a href="#" th:if="${author!=null and visitor==null}" th:href="@{/article/home/{id}(id=${author.getUserId()})}" class="float-right" style="color: #3399ea;font-size: 12px !important;">TA的个人主页&nbsp;></a>
+                        <a href="#" th:if="${author!=null and visitor!=null}" th:href="@{/article/home/{id}(id=${author.getUserId()},visitorUId=${visitor.getUserId()})}" class="float-right" style="color: #3399ea;font-size: 12px !important;">TA的个人主页&nbsp;></a>
                     </div>
                 </div>
             </div>
             <div class="ui divider" style="margin-bottom: 5px !important;margin-top: 5px !important;"></div>
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column">
-                    <a href="#" th:href="@{/article/index/{id}(id=${user.getUserId()})}" th:alt="originalArticleNum" class="m-black">
+                    <a href="#" th:href="@{/article/index/{id}(id=${author.getUserId()})}" th:alt="originalArticleNum" class="m-black">
                         原创
                         <div><strong th:text="${originalArticleNum}">200</strong></div>
                     </a>
@@ -63,18 +60,18 @@
             <div class="ui divider" style="margin-bottom: 5px !important;margin-top: 5px !important;"></div>
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column m-txt-align-left ">
-                    等级：<strong><span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserLevel()==null?0:user.getUserLevel()}"></span></strong>
+                    等级：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserLevel()==null?0:author.getUserLevel()}"></span></strong>
                 </div>
                 <div class="column m-txt-align-left">
-                    访问：<strong><span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserVisit()==null?0:user.getUserVisit()}"></span></strong>
+                    访问：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserVisit()==null?0:author.getUserVisit()}"></span></strong>
                 </div>
             </div>
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column m-txt-align-left">
-                    积分：<strong><span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserScore()==null?0:user.getUserScore()}"></span></strong>
+                    积分：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserScore()==null?0:author.getUserScore()}"></span></strong>
                 </div>
                 <div class="column m-txt-align-left">
-                    排名：<strong><span class="m-margin-left" th:if="${user!=null}" th:text="${user.getUserRank()==null?0:user.getUserRank()}">7</span></strong>
+                    排名：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserRank()==null?0:author.getUserRank()}">7</span></strong>
                 </div>
             </div>
         </div>
@@ -103,7 +100,8 @@
             <i class="bookmark icon"></i><strong>最新文章</strong>
         </div>
         <div class="ui segment" th:each="article:${newestArticles}">
-            <a href="#" th:if="${article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target class="m-black m-text-thin" th:text="${article.articleTopic}"></a>
+            <a href="#" th:if="${visitor==null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="m-black m-text-thin"></a>
+            <a href="#" th:if="${visitor!=null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class="m-black m-text-thin"></a>
         </div>
     </div>
     <!--归档-->

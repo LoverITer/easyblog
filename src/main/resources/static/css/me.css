@@ -21,8 +21,8 @@ body {
 }
 
 .m-padded-tb-mini {
-    padding-top: 0.1em !important;
-    padding-bottom: 0.1em !important;
+    padding-top: 0.5em !important;
+    padding-bottom: 0.5em !important;
 }
 
 .m-padded-tb-tiny {
@@ -41,7 +41,7 @@ body {
 }
 
 .m-padded-tb-large {
-    padding-top: 2em !important;
+    padding-top: 1em !important;
     padding-bottom: 2em !important;
 }
 
@@ -66,7 +66,7 @@ body {
     padding-right: 4em !important;
 }
 
-.border-bottom-only{
+.border-bottom-only {
     border-bottom: 1px dotted #DDDDDD;
     border-left: none !important;
     border-right: none !important;
@@ -236,7 +236,6 @@ body {
 }
 
 
-
 /*-----弹框-----*/
 #signup {
 
@@ -384,7 +383,7 @@ body {
 
 /*-----container*/
 
-.m-container-large{
+.m-container-large {
     max-width: 89em !important;
     margin: auto !important;
 }
@@ -404,7 +403,7 @@ body {
     margin: auto !important;
 }
 
-.m-menu-padding{
+.m-menu-padding {
     margin-left: 1em !important;
     font-size: 16px !important;
 }
@@ -493,18 +492,298 @@ span.count {
     border-right: none !important;
 }
 
-.m-font-size{
+.m-font-size {
     font-size: 12px !important;
 }
 
-@media screen and (max-width: 991px) {
+.m-comment-font-user {
+    font-family: 'PingFangSC-Semibold' !important;
+    font-style: normal !important;
+    color: #2e2e2e !important;
+    font-size: 14px !important;
+}
+
+.m-comment-font-user-other {
+    font-family: 'PingFangSC-Semibold' !important;
+    font-style: normal !important;
+    color: #999 !important;
+    font-size: 13px !important;
+}
+
+.m-comment-font-btn {
+    color: #0e90d2 !important;
+    font-size: 14px !important;
+    font-style: normal !important;
+    font-family: 'PingFangSC-Semibold' !important;
+}
+
+.m-comment-location-see-comment{
+    position: absolute;
+    right: 3em;
+    top: 5px;
+    cursor: pointer;
+}
+
+.m-comment-location-replay{
+    position: absolute;
+    right: 12em;
+    top: 5px;
+    cursor: pointer;
+}
+
+.m-child_comment-location-replay{
+    position: absolute;
+    right: 1.3em;
+    top: 5px;
+    cursor: pointer;
+}
+
+.m-article-title {
+    font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+    font-size: 25px !important;
+    line-height: 32px !important;
+    word-wrap: break-word !important;
+    color: #4d4d4d !important;
+}
+
+.m-article-list-title{
+    font-size: 18px !important;
+    font-weight: 800;
+    color: #4d4d4d !important;
+    letter-spacing: 0 !important;
+    text-align: left !important;
+    line-height: 28px !important;
+    word-wrap: break-word !important;
+    font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+}
+
+.m-column_article_desc{
+    font-size: 14px;
+    color: #999;
+    letter-spacing: 0;
+    text-align: left;
+    line-height: 22px;
+    margin-bottom: 8px;
+    word-break: break-word;
+}
+
+
+
+
+.m-article-quick-edit-btn {
+    font-size: 15px;
+    position: absolute !important;
+    top: 5.3em !important;
+    right: 2em !important;
+    display: none;
+}
+
+
+.m-comment-words-counter-location{
+    position: absolute;
+    top: 32px;
+    right: 10.2em !important;
+}
+
+
+.m-comment-publish_btn-location{
+    position: absolute;
+    top: 20px;
+    right: 12px !important;
+}
+
+.m-column_article_title{
+    margin-bottom: 8px;
+}
+
+.m-article-type{
+    color: #ca0c16;
+    border: 1px solid #f4ced0;
+}
+
+span.m-article-type{
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 2px;
+    vertical-align: 1px;
+    margin-right: 8px;
+    margin-top: 3px;
+}
+
+.m-mobile-show-only{
+    display: none !important;
+}
+
+.m-article-sidebar-padding{
+    padding: 10px 5px 20px 20px !important;
+}
+
+.m-mobile-icon-show{
+    position: absolute;
+    top: 1.5em;
+    left: 1.5em;
+    z-index: 10000;
+    background: rgba(0,0,0,.3) !important;
+    font-size: 16px !important;
+}
+
+.m-mobile-title-width{
+    width: 60% !important;
+}
+
+.m-mobile-info-width{
+    width:40% !important;
+}
+
+.m-look-more-margin{
+    margin-left: 40% !important;
+}
+
+/**Small Monitor*/
+@media screen and (min-width: 992px) and (max-width: 1200px) {
     .m-mobile-margin-left {
         margin-left: 72% !important;
     }
 }
 
+/**Tablet*/
+@media screen and (min-width: 768px) and (max-width: 991px){
+    .m-mobile-margin-left {
+        margin-left: 72% !important;
+    }
+}
+
+/**Mobile*/
 @media screen and (max-width: 768px) {
-    .m-font-size{
+
+    .m-padded-tb-big {
+        padding-top: 1.5em !important;
+        padding-bottom: 5em !important;
+    }
+
+    .m-look-more-margin{
+        margin-left: 31% !important;
+    }
+
+    .m-mobile-title-width{
+        width: 60% !important;
+    }
+
+    .m-moblie-info-width{
+        width:40% !important;
+    }
+
+    .m-padded-tiny {
+        padding: 9.33px 13.328px !important;
+    }
+
+    .m-article-sidebar-padding{
+        padding: unset !important;
+    }
+
+    .m-mobile-icon-show{
+        position: absolute;
+        top: 1.5em;
+        left: 1.5em;
+        z-index: 10000;
+        background: rgba(0,0,0,.3) !important;
+        font-size: 16px !important;
+    }
+
+    .m-margin-left {
+        margin-left: .5em !important;
+    }
+
+    .m-margin-left-big {
+        margin-left: 2em !important;
+    }
+
+    .m-margin-left-massive{
+        margin-left: .5em !important;
+        margin-top: 1em !important;
+    }
+
+    .m-comment-location-see-comment{
+        position: absolute;
+        right: -.5em;
+        top: 0;
+        cursor: pointer;
+    }
+
+    .m-comment-location-replay{
+        position: absolute;
+        right: 6.5em;
+        top: 1px;
+        cursor: pointer;
+    }
+
+    .m-child_comment-location-replay{
+        position: absolute;
+        right: 1.3em;
+        top: 5px;
+        cursor: pointer;
+    }
+
+
+    .m-comment-font-btn {
+        color: #0e90d2 !important;
+        font-size: 12px !important;
+        font-style: normal !important;
+        font-family: 'PingFangSC-Semibold' !important;
+    }
+
+    .m-comment-font-user {
+        font-family: 'PingFangSC-Semibold' !important;
+        font-style: normal !important;
+        color: #2e2e2e !important;
+        font-size: 12px !important;
+    }
+
+    .m-comment-font-user-other {
+        font-family: 'PingFangSC-Semibold' !important;
+        font-style: normal !important;
+        color: #999 !important;
+        font-size: 12px !important;
+    }
+
+    .m-article-title {
+        font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+        font-size: 14px !important;
+        line-height: 22px !important;
+        word-wrap: break-word !important;
+        color: #4d4d4d !important;
+    }
+
+    .m-article-list-title{
+        font-size: 18px !important;
+        font-weight: 800;
+        color: #4d4d4d !important;
+        letter-spacing: 0 !important;
+        text-align: left !important;
+        line-height: 28px !important;
+        word-wrap: break-word !important;
+        font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+
+    }
+
+    .m-article-title-info-font {
+        font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
+        font-size: 12px !important;
+    }
+
+    .m-mobile-pading {
+        padding-left: 10px !important;
+    }
+
+    .m-full-line {
+        min-width: 100% !important;
+    }
+
+    .m-font-size {
         font-size: 5px !important;
     }
 
@@ -512,7 +791,12 @@ span.count {
         display: none !important;
     }
 
+    .m-mobile-show-only{
+        display: inline !important;
+    }
+
     .m-mobile-show {
+        margin-inside: 10px !important;
         display: block !important;
     }
 
@@ -527,7 +811,7 @@ span.count {
     }
 
     .m-mobile-wide {
-        width: 100% !important;
+        width: auto !important;
     }
 
     .m-mobile-width-pwdBar {
@@ -557,11 +841,12 @@ span.count {
         margin-left: 0 !important;
     }
 
-    .header{
+   /* .header {
         max-height: 42px !important;
-        max-width: 42px !important;
+        max-width: 100px !important;
+        font-size: 15px !important;
         border-radius: 30px !important;
-    }
+    }*/
 }
 
 .m-center {
@@ -593,7 +878,7 @@ span.count {
     height: 100px !important;
 }
 
-.image-122x122{
+.image-122x122 {
     width: 122px !important;
     height: 122px !important;
 }

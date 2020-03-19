@@ -20,6 +20,7 @@
 <!--中间内容-->
 <div class="ui m-container m-padded-tb-big stackable">
     <div class="ui stackable grid">
+        <div class="one wide column"></div>
         <!--左侧菜单栏-->
         <div th:replace="~{account-setting-sidebar::sidebar}"></div>
         <!--博客内容-->
@@ -81,19 +82,22 @@
     $('#msg-btn').click(function () {
         $('.ui.modal').modal('hide');
     });
+
+    let userId="[[${user.getUserId()}]]";
+    let base_url=window.document.location;
     $('#firm_btn').click(function () {
         $.ajax({
             url: "/manage/account/destroy",
             method: 'GET',
             sync: true,
-            data: {password: $('#code').val()},
+            data: {password: $('#code').val(),userId:userId},
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    window.location.href = "/user/loginPage";
+                    window.location.href = base_url;
                 } else {
                     spop({
-                        template: response.msg,
+                        template: response.message,
                         autoclose: 3000,
                         position: "top-center",
                         style: 'error',

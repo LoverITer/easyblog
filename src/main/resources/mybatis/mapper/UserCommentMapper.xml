@@ -28,12 +28,12 @@
 
   <!--获得一个评论的子评论-->
   <select id="getByPidAndPrimaryKey" resultType="top.easyblog.bean.UserComment">
-    select * from user_comment where article_id=#{articleId} AND pid=#{id}
+    select * from user_comment where article_id=#{articleId} AND pid=#{pid}
   </select>
 
   <!--获得关于一篇文章的所有父级评论-->
   <select id="getTopCommentsByArticleId" resultType="top.easyblog.bean.UserComment">
-    select * from user_comment where article_id=#{articleId} AND pid is NULL
+    select * from user_comment where article_id=#{articleId} AND pid = 0
   </select>
 
   <select id="getAll" resultType="list">

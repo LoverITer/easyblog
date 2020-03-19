@@ -55,7 +55,7 @@
                         <div style="margin-bottom: 2.5em !important;color: grey !important;font-size: 14px !important;">
                             你还没有绑定手机号
                         </div>
-                        <a href="#" th:href="@{/manage/account/bindPhonePage}">
+                        <a href="#" th:href="@{/manage/account/bindPhonePage(userId=${user.getUserId()})}">
                             <button class="red  ui button">立即绑定手机号</button>
                         </a>
                     </div>
@@ -107,13 +107,14 @@
 </script>
 <!--获取验证码-->
 <script th:ononline="javascript">
-    var phone = [[${user.getUserPhone()}]];
+    let userId="[[${user.getUserId()}]]";
+    let phone = [[${user.getUserPhone()}]];
     $('#getCode_btn').click(function () {
         $.ajax({
             url: "/manage/account/sendByPhone",
             method: 'GET',
             sync: true,
-            data: {phone: phone},
+            data: {phone: phone,userId:userId},
             dataType: "json",
             success: function (response) {
                 if (response.success) {
@@ -135,10 +136,8 @@
                 });
             }
         })
-    })
-</script>
+    });
 
-<script type="text/javascript">
     $('#firm_btn').click(function () {
         var code = $('#code').val();
         console.log(code);
@@ -153,7 +152,7 @@
                     window.location.href="/manage/account/reset/phone/nextPage";
                 } else {
                     spop({
-                        template: response.msg,
+                        template: response.message,
                         autoclose: 3000,
                         position: "top-center",
                         style: 'error',
@@ -169,7 +168,7 @@
                 });
             }
         })
-    })
+    });
 </script>
 
 <script>

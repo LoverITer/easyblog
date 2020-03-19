@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface UserCommentMapper extends BaseMapper<UserComment> {
     /**
-     *
      * @param record
      * @return
      */
@@ -21,20 +20,19 @@ public interface UserCommentMapper extends BaseMapper<UserComment> {
 
     /**
      * 统计接收到的评论数
+     *
      * @param receivedId
      * @return
      */
     int countReceivedComment(@Param("receivedUser") int receivedId);
 
     /**
-     *
      * @param record
      * @return
      */
     int updateByPrimaryKeySelective(UserComment record);
 
     /**
-     *
      * @param record
      * @return
      */
@@ -42,6 +40,7 @@ public interface UserCommentMapper extends BaseMapper<UserComment> {
 
     /**
      * 得到所有该用户对别人的文章评论
+     *
      * @param receiveUser
      * @return
      */
@@ -50,6 +49,7 @@ public interface UserCommentMapper extends BaseMapper<UserComment> {
 
     /**
      * 得到所有关于该用户的文章评论
+     *
      * @param receiveUser
      * @return
      */
@@ -57,17 +57,19 @@ public interface UserCommentMapper extends BaseMapper<UserComment> {
 
     /**
      * 获得关于一篇文章的所有父级评论
-     * @param articleId
-     * @return
+     *
+     * @param articleId 文章Id
+     * @return 一篇文章的所有父级评论
      */
-    List<UserComment> getTopCommentsByArticleId(int articleId);
+    List<UserComment> getTopCommentsByArticleId(@Param(value = "articleId") int articleId);
 
     /**
-     *根据PID和主键获得评论
-     * @param articleId
-     * @param id
-     * @return
+     * 根据父级评论id(pid)和文章Id主键获得关于一篇文章的所有评论
+     *
+     * @param articleId 文章Id
+     * @param pid       父评论Id
+     * @return 一篇文章的所有父级评论下的子评论
      */
-    List<UserComment> getByPidAndPrimaryKey(int articleId, int id);
+    List<UserComment> getByPidAndPrimaryKey(@Param(value = "articleId") int articleId, @Param(value = "pid") int pid);
 
 }

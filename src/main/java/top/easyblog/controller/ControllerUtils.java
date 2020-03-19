@@ -34,11 +34,11 @@ class ControllerUtils {
         this.userAttention = userAttention;
     }
 
-    public static ControllerUtils getInstance(CategoryServiceImpl categoryService, ArticleServiceImpl articleService, CommentServiceImpl commentService, UserAttentionImpl userAttention){
-        if(Objects.isNull(controllerUtils)){
-            synchronized (ControllerUtils.class){
+    public static ControllerUtils getInstance(CategoryServiceImpl categoryService, ArticleServiceImpl articleService, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
+        if (Objects.isNull(controllerUtils)) {
+            synchronized (ControllerUtils.class) {
                 if (Objects.isNull(controllerUtils)) {
-                    controllerUtils=new ControllerUtils(categoryService,articleService,commentService,userAttention);
+                    controllerUtils = new ControllerUtils(categoryService, articleService, commentService, userAttention);
                 }
             }
         }
@@ -70,15 +70,15 @@ class ControllerUtils {
             int receiveCommentNum = commentService.getReceiveCommentNum(userId);
             //我的关注数
             int attentionNumOfMe = userAttention.countAttentionNumOfMe(userId);
-            model.addAttribute("attentionNumOfMe",attentionNumOfMe);
-            model.addAttribute("receiveCommentNum",receiveCommentNum);
+            model.addAttribute("attentionNumOfMe", attentionNumOfMe);
+            model.addAttribute("receiveCommentNum", receiveCommentNum);
             model.addAttribute("categories", lists);
             model.addAttribute("archives", archives);
             model.addAttribute("newestArticles", newestArticles);
             model.addAttribute("articles", articles);
             model.addAttribute("articleNum", articles.size());
             model.addAttribute("originalArticleNum", originalArticle);
-        }catch (Exception  e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
     }

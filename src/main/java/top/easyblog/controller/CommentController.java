@@ -1,20 +1,21 @@
 package top.easyblog.controller;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.easyblog.bean.Article;
-import top.easyblog.bean.User;
 import top.easyblog.bean.UserComment;
+import top.easyblog.commons.utils.RedisUtils;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
 
-import javax.servlet.http.HttpSession;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 /**
  * @author huangxin
@@ -25,35 +26,39 @@ public class CommentController {
 
     private final CommentServiceImpl commentService;
     private final ArticleServiceImpl articleService;
+    @Autowired
+    private RedisUtils redisUtil;
+    @Autowired
+    private Executor executor;
 
     public CommentController(CommentServiceImpl commentService, ArticleServiceImpl articleService) {
         this.commentService = commentService;
         this.articleService = articleService;
     }
 
+    /**
+     * 发表评论
+     *
+     * @param comment 评论信息
+     */
     @ResponseBody
     @PostMapping(value = "/publish", produces = "application/json;charset=UTF-8")
-    public Result publishComment(@RequestBody UserComment comment, HttpSession session) {
+    public Result publishComment(@RequestBody UserComment comment) {
         Result result = new Result();
-        result.setSuccess(false);
+        result.setMessage("您还未登陆，请登录后重试！");
         //登录用户就是发评论者，如果没有登录不可以发评论
-        User user = (User) session.getAttribute("user");
-        if (Objects.nonNull(user) && Objects.nonNull(comment)) {
-            comment.setCommentSend(user.getUserId());
-            if (comment.getPid() == 0) {
-                comment.setPid(null);
-            }
+        if (Objects.nonNull(comment) && Objects.nonNull(comment.getCommentSend()) && Objects.nonNull(comment.getCommentReceived())) {
             //更新文章的评论数
-            new Thread(()->{
+            executor.execute(() -> {
                 Article article = new Article();
                 article.setArticleId(comment.getArticleId());
                 article.setArticleCommentNum(1);
                 articleService.updateSelective(article);
-            }).start();
+            });
             int re = commentService.save(comment);
             if (re > 0) {
                 result.setSuccess(true);
-                result.setMessage("OK");
+                result.setMessage("评论保存成功！");
             }
         }
         return result;

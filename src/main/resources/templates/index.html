@@ -21,6 +21,7 @@
     <![endif]-->
 </head>
 <body>
+
 <!--top begin-->
 <header id="header">
     <div class="navbox">
@@ -31,16 +32,15 @@
         <nav>
             <ul id="starlist">
                 <li><a href="/" title="首页" th:href="@{/}">首页</a></li>
-                <li><a href="#"  th:href="@{/article/home/667017}">关于我</a></li>
-                <li th:if="${user==null}">
-                    <a href="#" th:href="@{/user/loginPage}">登录/注册</a>
+                <li>
+                    <a href="#" th:if="${user==null||user.getUserId()!=667019}"  th:href="@{/article/home/667019}">关于我</a>
+                    <a href="#" th:if="${user!=null&&user.getUserId()==667019}"  th:href="@{/article/home/667019(visitorUId=667019)}">关于我</a>
                 </li>
+                <li th:if="${user==null}"><a class="index_user_login" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
                 <li th:if="${user!=null}">
-                    <div id="header-images" class="right m-item m-mobile-hide menu"
-                         style="margin-left: 1em !important;">
-                        <a href="#" th:href="@{/manage/uc/profile}">
-                            <img style="max-height: 50px !important;max-width: 50px !important;border-radius: 30px !important;"
-                                 th:src="@{${user.getUserHeaderImgUrl()}}"/>
+                    <div id="header-images" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
+                        <a href="#" class="index_user_header" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}">
+                            <img style="max-height: 35px !important;max-width:35px !important;border-radius: 30px !important;" th:src="@{${user.getUserHeaderImgUrl()}}"/>
                         </a>
                     </div>
                 </li>
@@ -74,7 +74,14 @@
                     <li class="slide" th:if="${articles!=null and #lists.size(articles)>0}"
                         th:each="article:${articles}">
                         <a href="/web/html/14.html"
+                           th:if="${user==null}"
                            th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank">
+                            <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}">
+                        </a>
+                        <a href="/web/html/14.html"
+                           th:if="${user!=null}"
+                           th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" target="_blank">
                             <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
                             <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}">
                         </a>
@@ -99,13 +106,19 @@
                 <li th:if="${specialRecommendArticles!=null&&#lists.size(specialRecommendArticles)>0}"
                     th:each="article:${specialRecommendArticles}">
                     <i class="ztpic">
-                        <a href="/blog/7.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                        <a href="/blog/7.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                           target="_blank">
+                            <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" >
+                        </a>
+                        <a href="/blog/7.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}"
                            target="_blank">
                             <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
                             <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" >
                         </a>
                     </i>
-                    <a href="/blog/7.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank"><b th:text="${article.getArticleTopic()}">安静地做一个爱设计的女子</b></a>
+                    <a href="/blog/7.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank"><b th:text="${article.getArticleTopic()}">安静地做一个爱设计的女子</b></a>
+                    <a href="/blog/7.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" target="_blank"><b th:text="${article.getArticleTopic()}">安静地做一个爱设计的女子</b></a>
                     <span th:text="${#strings.abbreviate(article.getArticleContent(),50)}">自从入了这行，很多人跟我说可以做网络教程，我也有考虑，但最终没有实现，因为我觉得在这个教程泛滥的时代，直接做一套免费的原创个人博客模板更为实在。每当看到自己喜欢的配色图片</span>
                     <a href="/blog/7.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" class="readmore">阅读文章</a>
                 </li>
@@ -116,11 +129,17 @@
             <ul>
                 <li th:if="${newestArticlesPages!=null&&!#lists.isEmpty(newestArticlesPages.getList())}" th:each="article:${newestArticlesPages.getList()}">
                     <h3 class="blogtitle">
-                        <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
+                        <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
+                        <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
                     </h3>
                     <span class="blogpic imgscale">
-                     <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                     <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}"
                         th:title="${article.getArticleTopic()}" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                         <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                         <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                     </a>
+                        <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                           th:title="${article.getArticleTopic()}" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                          <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                          <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                      </a>
@@ -138,7 +157,8 @@
                         <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2018-11-08</span>
                         <span>【<a href="/xd/" th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}" target="_blank" th:text="${article.getArticleCategory()}">设计心得</a>】</span>
                     </p>
-                    <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" class="viewmore">阅读全文</a>
+                    <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" class="viewmore">阅读全文</a>
+                    <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" class="viewmore">阅读全文</a>
                 </li>
                 <!--10条 1栏目名称 18最新 5标签id-->
             </ul>
@@ -148,37 +168,56 @@
     <div class="rbox">
         <div class="whitebg paihang">
             <h2 class="htitle">访问排行</h2>
-            <section class="topnews imgscale" th:if="${famousSideBarTopArticle!=null}"
-                     th:each="topicArticle:${famousSideBarTopArticle}">
-                <a href="#"
-                   th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()})}">
+            <section class="topnews imgscale" th:if="${famousSideBarTopArticle!=null}" th:each="topicArticle:${famousSideBarTopArticle}">
+                <a href="#" th:if="${user==null}" th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()})}">
                     <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
                     <img th:if="${topicArticle.getArticleFirstPicture()!=null}" th:src="@{${topicArticle.getArticleFirstPicture()}}">
-                    <span th:text="${topicArticle.getArticleTopic()}">安静地做一个爱设计的女子</span></a>
+                    <span th:text="${topicArticle.getArticleTopic()}">安静地做一个爱设计的女子</span>
+                </a>
+                <a href="#" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()},visitorUId=${user.getUserId()})}">
+                    <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}" th:src="@{${topicArticle.getArticleFirstPicture()}}">
+                    <span th:text="${topicArticle.getArticleTopic()}">安静地做一个爱设计的女子</span>
+                </a>
             </section>
             <ul>
                 <li th:if="${visitRankingArticles!=null&&#lists.size(visitRankingArticles)>0}" th:each="article:${visitRankingArticles}">
                     <i></i>
-                    <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank" th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</a>
+                    <a href="#" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank" th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</a>
+                    <a href="#" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank" th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</a>
                 </li>
             </ul>
         </div>
         <div class="whitebg tuijian">
             <h2 class="htitle">今日推荐</h2>
             <section class="topnews imgscale" th:if="${recommendTopic!=null}" th:each="topicArticle:${recommendTopic}">
-                <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()})}">
+                <a th:if="${user!=null}" href="/xd/23.html" th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()},visitorUId=${user.getUserId()})}">
                     <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
                     <img th:if="${topicArticle.getArticleFirstPicture()!=null}" th:src="@{${topicArticle.getArticleFirstPicture()}}">
-                    <span th:text="${topicArticle.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</span></a>
+                    <span th:text="${topicArticle.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</span>
+                </a>
+                <a th:if="${user==null}" href="/xd/23.html" th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()})}">
+                    <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}" th:src="@{${topicArticle.getArticleFirstPicture()}}">
+                    <span th:text="${topicArticle.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</span>
+                </a>
             </section>
             <ul>
                 <li th:if="${recommend!=null}" th:each="article:${recommend}">
-                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" href="/web/html/14.html" th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank">
+                    <a th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" href="/web/html/14.html" th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank">
                         <i>
                             <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
                             <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}">
                         </i>
-                        <p th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</p></a>
+                        <p th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</p>
+                    </a>
+                    <a th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" href="/web/html/14.html" th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank">
+                        <i>
+                            <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}">
+                        </i>
+                        <p th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</p>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -192,7 +231,8 @@
             <h2 class="htitle">猜你喜欢</h2>
             <ul>
                 <li th:if="${youMayAlsoLikeArticles!=null}" th:each="article:${youMayAlsoLikeArticles}">
-                    <a target="_blank" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" href="/xd/23.html" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
+                    <a target="_blank" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" href="/xd/23.html" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
+                    <a target="_blank" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" href="/xd/23.html" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
                 </li>
             </ul>
         </div>

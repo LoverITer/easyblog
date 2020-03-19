@@ -15,19 +15,16 @@ import com.vladsch.flexmark.util.data.DataHolder;
 public class Markdown2HtmlParser extends AbstractMarkdownParser {
     @Override
     public String render2Html(String markdown) {
-        DataHolder OPTIONS = PegdownOptionsAdapter.flexmarkOptions(
+        DataHolder options = PegdownOptionsAdapter.flexmarkOptions(
                 Extensions.ALL
         );
 
-
-        Parser parser = Parser.builder(OPTIONS).build();
-        HtmlRenderer renderer = HtmlRenderer.builder(OPTIONS)
+        Parser parser = Parser.builder(options).build();
+        HtmlRenderer renderer = HtmlRenderer.builder(options)
                 .build();
 
         Node document = parser.parse(markdown);
-        String html = renderer.render(document);
-        System.out.println(html);
-        return html;
+        return renderer.render(document);
     }
 
 }

@@ -33,7 +33,7 @@
                         </div>
                         <div class="right floated column">
                             <button id="add-btn" class="ui right floated small basic red button">
-                                <a href="#" style="color: inherit" th:href="@{/manage/category/add}">新建</a>
+                                <a href="#" style="color: inherit" th:href="@{/manage/category/add(userId=${user.getUserId()})}">新建</a>
                             </button>
                         </div>
                     </div>
@@ -42,11 +42,11 @@
                     <div class="ui grid">
                         <div class="row" style="padding-top: 10px !important;padding-bottom: 10px !important;">
                             <div class="two wide column" style="padding-right: 0 !important;">
-                                <a id="all" href="#" th:href="@{/manage/category/list}" class="m-black"  style="font-size: 1.1rem !important;">全部(<span th:text="${visibleCategoryNum}">1</span>)</a>
+                                <a id="all" href="#" th:href="@{/manage/category/list(userId=${user.getUserId()})}" class="m-black"  style="font-size: 1.1rem !important;">全部(<span th:text="${visibleCategoryNum}">1</span>)</a>
                             </div>
                             <div class="two wide column"
                                  style="padding-right: 0 !important;padding-left: 0 !important;">
-                                <a id="public" href="#" th:href="@{/manage/category/dash}"  style="color:#349EDF !important;font-size: 1.1rem !important;"  class="m-black">
+                                <a id="public" href="#" th:href="@{/manage/category/dash(userId=${user.getUserId()})}"  style="color:#349EDF !important;font-size: 1.1rem !important;"  class="m-black">
                                     <i class="trash alternate outline icon"></i>回收站(<span th:text="${deletedCategoryNum}">1</span>)
                                 </a>
                             </div>
@@ -79,12 +79,12 @@
                         </div>
                         <div class="nine wide column right aligned" style="padding-right: 0 !important;">
                             <div style="padding-top: 15px !important;">
-                                <a href="#" th:href="@{/manage/category/restore(categoryId=${category.getCategoryId()})}" style="color:#349EDF !important;">一键恢复</a>
+                                <a href="#" th:href="@{/manage/category/restore(userId=${user.getUserId()},categoryId=${category.getCategoryId()})}" style="color:#349EDF !important;">一键恢复</a>
                             </div>
                         </div>
                         <div class="two wide column left aligned" style="padding-left: 5px !important;">
                             <div style="padding-top: 15px !important;">
-                                <a href="#" th:href="@{/manage/category/deleteComplete(categoryId=${category.getCategoryId()},imageUrl=${category.getCategoryImageUrl()})}" style="color:#B50C13 !important;">彻底删除</a>
+                                <a href="#" th:href="@{/manage/category/deleteComplete(userId=${user.getUserId()},categoryId=${category.getCategoryId()},imageUrl=${category.getCategoryImageUrl()})}" style="color:#B50C13 !important;">彻底删除</a>
                             </div>
                         </div>
                     </div>
@@ -105,17 +105,17 @@
                 <div class="ui middle aligned two column grid">
                     <div class="column" style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
-                            <a th:href="@{/manage/category/dash(page=${categoriesPage.getPrePage()})}">
+                            <a th:href="@{/manage/category/dash(page=${categoriesPage.getPrePage()},userId=${user.getUserId()})}">
                                 <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
                                 </button>
                             </a>
                             <a  th:each="pageNo:${categoriesPage.getNavigatepageNums()}"
-                                th:href="@{/manage/category/dash(page=${pageNo})}">
+                                th:href="@{/manage/category/dash(page=${pageNo},userId=${user.getUserId()})}">
                                 <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
                                     [[${pageNo}]]
                                 </button>
                             </a>
-                            <a  th:href="@{/manage/category/dash(page=${categoriesPage.getNextPage()})}">
+                            <a  th:href="@{/manage/category/dash(page=${categoriesPage.getNextPage()},userId=${user.getUserId()})}">
                                 <button class="ui right labeled icon button"
                                         style="background: white !important;font-weight: 100 !important;"> 下一页
                                 </button>
