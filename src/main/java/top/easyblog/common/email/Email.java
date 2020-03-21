@@ -1,4 +1,4 @@
-package top.easyblog.commons.email;
+package top.easyblog.common.email;
 
 /**
  * @author huangxin

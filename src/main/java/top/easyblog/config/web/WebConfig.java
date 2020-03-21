@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.servlet.config.annotation.*;
-import top.easyblog.commons.utils.RedisUtils;
+import top.easyblog.common.util.RedisUtils;
 import top.easyblog.handler.interceptor.LoginInterceptor;
 
 import javax.servlet.MultipartConfigElement;

@@ -44,11 +44,4 @@ public class ServiceThreadPool {
                 rejectHandler);
     }
 
-
-    /*public static void main(String[] args) {
-        ServiceThreadPool pool = new ServiceThreadPool();
-        pool.executor().execute(()->{
-            System.out.println("ok....");
-        });
-    }*/
 }

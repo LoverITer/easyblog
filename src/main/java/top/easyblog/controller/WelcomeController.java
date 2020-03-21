@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
-import top.easyblog.commons.pagehelper.PageParam;
-import top.easyblog.commons.pagehelper.PageSize;
-import top.easyblog.commons.utils.CollectionUtils;
-import top.easyblog.commons.utils.UserUtil;
+import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.common.pagehelper.PageSize;
+import top.easyblog.common.util.CollectionUtils;
+import top.easyblog.common.util.UserUtils;
 import top.easyblog.service.IArticleService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +44,7 @@ public class WelcomeController {
     @GetMapping(value = "/")
     public String index(Model model, @RequestParam(defaultValue = "1") int pageNo, HttpServletRequest request) {
         try {
-            User user = UserUtil.getUserFromCookie(request);
+            User user = UserUtils.getUserFromCookie(request);
             model.addAttribute("user", user);
             //查询最近1个月内的文章
             PageInfo<Article> newestArticlesPages = articleService.getAllUserNewestArticlesPage(new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize()));
@@ -69,7 +69,7 @@ public class WelcomeController {
             List<Article> youMayAlsoLikeArticles = articleService.getYouMayAlsoLikeArticles();
             model.addAttribute("youMayAlsoLikeArticles", youMayAlsoLikeArticles);
         } catch (Exception e) {
-            log.error(e.getMessage());
+           e.printStackTrace();
         }
         return "index";
     }

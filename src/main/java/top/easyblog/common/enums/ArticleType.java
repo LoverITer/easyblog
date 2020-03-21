@@ -1,4 +1,4 @@
-package top.easyblog.commons.enums;
+package top.easyblog.common.enums;
 
 /**
  * 文章的类型

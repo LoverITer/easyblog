@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 
 import org.jsoup.Jsoup;
@@ -16,9 +16,9 @@ import java.util.Objects;
 /**
  * @author huangxin
  */
-public final class NetWorkUtil {
+public final class NetWorkUtils {
 
-    private static Logger log = LoggerFactory.getLogger(NetWorkUtil.class);
+    private static Logger log = LoggerFactory.getLogger(NetWorkUtils.class);
 
     private static final String IP138 = "http://www.ip138.com/ips138.asp?ip=";
 

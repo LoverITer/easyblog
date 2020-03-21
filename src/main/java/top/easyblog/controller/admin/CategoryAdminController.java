@@ -13,10 +13,10 @@ import sun.misc.BASE64Encoder;
 import top.easyblog.autoconfig.qiniu.QiNiuCloudService;
 import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
-import top.easyblog.commons.pagehelper.PageParam;
-import top.easyblog.commons.pagehelper.PageSize;
-import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
-import top.easyblog.commons.utils.UserUtil;
+import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.common.pagehelper.PageSize;
+import top.easyblog.common.util.DefaultImageDispatcherUtils;
+import top.easyblog.common.util.UserUtils;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
@@ -52,7 +52,7 @@ public class CategoryAdminController {
     public String categoryPage(@RequestParam(value = "userId") Integer userId,
                                Model model,
                                @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -72,7 +72,7 @@ public class CategoryAdminController {
                                         @RequestParam(value = "userId") Integer userId) {
         Result result = new Result();
         result.setMessage("请登录后重试！");
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.isNull(user)) {
             result.setMessage("请先登录后再操作");
             return result;
@@ -149,7 +149,7 @@ public class CategoryAdminController {
     public String deleteCategory2DashBoxPage(Model model,
                                              @RequestParam(value = "userId") Integer userId,
                                              @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -188,7 +188,7 @@ public class CategoryAdminController {
 
     @GetMapping(value = "/add")
     public String categoryAddPage(@RequestParam(value = "userId") Integer userId, Model model) {
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -203,7 +203,7 @@ public class CategoryAdminController {
                           @RequestParam(required = false, defaultValue = "") String categoryDesc,
                           @RequestParam(required = false) MultipartFile categoryImg,
                           RedirectAttributes attributes) {
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             //用于回显
             attributes.addFlashAttribute("categoryDesc", categoryDesc);
@@ -250,7 +250,7 @@ public class CategoryAdminController {
 
     @GetMapping(value = "/edit")
     public String categoryEditor(@RequestParam(value = "userId") Integer userId, @RequestParam int categoryId, Model model) {
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -271,7 +271,7 @@ public class CategoryAdminController {
                              @RequestParam String oldCategoryImg,
                              @RequestParam MultipartFile categoryImage,
                              RedirectAttributes redirectAttributes) {
-        User user = UserUtil.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             //判断编辑后的分类名是否为空
             if (StringUtil.isEmpty(categoryName)) {

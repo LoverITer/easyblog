@@ -63,6 +63,6 @@ spring:
     cache: false
 logging:
   level:
-    root: info
-    top.easyblog: info
+    root: warn
+    top.easyblog: warn
   file: easyblog-pro.log

@@ -8,10 +8,10 @@ import top.easyblog.bean.Article;
 import top.easyblog.bean.Category;
 import top.easyblog.bean.CategoryCare;
 import top.easyblog.bean.User;
-import top.easyblog.commons.enums.ArticleType;
-import top.easyblog.commons.pagehelper.PageParam;
-import top.easyblog.commons.pagehelper.PageSize;
-import top.easyblog.commons.utils.UserUtil;
+import top.easyblog.common.enums.ArticleType;
+import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.common.pagehelper.PageSize;
+import top.easyblog.common.util.UserUtils;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.*;
 
@@ -83,7 +83,7 @@ public class CategoryController {
         author.setUserPassword(null);
         model.addAttribute("author", author);
         //访问者的信息
-        User visitor = UserUtil.getUserFromCookie(request);
+        User visitor = UserUtils.getUserFromCookie(request);
         model.addAttribute("visitor", visitor);
         return "category-details";
     }

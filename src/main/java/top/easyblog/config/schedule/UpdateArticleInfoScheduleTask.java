@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.easyblog.bean.Article;
-import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
+import top.easyblog.common.util.DefaultImageDispatcherUtils;
 import top.easyblog.service.IArticleService;
 
 import java.util.Date;
@@ -32,7 +32,7 @@ public class UpdateArticleInfoScheduleTask {
      */
     @Scheduled(cron = "0 0 2 * * ?")
     public void settingNoneFirstPictureArticle(){
-        log.info(new Date()+"定时任务开始");
+        log.info(new Date()+" schedule task start");
         try {
             List<Article> articles = articleService.getAllNoneFirstPicArticles();
             if (Objects.nonNull(articles)) {
@@ -44,14 +44,14 @@ public class UpdateArticleInfoScheduleTask {
                     var0.setArticleFirstPicture(imageUrl);
                     int res = articleService.updateSelective(var0);
                     if(res<=0){
-                        log.error("添加首图失败！");
+                        log.error("schedule task execute failed!");
                     }
                 });
             }
         }catch (Exception e){
             log.error(new Date().toString() +":"+e.getMessage());
         }
-        log.info(new Date()+"定时任务结束");
+        log.info(new Date()+" schedule task complete successful!");
     }
 
 }

@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -19,7 +19,7 @@ import java.util.Base64;
  * @author HuangXin
  * @since 2020/1/19 15:26
  */
-public class AESCrypt {
+public class AESCryptUtils {
     /**
      * AES CBC 加密
      * @param message 需要加密的字符串
@@ -158,15 +158,15 @@ public class AESCrypt {
         String iv = "1234567890000000";
         String msg = "Spring";
         {
-            String encrypt = AESCrypt.encryptCBC(msg, key, iv);
+            String encrypt = AESCryptUtils.encryptCBC(msg, key, iv);
             System.out.println(encrypt);
-            String decryptStr = AESCrypt.decryptCBC(encrypt, key, iv);
+            String decryptStr = AESCryptUtils.decryptCBC(encrypt, key, iv);
             System.out.println(decryptStr);
         }
         {
-            String encrypt = AESCrypt.encryptECB(msg, key);
+            String encrypt = AESCryptUtils.encryptECB(msg, key);
             System.out.println(encrypt);
-            String decryptStr = AESCrypt.decryptECB(encrypt, key);
+            String decryptStr = AESCryptUtils.decryptECB(encrypt, key);
             System.out.println(decryptStr);
         }
     }

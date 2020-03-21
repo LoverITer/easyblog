@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;

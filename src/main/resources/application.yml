@@ -1,7 +1,7 @@
 #公用环境
 spring:
   profiles:
-    active: dev
+    active: pro
   thymeleaf:
    enabled: true
    #默认是classpath:/templates/
@@ -13,7 +13,6 @@ spring:
      content-type: text/html
   application:
     name: EasyBlog
-
   #邮件相关配置
   mail:
     host: smtp.qq.com

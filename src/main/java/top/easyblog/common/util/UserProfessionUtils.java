@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 import java.util.Map;
 import java.util.Objects;
@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author huangxin
  */
-public class UserProfessionUtil {
+public class UserProfessionUtils {
 
     private static final Map<String, String> map = new ConcurrentHashMap<>(2 ^ 6);
 

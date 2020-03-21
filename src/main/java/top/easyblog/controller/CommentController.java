@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.UserComment;
-import top.easyblog.commons.utils.RedisUtils;
+import top.easyblog.common.util.RedisUtils;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
