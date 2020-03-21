@@ -69,7 +69,7 @@ public class WelcomeController {
             List<Article> youMayAlsoLikeArticles = articleService.getYouMayAlsoLikeArticles();
             model.addAttribute("youMayAlsoLikeArticles", youMayAlsoLikeArticles);
         } catch (Exception e) {
-            log.error(e.getMessage());
+           e.printStackTrace();
         }
         return "index";
     }

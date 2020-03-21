@@ -67,11 +67,11 @@ public class WebRequestLogAspect {
 
         @Override
         public String toString() {
-            return "请求日志：" +
-                    "url='" + url + '\'' +
-                    ", ipInfo='" + ipInfo + '\'' +
-                    ", classMethod='" + classMethod + '\'' +
-                    ", args=" + Arrays.toString(args);
+            return "request log{：" +
+                    "url:'" + url + '\'' +
+                    ", ipInfo:'" + ipInfo + '\'' +
+                    ", classMethod:'" + classMethod + '\'' +
+                    ", args:" + Arrays.toString(args) + "}";
         }
     }
 

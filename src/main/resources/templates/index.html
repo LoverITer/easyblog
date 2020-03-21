@@ -33,8 +33,8 @@
             <ul id="starlist">
                 <li><a href="/" title="首页" th:href="@{/}">首页</a></li>
                 <li>
-                    <a href="#" th:if="${user==null||user.getUserId()!=667019}"  th:href="@{/article/home/667019}">关于我</a>
-                    <a href="#" th:if="${user!=null&&user.getUserId()==667019}"  th:href="@{/article/home/667019(visitorUId=667019)}">关于我</a>
+                    <a href="#" th:if="${user==null||user.getUserId()!=667020}"  th:href="@{/article/home/667020}">关于我</a>
+                    <a href="#" th:if="${user!=null&&user.getUserId()==667020}"  th:href="@{/article/home/667020(visitorUId=${user.getUserId()})}">关于我</a>
                 </li>
                 <li th:if="${user==null}"><a class="index_user_login" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
                 <li th:if="${user!=null}">
