@@ -16,4 +16,5 @@ WORKDIR $Tomcat_Home/webapps
 # 暴露80端口
 EXPOSE 80
 #启动容器
+
 ENTRYPOINT ["/usr/local/tomcat/bin/catalina.sh","run"]
