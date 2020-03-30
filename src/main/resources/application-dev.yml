@@ -54,7 +54,7 @@ spring:
     restart:
       additional-paths: src/main/java
   redis:
-    host: 192.168.92.138
+    host: 192.168.92.141
     port: 6379
     database: 0
     timeout: 10000
@@ -66,8 +66,6 @@ spring:
         max-idle: 8
         max-wait: 5000ms
       shutdown-timeout: 100ms
-#  session:
-#    store-type: redis # 共享session存储在redis
   servlet:
     multipart:
       max-file-size: 5MB
