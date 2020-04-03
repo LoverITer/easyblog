@@ -3,7 +3,7 @@
 .typo p {
   font-size: 16px;
   font-weight: 400;
-  line-height: 26px;
+  line-height: 28px;
   color: #4d4d4d;
   margin: 0 0 16px;
  /* white-space: pre-line;  !*合并空白符序列, 但正常换行*!*/
@@ -289,11 +289,14 @@
 
 .typo ol, .typo-ol {
   list-style: decimal;
+  margin-top: 0;
+  margin-bottom: 5px;
+  margin-left: -1.9em;
 }
 
 .typo li ul, .typo li ol, .typo-ul ul, .typo-ul ol, .typo-ol ul, .typo-ol ol {
   margin-bottom: 0.8em;
-  margin-left: 2em;
+  margin-left: -1em;
 }
 
 .typo li ul, .typo-ul ul, .typo-ol ul {

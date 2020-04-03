@@ -210,7 +210,7 @@
                                 <div class="field">
                                     <div class="ui radio checkbox">
                                         <input id="private" type="radio" th:if="${article!=null}"
-                                               th:selected="${article.getArticleStatus()=='0'}" name="frequency">
+                                               th:selected="${article.getArticleStatus()=='1'}" name="frequency">
                                         <input id="private" type="radio" th:if="${article==null}" name="frequency">
                                         <label>私有</label>
                                     </div>
@@ -485,7 +485,7 @@
             let articleType = $('#article_type').val();
             let appreciate = $('#appreciate').find("option:selected").val();
             let publicArticle = $('#public').is(":checked");
-            let status = 0;
+            let status = "0";
             if (!publicArticle) {
                 status = "1";
             }

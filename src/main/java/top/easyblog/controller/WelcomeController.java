@@ -48,9 +48,12 @@ public class WelcomeController {
             model.addAttribute("user", user);
             //查询最近1个月内的文章
             PageInfo<Article> newestArticlesPages = articleService.getAllUserNewestArticlesPage(new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize()));
+            model.addAttribute("newestArticlesPages", newestArticlesPages);
             //查询访问量最高的19篇最近的文章用于首页大图、访问排行、特别推荐的显示
             List<Article> mostFamousArticles = articleService.getMostFamousArticles(22);
-            model.addAttribute("newestArticlesPages", newestArticlesPages);
+            if(mostFamousArticles==null||mostFamousArticles.size()<22){
+                mostFamousArticles=articleService.getAllHistoryFamousArticles(22);
+            }
             List<List<?>> splitList = CollectionUtils.splitList(mostFamousArticles, new int[]{5, 1, 7, 6});
             if (Objects.nonNull(splitList)) {
                 model.addAttribute("articles", splitList.get(0));

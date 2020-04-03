@@ -101,7 +101,7 @@
                                         <a href="#" th:if="${visitor!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
                                     </div>
                                 </div>
-                                <p class="m-column_article_desc"  th:text="${#strings.abbreviate(article.getArticleContent(),150)}">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
+                                <p class="m-column_article_desc"  th:text="${#strings.abbreviate(article.getArticleContent(),250)}">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
                                 </p>
                                 <div class="ui stackable grid">
                                     <div class="eleven wide column">
