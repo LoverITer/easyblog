@@ -31,7 +31,7 @@ import java.util.concurrent.Executor;
 /**
  * 后台博客管理
  *
- * @visitor huangxin
+ * @author HuangXin
  */
 @Controller
 @RequestMapping(value = "/manage/blog")
@@ -206,14 +206,14 @@ public class ArticleAdminController {
                         categoryService.saveCategory(category);
                     } else {
                         //数据库中用户有这个分类就更新该分类下的文章的数量
-                        Category category0 = new Category();
-                        category0.setCategoryId(category.getCategoryId());
-                        int num = articleService.countUserArticleInCategory(userId, article.getArticleCategory());
                         //id=-1标志这是一篇新文章
                         if (article.getArticleId() == -1) {
+                            Category category0 = new Category();
+                            category0.setCategoryId(category.getCategoryId());
+                            int num = articleService.countUserArticleInCategory(userId, article.getArticleCategory());
                             category0.setCategoryArticleNum(num + 1);
+                            categoryService.updateByPKSelective(category0);
                         }
-                        categoryService.updateByPKSelective(category0);
                     }
                 } else {
                     result.setMessage("请填写文章专栏名");
