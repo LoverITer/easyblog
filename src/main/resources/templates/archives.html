@@ -162,7 +162,7 @@
             </div>
 
             <!--分页按钮-->
-            <div th:if="${articlePages.getTotal()>15}" class="ui bottom attached segment">
+            <div th:if="${articlePages.getTotal()>10}" class="ui bottom attached segment">
                 <div class="ui middle aligned two column grid">
                     <div  style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
@@ -219,14 +219,6 @@
             </div>
 
         </div>
-    </div>
-</div>
-<div  class="ui small modal">
-    <div class="header" id="msg_header">删除</div>
-    <div id="msg" class="content">
-    </div>
-    <div class="actions">
-        <div id="msg-btn" class="ui red button">知道了</div>
     </div>
 </div>
 

@@ -1,6 +1,7 @@
 package top.easyblog.controller;
 
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 /**
  * @author huangxin
@@ -33,6 +35,8 @@ public class CategoryController {
     private final UserServiceImpl userService;
     private final CommentServiceImpl commentService;
     private final UserAttentionImpl userAttention;
+    @Autowired
+    private Executor executor;
 
     public CategoryController(CategoryServiceImpl categoryServiceImpl, CategoryCareServiceImpl categoryCareService, ArticleServiceImpl articleService, UserServiceImpl userService, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
         this.categoryServiceImpl = categoryServiceImpl;
@@ -85,6 +89,13 @@ public class CategoryController {
         //访问者的信息
         User visitor = UserUtils.getUserFromCookie(request);
         model.addAttribute("visitor", visitor);
+        executor.execute(()->{
+            //更新专栏的访问量
+            Category var0 = new Category();
+            var0.setCategoryId(categoryId);
+            var0.setCategoryClickNum(category.getCategoryClickNum()+1);
+            categoryServiceImpl.updateByPKSelective(var0);
+        });
         return "category-details";
     }
 
