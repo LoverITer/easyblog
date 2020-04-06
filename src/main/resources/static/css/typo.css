@@ -3,7 +3,7 @@
 .typo p {
   font-size: 16px;
   font-weight: 400;
-  line-height: 28px;
+  line-height: 30px;
   color: #4d4d4d;
   margin: 0 0 16px;
  /* white-space: pre-line;  !*合并空白符序列, 但正常换行*!*/
@@ -28,7 +28,7 @@
 
 /* 要注意表单元素并不继承父级 font 的问题 */
 .typo button, input, select, textarea {
-  font: 300 1em/1.8 PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+  font: 300 1em/1.8  Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
 }
 
 .typo button::-moz-focus-inner,
@@ -55,9 +55,9 @@
   font-size: 15px;
   color: #999;
   font-weight: 400;
-  background: #eef0f4;
+  background: #f4f9fb;
   overflow: auto;
-  border-left: 8px solid #dddfe4;
+  border-left: 5px solid #74cde6;
   padding: 8px;
   margin: 0 0 24px;
 }

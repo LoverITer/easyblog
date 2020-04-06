@@ -124,7 +124,7 @@
                                     </div>
                             </div>
                             <!--文章内容预览-->
-                            <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),250)}">
+                            <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),200)}">
                                 正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
                             </p>
                             <div class="ui stackable grid">
@@ -159,8 +159,8 @@
 
                         <div class="five wide column">
                             <a target="_blank">
-                                <img style="border-radius: 5px" th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}"  class="ui rounded image">
-                                <img style="border-radius: 5px" th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" class="ui rounded image">
+                                <img style="border-radius: 5px" th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}"  class="ui rounded image m-prev-image-style">
+                                <img style="border-radius: 5px" th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" class="ui rounded image m-prev-image-style">
                             </a>
                         </div>
                     </div>
