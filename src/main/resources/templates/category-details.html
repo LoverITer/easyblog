@@ -119,13 +119,12 @@
                                         </div>
                                     </div>
                                     <div class="fourteen wide column" style="padding-top: 0px !important;padding-left: 10px !important;">
-                                        <a href="#" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
-                                        <a href="#" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                        <a href="#" th:if="${visitor==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                        <a href="#" th:if="${visitor!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
                                     </div>
                             </div>
                             <!--文章内容预览-->
-                            <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),250)}">
-                                正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
+                            <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),200)}">
                             </p>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
@@ -159,17 +158,17 @@
 
                         <div class="five wide column">
                             <a target="_blank">
-                                <img style="border-radius: 5px" th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}"  class="ui rounded image">
-                                <img style="border-radius: 5px" th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" class="ui rounded image">
+                                <img style="border-radius: 5px" th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}"  class="ui rounded image m-prev-image-style">
+                                <img style="border-radius: 5px" th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" class="ui rounded image m-prev-image-style">
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div th:if="${!#lists.isEmpty(categoryArticles)&&categoryArticles.getTotal()<15&&categoryArticles.getTotal()>0}" class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
+            <div th:if="${!#lists.isEmpty(categoryArticles)&&categoryArticles.getTotal()<=10&&categoryArticles.getTotal()>0}" class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
 
             <!--分页按钮-->
-            <div th:if="${categoryArticles.getTotal()>15}" class="ui bottom attached segment"
+            <div th:if="${categoryArticles.getTotal()>10}" class="ui bottom attached segment"
                  style="border-top: solid 1px #ccc !important;">
                 <div class="ui middle aligned two column grid">
                     <div  style="margin: 5px auto;float: left !important;">

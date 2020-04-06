@@ -103,7 +103,7 @@
                                     <a href="#" th:if="${visitor!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
                                 </div>
                             </div>
-                            <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),250)}">
+                            <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),200)}">
                                 正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
                             </p>
                             <div class="ui stackable grid">
@@ -144,8 +144,8 @@
                             <a  target="_blank">
                                 <a  href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin m-mobile-icon-show m-mobile-show-only"
                                    th:text="${article.getArticleCategory()}" style="background: rgba(0,0,0,.3) !important;border-color: rgba(0,0,0,.1) !important;">认知升级</a>
-                                <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}"  class="ui rounded image">
-                                <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}"  class="ui rounded image">
+                                <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}"  class="ui rounded image m-prev-image-style">
+                                <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}"  class="ui rounded image m-prev-image-style">
                             </a>
                         </div>
                     </div>
@@ -162,7 +162,7 @@
             </div>
 
             <!--分页按钮-->
-            <div th:if="${articlePages.getTotal()>15}" class="ui bottom attached segment">
+            <div th:if="${articlePages.getTotal()>10}" class="ui bottom attached segment">
                 <div class="ui middle aligned two column grid">
                     <div  style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
@@ -219,14 +219,6 @@
             </div>
 
         </div>
-    </div>
-</div>
-<div  class="ui small modal">
-    <div class="header" id="msg_header">删除</div>
-    <div id="msg" class="content">
-    </div>
-    <div class="actions">
-        <div id="msg-btn" class="ui red button">知道了</div>
     </div>
 </div>
 
