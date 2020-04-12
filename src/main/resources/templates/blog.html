@@ -37,7 +37,7 @@
 <!--导航-->
 <div th:replace="~{nav :: navbar}"></div>
 <!--中间内容-->
-<div id="waypoint" class="m-padded-tb-big animated fadeIn">
+<div id="waypoint" class="m-padded-tb-big animated fadeIn m-article-padding-top">
     <div class="ui" style="max-width: 96em!important;margin: auto !important;">
         <div class="ui stackable grid">
             <!--左边的卡片-->
@@ -56,7 +56,7 @@
             </div>
 
             <!--右边文章-->
-            <div class="twelve wide column" style="padding-top: 0 !important;">
+            <div class="twelve wide column m-article-body-outer-padding" style="padding-top: 0 !important;">
                 <div class="ui top attached segment editArticle" style="padding: 20px 10px 5px !important;">
                     <!--标题-->
                     <div class="ui left aligned basic segment" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <!--文章主体开始-->
-                <div class="ui attached padded segment" style="padding:10px 15px 0 15px !important;">
+                <div class="ui attached padded segment m-article-body-inner-padding" >
                     <div  id="content" th:utext="${article.getArticleContent()}" style="padding:0 10px !important;font-size: 1.1rem !important;" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large"></div>
                     <!--赞赏-->
                     <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui center aligned basic segment">
@@ -111,7 +111,7 @@
                 </div>
                 <!--文章主体结束-->
                 <!--声明信息-->
-                <div th:if="${article.getArticleType()=='0'}" class="ui attached positive message bottom">
+                <div th:if="${article.getArticleType()=='0'}" class="ui attached positive message bottom m-article-author-info-padding">
                     <!--博客信息-->
                     <div class="ui middle aligned grid">
                         <div class="sixteen wide column">
