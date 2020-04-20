@@ -1,14 +1,15 @@
 @charset "utf-8";
 
 .typo p {
-  font-size: 16px;
+  font-size: 16px !important;
   font-weight: 400;
   line-height: 30px;
-  color: #4d4d4d;
+  color: #111;
   margin: 0 0 16px;
  /* white-space: pre-line;  !*合并空白符序列, 但正常换行*!*/
   overflow-wrap:break-word;
   word-break:break-all;
+  letter-spacing: .5px;
 }
 
 .typo h1 a,.typo h2 a,.typo h3 a,.typo h4 a,.typo h5 a,.typo h6 a{
@@ -52,7 +53,7 @@
 .typo blockquote {
   position: relative;
   display: block;
-  font-size: 15px;
+  font-size: 16px;
   color: #999;
   font-weight: 400;
   background: #f4f9fb;
@@ -64,7 +65,7 @@
 
 .typo li{
   font-size: 16px;
-  color: #4d4d4d;
+  color: #111;
   line-height: 24px;
   overflow-wrap: break-word;
   word-break: break-all;

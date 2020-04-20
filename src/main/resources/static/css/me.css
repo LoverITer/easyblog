@@ -1,5 +1,7 @@
 
 body {
+    font-family: arial,verdana,helvetica,'PingFang SC','HanHei SC',STHeitiSC-Light,Microsoft Yahei,sans-serif !important;
+    -webkit-font-smoothing: antialiased !important;
     background: url("../images/bg.png");
 }
 
