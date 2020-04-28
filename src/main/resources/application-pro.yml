@@ -45,7 +45,7 @@ spring:
     # 通过connectProperties属性来打开mergeSql功能
     connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
   redis:
-    host: redis      #在docker容器中部署，host地址一定要写你配置的--link的名字
+    host: redis      #在docker容器中部署，host地址一定要写你配置的Redis容器的名字
     port: 6379
     database: 0
     password: CySynWsw5NLzbzHne3XcXaRGPWKpJxSKsHikLYvQ6VI0dNKjScuyYPjt
@@ -63,6 +63,6 @@ spring:
     cache: false
 logging:
   level:
-    root: info
-    top.easyblog: info
+    root: warn
+    top.easyblog: warn
   file: easyblog-pro.log

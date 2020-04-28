@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.easyblog.bean.Article;
-import top.easyblog.commons.pagehelper.PageParam;
-import top.easyblog.commons.pagehelper.PageSize;
+import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.service.impl.ArticleServiceImpl;
 
 /**
@@ -25,6 +25,13 @@ public class SearchController {
         this.articleService = articleService;
     }
 
+    /**
+     * 搜索结果显示
+     *
+     * @param query
+     * @param pageNo
+     * @param model
+     */
     @GetMapping("/details")
     public String showSearchResult(@RequestParam String query,
                                    @RequestParam(value = "page", defaultValue = "1") int pageNo,

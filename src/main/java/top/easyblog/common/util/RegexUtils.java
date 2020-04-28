@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 /**
  * @author huangxin
  */
-public class RegexUtil {
+public class RegexUtils {
 
     /**
      * Email正则表达式="^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";

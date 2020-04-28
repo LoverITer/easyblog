@@ -15,6 +15,7 @@
     <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
   </resultMap>
 
+
   <select id="getByPrimaryKey" parameterType="java.lang.Long" resultType="top.easyblog.bean.UserSigninLog">
     select * from user_signIn_log where log_id = #{id}
   </select>

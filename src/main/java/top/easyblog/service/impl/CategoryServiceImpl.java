@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.bean.Category;
-import top.easyblog.commons.pagehelper.PageParam;
-import top.easyblog.commons.utils.DefaultImageDispatcherUtils;
+import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.common.util.DefaultImageDispatcherUtils;
 import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.service.ICategoryService;
@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return null;
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor=Exception.class)
     @Cacheable(cacheNames = "category",condition = "#result!=null")
     @Override
     public Category getCategoryByUserIdAndName(int userId, String categoryName) {

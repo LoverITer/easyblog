@@ -13,6 +13,16 @@
     <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+    <!--百度统计JS脚本-->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?1d2b1074de8c4606d68aa61802a74c14";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
 </head>
 <body>
 
@@ -75,7 +85,6 @@
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="../../../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script type="text/javascript">
-
     $(document).ready(function () {
         let userId=$('#userId').val();
         showPageZoomWarning();
@@ -83,12 +92,13 @@
         logOut(userId);
     });
 </script>
-<script>
+<script th:online="javascript">
     $('#msg-btn').click(function () {
         $('.ui.modal').modal('hide');
     });
     $('#firm_btn').click(function () {
         $('#firm_btn').addClass("disabled");
+        let userId="[[${user.getUserId()}]]";
         var oldPWD=$('#oldpwd').val();
         var newPWD=$('#newpwd').val();
         var newPWDConfirm=$('#newpwdconfirm').val();
@@ -96,52 +106,17 @@
             url:"/manage/account/reset/password/save",
             method:"GET",
             sync: true,
-            data:{oldPwd:oldPWD,newPwd:newPWD,newPwdConfirm:newPWDConfirm},
+            data:{oldPwd:oldPWD,newPwd:newPWD,newPwdConfirm:newPWDConfirm,userId:userId},
             dateType: "json",
             success:function (response) {
                 if(response.success){
-                    $.ajax({
-                        url:"/user/logout",
-                        method:"GET",
-                        sync:true,
-                        dataType:"json",
-                        success:function (response) {
-                            if(response.success){
-                                window.location.href="/user/loginPage";
-                            }else{
-                                spop({
-                                    template: response.msg,
-                                    autoclose: 4000,
-                                    position: "top-center",
-                                    style: 'error',
-                                });
-                            }
-                        },
-                        error:function () {
-                            spop({
-                                template: '服务异常，请重试！',
-                                autoclose: 4000,
-                                position: "top-center",
-                                style: 'error',
-                            });
-                        }
-                    })
+                    logOut(userId);
                 }else{
-                    spop({
-                        template: response.msg,
-                        autoclose: 4000,
-                        position: "top-center",
-                        style: 'error',
-                    });
+                    showErrorMessage(response.message);
                 }
             },
             error:function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
+                showErrorMessage("服务异常，请重试！");
             }
         })
     })

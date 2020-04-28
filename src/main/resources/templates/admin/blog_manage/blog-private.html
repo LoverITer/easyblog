@@ -13,6 +13,16 @@
     <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+    <!--百度统计JS脚本-->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?1d2b1074de8c4606d68aa61802a74c14";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
 </head>
 <body>
 
@@ -44,7 +54,7 @@
                                 <span th:case="2">翻译</span>
                             </button>
                             <h3 class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">
-                                <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" title="查看" class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a>
+                                <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()},userId=${user.getUserId()})}" title="点击查看" class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a>
                             </h3>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
@@ -73,8 +83,8 @@
                                 <div class="right aligned five wide column">
                                     <div class="five  wide  column">
                                         <div class="ui horizontal list">
-                                            <div class="item"><a href="#" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}" style="color: #349EDF">编辑</a></div>
-                                            <div class="item"><a href="#" th:href="@{/manage/blog/deletePrivateArticle(articleId=${article.getArticleId()})}" style="color: #CA0C16">删除</a></div>
+                                            <div class="item"><a href="#" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #349EDF">编辑</a></div>
+                                            <div class="item"><a href="#" th:href="@{/manage/blog/deletePrivateArticle(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #CA0C16">删除</a></div>
                                         </div>
                                     </div>
                                 </div>
@@ -91,17 +101,17 @@
                 <div class="ui middle aligned two column grid">
                     <div class="column" style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
-                            <a th:href="@{/manage/blog/private(page=${articlePages.getPrePage()})}">
+                            <a th:href="@{/manage/blog/private(page=${articlePages.getPrePage()},userId=${user.getUserId()})}">
                                 <button class="ui button" style="background: white !important;font-weight: 100 !important;">上一页
                                 </button>
                             </a>
                             <a  th:each="pageNo:${articlePages.getNavigatepageNums()}"
-                                th:href="@{/manage/blog/private(page=${pageNo})}">
+                                th:href="@{/manage/blog/private(page=${pageNo},userId=${user.getUserId()})}">
                                 <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
                                     [[${pageNo}]]
                                 </button>
                             </a>
-                            <a  th:href="@{/manage/blog/private(page=${articlePages.getNextPage()})}">
+                            <a  th:href="@{/manage/blog/private(page=${articlePages.getNextPage()},userId=${user.getUserId()})}">
                                 <button class="ui right button"
                                         style="background: white !important;font-weight: 100 !important;"> 下一页
                                 </button>

@@ -1,11 +1,11 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 import java.util.regex.Pattern;
 
 /**
  * @author huangxin
  */
-public class HtmlParserUtil {
+public class HtmlParserUtils {
     /**
      * 匹配所有的<script></script>以及里面的内容
      */

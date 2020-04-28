@@ -56,9 +56,9 @@ public class ServiceLogAspect {
 
         @Override
         public String toString() {
-            return "请求日志：" +
+            return "request log{：" +
                     ", classMethod='" + classMethod + '\'' +
-                    ", args=" + Arrays.toString(args);
+                    ", args=" + Arrays.toString(args) + "}";
         }
     }
 

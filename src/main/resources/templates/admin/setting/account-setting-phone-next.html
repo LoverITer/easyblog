@@ -13,6 +13,16 @@
     <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+    <!--百度统计JS脚本-->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?1d2b1074de8c4606d68aa61802a74c14";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
 </head>
 <body>
 
@@ -29,9 +39,7 @@
         <!--博客内容-->
         <div class="twelve wide column">
             <div class="ui top attached segment stackable">
-                <h3 class="m-margin-top m-margin-bottom m-margin-left"
-                    style="font-size: 20px !important;color: #3d3d3d !important;">
-                    修改手机</h3>
+                <h3 class="m-margin-top m-margin-bottom m-margin-left" style="font-size: 20px !important;color: #3d3d3d !important;">修改手机</h3>
                 <div class="ui divider"></div>
                 <div class="m-margin-left-large">
                     <div id="phone" class="ui input m-margin-top" style="width: 62% !important;">
@@ -77,7 +85,6 @@
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="../../../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script type="text/javascript">
-
     $(document).ready(function () {
         let userId=$('#userId').val();
         showPageZoomWarning();
@@ -89,8 +96,8 @@
 <script type="text/javascript">
     $("#new_phone").click(function () {
         function changePhone() {
-            var new_phone=document.getElementById("new_phone").value;
-            var len2=document.getElementById("confirm_code").value.length;
+            let new_phone=document.getElementById("new_phone").value;
+            let len2=document.getElementById("confirm_code").value.length;
             if(isMobileNumber(new_phone)){
                 $('#code_btn').removeClass("disabled");
                 $('#error').html("");
@@ -125,12 +132,7 @@
             flag = true;
         }
         if (message != "") {
-            spop({
-                template: message,
-                autoclose: 3000,
-                position: "top-center",
-                style: 'info',
-            });
+            showInfoMessage(message);
         }
         return flag;
     }

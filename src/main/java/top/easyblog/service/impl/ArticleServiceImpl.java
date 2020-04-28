@@ -11,15 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.bean.*;
-import top.easyblog.commons.enums.ArticleType;
-import top.easyblog.commons.pagehelper.PageParam;
-import top.easyblog.commons.utils.HtmlParserUtil;
-import top.easyblog.commons.utils.MarkdownUtil;
+import top.easyblog.common.enums.ArticleType;
+import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.common.util.HtmlParserUtils;
+import top.easyblog.common.util.MarkdownUtils;
 import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.mapper.UserCommentMapper;
 import top.easyblog.mapper.UserMapper;
+import top.easyblog.markdown.TextForm;
 import top.easyblog.service.IArticleService;
 
 import java.util.ArrayList;
@@ -79,9 +80,9 @@ public class ArticleServiceImpl implements IArticleService {
         if (articleId > 0) {
             try {
                 article = articleMapper.getByPrimaryKey((long) articleId);
-                if ("html".equals(flag)) {
+                if (TextForm.HTML.equals(flag)) {
                     parseMarkdown2HTML(article);
-                } else if ("text".equals(flag)) {
+                } else if (TextForm.TXT.equals(flag)) {
                     parseMarkdown2Text(article);
                 }
             } catch (Exception e) {
@@ -154,12 +155,17 @@ public class ArticleServiceImpl implements IArticleService {
                         try {
                             Integer userId = article.getArticleUser();
                             User user = userMapper.getByPrimaryKey((long) userId);
-                            article.setUserHeaderImageUrl(user.getUserHeaderImgUrl());
+                            if (user != null) {
+                                article.setUserHeaderImageUrl(user.getUserHeaderImgUrl());
+                            }
                             Category category = categoryMapper.getCategoryByUserIdAndName(userId, article.getArticleCategory());
-                            article.setCategoryId(category.getCategoryId());
+                            if (category != null) {
+                                article.setCategoryId(category.getCategoryId());
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
                     });
                     //把MarkDown文本转换为普通文本
                     parseMarkdowns2Text(articles);
@@ -215,9 +221,11 @@ public class ArticleServiceImpl implements IArticleService {
         if (userId > 0) {
             try {
                 if (ArticleType.Unlimited.getArticleType().equals(articleType)) {
-                    return parseMarkdowns2Text(articleMapper.getUserAllArticles(userId));  //得到用户的所有文章
+                    //得到用户的所有文章
+                    return parseMarkdowns2Text(articleMapper.getUserAllArticles(userId));
                 } else {
-                    return parseMarkdowns2Text(articleMapper.getUserArticlesSelective(userId, articleType));  //根据option
+                    //根据option
+                    return parseMarkdowns2Text(articleMapper.getUserArticlesSelective(userId, articleType));
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
@@ -538,7 +546,7 @@ public class ArticleServiceImpl implements IArticleService {
     private Article parseMarkdown2Text(Article article) {
         if (Objects.nonNull(article)) {
             String htmlContent = parseMarkdown2HTML(article).getArticleContent();
-            String textContent = HtmlParserUtil.HTML2Text(htmlContent);
+            String textContent = HtmlParserUtils.HTML2Text(htmlContent);
             article.setArticleContent(textContent);
         }
         return article;
@@ -552,7 +560,7 @@ public class ArticleServiceImpl implements IArticleService {
      */
     private Article parseMarkdown2HTML(Article article) {
         if (Objects.nonNull(article)) {
-            article.setArticleContent(MarkdownUtil.markdownToHtmlExtensions(article.getArticleContent()));
+            article.setArticleContent(MarkdownUtils.markdownToHtmlExtensions(article.getArticleContent()));
         }
         return article;
     }

@@ -1,22 +1,24 @@
 package top.easyblog.controller.admin;
 
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import top.easyblog.autoconfig.qiniu.QiNiuCloudService;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserAttention;
-import top.easyblog.commons.utils.CalendarUtil;
-import top.easyblog.commons.utils.UserProfessionUtil;
+import top.easyblog.common.util.*;
 import top.easyblog.config.web.Result;
 import top.easyblog.service.impl.UserAttentionImpl;
 import top.easyblog.service.impl.UserServiceImpl;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 /**
  * @author huangxin
@@ -30,6 +32,10 @@ public class UserCenterController {
     private final UserServiceImpl userService;
     private final UserAttentionImpl userAttentionService;
     private final QiNiuCloudService qiNiuCloudService;
+    @Autowired
+    private RedisUtils redisUtils;
+    @Autowired
+    private Executor executor;
 
     public UserCenterController(UserServiceImpl userService, UserAttentionImpl userAttentionService, QiNiuCloudService qiNiuCloudService) {
         this.userService = userService;
@@ -38,10 +44,11 @@ public class UserCenterController {
     }
 
     @GetMapping(value = "/profile")
-    public String center(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
+    public String center(@RequestParam Integer userId, Model model) {
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
-            model.addAttribute("user", userService.getUser(user.getUserId()));
+            model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             String str = user.getUserAddress();
             if (Objects.nonNull(str) && !"".equals(str)) {
                 String[] address = str.split(",");
@@ -55,35 +62,42 @@ public class UserCenterController {
         return LOGIN_PAGE;
     }
 
-    @PostMapping(value = "/updateInfo")
-    public String updateUserInfo(HttpSession session, User user,
+    @PostMapping(value = "/updateInfo/{userId}")
+    public String updateUserInfo(User user,
+                                 @PathVariable Integer userId,
                                  @RequestParam(value = "birthday", required = false) String birthday,
                                  @RequestParam(required = false) String country,
                                  @RequestParam(required = false) String city,
-                                 @RequestParam(required = false) String county) {
-        User user1 = (User) session.getAttribute("user");
-        if (Objects.nonNull(user1)) {
+                                 @RequestParam(required = false) String county,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) {
+        User user1 = null;
+        if (Objects.nonNull(user1 = UserUtils.getUserFromRedis(userId))) {
             if (Objects.nonNull(user)) {
                 if (Objects.nonNull(birthday)) {
-                    user.setUserBirthday(CalendarUtil.getInstance().getDate(birthday));
+                    user.setUserBirthday(CalendarUtils.getInstance().getDate(birthday));
                 }
                 String address = country + "," + city + "," + county;
                 user.setUserAddress(address);
                 user.setUserId(user1.getUserId());
-                //页面提交过来的是用户的职业的代号，具体实啥职业需要转码
-                user.setUserPrefession(UserProfessionUtil.getUserProfession(user.getUserPrefession()));
+                //页面提交过来的是用户的职业的代号，具体职业需要转码
+                user.setUserPrefession(UserProfessionUtils.getUserProfession(user.getUserPrefession()));
                 userService.updateUserInfo(user);
+                User user2 = CombineBeans.combine(user, user1);
+                executor.execute(() -> UserUtils.updateLoggedUserInfo(user2, request, response));
             }
-            return "redirect:/manage/uc/profile";
+            return "redirect:/manage/uc/profile?userId=" + userId;
         }
         return LOGIN_PAGE;
     }
 
 
     @GetMapping(value = "/follow-list")
-    public String care(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
+    public String care(@RequestParam Integer userId, Model model) {
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
+            model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             UserAttention var0 = new UserAttention();
             var0.setAttentionId(user.getUserId());
             List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var0);
@@ -96,10 +110,10 @@ public class UserCenterController {
 
     @ResponseBody
     @RequestMapping(value = "/cancelAttention")
-    public Result cancelAttention(HttpSession session, @RequestParam(value = "attentionId") int attentionId) {
-        User user = (User) session.getAttribute("user");
+    public Result cancelAttention(@RequestParam Integer userId, @RequestParam(value = "attentionId") int attentionId) {
+        User user = UserUtils.getUserFromRedis(userId);
         Result result = new Result();
-        result.setSuccess(false);
+        result.setMessage("请登录后重试！");
         if (Objects.nonNull(user)) {
             int res = userAttentionService.deleteByPK(attentionId);
             if (res > 0) {
@@ -114,9 +128,11 @@ public class UserCenterController {
 
 
     @GetMapping(value = "/fans-list")
-    public String fans(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
+    public String fans(@RequestParam Integer userId, Model model) {
+        User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
+            model.addAttribute("user", user);
+            model.addAttribute("visitor", user);
             UserAttention var1 = new UserAttention();
             var1.setUserId(user.getUserId());
             List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var1);
@@ -127,12 +143,23 @@ public class UserCenterController {
         return LOGIN_PAGE;
     }
 
+    /**
+     * 更换用户头像
+     *
+     * @param map
+     * @param userId   用户Id
+     * @param request
+     * @param response
+     */
     @ResponseBody
     @PostMapping(value = "/uploadImg", produces = "application/json;charset=UTF-8")
-    public Result changeHeaderImage(@RequestBody Map<String, String> map, HttpSession session) {
-        User user = (User) session.getAttribute("user");
+    public Result changeHeaderImage(@RequestBody Map<String, String> map,
+                                    @RequestParam Integer userId,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response) {
+        User user = UserUtils.getUserFromRedis(userId);
         Result result = new Result();
-        result.setSuccess(false);
+        result.setMessage("请登录后重试！");
         if (Objects.nonNull(user)) {
             try {
                 String image = map.get("image");
@@ -147,11 +174,11 @@ public class UserCenterController {
                 var0.setUserId(user.getUserId());
                 var0.setUserHeaderImgUrl(imageUrl);
                 userService.updateUserInfo(var0);
-                System.out.println(user.getUserHeaderImgUrl());
                 if (!user.getUserHeaderImgUrl().contains("static")) {
                     qiNiuCloudService.delete(user.getUserHeaderImgUrl());
-                    user.setUserHeaderImgUrl(imageUrl);
                 }
+                User user1 = CombineBeans.combine(var0, user);
+                executor.execute(() -> UserUtils.updateLoggedUserInfo(user1, request, response));
                 result.setSuccess(true);
                 result.setMessage("头像上传成功");
             } catch (Exception e) {

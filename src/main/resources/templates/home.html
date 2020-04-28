@@ -15,27 +15,39 @@
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
     <!--加载动画和确认框特效-->
     <link rel="stylesheet" href="../static/css/loading/zeroModal.css" th:href="@{/static/css/loading/zeroModal.css}">
+    <!--百度统计JS脚本-->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?1d2b1074de8c4606d68aa61802a74c14";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <!--google Adsense-->
+    <script data-ad-client="ca-pub-2311962880414013" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <body>
 
 <!--导航-->
 <div th:replace="~{nav :: navbar}"></div>
 <!--中间内容-->
-<div class="m-container m-padded-tb-big">
+<div class="m-container m-padded-tb-large">
     <div class="ui  stackable grid">
         <div class="twelve wide column" style="padding-top: 0 !important;">
-            <div class="ui stackable grid segment m-margin-top m-margin-bottom">
+            <div class="ui stackable grid segment m-margin-top m-margin-bottom m-mobile-hide" style="margin-left: unset !important;margin-right: unset !important;">
                 <div class="three wide column" style="max-width: 130px !important;padding-right: 0 !important;">
                     <!--
-                       user是文章的作者
+                       author是文章的作者
                        visitor是访问者
                     -->
-                    <img th:src="${user.getUserHeaderImgUrl()}" src="https://img-blog.csdnimg.cn/20190927151132530.png"
+                    <img th:src="${author.getUserHeaderImgUrl()}" style="border-radius: 5px"  src="https://img-blog.csdnimg.cn/20190927151132530.png"
                          class="ui fluid top aligned  medium circular image image-100x100" alt="">
                 </div>
-                <div class="thirteen wide column" style="padding-left: 0 !important;">
+                <div class="thirteen wide column m-mobile-pading">
                     <div class="row">
-                        <span style="font-size: 26px"><strong>LoveITer</strong></span>
+                        <span style="font-size: 25px"><strong>LoveITer</strong></span>
                         <button id="secret-btn" class="ui right floated  small yellow basic button">
                             <a href="#" style="color: inherit;font-size: 12px;">私信</a>
                         </button>
@@ -48,12 +60,12 @@
                         <span>关注数：<span style="color: dodgerblue !important;"><em>0</em></span></span>
 
                         <span class="m-margin-left">访问量：<span style="color: dodgerblue !important;"><em
-                                th:text="${user.getUserVisit()}">22255</em></span></span>
+                                th:text="${author.getUserVisit()}">22255</em></span></span>
                     </div>
                 </div>
             </div>
             <!--content header-->
-            <div class="ui top attached segment">
+            <div class="ui  top attached segment">
                 <div class="ui middle aligned two column grid">
                     <div class="column">
                         <h3 class="ui header m-inline-block m-black"
@@ -67,44 +79,53 @@
             </div>
             <!--content-->
             <div class="ui attached segment border-bt-none">
-                <div th:each="article:${articles}"
-                     class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none"
-                     style="padding-bottom: 20px !important;padding-top: 10px !important;">
+                <div th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
-                            <button th:switch="${article.getArticleType()}"
-                                    class="ui mini red basic button  m-inline-block ">
-                                <span th:case="0">原创</span>
-                                <span th:case="1">转载</span>
-                                <span th:case="2">翻译</span>
-                            </button>
-                            <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
-                               th:text="${article.getArticleTopic()}"
-                               class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">你真的理解什么是财富自由吗？</a>
-                            <p class="m-text"
-                               style="color: #0a001f;font-size: 1.111rem !important;line-height: 22px;"
-                               th:text="${#strings.abbreviate(article.getArticleContent(),100)}">
+                            <div class="ui stackable  grid">
+                                <div class="two wide column m-mobile-hide" style="max-width: 52px;padding-right: 0 !important;">
+                                    <div th:switch="${article.getArticleType()}" class="ui red mini basic label">
+                                        <span th:case="0">原创</span>
+                                        <span th:case="1">转载</span>
+                                        <span th:case="2">翻译</span>
+                                    </div>
+                                </div>
+                                <div class="fourteen wide column" style="padding-top: 0px !important;padding-left: 10px !important;">
+                                    <a href="#" th:if="${visitor==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                    <a href="#" th:if="${visitor!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                </div>
+                            </div>
+                            <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),300)}">
                                 正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
                             </p>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
-                                        <div class="item">
-                                            <img th:src="${user.getUserHeaderImgUrl()}"
+                                        <div class="item m-margin-left">
+                                            <div th:switch="${article.getArticleType()}" class="ui red mini basic label m-mobile-show-only">
+                                                <span th:case="0">原创</span>
+                                                <span th:case="1">转载</span>
+                                                <span th:case="2">翻译</span>
+                                            </div>
+                                        </div>
+                                        <div class="item m-margin-left">
+                                            <img th:src="${author.getUserHeaderImgUrl()}"
                                                  src="https://unsplash.it/100/100?image=1005" alt=""
-                                                 class="ui avatar image">
-                                            <div class="content"><a href="#" class="header"
-                                                                    th:text="${user.getUserNickname()}">黄鑫</a></div>
+                                                 class="ui avatar image m-mobile-hide">
+                                            <div class="content">
+                                                <a href="#" class="m-comment-font-user" th:text="${author.getUserNickname()}">黄鑫</a></div>
                                         </div>
-                                        <div class="item">
-                                            <i class="calendar icon"></i>[[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd
-                                            hh:mm:ss')}]]
+                                        <div class="item m-margin-left">
+                                            <i class="calendar icon"></i>
+                                            [[${#dates.format(article.getArticlePublishTime(),'yyyy年MM月dd hh:mm:ss')}]]
                                         </div>
-                                        <div class="item">
-                                            <i class="eye icon"></i>[[${article.getArticleClick()}]]
+                                        <div class="item m-margin-left">
+                                            <i class="eye icon"></i>
+                                            [[${article.getArticleClick()}]]
                                         </div>
-                                        <div class="item">
-                                            <i class="comment alternate icon"></i>[[${article.getArticleCommentNum()}]]
+                                        <div class="item m-margin-left">
+                                            <i class="comment alternate icon"></i>
+                                            [[${article.getArticleCommentNum()}]]
                                         </div>
                                     </div>
                                 </div>
@@ -113,8 +134,13 @@
 
                         <div class="five wide column">
                             <a target="_blank">
-                                <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" style="max-width: 280px;max-height: 160px;min-height: 155.9px;min-width: 277px" class="ui rounded image">
-                                <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}"  style="max-width: 280px;max-height: 160px;min-height: 155.9px;min-width: 277px" class="ui rounded image">
+                                <img th:if="${article.getArticleFirstPicture()==null}"
+                                     src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                     th:alt="${article.getArticleTopic()}" class="ui rounded image">
+                                <img th:if="${article.getArticleFirstPicture()!=null}"
+                                     th:src="@{${article.getArticleFirstPicture()}}"
+                                     th:alt="${article.getArticleTopic()}"
+                                     class="ui rounded image">
                             </a>
                         </div>
                     </div>
@@ -122,16 +148,17 @@
             </div>
 
             <!--查看更多-->
-            <div th:if="${articleSize>15}" class="ui attached segment bottom " style="border-top: none !important;">
-                <a href="#" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}">
-                    <button id="more-btn" class="ui negative basic button" style="margin-left: 40% !important;">查看更多
+            <div th:if="${#lists.size(articles)>25}" class="ui bottom attached segment" style="border-top: none !important;">
+                <a href="#" th:href="@{/article/index/{uid}(uid=${author.getUserId()})}">
+                    <button id="more-btn" class="ui negative basic button m-look-more-margin">查看更多
                     </button>
                 </a>
             </div>
 
-            <div th:if="${articleSize<=15&&articleSize!=0}" class="ui attached segment bottom "
-                 style="border-top: none !important;">
+            <!--文章条数>0并且小于等于25-->
+            <div th:if="${!#lists.isEmpty(articles) and #lists.size(articles)<=25}" class="ui bottom attached segment" style="border-top: none !important;padding: 1px !important;">
             </div>
+
 
             <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment"
                  style="border-top: none !important;">
@@ -145,24 +172,21 @@
         <!--关于我面板-->
         <div class="four wide column m-mobile-hide">
             <div class="ui attached segment">
-                <div class="ui header about">关于我<a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="about"
-                                                   href="#"
-                                                   style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
+                <div class="ui header about">关于我
+                    <a class="toggle-btn" th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" id="about" href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
-                <p id="about-show" style="word-break:break-all;" class="m-text" th:if="${!#strings.isEmpty(user.getUserDescription())}"
-                   th:text="${user.getUserDescription()}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环.
+                <p id="about-show" style="word-break:break-all;" class="m-text" th:if="${!#strings.isEmpty(author.getUserDescription())}"
+                   th:text="${author.getUserDescription()}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环.
                     希望结识可以共同成长的小伙伴.</p>
-                <p id="about-show" class="m-text" th:if="${#strings.isEmpty(user.getUserDescription())}">
-                    这人很懒，什么也没留下~~</p>
+                <p id="about-show" class="m-text" th:if="${#strings.isEmpty(author.getUserDescription())}">这人很懒，什么也没留下~~</p>
             </div>
             <div class="ui attached segment">
                 <div class="ui header hobby">
                     我的爱好
-                    <a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="hobby" href="#"
+                    <a class="toggle-btn" th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" id="hobby" href="#"
                        style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
-                <div style="margin-bottom: 8px !important;" th:if="${userHobby!=null}" th:each="hobby:${userHobby}"
-                     class="ui orange basic left pointing label" th:text="${hobby}">
+                <div style="margin-bottom: 8px !important;" th:if="${userHobby!=null}" th:each="hobby:${userHobby}" class="ui orange basic left pointing label" th:text="${hobby}">
                     编程
                 </div>
                 <p class="m-text" th:if="${userHobby==null}">
@@ -171,7 +195,7 @@
             <div class="ui attached segment">
                 <div class="ui header tech">
                     我的技术栈
-                    <a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="thchnology" href="#"
+                    <a class="toggle-btn" th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" id="thchnology" href="#"
                        style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
                 <div th:if="${userTech!=null&&tech!=null&&!#strings.isEmpty(tech)}" th:each="tech:${userTech}"
@@ -182,7 +206,7 @@
             </div>
             <div class="ui bottom attached segment">
                 <div class="ui header contact">
-                    联系我<a th:if="${visitorId!=null and visitorId==user.getUserId()}" id="contact-me" href="#"
+                    联系我<a class="toggle-btn" th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" id="contact-me" href="#"
                           style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
                 <a href="#"
@@ -219,9 +243,9 @@
                 (authorAccounts.getGithub()==null||#strings.isEmpty(authorAccounts.getGithub())))}">这人很懒，什么也没留下~~</p>
             </div>
 
-            <div class="ui wechat-qr flowing popup transition hidden" style="padding: 0 0 !important;">
-                <img th:if="${authorAccounts.getWechat()!=null&&!#strings.isEmpty(authorAccounts.getWechat())&&#strings.indexOf(authorAccounts.getWechat(),'=')!=-1}"
-                     th:src="@{${#strings.substring(authorAccounts.getWechat(),#strings.indexOf(authorAccounts.getWechat(),'=')+1,#strings.length(authorAccounts.getWechat()))}}"
+            <div th:if="${authorAccounts!=null&&authorAccounts.getWechat()!=null&&!#strings.isEmpty(authorAccounts.getWechat())&&#strings.indexOf(authorAccounts.getWechat(),'=')!=-1}"
+                 class="ui wechat-qr flowing popup transition hidden" style="padding: 0 0 !important;">
+                <img th:src="@{${#strings.substring(authorAccounts.getWechat(),#strings.indexOf(authorAccounts.getWechat(),'=')+1,#strings.length(authorAccounts.getWechat()))}}"
                      alt=""
                      class="ui rounded image" style="width: 110px">
             </div>
@@ -239,8 +263,8 @@
     <div class="content">
         <div class="ui form">
             <div class="field">
-                <label>向大家介绍一下自己吧！</label>
-                <textarea id="about-me" th:text="${user.getUserDescription()}"></textarea>
+                <label style="font-size: 15px !important;">向大家介绍一下自己吧！</label>
+                <textarea id="about-me" th:text="${author.getUserDescription()}"></textarea>
             </div>
         </div>
     </div>
@@ -262,8 +286,7 @@
             <div class="field">
                 <div class="ui large label" th:if="${userHobby!=null}" th:each="hobby:${userHobby}"
                      th:text="${hobby}"></div>
-                <span id="hobby-add" style="color: #00c4ff;cursor: pointer"><i class="plus circle icon"
-                                                                               style="color: #00c4ff !important;"></i>添加</span>
+                <span id="hobby-add" style="color: #00c4ff;cursor: pointer"><i class="plus circle icon" style="color: #00c4ff !important;"></i>添加</span>
                 <div class="ui input hobby-input" style="width: unset !important;display: none">
                     <input type="text" placeholder="多个“爱好”以逗号隔开">
                 </div>
@@ -275,7 +298,6 @@
         <div id="hobby-commit" class="ui green button">保存</div>
     </div>
 </div>
-
 
 <!--我的技术栈修改-->
 <div class="ui large modal scrolling transition hidden tech">
@@ -1562,7 +1584,7 @@
                 <input id="github" class="ui input" type="text" placeholder="GitHub账号"
                        th:if="${authorAccounts==null || authorAccounts.getGithub()==null ||#strings.isEmpty(authorAccounts.getGithub())}">
                 <div th:if="${authorAccounts==null || authorAccounts.getWechat()==null || #strings.isEmpty(authorAccounts.getWechat())}"
-                     th:value="${authorAccounts.getWechat()}"><i class="wechat icon"></i>微信
+                ><i class="wechat icon"></i>微信
                 </div>
                 <div th:if="${authorAccounts==null || authorAccounts.getWechat()==null || #strings.isEmpty(authorAccounts.getWechat())}"
                      class="ui  left icon input">
@@ -1604,12 +1626,10 @@
     <div class="content">
         <div class="ui from">
             <input id="input_file" name="categoryImg"
-                   style="position:absolute;opacity:0;height: 35px !important;width: 117px !important;padding: 0 !important;cursor: pointer;"
-                   onchange="show(this)" accept="image/*" type="file"/>
+                   style="position:absolute;opacity:0;height: 35px !important;width: 117px !important;padding: 0 !important;cursor: pointer;" onchange="show(this)" accept="image/*" type="file"/>
             <button class="ui button" style="cursor: pointer;"><i class="upload icon"></i>选择图片</button>
             <div style="margin-top: 10px; ">
-                <img id="pre-look" src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}"
-                     style="width: 400px;height: 400px;margin-left: 150px">
+                <img id="pre-look" src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" style="width: 400px;height: 400px;margin-left: 150px">
             </div>
         </div>
     </div>
@@ -1638,7 +1658,10 @@
     let obj = window.document.location;
     let BASE_PATH = obj.href.substring(0, obj.href.indexOf(obj.pathname));
     $(document).ready(function () {
+        let userId = $('#userId').val();
         showPageZoomWarning();
+        toggleStatus(userId);
+        logOut(userId);
         //控制“修改按钮的显示和隐藏”
         showModifyButton(".ui.header.about");
         showModifyButton(".ui.header.hobby");
@@ -1649,16 +1672,62 @@
             showSuccessMessage("修改成功！");
             localStorage.removeItem("contact_edit_success");
         }
-        let hobby_success=sessionStorage.getItem("hobby-success");
-        if(hobby_success){
+        let hobby_success = sessionStorage.getItem("hobby-success");
+        if (hobby_success) {
             showSuccessMessage("修改成功！");
             sessionStorage.removeItem("hobby-success");
         }
     });
 </script>
+<!--弹框-->
+<script type="text/javascript">
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('.wechat').popup({
+        popup: $('.wechat-qr'),
+        position: 'bottom center'
+    });
+
+    $('.qq').popup();
+    $('.github').popup();
+    $('.weibo').popup();
+    $('.twitter').popup();
+    $('.steam').popup();
+</script>
+<script type="text/javascript">
+    //私信按钮颜色的交互变化
+    $('#secret-btn').mouseenter(function () {
+        $('#secret-btn').removeClass("basic")
+    });
+    $('#secret-btn').mouseleave(function () {
+        $('#secret-btn').addClass("basic")
+    });
+    //关注按钮颜色的交互变化
+    $('#care-btn').mouseenter(function () {
+        $('#care-btn').removeClass("basic")
+    });
+    $('#care-btn').mouseleave(function () {
+        $('#care-btn').addClass("basic")
+    });
+    //更多按钮颜色的交互变化
+    $('#more-btn').mouseenter(function () {
+        $('#more-btn').css("color", "#ffffff");
+        $('#more-btn').removeClass("basic")
+    });
+    $('#more-btn').mouseleave(function () {
+        $('#more-btn').css("color", "inherit");
+        $('#more-btn').addClass("basic")
+    });
+</script>
 
 <!--关于我的信息的修改控制-->
 <script th:online="javascript" type="text/javascript">
+    let userJSONStr = sessionStorage.getItem("user");
+    let userId="[[${author.getUserId()}]]";
     /***修改关于我的信息弹窗控制***/
     $('#about').click(function () {
         $('.modal.about').modal({
@@ -1671,25 +1740,29 @@
     });
     $('#about-commit').click(function () {
         let about_me_info = $('#about-me').val();
-        $.ajax({
-            url: "/user/aboutMe",
-            method: "GET",
-            sync: false,
-            data: {aboutMeInfo: about_me_info},
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    $('#about-show').text(about_me_info);
-                    $('#about-me').val(about_me_info);
-                    $('.modal.about').modal('hide');
-                    showSuccessMessage(response.message);
+        if(userJSONStr!=null&&userJSONStr!="") {
+            $.ajax({
+                url: "/user/aboutMe",
+                method: "GET",
+                sync: false,
+                data: {aboutMeInfo: about_me_info, userId: userId},
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        $('#about-show').text(about_me_info);
+                        $('#about-me').val(about_me_info);
+                        $('.modal.about').modal('hide');
+                        showSuccessMessage(response.message);
+                    }
+                },
+                error: function () {
+                    $('.modal.about').modal('toggle');
+                    showErrorMessage("服务异常，请重试！");
                 }
-            },
-            error: function () {
-                $('.modal.about').modal('toggle');
-                showErrorMessage("服务异常，请重试！");
-            }
-        });
+            });
+        }else{
+            showInfoMessage("您还未登录，请登录后重试！")
+        }
     });
 
     /***修改我的爱好弹窗控制***/
@@ -1712,26 +1785,26 @@
     });
     $('#hobby-commit').click(function () {
         let inputHobby = $('.hobby-input').find('input').val() == null ? "" : $('.hobby-input').find('input').val();
-        let hobby = "[[${user.getUserHobby()}]]";
-        if (hobby != null) {
+        let hobby = "[[${author.getUserHobby()}]]";
+        if (hobby != null&&hobby.toString().length!=0) {
             hobby = hobby.toString().concat("," + inputHobby);
         } else {
             hobby = inputHobby;
         }
-        console.log(hobby);
-        if (inputHobby != null && hobby != null) {
+        //console.log(hobby);
+        if (inputHobby != null && hobby != null&&userJSONStr!=null&&userJSONStr!="") {
             _loading(2);
             $.ajax({
                 url: "/user/settingHobby",
                 method: "GET",
                 sync: false,
-                data: {hobby: hobby},
+                data: {hobby: hobby,userId:userId},
                 dataType: "JSON",
                 success: function (response) {
                     _loadingClose();
                     if (response.success) {
                         $('.modal.hobby').modal('hide');
-                        sessionStorage.setItem("hobby-success",true);
+                        sessionStorage.setItem("hobby-success", true);
                         //刷新页面
                         window.location.reload();
                     } else {
@@ -1742,7 +1815,7 @@
                     _loadingClose();
                     showErrorMessage("服务异常，请稍后重试！")
                 }
-            })
+            });
         }
     });
 
@@ -1843,28 +1916,30 @@
         if (github != "" || wechat != "" || qq != "" || steam != "" || twitter != "" || weibo != "") {
             //内容不能全为空就提交
             _loading(2);
-            $.ajax({
-                url: "/user/settingContact",
-                method: "Get",
-                sync: false,
-                data: {github: github, wechat: wechat, qq: qq, steam: steam, twitter: twitter, weibo: weibo},
-                dataType: "json",     //服务器返回的数据类型
-                success: function (response) {
-                    $('.large.modal.contact').modal('hide');
-                    if (response.success) {
-                        localStorage.setItem("contact_edit_success", true);
-                        //刷新页面
-                        window.location.reload();
-                    } else {
-                        showInfoMessage(response.message);
+            if(userJSONStr!=null&&userJSONStr!="") {
+                $.ajax({
+                    url: "/user/settingContact",
+                    method: "Get",
+                    sync: false,
+                    data: {github: github, wechat: wechat, qq: qq, steam: steam, twitter: twitter, weibo: weibo,userId:userId},
+                    dataType: "json",     //服务器返回的数据类型
+                    success: function (response) {
+                        $('.large.modal.contact').modal('hide');
+                        if (response.success) {
+                            localStorage.setItem("contact_edit_success", true);
+                            //刷新页面
+                            window.location.reload();
+                        } else {
+                            showInfoMessage(response.message);
+                        }
+                    },
+                    error: function () {
+                        _loadingClose();
+                        $('.large.modal.contact').modal('hide');
+                        showErrorMessage("服务异常，请重试！");
                     }
-                },
-                error: function () {
-                    _loadingClose();
-                    $('.large.modal.contact').modal('hide');
-                    showErrorMessage("服务异常，请重试！");
-                }
-            });
+                });
+            }
         } else {
             $('.large.modal.contact').modal('hide');
             showInfoMessage("没有任何内容可以提交！");
@@ -1884,59 +1959,6 @@
         };
 
     }
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        let userId=$('#userId').val();
-        showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
-    });
-
-</script>
-<!--弹框-->
-<script type="text/javascript">
-    $('.menu.toggle').click(function () {
-        $('.m-item').toggleClass('m-mobile-hide');
-    });
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
-    });
-    $('.wechat').popup({
-        popup: $('.wechat-qr'),
-        position: 'bottom center'
-    });
-
-    $('.qq').popup();
-    $('.github').popup();
-    $('.weibo').popup();
-    $('.twitter').popup();
-    $('.steam').popup();
-</script>
-<script type="text/javascript">
-    //私信按钮颜色的交互变化
-    $('#secret-btn').mouseenter(function () {
-        $('#secret-btn').removeClass("basic")
-    });
-    $('#secret-btn').mouseleave(function () {
-        $('#secret-btn').addClass("basic")
-    });
-    //关注按钮颜色的交互变化
-    $('#care-btn').mouseenter(function () {
-        $('#care-btn').removeClass("basic")
-    });
-    $('#care-btn').mouseleave(function () {
-        $('#care-btn').addClass("basic")
-    });
-    //更多按钮颜色的交互变化
-    $('#more-btn').mouseenter(function () {
-        $('#more-btn').css("color", "#ffffff");
-        $('#more-btn').removeClass("basic")
-    });
-    $('#more-btn').mouseleave(function () {
-        $('#more-btn').css("color", "inherit");
-        $('#more-btn').addClass("basic")
-    });
 </script>
 
 <script type="text/javascript" th:online="javascript">
@@ -1980,7 +2002,7 @@
     }
 
     function showUserTech() {
-        let techStr = "[[${user.getUserTech()}]]";
+        let techStr = "[[${author.getUserTech()}]]";
         if (techStr != null && techStr.length > 0) {
             let checkboxs = document.getElementsByName('public');
             for (let i = 0; i < checkboxs.length; i++) {
@@ -2000,35 +2022,35 @@
         let checkboxs = document.getElementsByName('public');
         for (let i = 0; i < checkboxs.length; i++) {
             if (checkboxs[i].checked) {
-                if(techStr!="") {
+                if (techStr !== "") {
                     techStr = techStr.concat("," + checkboxs[i].value);
-                }else{
-                    techStr=checkboxs[i].value;
+                } else {
+                    techStr = checkboxs[i].value;
                 }
             }
         }
-        $.ajax({
-            url: BASE_PATH + "/user/settingTech",
-            method: "GET",
-            sync: false,
-            data: {techStr: techStr},
-            dataType: "JSON",
-            success: function (response) {
-                if (response.success) {
-                    if ($(checkBoxObj).is(':checked')) {
-                        showSuccessMessage("添加成功！");
+        if(userJSONStr!=null&&userJSONStr!=="") {
+            $.ajax({
+                url: BASE_PATH + "/user/settingTech",
+                method: "GET",
+                sync: false,
+                data: {techStr: techStr,userId:userId},
+                dataType: "JSON",
+                success: function (response) {
+                    if (response.success) {
+                        showSuccessMessage("修改已保存！")
                     } else {
-                        showSuccessMessage("取消成功！");
+                        showErrorMessage(response.message);
                     }
-                } else {
-                    showErrorMessage(response.message);
+                },
+                error: function () {
+                    showErrorMessage("服务异常，请重试！");
                 }
-            },
-            error: function () {
-                showErrorMessage("服务异常，请重试！");
-            }
-        });
+            });
+        }
     }
 </script>
+
+
 
 </html>

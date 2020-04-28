@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 
 import org.jsoup.Jsoup;
@@ -16,9 +16,9 @@ import java.util.Objects;
 /**
  * @author huangxin
  */
-public final class NetWorkUtil {
+public final class NetWorkUtils {
 
-    private static Logger log = LoggerFactory.getLogger(NetWorkUtil.class);
+    private static Logger log = LoggerFactory.getLogger(NetWorkUtils.class);
 
     private static final String IP138 = "http://www.ip138.com/ips138.asp?ip=";
 
@@ -67,7 +67,8 @@ public final class NetWorkUtil {
             }
 
             // 对于通过多个代理的情况，第一个不是unknown的ip为真实ip
-            if (null != ip && ip.length() > 15) { //***.***.***.***
+            if (null != ip && ip.length() > 15) {
+                //***.***.***.***
                 final String[] ips = ip.split(",");
                 for (final String str : ips) {
                     if (!"unknown".equalsIgnoreCase(str)) {
@@ -103,23 +104,24 @@ public final class NetWorkUtil {
 
         String location="未知地址";
         //通过请求头或者客户端的User-Agent
-        String USERAGENT = request.getHeader("User-Agent");
-        log.debug(USERAGENT);
+        String uSERAGENT = request.getHeader("User-Agent");
         try {
-            //从ip138网站获得所需查询ip的物理地址
-            Document doc = Jsoup.connect(IP138 + ip + "&action=2").timeout(80000).userAgent(USERAGENT).get();
-            if (Objects.nonNull(doc)) {
-                //JSoup支持使用类选择器来选择
-                Element ul = doc.selectFirst(".ul1");
-                if (Objects.nonNull(ul)) {
-                    Element li = doc.selectFirst("li");
-                    if (Objects.nonNull(li)) {
-                        String text = li.text();
-                        location=text.substring(5,text.length());
+            if (Objects.nonNull(uSERAGENT)) {
+
+                //从ip138网站获得所需查询ip的物理地址
+                Document doc = Jsoup.connect(IP138 + ip + "&action=2").timeout(50000).userAgent(uSERAGENT).get();
+                if (Objects.nonNull(doc)) {
+                    //JSoup支持使用类选择器来选择
+                    Element ul = doc.selectFirst(".ul1");
+                    if (Objects.nonNull(ul)) {
+                        Element li = doc.selectFirst("li");
+                        if (Objects.nonNull(li)) {
+                            String text = li.text();
+                            location = text.substring(5);
+                        }
                     }
                 }
             }
-
         } catch (IOException e) {
             log.error(e.getMessage());
         }

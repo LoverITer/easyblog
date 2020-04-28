@@ -1,10 +1,12 @@
 package top.easyblog.config.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.servlet.config.annotation.*;
+import top.easyblog.common.util.RedisUtils;
 import top.easyblog.handler.interceptor.LoginInterceptor;
 
 import javax.servlet.MultipartConfigElement;
@@ -16,6 +18,8 @@ import javax.servlet.MultipartConfigElement;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    @Autowired
+    private RedisUtils redisUtil;
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {
@@ -30,7 +34,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        final InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
+        final InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor(redisUtil));
         registration.addPathPatterns("/**");
         /**
          * 排除拦截classpath:/static下的所有静态资源

@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +47,11 @@ public class CollectionUtils {
         for (int i = 0; i < splitCapacity.length; i++) {
             size += splitCapacity[i];
         }
+        //传入的list长度小于规定的长度
         if (size > sourceList.size()) {
             throw new RuntimeException("不合理的分割参数");
         }
-        List<List<?>> result = new ArrayList<List<?>>();
+        List<List<?>> result = new ArrayList<>();
         for (int i = 0, count = splitCapacity.length, j = 0; i < count && j < sourceList.size(); i++) {
             List<?> subList = sourceList.subList(j, j + splitCapacity[i]);
             result.add(subList);

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserComment;
-import top.easyblog.commons.pagehelper.PageParam;
+import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserCommentMapper;
@@ -84,6 +84,7 @@ public class CommentServiceImpl implements ICommentService {
         return null;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor = Exception.class)
     @Override
     public PageInfo<UserComment> getCommentPage(int userId, String flag, PageParam pageParam) {
         PageInfo<UserComment> pageInfo=null;
@@ -129,7 +130,7 @@ public class CommentServiceImpl implements ICommentService {
         }
     }
 
-
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor = Exception.class)
     @Override
     public int deleteComment(int commentId) {
         if (commentId > 0) {
@@ -144,7 +145,7 @@ public class CommentServiceImpl implements ICommentService {
     }
 
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ,rollbackFor = Exception.class)
     @Cacheable(cacheNames = "comments", condition = "#result!=null&&result.size()>0")
     @Override
     public List<UserComment> getArticleComments(long articleId) {

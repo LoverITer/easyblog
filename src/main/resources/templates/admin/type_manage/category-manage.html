@@ -13,6 +13,16 @@
     <link rel="stylesheet" href="../../../css/me.css" th:href="@{/static/css/me.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+    <!--百度统计JS脚本-->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?1d2b1074de8c4606d68aa61802a74c14";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
 </head>
 <body>
 
@@ -36,7 +46,7 @@
                         </div>
                         <div class="right floated column">
                             <button id="add-btn" class="ui right floated small basic red button">
-                                <a href="#" style="color: inherit"  th:href="@{/manage/category/add}">新建</a>
+                                <a href="#" style="color: inherit"  th:href="@{/manage/category/add(userId=${user.getUserId()})}">新建</a>
                             </button>
                         </div>
                     </div>
@@ -46,13 +56,13 @@
                     <div class="ui grid">
                         <div class="row" style="padding-top: 10px !important;padding-bottom: 10px !important;">
                             <div class="two wide column" style="padding-right: 0 !important;">
-                                <a id="all" href="#" th:href="@{/manage/category/list}" class="m-black"
+                                <a id="all" href="#" th:href="@{/manage/category/list(userId=${user.getUserId()})}" class="m-black"
                                    style="color:#349EDF !important;font-size: 1.1rem !important;">全部(<span
                                         th:text="${visibleCategoryNum}">1</span>)</a>
                             </div>
                             <div class="two wide column"
                                  style="padding-right: 0 !important;padding-left: 0 !important;">
-                                <a id="public" href="#" th:href="@{/manage/category/dash}"
+                                <a id="public" href="#" th:href="@{/manage/category/dash(userId=${user.getUserId()})}"
                                    style="font-size: 1.1rem !important;" class="m-black"><i
                                         class="trash alternate outline icon"></i>回收站(<span th:text="${deletedCategoryNum}">1</span>)</a>
                             </div>
@@ -67,11 +77,9 @@
                                 <span class="m-black"
                                       style="color:grey !important;font-size: 1.1rem !important;">类别</span>
                             </div>
-                            <div class="two wide column" style="padding-right: 0 !important;"><span class="m-black"
-                                                                                                    style="color:grey !important;font-size: 1.1rem !important;">操作</span>
+                            <div class="two wide column" style="padding-right: 0 !important;"><span class="m-black" style="color:grey !important;font-size: 1.1rem !important;">操作</span>
                             </div>
-                            <div class="two wide column" style="padding-right: 0 !important;"><span class="m-black"
-                                                                                                    style="color:grey !important;font-size: 1.1rem !important;">前台是否显示</span>
+                            <div class="two wide column" style="padding-right: 0 !important;"><span class="m-black" style="color:grey !important;font-size: 1.1rem !important;">前台是否显示</span>
                             </div>
                             <div class="two wide column" style="padding-right: 0 !important;">
                                 <span class="m-black"
@@ -93,17 +101,17 @@
                         </div>
                         <div class="six wide column right aligned" style="padding-right: 0 !important;">
                             <div style="padding-top: 15px !important;">
-                              <a href="#" th:href="@{/category/details/{id}/{uid}(id=${category.getCategoryId()},uid=${userId})}" style="color:#349EDF !important;">查看</a>
+                              <a href="#" th:href="@{/category/details/{id}/{uid}(id=${category.getCategoryId()},uid=${user.getUserId()})}" style="color:#349EDF !important;">查看</a>
                             </div>
                         </div>
                         <div class="one wide column center aligned" style="padding-left: 0 !important;padding-right: 0 !important;">
                             <div style="padding-top: 15px !important;">
-                              <a href="#" th:href="@{/manage/category/edit(categoryId=${category.getCategoryId()})}" style="color:#349EDF !important;">编辑</a>
+                              <a href="#" th:href="@{/manage/category/edit(categoryId=${category.getCategoryId()},userId=${user.getUserId()})}" style="color:#349EDF !important;">编辑</a>
                             </div>
                         </div>
                         <div class="one wide column left aligned" style="padding-left: 0 !important;">
                             <div style="padding-top: 15px !important;">
-                              <a href="#" th:href="@{/manage/category/delete(categoryId=${category.getCategoryId()})}" style="color:#B50C13 !important;">删除</a>
+                              <a href="#" th:href="@{/manage/category/delete(categoryId=${category.getCategoryId()},userId=${user.getUserId()})}" style="color:#B50C13 !important;">删除</a>
                             </div>
                         </div>
                         <div class="two wide column center aligned">
@@ -131,7 +139,7 @@
                     <div style="padding-bottom: 1em !important;padding-left: 1.8em !important;color: grey !important;font-size: 14px !important;">
                         您没有还任何分类
                     </div>
-                    <a th:href="@{/manage/category/add}" target style="color: #FFFFFF !important;">
+                    <a th:href="@{/manage/category/add(userId=${user.getUserId()})}" target style="color: #FFFFFF !important;">
                         <button class="red fluid ui button">新建分类</button>
                     </a>
                 </div>
@@ -141,17 +149,17 @@
                 <div class="ui middle aligned two column grid">
                     <div class="column" style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
-                            <a th:href="@{/manage/category/list(page=${categoriesPage.getPrePage()})}">
+                            <a th:href="@{/manage/category/list(page=${categoriesPage.getPrePage()},userId=${user.getUserId()})}">
                                 <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
                                 </button>
                             </a>
                             <a  th:each="pageNo:${categoriesPage.getNavigatepageNums()}"
-                                th:href="@{/manage/category/list(page=${pageNo})}">
+                                th:href="@{/manage/category/list(page=${pageNo},userId=${user.getUserId()})}">
                                 <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
                                     [[${pageNo}]]
                                 </button>
                             </a>
-                            <a  th:href="@{/manage/category/list(page=${categoriesPage.getNextPage()})}">
+                            <a  th:href="@{/manage/category/list(page=${categoriesPage.getNextPage()},userId=${user.getUserId()})}">
                                 <button class="ui right labeled icon button"
                                         style="background: white !important;font-weight: 100 !important;"> 下一页
                                 </button>
@@ -184,8 +192,9 @@
         showCurrentPageNum();
     });
 </script>
-<script>
+<script th:online="javascript">
     function changeDisplayOrNot(obj) {
+        let userId="[[${user.getUserId()}]]";
         var categoryId=$(obj).val();
         var status=$(obj).is(":checked");
         if(status){
@@ -194,25 +203,15 @@
                 url: "/manage/category/changeDisplay",
                 sync:true,
                 method:"GET",
-                data:{categoryId:categoryId,displayStatus:"1"},
+                data:{categoryId:categoryId,displayStatus:"1",userId:userId},
                 dataType:"json",
                 success:function (response) {
                     if(!response.success){
-                        spop({
-                            template: '服务异常，请重试！',
-                            autoclose: 4000,
-                            position: "top-center",
-                            style: 'error',
-                        });
+                        showErrorMessage(response.message);
                     }
                 },
                 error:function () {
-                    spop({
-                        template: '服务异常，请重试！',
-                        autoclose: 4000,
-                        position: "top-center",
-                        style: 'error',
-                    });
+                    showErrorMessage("服务异常，请稍后重试！");
                 }
             })
         }else{
@@ -221,25 +220,15 @@
                 url: "/manage/category/changeDisplay",
                 sync:true,
                 method:"GET",
-                data:{categoryId:categoryId,displayStatus:"0"},
+                data:{categoryId:categoryId,displayStatus:"0",userId:userId},
                 dataType:"json",
                 success:function (response) {
                     if(!response.success){
-                        spop({
-                            template: '服务异常，请重试！',
-                            autoclose: 4000,
-                            position: "top-center",
-                            style: 'error',
-                        });
+                        showErrorMessage(response.message);
                     }
                 },
                 error:function () {
-                    spop({
-                        template: '服务异常，请重试！',
-                        autoclose: 4000,
-                        position: "top-center",
-                        style: 'error',
-                    });
+                    showErrorMessage("服务异常，请稍后重试！");
                 }
             })
         }

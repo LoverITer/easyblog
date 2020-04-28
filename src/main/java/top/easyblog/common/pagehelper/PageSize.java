@@ -1,4 +1,4 @@
-package top.easyblog.commons.pagehelper;
+package top.easyblog.common.pagehelper;
 
 /**
  * 分页的大小

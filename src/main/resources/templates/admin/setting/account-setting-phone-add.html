@@ -13,6 +13,16 @@
     <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+    <!--百度统计JS脚本-->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?1d2b1074de8c4606d68aa61802a74c14";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
 </head>
 <body>
 
@@ -105,10 +115,11 @@
     $('#account2').css('color', '#ffffff');
 </script>
 <!--获取短信验证码-->
-<script type="text/javascript">
+<script type="text/javascript" th:online="javascript">
+    let userId="[[${user.getUserId()}]]";
     $('#getCode_btn').click(function () {
-        var phone = $('#phone').val();
-        var phone_reg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(199))+\d{8})$/;
+        let phone = $('#phone').val();
+        let phone_reg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(199))+\d{8})$/;
         if (phone == null || phone == '') {
             spop({
                 template: '请输入手机号',
@@ -127,7 +138,7 @@
             $.ajax({
                 url: "/manage/account/sendByPhone",
                 method: 'GET',
-                data: {phone: phone},
+                data: {phone: phone,userId:userId},
                 sync: true,
                 dataType: "json",
                 success: function (response) {
@@ -153,8 +164,7 @@
             })
         }
     });
-</script>
-<script type="text/javascript">
+
     $('#firm_btn').click(function () {
         var code = $('#code').val();
         var phone = $('#phone').val();
@@ -162,12 +172,12 @@
             url: "/manage/account/bindPhone",
             method: "GET",
             sync: true,
-            data: {phone:phone,code: code},
+            data: {phone:phone,code: code,userId:userId},
             dataType: "json",
             success: function (response) {
                 if (response.success) {
                     spop({
-                        template: response.msg,
+                        template: response.message,
                         autoclose: 3000,
                         position: "top-left",
                         style: 'success',
@@ -191,7 +201,7 @@
                 });
             }
         })
-    })
+    });
 </script>
 <!--控制按钮的禁用和可用状态-->
 <script type="text/javascript">
@@ -208,7 +218,6 @@
                 $('#firm_btn').css("color", "#000000");
             }
         }
-
         setInterval(changePwd, 300);
     });
 </script>

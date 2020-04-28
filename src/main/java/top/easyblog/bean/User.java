@@ -1,6 +1,6 @@
 package top.easyblog.bean;
 
-import top.easyblog.commons.enums.ArticleType;
+import top.easyblog.common.enums.ArticleType;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.Date;
 public class User implements Serializable {
 
     private static final long serialVersionUID = 9108908247105270923L;
-    private Integer  userId;
+    private Integer userId;
     private String userNickname;
     private String userPassword;
     private String userName;
@@ -37,11 +37,12 @@ public class User implements Serializable {
     private String userHobby;
     private String userTech;
 
+
     public User() {
     }
 
 
-    public User(String userNickname, String userPassword, String userName, String userGender, Date userBirthday,  String userPhone, String userMail, String userAddress, int userScore, int userRank, String userHeaderImgUrl, String userDescription, String userRegisterIp, String userLastUpdateTime, Integer userLock, Integer userFreeze, Integer userPower,Integer userLevel,Integer userVisit) {
+    public User(String userNickname, String userPassword, String userName, String userGender, Date userBirthday, String userPhone, String userMail, String userAddress, int userScore, int userRank, String userHeaderImgUrl, String userDescription, String userRegisterIp, String userLastUpdateTime, Integer userLock, Integer userFreeze, Integer userPower, Integer userLevel, Integer userVisit) {
         this.userNickname = userNickname;
         this.userPassword = userPassword;
         this.userName = userName;
@@ -59,8 +60,8 @@ public class User implements Serializable {
         this.userLock = userLock;
         this.userFreeze = userFreeze;
         this.userPower = userPower;
-        this.userLevel=userLevel;
-        this.userVisit=userVisit;
+        this.userLevel = userLevel;
+        this.userVisit = userVisit;
     }
 
     public String getUserJobPosition() {
@@ -188,12 +189,12 @@ public class User implements Serializable {
     }
 
     public void setUserScore(String type) {
-        if(ArticleType.Original.getArticleType().equals(type)){
-            this.userScore=this.userScore+5;   //原创文章+5分
-        }else if(ArticleType.Translate.getArticleType().equals(type)){
-            this.userScore=this.userScore+3;   //翻译文章+3分
-        }else{
-            this.userScore=this.userScore+1;   //转载的文章+1分
+        if (ArticleType.Original.getArticleType().equals(type)) {
+            this.userScore = this.userScore + 5;   //原创文章+5分
+        } else if (ArticleType.Translate.getArticleType().equals(type)) {
+            this.userScore = this.userScore + 3;   //翻译文章+3分
+        } else {
+            this.userScore = this.userScore + 1;   //转载的文章+1分
         }
     }
 
@@ -206,41 +207,41 @@ public class User implements Serializable {
     }
 
     public void setUserRank() {
-        if(this.userScore<256){
+        if (this.userScore < 256) {
             setUserRank(1);
-        }else if(this.userScore < 512){
+        } else if (this.userScore < 512) {
             setUserRank(2);
-        }else if(this.userScore < 1024){
+        } else if (this.userScore < 1024) {
             setUserRank(3);
-        }else if(this.userScore < 2048){
+        } else if (this.userScore < 2048) {
             setUserRank(4);
-        }else if(this.userScore < 4096){
+        } else if (this.userScore < 4096) {
             setUserRank(5);
-        }else if(this.userScore<8192){
+        } else if (this.userScore < 8192) {
             setUserRank(6);
-        }else if(this.userScore<16384){
+        } else if (this.userScore < 16384) {
             setUserRank(7);
-        }else if(this.userScore<32768){
+        } else if (this.userScore < 32768) {
             setUserRank(8);
-        }else if(this.userScore<65536){
+        } else if (this.userScore < 65536) {
             setUserRank(9);
-        }else if(this.userScore<131072){
+        } else if (this.userScore < 131072) {
             setUserRank(10);
-        }else if(this.userScore<262144){
+        } else if (this.userScore < 262144) {
             setUserRank(11);
-        }else if(this.userScore<524288){
+        } else if (this.userScore < 524288) {
             setUserRank(12);
-        }else if(this.userScore<1048576){
+        } else if (this.userScore < 1048576) {
             setUserRank(13);
-        }else if(this.userScore<2097152){
+        } else if (this.userScore < 2097152) {
             setUserRank(14);
-        }else if(this.userScore<4194304){
+        } else if (this.userScore < 4194304) {
             setUserRank(15);
-        }else if(this.userScore<8388608){
+        } else if (this.userScore < 8388608) {
             setUserRank(16);
-        }else if(this.userScore<16777216){
+        } else if (this.userScore < 16777216) {
             setUserRank(17);
-        }else {
+        } else {
             setUserRank(this.userRank);
         }
 

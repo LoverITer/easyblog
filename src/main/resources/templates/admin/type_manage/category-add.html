@@ -13,6 +13,16 @@
     <link rel="stylesheet" href="../../../css/me.css" th:href="@{/static/css/me.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+    <!--百度统计JS脚本-->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?1d2b1074de8c4606d68aa61802a74c14";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
 </head>
 <body>
 <!--导航-->
@@ -28,11 +38,11 @@
             <div class="ui top attached segment " style="border-bottom: none !important;padding-bottom: 0 !important;">
                 <div class="four column row" style="padding-bottom: 0 !important;padding-left: 1.13rem !important;">
                     <div class="left floated column">
-                        <a style="color:#bbbbbb;font-size: 1rem !important;" href="#" th:href="@{/manage/category/list}">< 返回分类专栏</a>
+                        <a style="color:#bbbbbb;font-size: 1rem !important;" href="#" th:href="@{/manage/category/list(userId=${user.getUserId()})}">< 返回分类专栏</a>
                     </div>
                 </div>
-                <form class="ui form" method="Post" th:action="@{/manage/category/saveAdd}"
-                      enctype="multipart/form-data">
+                <form class="ui form" method="Post" th:action="@{/manage/category/saveAdd}" enctype="multipart/form-data">
+                    <input type="hidden" name="userId" th:value="${user.getUserId()}">
                     <div class="row" style="padding-left: 2rem !important;padding-top: 2em !important;">
                         <div class="ui form">
                             <div class="inline field">
@@ -92,12 +102,7 @@
     $(document).ready(function () {
         var msg="[[${error}]]";
         if(msg!="") {
-            spop({
-                template: msg,
-                autoclose: 2000,
-                position: "top-center",
-                style: 'info',
-            });
+            showInfoMessage(msg);
         }
     });
 

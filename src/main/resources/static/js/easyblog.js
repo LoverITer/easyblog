@@ -142,7 +142,7 @@ function showSuccessMessage(message) {
     if (message != "") {
         spop({
             template: message,
-            autoclose: 4000,
+            autoclose: 3000,
             position: "top-center",
             style: 'success',
         });
@@ -257,13 +257,12 @@ function _confirmWithDetail(option, optionDetail) {
 
 
 /**
- * 密码可见性开关
+ * 密码框文本的可见性开关
  * @param obj   显示/不显示的按钮
  * @param passwordObj   密码框
  */
 function passwordDisplayToggle(obj, passwordObj) {
     $(obj).click(function () {
-        console.log(1111111);
         if ($(this).hasClass('password-hide')) {
             $(this).removeClass('password-hide');
             $(this).addClass('password-show');
@@ -279,15 +278,15 @@ function passwordDisplayToggle(obj, passwordObj) {
 }
 
 /**
- * 控制一个元素结点的显示和隐藏
+ * 控制一个结点下的a元素响应鼠标悬浮事件===>显示和隐藏
  * @param identity  标识元素结点的class
  */
 function showModifyButton(identity) {
     $(identity).hover(function () {
-            $('a', this).show();
+            $('a.toggle-btn', this).show();
         },
         function () {
-            $('a', this).hide();
+            $('a.toggle-btn', this).hide();
         });
 }
 
@@ -296,8 +295,11 @@ function showModifyButton(identity) {
  * 向服务器发送AJAX请求检查检查用户的登录情况用于判断显示头像还是显示登录按钮
  */
 function toggleStatus(userId) {
-    console.log(userId);
-    if(userId>=0) {
+    let userJSONStr = localStorage.getItem("user");
+    //console.log(userJSONStr);
+    if (userJSONStr != null && userJSONStr !== "0" && userJSONStr !== "undefined") {
+        changeUserLogState2Login();
+    } else if (userId >= 0) {
         $.ajax({
             url: "/user/checkUserStatus",
             method: "GET",
@@ -306,39 +308,44 @@ function toggleStatus(userId) {
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    console.log('用户登录了');
-                    if($('#login-btn').css('display')!="none"){
-                        $('#login-btn').css("cssText",'display:none !important;margin-left: 1em !important;');
-                    }
-                    if($('#header-images').css('display')=="none"){
-                        $('#header-images').css("cssText",'display:block !important;margin-left: 1em !important;');
-                    }
+                    //console.log('用户登录了');
+                    localStorage.setItem("user", response.message);
+                    changeUserLogState2Login();
                 } else {
-                    console.log('用户没登录');
-                    if($('#header-images').css('display')!="none"){
-                        $('#header-images').css("cssText",'display:none !important;margin-left: 1em !important;');
-                    }
-                    if($('#login-btn').css('display')=="none"){
-                        $('#login-btn').css("cssText",'display:flex !important;margin-left: 1em !important;');
-                    }
+                    //console.log('用户没登录');
+                    changeUserLogState2LogOut();
                 }
             },
             error: function () {
-                if($('#header-images').css('display')!="none"){
-                    $('#header-images').css("cssText",'display:none !important;margin-left: 1em !important;');
-                }
-                if($('#login-btn').css('display')=="none"){
-                    $('#login-btn').css("cssText",'display:flex !important;margin-left: 1em !important;');
-                }
+                changeUserLogState2LogOut();
             }
         });
-    }else{
-        if($('#header-images').css('display')!="none"){
-            $('#header-images').css("cssText",'display:none !important;margin-left: 1em !important;');
-        }
-        if($('#login-btn').css('display')=="none"){
-            $('#login-btn').css("cssText",'display:flex !important;margin-left: 1em !important;');
-        }
+    } else {
+        changeUserLogState2LogOut();
+    }
+}
+
+/**
+ * @private
+ */
+function changeUserLogState2Login() {
+    if ($('#login-btn').css('display') != "none") {
+        $('#login-btn').css("cssText", 'display:none ;margin-left: 1em !important;');
+    }
+    if ($('#header-images').css('display') == "none") {
+        $('#header-images').css("cssText", 'display:block ;margin-left: 1em !important;');
+    }
+}
+
+/**
+ * @private
+ */
+function changeUserLogState2LogOut() {
+    if ($('#header-images').css('display') != "none") {
+        $('#header-images').css("cssText", 'display:none ;margin-left: 1em !important;');
+    }
+    if ($('#login-btn').css('display') == "none") {
+        $('#login-btn').css("cssText", 'display:flex ;margin-left: 1em !important;');
     }
 }
 
@@ -347,7 +354,7 @@ function toggleStatus(userId) {
  * 用户退出登录AJAX请求
  * @param userId
  */
-function logOut(userId){
+function logOut(userId) {
     //console.log("userid:"+userId);
     $('#logout').click(function () {
         $.ajax({
@@ -358,7 +365,9 @@ function logOut(userId){
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    toggleStatus();
+                    localStorage.removeItem("user");
+                    changeUserLogState2LogOut();
+                    window.location.reload();
                 }
             },
             error: function () {

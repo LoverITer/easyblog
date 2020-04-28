@@ -1,4 +1,4 @@
-package top.easyblog.commons.utils;
+package top.easyblog.common.util;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,6 +6,8 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import top.easyblog.bean.User;
+import top.easyblog.config.ApplicationContextHolder;
 import top.easyblog.config.redis.ObjectRedisTemplate;
 
 import java.util.List;
@@ -39,6 +41,25 @@ public class RedisUtils {
     @Autowired
     private ZSetOperations<String, Object> redisZSetOps;
 
+    /**Redis默认的16个数据库索引**/
+    public static final int DB_0 = 0;
+    public static final int DB_1 = 1;
+    public static final int DB_2 = 2;
+    public static final int DB_3 = 3;
+    public static final int DB_4 = 4;
+    public static final int DB_5 = 5;
+    public static final int DB_6 = 6;
+    public static final int DB_7 = 7;
+    public static final int DB_8 = 8;
+    public static final int DB_9 = 9;
+    public static final int DB_10 = 10;
+    public static final int DB_11 = 11;
+    public static final int DB_12 = 12;
+    public static final int DB_13 = 13;
+    public static final int DB_14 = 14;
+    public static final int DB_15 = 15;
+
+
     /**
      * Redis数据库最大索引
      */
@@ -47,6 +68,20 @@ public class RedisUtils {
      * Redis数据库最小索引
      */
     private static final int MIN_DB_INDEX = 0;
+
+    /**
+     * redis读写工具类
+     */
+    private static RedisUtils redisUtils = null;
+
+    public static RedisUtils getRedisUtils() {
+        if (Objects.isNull(redisUtils)) {
+            synchronized (User.class) {
+                redisUtils = ApplicationContextHolder.getBean("redisUtils");
+            }
+        }
+        return redisUtils;
+    }
 
 
     //=============================common============================
@@ -665,9 +700,9 @@ public class RedisUtils {
     }
 
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         RedisUtils redisUtil = new RedisUtils();
         redisUtil.set("user", "age:20", 1);
-    }
+    }*/
 
 }
