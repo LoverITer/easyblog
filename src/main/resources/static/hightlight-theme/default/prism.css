@@ -71,14 +71,14 @@ code[class*="language-"]::selection, code[class*="language-"] ::selection {
 
 /* Code blocks */
 pre[class*="language-"] {
-    padding: 1em;
+    padding: 0.5em;
     margin: .5em 0;
     overflow: auto;
 }
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-	border-radius:8px;
+	border-radius:5px;
     background: #fafafa;
 }
 
