@@ -24,7 +24,7 @@ public class WebAdminRequestLogAspect {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Pointcut(value = "execution(* top.easyblog.controller.*.*.*(..))")
+    @Pointcut(value = "execution(* top.easyblog.controller.admin.*.*(..))")
     public void log() {
     }
 
