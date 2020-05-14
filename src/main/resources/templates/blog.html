@@ -20,7 +20,6 @@
     </style>
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
-    <!--百度统计JS脚本-->
     <script>
         var _hmt = _hmt || [];
         (function() {
@@ -30,7 +29,6 @@
             s.parentNode.insertBefore(hm, s);
         })();
     </script>
-    <!--google Adsense-->
     <script data-ad-client="ca-pub-2311962880414013" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <body>
@@ -118,7 +116,7 @@
                     <div class="ui middle aligned grid">
                         <div class="sixteen wide column">
                             <ul class="list">
-                                <li>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：[[${author.getUserNickname()}]]</li>
+                                <li>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：[[${author.getUserNickname()}]]</li>
                                 <li>发表时间：[[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd hh:mm:ss')}]]</li>
                                 <li>版权声明：本文为博主原创文章，遵循<a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="font-size: 16px"> CC 4.0 BY-SA</a> 版权协议，转载请附上原文出处链接和本声明。</li>
                                 <li>原文链接：<a th:href="${#httpServletRequest.getRequestURL()}" th:text="${#httpServletRequest.getRequestURL()}"></a></li>
@@ -129,6 +127,7 @@
                 <div class="divider"></div>
                 <!--留言信息-->
                 <div style="margin-top: 1em !important;border-radius: 5px !important;" id="comment-container" class="ui attached segment">
+                    <h4 style="color:  #000000 !important;padding-left: 10px;margin: 0 auto 10px;border-left: 10px solid #55895B;font-size: 1.4em;">留言区</h4>
                     <!--留言区域列表-->
                     <div id="commentForm" class="ui form" style="padding-bottom: 15px !important;">
                         <!--默认存放文章作者的ID,评论默认发送给文章的作者-->
@@ -211,13 +210,9 @@
     </div>
 </div>
 
-<div class="ui toc-container flowing popup transition hidden" style="width: 250px!important;">
+<!--<div class="ui toc-container flowing popup transition hidden" style="width: 250px!important;">
     <ol class="js-toc">
     </ol>
-</div>
-
-<!--<div id="qrcode" class="ui wechat-qr flowing popup transition hidden " style="width: 130px !important;">
-    <img src="./static/images/wechat.jpg" alt="" class="ui rounded image" style="width: 120px !important;">
 </div>-->
 
 <div style="height: 10em"></div>
@@ -386,16 +381,5 @@
     });
 
 
-    var waypoint = new Waypoint({
-        element: document.getElementById('waypoint'),
-        handler: function (direction) {
-            if (direction == 'down') {
-                $('#toolbar').show(100);
-            } else {
-                $('#toolbar').hide(500);
-            }
-            console.log('Scrolled to waypoint!  ' + direction);
-        }
-    })
 </script>
 </html>

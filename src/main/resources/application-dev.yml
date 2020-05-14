@@ -8,7 +8,7 @@ spring:
     #指定使用Druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://121.36.49.86:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.92.145:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
     username: root
     password: 95162437hx$
     #password: huangxin@95162437
@@ -54,9 +54,9 @@ spring:
     restart:
       additional-paths: src/main/java
   redis:
-    host: 121.36.49.86
+    host: 192.168.92.145
     port: 6379
-    password: CySynWsw5NLzbzHne3XcXaRGPWKpJxSKsHikLYvQ6VI0dNKjScuyYPjt
+    #password: CySynWsw5NLzbzHne3XcXaRGPWKpJxSKsHikLYvQ6VI0dNKjScuyYPjt
     database: 0
     timeout: 10000
     #springBoot 2.x应该配置lettuce作为Redis客户端  Spring1.x配置jedis
