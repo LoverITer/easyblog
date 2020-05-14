@@ -155,12 +155,17 @@ public class ArticleServiceImpl implements IArticleService {
                         try {
                             Integer userId = article.getArticleUser();
                             User user = userMapper.getByPrimaryKey((long) userId);
-                            article.setUserHeaderImageUrl(user.getUserHeaderImgUrl());
+                            if (user != null) {
+                                article.setUserHeaderImageUrl(user.getUserHeaderImgUrl());
+                            }
                             Category category = categoryMapper.getCategoryByUserIdAndName(userId, article.getArticleCategory());
-                            article.setCategoryId(category.getCategoryId());
+                            if (category != null) {
+                                article.setCategoryId(category.getCategoryId());
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
                     });
                     //把MarkDown文本转换为普通文本
                     parseMarkdowns2Text(articles);

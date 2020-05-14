@@ -34,10 +34,10 @@ code[class*="language-"]{
     background: none;
     text-shadow: 0 1px white;
     font-family: Monaco,Menlo,Consolas,"Courier New",monospace !important;
-    font-size: 15px;
+    font-size: 16px;
     text-align: justify;
     white-space: pre;
-    word-spacing: normal;
+    word-spacing: .5px;
     word-break: normal;
     word-wrap: normal;
     line-height: 28px;
@@ -71,14 +71,14 @@ code[class*="language-"]::selection, code[class*="language-"] ::selection {
 
 /* Code blocks */
 pre[class*="language-"] {
-    padding: 1em;
+    padding: 0.5em;
     margin: .5em 0;
     overflow: auto;
 }
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-	border-radius:8px;
+	border-radius:5px;
     background: #fafafa;
 }
 

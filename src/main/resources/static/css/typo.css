@@ -1,14 +1,15 @@
 @charset "utf-8";
 
 .typo p {
-  font-size: 16px;
+  font-size: 16px !important;
   font-weight: 400;
   line-height: 30px;
-  color: #4d4d4d;
+  color: #111;
   margin: 0 0 16px;
  /* white-space: pre-line;  !*合并空白符序列, 但正常换行*!*/
   overflow-wrap:break-word;
   word-break:break-all;
+  letter-spacing: .5px;
 }
 
 .typo h1 a,.typo h2 a,.typo h3 a,.typo h4 a,.typo h5 a,.typo h6 a{
@@ -41,6 +42,7 @@
 .typo table {
   border-collapse: collapse;
   border-spacing: 0;
+  width: 100%;
 }
 
 /* 去除默认边框 */
@@ -52,7 +54,7 @@
 .typo blockquote {
   position: relative;
   display: block;
-  font-size: 15px;
+  font-size: 16px;
   color: #999;
   font-weight: 400;
   background: #f4f9fb;
@@ -64,7 +66,7 @@
 
 .typo li{
   font-size: 16px;
-  color: #4d4d4d;
+  color: #111;
   line-height: 24px;
   overflow-wrap: break-word;
   word-break: break-all;
@@ -238,11 +240,14 @@
 }
 
 /* 保证块/段落之间的空白隔行 */
-.typo p, .typo pre,  .typo dl, .typo form, .typo hr, .typo table,
+.typo pre,  .typo dl, .typo form, .typo hr, .typo table,
 .typo-p, .typo-pre, .typo-ul, .typo-ol, .typo-dl, .typo-form, .typo-hr, .typo-table, blockquote {
-  margin-bottom: 0.5em
+  margin-bottom: 0.9em
 }
 
+.typo p{
+    margin-bottom: 0.2em
+}
 .typo h1,.typo  h2,.typo  h3,.typo  h4,.typo  h5,.typo  h6 {
   font-family:  Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
   font-weight: 600;
@@ -253,7 +258,6 @@
 /* 标题应该更贴紧内容，并与其他块区分，margin 值要相应做优化 */
 .typo h1, .typo h2, .typo h3, .typo h4, .typo h5, .typo h6,
 .typo-h1, .typo-h2, .typo-h3, .typo-h4, .typo-h5, .typo-h6 {
-  margin-top: 1.2em;
   margin-bottom: 0.6em;
   line-height: 1.35;
 }
@@ -307,7 +311,9 @@
 .typo table th, .typo table td, .typo-table th, .typo-table td, .typo table caption {
   border: 1px solid #ddd;
   padding: 0.5em 1em;
-  color: #666;
+  color: #111;
+  font-weight: 500;
+  background: antiquewhite;
 }
 
 .typo table th, .typo-table th {
@@ -316,7 +322,7 @@
 
 .typo table thead th, .typo-table thead th {
   font-size: 16px;
-  background: #f1f1f1;
+  background: bisque;
   text-align: center;
   font-weight: 700;
 }

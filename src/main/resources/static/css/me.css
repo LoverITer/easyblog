@@ -1,5 +1,7 @@
 
 body {
+    font-family: arial,verdana,helvetica,'PingFang SC','HanHei SC',STHeitiSC-Light,Microsoft Yahei,sans-serif !important;
+    -webkit-font-smoothing: antialiased !important;
     background: url("../images/bg.png");
 }
 
@@ -575,7 +577,6 @@ span.count {
     position: absolute !important;
     top: 5.3em !important;
     right: 2em !important;
-    display: none;
 }
 
 
@@ -648,6 +649,10 @@ span.m-article-type{
     width: 100% !important;
 }
 
+.m-article-body-inner-padding{
+    padding: 10px 15px 0 15px !important;
+}
+
 /**Small Monitor*/
 @media screen and (min-width: 992px) and (max-width: 1200px) {
     .m-mobile-margin-left {
@@ -666,6 +671,24 @@ span.m-article-type{
 
 /**Mobile*/
 @media screen and (max-width: 768px) {
+
+    .m-article-author-info-padding{
+        padding: 0 .5em !important;
+    }
+
+    .m-article-padding-top{
+        padding-top: 14px !important;
+    }
+
+    .m-article-body-inner-padding{
+        padding: 10px 8px 0 8px !important;
+    }
+
+    .m-article-body-outer-padding{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        padding-top: 0 !important;
+    }
 
     .m-prev-image-style{
         max-height: unset;
@@ -764,8 +787,8 @@ span.m-article-type{
 
     .m-article-title {
         font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif !important;
-        font-size: 14px !important;
-        line-height: 22px !important;
+        font-size: 20px !important;
+        line-height: 24px !important;
         word-wrap: break-word !important;
         color: #4d4d4d !important;
     }
