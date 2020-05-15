@@ -369,13 +369,17 @@ public class ArticleAdminController {
 
     @GetMapping(value = "/delete")
     public String deleteArticle(@RequestParam("articleId") int articleId,@RequestParam int userId) {
-        try {
-            //删除的文章暂时移动到垃圾桶
-            updateArticle(articleId, "3");
-        } catch (Exception e) {
-            return "redirect:/error/error";
+        User user = UserUtils.getUserFromRedis(userId);
+        if (Objects.nonNull(user)) {
+            try {
+                //删除的文章暂时移动到垃圾桶
+                updateArticle(articleId, "3");
+            } catch (Exception e) {
+                return "redirect:/error/error";
+            }
+            return "redirect:/manage/blog/?userId=" + userId;
         }
-        return "redirect:/manage/blog/?userId="+userId;
+        return "redirect:/user/loginPage";
     }
 
 

@@ -22,28 +22,28 @@ spring:
         enabled: true
         exclusions: .js,.css,.html,/druid/*
         url-pattern: /*
-    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-    filters: stat,wall,logback
-    # 初始化连接池的连接数量 大小，最小，最大
-    initial-size: 5
-    min-idle: 5
-    max-active: 20
-    # 配置获取连接等待超时的时间
-    max-wait: 60000
-    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-    time-between-eviction-runs-millis: 60000
-      # 配置一个连接在池中最小生存的时间，单位是毫秒
-    min-evictable-idle-time-millis: 300000
-    validation-query: SELECT 1 FROM DUAL
-    test-while-idle: true
-    test-on-borrow: false
-    test-on-return: false
-    # 是否缓存preparedStatement，也就是PSCache  官方建议MySQL下建议关闭,如果想用SQL防火墙 建议打开
-    pool-prepared-statements: true
-    max-pool-prepared-statement-per-connection-size: 20
-    use-global-data-source-stat: true
-    # 通过connectProperties属性来打开mergeSql功能
-    connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,logback
+      # 初始化连接池的连接数量 大小，最小，最大
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      # 配置获取连接等待超时的时间
+      max-wait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      # 是否缓存preparedStatement，也就是PSCache  官方建议MySQL下建议关闭,如果想用SQL防火墙 建议打开
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      use-global-data-source-stat: true
+      # 通过connectProperties属性来打开mergeSql功能
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
   redis:
     host: redis      #在docker容器中部署，host地址一定要写你配置的Redis容器的名字
     port: 6379
@@ -57,12 +57,10 @@ spring:
         max-idle: 5         # 连接池的最大空闲连接
         min-idle: 0         # 连接池的最小空闲连接
       shutdown-timeout: 1200           # 连接超时时间(ms)
-#  session:
-#    store-type: redis # 共享session存储在redis
   thymeleaf:
     cache: false
 logging:
   level:
-    root: warn
-    top.easyblog: warn
+    root: info
+    top.easyblog.mapper: DEBUG
   file: easyblog-pro.log

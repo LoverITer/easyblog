@@ -42,8 +42,8 @@
             <file>${LOG_FILE}</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
                 <fileNamePattern>%d{yyyy-MM-dd}.%i.${LOG_FILE}</fileNamePattern>
-                <!--保留历史日志一个月的时间-->
-                <maxHistory>30</maxHistory>
+                <!--保留历史日志半月的时间-->
+                <maxHistory>15</maxHistory>
                 <!--
                 Spring Boot默认情况下，日志文件100M时，会切分日志文件,这样设置日志文件会在100M时切分日志
                 -->

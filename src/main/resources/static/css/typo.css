@@ -12,9 +12,15 @@
   letter-spacing: .5px;
 }
 
-.typo h1 a,.typo h2 a,.typo h3 a,.typo h4 a,.typo h5 a,.typo h6 a{
+.typo h1 a,.typo h2 a,.typo h3 a,.typo h4 a,.typo h5 a{
   color: #000000 !important;
   text-decoration: none !important;
+}
+
+.typo h6 a{
+  color: grey !important;
+  text-decoration: none !important;
+  font-size: 16px;
 }
 
 /* 重设 HTML5 标签, IE 需要在 js 中 createElement(TAG) */
@@ -258,7 +264,7 @@
 /* 标题应该更贴紧内容，并与其他块区分，margin 值要相应做优化 */
 .typo h1, .typo h2, .typo h3, .typo h4, .typo h5, .typo h6,
 .typo-h1, .typo-h2, .typo-h3, .typo-h4, .typo-h5, .typo-h6 {
-  margin-bottom: 0.6em;
+  margin: 0.3em 0;
   line-height: 1.35;
 }
 
@@ -282,8 +288,12 @@
   font-size: 1.4em;
 }
 
-.typo h5, .typo h6, .typo-h5, .typo-h6 {
+.typo h5, .typo-h5 {
   font-size: 1.2em;
+}
+
+.typo h6,.typo-h6{
+  font-size: 0.9em;
 }
 
 /* 在文章中，应该还原 ul 和 ol 的样式 */

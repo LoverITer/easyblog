@@ -34,6 +34,7 @@ public class UpdateArticleInfoScheduleTask {
     public void settingNoneFirstPictureArticle(){
         log.info(new Date()+" schedule task start");
         try {
+            //后驱所有没有首图的文章
             List<Article> articles = articleService.getAllNoneFirstPicArticles();
             if (Objects.nonNull(articles)) {
                 articles.forEach(article -> {
@@ -43,7 +44,7 @@ public class UpdateArticleInfoScheduleTask {
                     var0.setArticleId(article.getArticleId());
                     var0.setArticleFirstPicture(imageUrl);
                     int res = articleService.updateSelective(var0);
-                    if(res<=0){
+                    if (res <= 0) {
                         log.error("schedule task execute failed!");
                     }
                 });

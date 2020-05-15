@@ -25,11 +25,10 @@ public class WebRequestLogAspect {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Pointcut(value = "execution(* top.easyblog.controller.*.*(..))")
-    public void log() {
-    }
+    public void log() { }
 
 
-    @Before(value = "log()")
+    @Before( value="log()")
     public void doBefore(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;

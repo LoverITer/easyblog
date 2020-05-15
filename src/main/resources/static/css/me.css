@@ -1,8 +1,12 @@
-
+@charset "utf-8";
 body {
     font-family: arial,verdana,helvetica,'PingFang SC','HanHei SC',STHeitiSC-Light,Microsoft Yahei,sans-serif !important;
     -webkit-font-smoothing: antialiased !important;
     background: url("../images/bg.png");
+}
+
+footer a:hover{
+    color: #00B5AD !important;
 }
 
 .m-padded-no {
@@ -23,8 +27,8 @@ body {
 }
 
 .m-padded-tb-mini {
-    padding-top: 0.5em !important;
-    padding-bottom: 0.5em !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .m-padded-tb-tiny {
