@@ -83,7 +83,7 @@
         select *
         from article
         where article_status = '0'
-          and date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+          AND date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
         ORDER BY article_click DESC
         limit #{limit}
     </select>

@@ -168,9 +168,10 @@ span.token.number {
     color: #a626a4;
 }
 
-.token.function {
+.token.function,.token.punctuation{
     color: #4078f2;
 }
+
 
 .token.class-name {
     color: #556370;

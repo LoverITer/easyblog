@@ -5,6 +5,11 @@ body {
     background: url("../images/bg.png");
 }
 
+/*CNZZ统计*/
+#cnzz_stat_icon_1278910749 img{
+    display: inline-block !important;
+}
+
 footer a:hover{
     color: #00B5AD !important;
 }

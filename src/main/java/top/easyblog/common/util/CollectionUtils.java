@@ -41,7 +41,7 @@ public class CollectionUtils {
      */
     public static List<List<?>> splitList(List<?> sourceList, int[] splitCapacity) {
         if (sourceList == null || sourceList.size() == 0 || splitCapacity == null || splitCapacity.length < 1) {
-            return null;
+           return null;
         }
         int size = 0;
         for (int i = 0; i < splitCapacity.length; i++) {

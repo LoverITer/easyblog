@@ -15,36 +15,36 @@ Features
 
 How to use it?
 ------------
-#### 项目首页地址：www.easyblog.top
-#### 项目运行效果演示： 
-##### 项目首页
+#### Website：www.easyblog.top
+#### Demonstration of project operation effect： 
+##### Website Home page
 ![](http://image.easyblog.top/1581419401975088bf0a7-2215-4364-8343-7cb56dec4751.png)
 
-##### 登录/注册页面
+##### Login/Registration page
 ![](http://image.easyblog.top/15814197771404e2f80e8-c4d3-4156-bf3e-1b3578cf6161.jpg)
 
-##### 文章内容页面
+##### Article content page
 ![](http://image.easyblog.top/158141986451400a9fde4-a91d-4850-a1e6-95ad455d2756.png)
 
-##### 文章分类专栏页面
+##### Article category page
 ![](http://image.easyblog.top/158142018903330c50b98-a5e8-444b-92ec-789e1b6a489d.png)
 
-##### 文章归档页面
+##### Article archive page
 ![](http://image.easyblog.top/15814203243294ed6e732-edcb-4604-b7fc-5d5d7a73bb2c.png)
 
-##### 博客详情页面
+##### Blog details page
 ![](http://image.easyblog.top/1581420469583b059dab2-15a4-44a7-a96f-cdece5b88f8e.png)
 
-##### 个人主页页面
+##### Profile page
 ![](http://image.easyblog.top/15814205516631953da39-8f35-493c-9ac7-86ccfd28297f.png)
 
-##### 个人信息设置页面
+##### Personal information setting page
 ![](http://image.easyblog.top/1581420657904c0357c2f-9391-426d-a1d0-05dae4ecd043.png)
 
-##### 文章编辑以及发布页面
+##### Article editing and publishing page
 ![](http://image.easyblog.top/15814208027537f962c90-9fbd-4e0a-8a0e-ea4b31dc0291.png)
 
-##### 博客管理页面
+##### Blog management page
 ![](http://image.easyblog.top/1581420877327788dfd73-0e33-4625-ad00-295b4b2f2cfe.png)
 Contribute
 ----------
