@@ -63,7 +63,7 @@ nav { float: left; height: 50px; line-height: 50px; text-align: center; }
 .menu span { display: none; width: 50px; height: 50px; background: #12b7de; opacity: 0.5; position: absolute; top: 0; right: 0; border-left: #49ccea 1px solid; }
 /*search*/
 .searchico { margin-top: 5px;margin-right: 10px; width: 39px; height: 39px; float: right; display: inline; cursor: pointer; background: url(../images/search.png) no-repeat center !important; }
-.searchbox { width: 1200px; margin: 0 auto; overflow: hidden; background: rgba(255,255,255,.2);; position: relative; }
+.searchbox { width: 1200px; margin: 10px auto; overflow: hidden; background: rgba(255,255,255,.2);; position: relative; }
 .search { width: 50%; margin: 20px auto; background: #d84315; border-radius: 5px; position: relative;  display: none; }
 .search input.input_submit { border: 0; background: 0; color: #fff; outline: none; position: absolute; top: 10px; right: 10% }
 .search input.input_text { border-radius: 3px;border: 0; line-height: 45px; height: 45px; width: 72%; padding-left: 10px; outline: none ;font-size: 15px}
@@ -75,7 +75,7 @@ nav { float: left; height: 50px; line-height: 50px; text-align: center; }
 /*lbox*/
 .lbox { width: 75%; float: left; overflow: hidden }
 /*banner*/
-.banbox { width: 100%; overflow: hidden; float: left; border-radius: 3px; margin-bottom: 20px;padding-top: 10px }
+.banbox { width: 100%; overflow: hidden; float: left; border-radius: 3px; margin-bottom: 20px;padding-top: 0 }
 .banner { width: 100%;overflow: hidden; float: left;}
 .fader { position: relative; width: 100%; height: 450px; /*padding-top: 50%;*/ font-family: "futura", arial; overflow: hidden; }
 .fader .slide { position: absolute; width: 100%; height:100%;top: 0; z-index: 1; opacity: 0; }
@@ -184,7 +184,7 @@ a.viewmore { display: block; right: 10px; bottom: 20px; position: absolute; padd
 .links li a { display: block; }
 .links li:hover { background: #f7f7f7 }
 /*rbox*/
-.rbox { width: 23.5%; float: right; overflow: hidden; padding-top: 10px !important;}
+.rbox { width: 23.5%; float: right; overflow: hidden;}
 .card { box-shadow: 0px 1px 0px rgba(255,255,255,.1), inset 0px 1px 1px rgba(0,0,0,.7); border-radius: 3px; background: url(../images/quote-bg.png) no-repeat top right rgba(42,42,42,1); height: 260px; overflow: hidden; margin-bottom: 20px }
 .card h2 { font-size: 22px; margin: 10px; color: #89919a; font-weight: normal; padding-bottom: 10px; }
 .card p { font-size: 12px; padding: 0 0 0 20px; line-height: 28px; text-shadow: 0px 1px 2px rgba(0,0,0,.5); color: #d0d2d4; -webkit-animation: animations2 5s ease-in-out 5s; -moz-animation: animations2 5s ease-in-out 5s; -o-animation: animations2 5s ease-in-out 5s; -ms-animation: animations2 5s ease-in-out 5s; animation: animations2 5s ease-in-out 5s; }
@@ -238,6 +238,7 @@ a.iconfont.icon-weixin { color: #07AF12; }
 .paihang ul li:nth-child(6) i::before { content: "6"; }
 .paihang ul li:nth-child(7) i::before { content: "7"; }
 .paihang ul li:nth-child(8) i::before { content: "8"; }
+.paihang ul li:nth-child(9) i::before { content: "9"; }
 .paihang ul li:hover { -moz-transition: all .2s ease; -webkit-transition: all .2s ease; transition: all .2s ease; }
 /*tuijian*/
 .tuijian ul { overflow: hidden; padding-top: 10px }

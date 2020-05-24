@@ -16,6 +16,11 @@
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
     <script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
+    <style>
+        #cnzz_stat_icon_1278910749 img{
+            display: inline-block !important;
+        }
+    </style>
     <!--[if lt IE 9]>
     <script src="js/modernizr.js"></script>
     <![endif]-->
@@ -35,19 +40,36 @@
 <body>
 
 <!--top begin-->
-<header id="header">
+<header id="header" th:fragment="index-nav">
     <div class="navbox">
         <h2 id="mnavh"><span class="navicon"></span></h2>
-        <div class="logo">
-            <a href="/" style="color: #00B5AD"><h2>EasyBlog</h2></a>
-        </div>
+        <div class="logo"><a href="/" style="color: #00B5AD"><h2>EasyBlog</h2></a></div>
         <nav>
             <ul id="starlist">
                 <li><a href="/" title="首页" th:href="@{/}">首页</a></li>
-                <li>
-                    <a href="#" th:if="${user==null||user.getUserId()!=667020}"  th:href="@{/article/home/667020}">关于我</a>
-                    <a href="#" th:if="${user!=null&&user.getUserId()==667020}"  th:href="@{/article/home/667020(visitorUId=${user.getUserId()})}">关于我</a>
-                </li>
+                <li class="menu"><a href="/cb" th:href="@{/cb}">计算机基础</a>
+                    <ul class="sub">
+                    <li><a href="/cb/algrothim" th:href="@{/cb/algorithm}">数据结构与算法</a></li>
+                    <li><a href="/cb/network" th:href="@{/cb/network}">计算机网络</a></li>
+                    <li><a href="/cb/os" th:href="@{/cb/os}">操作系统</a></li>
+                </ul><span></span></li>
+                <li><a href="/java"  th:href="@{/java}">Java</a></li>
+                <li class="menu"><a href="/framework" th:href="@{/framework}">架构/框架</a>
+                    <ul class="sub">
+                        <li><a href="/spring" th:href="@{/framework/spring}">Spring</a></li>
+                        <li><a href="/springmvc" th:href="@{/framework/springmvc}">Spring MVC</a></li>
+                        <li><a href="/springboot" th:href="@{/framework/springboot}">Spring Boot</a></li>
+                        <li><a href="/mybatis" th:href="@{/framework/mybatis}">MyBatis</a></li>
+                        <li><a href="/redis" th:href="@{/framework/redis}">Redis</a></li>
+                        <li><a href="/docker" th:href="@{/framework/docker}">Docker</a></li>
+                        <li><a href="/nginx" th:href="@{/framework/nginx}">Nginx</a></li>
+                        <li><a href="/netty" th:href="@{/framework/netty}">Netty</a></li>
+                    </ul><span></span></li>
+                <li><a href="/db" th:href="@{/db}">数据库</a></li>
+                <li><a href="/bigdata" th:href="@{/bigdata}">云计算/大数据</a></li>
+                <li><a href="/others" th:href="@{/others}">其它技术</a></li>
+                <li><a href="#" th:if="${user==null||user.getUserId()!=667020}"  th:href="@{/article/home/667020}">关于我</a>
+                    <a href="#" th:if="${user!=null&&user.getUserId()==667020}"  th:href="@{/article/home/667020(visitorUId=${user.getUserId()})}">关于我</a></li>
                 <li th:if="${user==null}"><a class="index_user_login" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
                 <li th:if="${user!=null}">
                     <div id="header-images" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
@@ -61,7 +83,7 @@
         <div class="searchico"></div>
     </div>
 </header>
-<div class="searchbox">
+<div class="searchbox" th:fragment="index-search">
     <div class="search">
         <form action="#" th:action="@{/search/details}" method="get" target="_blank" name="searchform" id="searchform">
             <input name="query" id="keyboard" class="input_text" value="请输入关键字词" style="color: rgb(153, 153, 153);"
@@ -177,19 +199,19 @@
         </div>
         <!--bloglist end-->
     </div>
-    <div class="rbox">
-        <div class="whitebg paihang">
-            <h2 class="htitle">访问排行</h2>
+    <div class="rbox" >
+        <div class="whitebg paihang" th:fragment="index-click">
+            <h2 class="htitle">点击排行</h2>
             <section class="topnews imgscale" th:if="${famousSideBarTopArticle!=null}" th:each="topicArticle:${famousSideBarTopArticle}">
                 <a href="#" th:if="${user==null}" th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()})}">
                     <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
                     <img th:if="${topicArticle.getArticleFirstPicture()!=null}" th:src="@{${topicArticle.getArticleFirstPicture()}}">
-                    <span th:text="${topicArticle.getArticleTopic()}">安静地做一个爱设计的女子</span>
+                    <span th:text="${topicArticle.getArticleTopic()}"></span>
                 </a>
                 <a href="#" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()},visitorUId=${user.getUserId()})}">
                     <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
                     <img th:if="${topicArticle.getArticleFirstPicture()!=null}" th:src="@{${topicArticle.getArticleFirstPicture()}}">
-                    <span th:text="${topicArticle.getArticleTopic()}">安静地做一个爱设计的女子</span>
+                    <span th:text="${topicArticle.getArticleTopic()}"></span>
                 </a>
             </section>
             <ul>
@@ -239,10 +261,10 @@
                          src="/skin/jxhx/images/ad.jpg"></a>
              </ul>
          </div>-->
-        <div class="whitebg wenzi">
+        <div class="whitebg wenzi" th:fragment="index-like">
             <h2 class="htitle">猜你喜欢</h2>
             <ul>
-                <li th:if="${youMayAlsoLikeArticles!=null}" th:each="article:${youMayAlsoLikeArticles}">
+                <li th:if="${likes!=null}" th:each="article:${likes}">
                     <a target="_blank" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" href="/xd/23.html" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
                     <a target="_blank" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" href="/xd/23.html" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
                 </li>
@@ -256,12 +278,12 @@
         </div>-->
     </div>
 </article>
-<footer>
+<footer th:fragment="index-footer">
     <div class="box">
         <div class="wxbox">
             <ul>
-                <li><img src="../static/images/wechart.png" th:src="@{/static/images/wechart.png}"><span>开发者微信</span></li>
-                <li><img src="../static/images/wechart.png" th:src="@{/static/images/wechart.png}"><span>微信公众号</span></li>
+                <li><img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}"><span>开发者微信</span></li>
+                <li><img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}"><span>微信公众号</span></li>
             </ul>
         </div>
         <div class="endnav">
@@ -273,7 +295,10 @@
             <br/>
             <p class="copyright" style="margin-top: 0 !important;font-size: 15px">Copyright © 2019-[[${#dates.format(new java.util.Date().getTime(),'yyyy')}]] <a
                  style="font-size: 15px;color: inherit"   href="http://www.easyblog.top">www.easyblog.top</a> 版权所有.
-                <a href="http://www.miitbeian.gov.cn/" style="font-size: 15px;color: inherit"  target="_blank">陕ICP备-19025460号</a></p>
+                <a href="http://beian.miit.gov.cn/publish/query/indexFirst.action" style="font-size: 15px;color: inherit"  target="_blank">陕ICP备-19025460号.</a>
+                <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278910749'%3E%3C/span%3E%3Cscript src='https://v1.cnzz.com/z_stat.php%3Fid%3D1278910749%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+
+            </p>
         </div>
     </div>
     <a href="#">
