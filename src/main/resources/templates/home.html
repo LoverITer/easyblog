@@ -134,10 +134,10 @@
 
                         <div class="five wide column">
                             <a target="_blank">
-                                <img th:if="${article.getArticleFirstPicture()==null}"
+                                <img th:if="${article.getArticleFirstPicture() eq null}"
                                      src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
                                      th:alt="${article.getArticleTopic()}" class="ui rounded image">
-                                <img th:if="${article.getArticleFirstPicture()!=null}"
+                                <img th:if="${article.getArticleFirstPicture() ne null}"
                                      th:src="@{${article.getArticleFirstPicture()}}"
                                      th:alt="${article.getArticleTopic()}"
                                      class="ui rounded image">
@@ -148,7 +148,7 @@
             </div>
 
             <!--查看更多-->
-            <div th:if="${#lists.size(articles)>25}" class="ui bottom attached segment" style="border-top: none !important;">
+            <div th:if="${#lists.size(articles) gt 25}" class="ui bottom attached segment" style="border-top: none !important;">
                 <a href="#" th:href="@{/article/index/{uid}(uid=${author.getUserId()})}">
                     <button id="more-btn" class="ui negative basic button m-look-more-margin">查看更多
                     </button>
@@ -156,7 +156,7 @@
             </div>
 
             <!--文章条数>0并且小于等于25-->
-            <div th:if="${!#lists.isEmpty(articles) and #lists.size(articles)<=25}" class="ui bottom attached segment" style="border-top: none !important;padding: 1px !important;">
+            <div th:if="${!#lists.isEmpty(articles) and #lists.size(articles) le 25}" class="ui bottom attached segment" style="border-top: none !important;padding: 1px !important;">
             </div>
 
 

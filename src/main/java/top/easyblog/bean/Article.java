@@ -4,11 +4,12 @@ import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author huangxin
  */
-public class Article implements Serializable {
+public class Article implements Serializable, Comparable<Article> {
 
     private static final long serialVersionUID = -1882730239589668817L;
 
@@ -205,5 +206,21 @@ public class Article implements Serializable {
                 ", articleTags='" + articleTags + '\'' +
                 ", articleContent='" + articleContent + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Article o) {
+        if (Objects.nonNull(o)) {
+            if (this.articleClick.equals(o.articleClick)) {
+                return 0;
+            } else if (this.articleClick > o.articleClick) {
+                return 1;
+            } else {
+                return -1;
+            }
+        } else {
+
+            throw new IllegalArgumentException("Argument can not be null");
+        }
     }
 }

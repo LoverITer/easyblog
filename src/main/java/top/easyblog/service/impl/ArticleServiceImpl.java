@@ -3,10 +3,6 @@ package top.easyblog.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,13 +20,13 @@ import top.easyblog.markdown.TextForm;
 import top.easyblog.service.IArticleService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * @author huangxin
  */
-@CacheConfig(keyGenerator = "keyGenerator", cacheManager = "cacheManager")
 @Service
 public class ArticleServiceImpl implements IArticleService {
 
@@ -47,7 +43,6 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    @CachePut(cacheNames = "article", condition = "#result>0")
     @Override
     public int saveArticle(Article article) {
         try {
@@ -73,7 +68,6 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    @Cacheable(cacheNames = "article", condition = "#result!=null")
     @Override
     public Article getArticleById(int articleId, String flag) {
         Article article = null;
@@ -93,7 +87,6 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    @Cacheable(cacheNames = "userArticles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Article> getUserNewestArticles(int userId, int limit) {
         if (userId > 0 && limit > 0) {
@@ -197,7 +190,6 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<ArticleCounter> getUserAllArticleArchives(int userId) {
         if (userId > 0) {
@@ -215,7 +207,6 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Article> getUserArticles(int userId, String articleType) {
         if (userId > 0) {
@@ -265,7 +256,6 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Article> getUserArticlesMonthly(int userId, String year, String month) {
         if (userId > 0 && StringUtil.isNotEmpty(year) && StringUtil.isNotEmpty(month)) {
@@ -299,7 +289,6 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    @Cacheable(cacheNames = "articles", condition = "#result!=null&&result.size()>0")
     @Override
     public List<Article> getUserArticlesMonthlyOrderByClickNum(int userId, String year, String month) {
         if (userId > 0 && StringUtil.isNotEmpty(year) && StringUtil.isNotEmpty(month)) {
@@ -333,7 +322,6 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    @Cacheable(cacheNames = "articles", condition = "#result!=null&&result.size()>0")
     @Override
     public List<Article> getByCategoryAndUserId(int userId, int categoryId) {
         if (userId > 0 && categoryId > 0) {
@@ -368,7 +356,6 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    @Cacheable(cacheNames = "articles", condition = "#result!=null&&#result.size()>0")
     @Override
     public List<Article> getArticlesSelective(Article article, String year, String month) {
         try {
@@ -407,12 +394,11 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    @Cacheable(cacheNames = "articles", condition = "#result!=null&&result.size()>0")
     @Override
     public List<Article> getArticleByTopic(String query) {
         if (StringUtil.isNotEmpty(query)) {
             try {
-                return parseMarkdowns2Text(articleMapper.getUsersArticleByQueryString("%" + query + "%"));
+                return parseMarkdowns2Text(articleMapper.getUsersArticleByQueryString(query + "%"));
             } catch (Exception e) {
                 throw new RuntimeException(e.getCause());
             }
@@ -428,7 +414,7 @@ public class ArticleServiceImpl implements IArticleService {
             if (Objects.nonNull(pageParam)) {
                 try {
                     PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
-                    List<Article> articles = articleMapper.getUsersArticleByQueryString("%" + query + "%");
+                    List<Article> articles = articleMapper.getUsersArticleByQueryString(query + "%");
                     pageInfo = new PageInfo<>(parseMarkdowns2Text(articles));
                 } catch (Exception e) {
                     throw new RuntimeException(e.getCause());
@@ -440,8 +426,18 @@ public class ArticleServiceImpl implements IArticleService {
         return pageInfo;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class, readOnly = true)
+    @Override
+    public List<Article> getArticleByCategoryFuzzy(String[] keys,Boolean order,int limit) {
+        if (Objects.nonNull(keys) && keys.length > 0) {
+            List<Article> articles = articleMapper.getArticleByCategoryNameFuzzy(keys,order,limit);
+            return parseMarkdowns2Text(articles);
+        } else {
+            throw new IllegalArgumentException("illegal args for 'keys':" + Arrays.toString(keys));
+        }
+    }
+
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = "article")
     @Override
     public void deleteByUserIdAndTitle(int userId, String title) {
         if (userId > 0 && StringUtil.isNotEmpty(title)) {

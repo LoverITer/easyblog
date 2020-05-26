@@ -49,135 +49,155 @@
         <img th:case="cb"  src="http://image.easyblog.top/15903233387258b4e7141-25d4-4faa-8051-eb6d353c4582.jpg"/>
         <img th:case="algorithm"  src="http://image.easyblog.top/1590322775867abaa2947-24d3-41d7-b422-000228bbd7fe.jpg"/>
         <img th:case="network"  src="http://image.easyblog.top/1590323644319dbf0f867-c1f8-4cbc-9429-6c333a4fa751.jpg"/>
+        <!--<img th:case="pco"  src="http://image.easyblog.top/15903743597891a21aa9d-4571-4ee9-bc9e-75edee922032.jpg"/>-->
+        <img th:case="dp"  src="http://image.easyblog.top/15903744411154662a25a-e13b-4640-ba4b-d55e75efc9ce.jpg"/>
+        <img th:case="se"  src="http://image.easyblog.top/1590374487557b67f7d02-ba6b-4973-a478-9e10b045cd30.jpg"/>
         <img th:case="os"  src="http://image.easyblog.top/15900765076234deaf34d-3ad3-4ca4-b741-1d390e7ec311.jpg"/>
         <img th:case="java"  src="http://image.easyblog.top/15903231496342deac5a2-89e2-4dc0-9bc2-055c028269c9.jpg"/>
         <img th:case="framework"  src="http://image.easyblog.top/158832421917462ac5b65-264e-43b0-a19d-76b045dc8648.jpg"/>
         <img th:case="spring"  src="http://image.easyblog.top/15873717732612e7ce6e9-4c32-4943-9303-2599446ccda4.jpg"/>
-        <img th:case="springmvc"  src="http://image.easyblog.top/1584073347633f74cd107-020d-431a-bc8e-a99ae2be8c7c.jpg"/>
-        <img th:case="springboot"  src="http://image.easyblog.top/1585056511670305e5cb6-0a71-4c42-9d8d-53b49b150dea.jpg"/>
+        <img th:case="springmvc"  src="http://image.easyblog.top/15904839772660e6979db-bc89-4ca6-9cce-a0fbabf9631e.jpg"/>
+        <img th:case="springboot"  src="http://image.easyblog.top/1590484117601924cd353-9fc0-409b-be6f-4bac7a120d46.jpg"/>
         <img th:case="mybatis"  src="http://image.easyblog.top/15873717946605ab45cf6-eb97-4c2c-b587-d4a5714b4f26.jpg"/>
         <img th:case="redis"  src="http://image.easyblog.top/1585900234728918a846d-8547-4f42-8bfa-2c3c99472fbf.jpg"/>
         <img th:case="nginx"  src="http://image.easyblog.top/1585019402615663c0a6d-2edd-49ef-88d8-c7e72ae53088.jpg"/>
         <img th:case="netty"  src="http://image.easyblog.top/15903228174299138239d-57d1-4de6-9292-e1b5f6077b33.jpg"/>
-        <img th:case="docker"  src="http://image.easyblog.top/158501884829316ce20b7-2375-46b7-9dd4-764989d6ba45.jpg"/>
+        <img th:case="docker"  src="http://image.easyblog.top/1590484169892bca4ea69-3d92-47c2-b1a1-07fd10e2983e.jpg"/>
         <img th:case="db"  src="http://image.easyblog.top/1587906779529875bfa2c-1be7-4bc1-88dd-f6a49e34c818.jpg"/>
         <img th:case="bigdata"  src="http://image.easyblog.top/15903299809772aa9b5a5-ee49-44c6-a382-ea3b5a81dfb1.jpg"/>
         <img th:case="others"  src="http://image.easyblog.top/15903233387258b4e7141-25d4-4faa-8051-eb6d353c4582.jpg"/>
-      <h1 th:switch="${type}">
-        <span th:case="cb">计算机基础</span>
-        <span th:case="algorithm">数据结构与算法</span>
-        <span th:case="network">计算机网络</span>
-        <span th:case="os">操作系统</span>
-        <span th:case="java">Java</span>
-        <span th:case="framework">架构/框架</span>
-        <span th:case="spring">Spring</span>
-        <span th:case="springmvc">Spring MVC</span>
-        <span th:case="springboot">Spring Boot</span>
-        <span th:case="mybatis">MyBatis</span>
-        <span th:case="redis">Redis</span>
-        <span th:case="nginx">Nginx</span>
-        <span th:case="netty">Netty</span>
-        <span th:case="docker">Docker</span>
-        <span th:case="db">数据库</span>
-        <span th:case="bigdata">云计算/大数据</span>
-        <span th:case="others">其它技术</span>
-      </h1>
-      <p th:switch="${type}">
-          <span th:case="cb">计算机基础是入门计算机开发领域所必须要掌握的基础知识，主要包括数据结构与算法、操作系统、计算机网络、计算机组成原理、设计模式、软件工程等</span>
-          <span th:case="algorithm">数据结构是指相互之间存在一种或多种特定关系的数据元素的集合用计算机存储、组织数据的方式。</span>
-          <span th:case="network">计算机网络是指将地理位置不同的具有独立功能的多台计算机及其外部设备，通过通信线路连接起来，在网络操作系统，网络管理软件及网络通信协议的管理和协调下，实现资源共享和信息传递的计算机系统。</span>
-          <span th:case="os">操作系统是管理计算机软件和软件资源的程序，是计算机系统的内核和基石。它的本质是运行在计算机上的软件，为用户提供了一个和系统交互的操作页面。</span>
-          <span th:case="java">Java具有简单性、面向对象、分布式、健壮性、安全性、平台独立与可移植性、多线程、动态性等特点。Java可以编写桌面应用程序、Web应用程序、分布式系统和嵌入式系统应用程序等，是目前企业级应用的主力编程语言。</span>
-          <span th:case="framework">框架( Framework )是构成一类特定软件可复用设计的一组相互协作的类。框架规定了你的应用的体系结构。它定义了整体结构，类和对象的分割，各部分的主要责任，类和对象怎么协作，以及控制流程。</span>
-          <span th:case="spring">Spring是一个轻量级的IOC(Inversion of Control，控制反转)和AOP(Aspect Oriented Programming，面向切面编程)开源框架。Spring提倡提倡以“最少侵入”的方式来管理应用中的代码，并且它出现的使命就是简化Java开发流程。</span>
-          <span th:case="springmvc">Spring MVC属于SpringFrameWork的后续产品，已经融合在Spring Web Flow里面。Spring 框架提供了构建 Web 应用程序的全功能MVC架构模块——Spring MVC</span>
-          <span th:case="springboot">Spring Boot是由Pivotal团队提供的全新框架，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置。通过这种方式，Spring Boot致力于在蓬勃发展的快速应用开发领域(rapid application development)成为领导者。</span>
-          <span th:case="mybatis">MyBatis是一款优秀的持久层框架，它支持定制化 SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。MyBatis 可以使用简单的 XML 或注解来配置和映射原生信息，将接口和 Java 的 POJOs(Plain Ordinary Java Object,普通的 Java对象)映射成数据库中的记录。</span>
-          <span th:case="redis">Redis是一个高性能的key-value内存数据库。Redis的出现，很大程度补偿了memcached这类key/value存储的不足，相比之下Redis具有更丰富的数据类型、支持持久化以及Redis天生支持高可用，因此Redis已经成为了现代企业常用的NoSQL中间件。</span>
-          <span th:case="nginx">Nginx (engine x) 是一个高性能的HTTP和反向代理web服务器，同时也提供了IMAP/POP3/SMTP服务。其特点是占有内存少，并发能力强，在连接高并发的情况下，Nginx是Apache服务不错的替代品。</span>
-          <span th:case="netty">Netty是由JBOSS提供的一个java开源框架，提供异步的、事件驱动的网络应用程序框架和工具，用以快速开发高性能、高可靠性的网络服务器和客户端程序。例如实现了某种协议的客户、服务端应用。Netty相当于简化和流线化了网络应用的编程开发过程，例如：基于TCP和UDP的socket服务开发。</span>
-          <span th:case="docker">Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中,然后发布到任何流行的Linux机器或Windows 机器上,也可以实现虚拟化,容器是完全使用沙箱机制,相互之间不会有任何接口。</span>
-          <span th:case="db">数据库是“按照数据结构来组织、存储和管理数据的仓库”。是一个长期存储在计算机内的、有组织的、可共享的、统一管理的大量数据的集合。</span>
-          <span th:case="bigdata">云计算（cloud computing）是分布式计算的一种，指的是通过网络“云”将巨大的数据计算处理程序分解成无数个小程序，然后，通过多部服务器组成的系统进行处理和分析这些小程序得到结果并返回给用户。</span>
-          <span th:case="others">技术杂谈、行业新闻/动态....</span>
-      </p>
+        <h1 th:switch="${type}">
+            <span th:case="cb">计算机基础</span>
+            <span th:case="algorithm">数据结构与算法</span>
+            <span th:case="network">计算机网络</span>
+            <span th:case="os">操作系统</span>
+            <!--<span th:case="pco">计算机组成原理</span>-->
+            <span th:case="dp">设计模式</span>
+            <span th:case="se">软件工程</span>
+            <span th:case="java">Java</span>
+            <span th:case="framework">架构/框架</span>
+            <span th:case="spring">Spring</span>
+            <span th:case="springmvc">Spring MVC</span>
+            <span th:case="springboot">Spring Boot</span>
+            <span th:case="mybatis">MyBatis</span>
+            <span th:case="redis">Redis</span>
+            <span th:case="nginx">Nginx</span>
+            <span th:case="netty">Netty</span>
+            <span th:case="docker">Docker</span>
+            <span th:case="db">数据库</span>
+            <span th:case="bigdata">云计算/大数据</span>
+            <span th:case="others">其它技术</span>
+        </h1>
+        <p th:switch="${type}">
+            <span th:case="cb">计算机基础是入门计算机开发领域所必须要掌握的基础知识，主要包括数据结构与算法、操作系统、计算机网络、计算机组成原理、设计模式、软件工程等</span>
+            <span th:case="algorithm">数据结构是指相互之间存在一种或多种特定关系的数据元素的集合用计算机存储、组织数据的方式。</span>
+            <span th:case="network">计算机网络是指将地理位置不同的具有独立功能的多台计算机及其外部设备，通过通信线路连接起来，在网络操作系统，网络管理软件及网络通信协议的管理和协调下，实现资源共享和信息传递的计算机系统。</span>
+            <span th:case="os">操作系统是管理计算机软件和软件资源的程序，是计算机系统的内核和基石。它的本质是运行在计算机上的软件，为用户提供了一个和系统交互的操作页面。</span>
+            <!--<span th:case="pco">计算机组成原理</span>-->
+            <span th:case="dp">设计模式（Design Pattern）是一套被反复使用、多数人知晓的、经过分类的、代码设计经验的总结。使用设计模式的目的：为了代码可重用性、让代码更容易被他人理解、保证代码可靠性。</span>
+            <span th:case="se">软件工程 (Software Engineering，简称为SE)是一门研究用工程化方法构建和维护有效的、实用的和高质量的软件的学科。它涉及到程序设计语言，数据库，软件开发工具，系统平台，标准，设计模式等方面。</span>
+            <span th:case="java">Java具有简单性、面向对象、分布式、健壮性、安全性、平台独立与可移植性、多线程、动态性等特点。Java可以编写桌面应用程序、Web应用程序、分布式系统和嵌入式系统应用程序等，是目前企业级应用的主力编程语言。</span>
+            <span th:case="framework">框架( Framework )是构成一类特定软件可复用设计的一组相互协作的类。框架规定了你的应用的体系结构。它定义了整体结构，类和对象的分割，各部分的主要责任，类和对象怎么协作，以及控制流程。</span>
+            <span th:case="spring">Spring是一个轻量级的IOC(Inversion of Control，控制反转)和AOP(Aspect Oriented Programming，面向切面编程)开源框架。Spring提倡提倡以“最少侵入”的方式来管理应用中的代码，并且它出现的使命就是简化Java开发流程。</span>
+            <span th:case="springmvc">Spring MVC属于SpringFrameWork的后续产品，已经融合在Spring Web Flow里面。Spring 框架提供了构建 Web 应用程序的全功能MVC架构模块——Spring MVC</span>
+            <span th:case="springboot">Spring Boot是由Pivotal团队提供的全新框架，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置。通过这种方式，Spring Boot致力于在蓬勃发展的快速应用开发领域(rapid application development)成为领导者。</span>
+            <span th:case="mybatis">MyBatis是一款优秀的持久层框架，它支持定制化 SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。MyBatis 可以使用简单的 XML 或注解来配置和映射原生信息，将接口和 Java 的 POJOs(Plain Ordinary Java Object,普通的 Java对象)映射成数据库中的记录。</span>
+            <span th:case="redis">Redis是一个高性能的key-value内存数据库。Redis的出现，很大程度补偿了memcached这类key/value存储的不足，相比之下Redis具有更丰富的数据类型、支持持久化以及Redis天生支持高可用，因此Redis已经成为了现代企业常用的NoSQL中间件。</span>
+            <span th:case="nginx">Nginx (engine x) 是一个高性能的HTTP和反向代理web服务器，同时也提供了IMAP/POP3/SMTP服务。其特点是占有内存少，并发能力强，在连接高并发的情况下，Nginx是Apache服务不错的替代品。</span>
+            <span th:case="netty">Netty是由JBOSS提供的一个java开源框架，提供异步的、事件驱动的网络应用程序框架和工具，用以快速开发高性能、高可靠性的网络服务器和客户端程序。例如实现了某种协议的客户、服务端应用。Netty相当于简化和流线化了网络应用的编程开发过程，例如：基于TCP和UDP的socket服务开发。</span>
+            <span th:case="docker">Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中,然后发布到任何流行的Linux机器或Windows 机器上,也可以实现虚拟化,容器是完全使用沙箱机制,相互之间不会有任何接口。</span>
+            <span th:case="db">数据库是“按照数据结构来组织、存储和管理数据的仓库”。是一个长期存储在计算机内的、有组织的、可共享的、统一管理的大量数据的集合。</span>
+            <span th:case="bigdata">云计算（cloud computing）是分布式计算的一种，指的是通过网络“云”将巨大的数据计算处理程序分解成无数个小程序，然后，通过多部服务器组成的系统进行处理和分析这些小程序得到结果并返回给用户。</span>
+            <span th:case="others">技术杂谈、行业新闻/动态....</span>
+        </p>
     </div>
-    <div class="whitebg bloglist">
-      <h2 class="htitle">最新博文</h2>
-      <ul>
-        <li>
-          <h3 class="blogtitle"><b>【顶】</b><a href="/xd/23.html" target="_blank">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a></h3>
-           <span class="blogpic imgscale"><i><a href="/xd/" target="_blank">设计心得</a></i><a href="/xd/23.html" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?"><img src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?"></a></span>
-          <p class="blogtext">就拿我自己来说吧，有时候会很矛盾，设计好的作品，不把它分享出来，会觉得待在自己电脑里面实在是没有意义。干脆就发布出去吧。我也害怕收到大家不好的评论，有些评论，可能说者无意，但是对于每一个用心的站长来说，都会受很深 </p>
-          <p class="bloginfo"><i class="avatar"><script src="/d/js/acmsd/thea6.js"></script></i><span></span><span>2018-11-08</span><span>【<a href="/xd/" target="_blank">设计心得</a>】</span></p>
-          <a href="/xd/23.html" class="viewmore">阅读更多</a> </li>
+      <!--分类的文章列表-->
+      <div class="whitebg bloglist">
+          <h2 class="htitle">最新博文</h2>
+          <ul >
+              <li th:if="${allArticles!=null and article!=null}" th:each="article,articleStat:${allArticles}">
+                  <h3 class="blogtitle">
+                      <b th:if="${articleStat.index le 2}">【顶】</b>
+                      <a href="#" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
+                      <a href="#" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
+                  </h3>
+                  <span class="blogpic imgscale">
+                      <i><a href="/xd/" th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}" target="_blank" th:text="${article.getArticleCategory()}">设计心得</a></i>
+                      <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                         th:title="${article.getArticleTopic()}" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                         <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                         <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                      </a>
+                      <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}"
+                         th:title="${article.getArticleTopic()}" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                         <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                         <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
+                      </a>
+                  </span>
+                  <p th:text="${#strings.abbreviate(article.getArticleContent(),150)}" class="blogtext">
+                      就拿我自己来说吧，有时候会很矛盾，设计好的作品，不把它分享出来，会觉得待在自己电脑里面实在是没有意义。干脆就发布出去吧。我也害怕收到大家不好的评论，有些评论，可能说者无意，但是对于每一个用心的站长来说，都会受很深
+                  </p>
+                  <p class="bloginfo">
+                      <i class="avatar">
+                          <a href="#" th:href="@{/article/index/{userId}(userId=${article.getArticleUser()})}" target="_blank">
+                              <img src="#" th:src="@{${article.getUserHeaderImageUrl()}}" width="30px" height="30px"/>
+                          </a>
+                      </i>
+                      <span></span>
+                      <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2018-11-08</span>
+                      <span class="text">
+                          <svg style="vertical-align:-5px;fill: #666" t="1568705845189" class="icon eye" viewBox="0 0 1433 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16883" width="20" height="20"><path d="M720.69629629 932.6176963c-213.05768889 0-407.36918519-120.58848889-582.93448888-361.67534074-23.88337036-32.71571111-23.88337036-85.169 0-117.88471112C313.32711111 211.97079259 507.63860741 91.3823037 720.69629629 91.3823037s407.36918519 120.58848889 582.9344889 361.67534074c23.88337036 32.71571111 23.88337036 85.169 0 117.88471112C1128.06548147 812.02920741 933.75398519 932.6176963 720.69629629 932.6176963z m0-721.00740741C542.51734074 211.61028889 377.85727408 309.39691852 222.48017777 512 377.85727408 714.60308148 542.4272148 812.38971111 720.69629629 812.38971111c178.17895556 0 342.83902223-97.78662964 498.21611851-300.38971111C1063.53531852 309.39691852 898.96537777 211.61028889 720.69629629 211.61028889z m0 495.69259259a195.30288148 195.30288148 0 1 1 0-390.60576296 195.30288148 195.30288148 0 0 1 0 390.60576296zM720.69629629 602.12592592a90.12592592 90.12592592 0 1 0 0-180.25185184 90.12592592 90.12592592 0 0 0 0 180.25185184z" p-id="16884" fill=""></path></svg>
+                         <span style="margin-left: 0" th:text="${article.getArticleClick()}"></span>
+                      </span>
 
-        <li>
-          <h3 class="blogtitle"><b>【顶】</b><a href="/xd/1.html" target="_blank">Come on,行动起来吧!我们和时间来一场赛跑!</a></h3>
-           <span class="blogpic imgscale"><i><a href="/xd/" target="_blank">设计心得</a></i><a href="/xd/1.html" title="Come on,行动起来吧!我们和时间来一场赛跑!"><img src="/skin/jxhx/images/b03.jpg" alt="Come on,行动起来吧!我们和时间来一场赛跑!"></a></span>
-          <p class="blogtext">"时间过得那么飞快,使我的小心眼儿里不只是着急,还有悲伤.有一天,我放学回家,看到太阳快落山了,就下决心说:"我要比太阳更快地回家."我狂奔回去,站在庭院前喘气的时候,看到太阳还露着半边脸,我高兴地跳跃起来 </p>
-          <p class="bloginfo"><i class="avatar"><script src="/d/js/acmsd/thea6.js"></script></i><span></span><span>2018-11-07</span><span>【<a href="/xd/" target="_blank">设计心得</a>】</span></p>
-          <a href="/xd/1.html" class="viewmore">阅读更多</a> </li>
-
-        <li>
-          <h3 class="blogtitle"><a href="/xd/25.html" target="_blank">即便是坑，我也想要拉你入伙！</a></h3>
-           <span class="blogpic imgscale"><i><a href="/xd/" target="_blank">设计心得</a></i><a href="/xd/25.html" title="即便是坑，我也想要拉你入伙！"><img src="http://www.yangqq.com/d/file/news/life/2014-07-31/ae167e7d81612318949460aad1143e0d.jpg" alt="即便是坑，我也想要拉你入伙！"></a></span>
-          <p class="blogtext">对于刚毕业的学生来说，想学习建网站，掌握一技之长，最简单的入门无非就是学会html和css，先前发表过一篇文章《如果要学习web前端开发，需要学习什么？》，如果你还不知道如何着手，请仔细阅读....7天的时间，入门是没有问题的，当然，如果你用心的话！ </p>
-          <p class="bloginfo"><i class="avatar"><script src="/d/js/acmsd/thea6.js"></script></i><span></span><span>2018-11-08</span><span>【<a href="/xd/" target="_blank">设计心得</a>】</span></p>
-          <a href="/xd/25.html" class="viewmore">阅读更多</a> </li>
-
-        <li>
-          <h3 class="blogtitle"><a href="/xd/24.html" target="_blank">我是怎么评价自己的？</a></h3>
-           <span class="blogpic imgscale"><i><a href="/xd/" target="_blank">设计心得</a></i><a href="/xd/24.html" title="我是怎么评价自己的？"><img src="http://www.yangqq.com/d/file/news/s/2018-07-28/95d1b1577a8a7aa4fe3893f2502617e9.jpg" alt="我是怎么评价自己的？"></a></span>
-          <p class="blogtext">为了挨打轻一些，问我哪里来的，我瞎说了一个说那个谁家的，结果，打得更凶。最后事情还原了真相，我妈说，你要说说奶奶家的，都不会打你了。从此以后，我知道撒谎是会付出更惨痛的代价的，我不再撒谎，也不喜欢爱撒谎的人。 </p>
-          <p class="bloginfo"><i class="avatar"><script src="/d/js/acmsd/thea6.js"></script></i><span></span><span>2018-11-08</span><span>【<a href="/xd/" target="_blank">设计心得</a>】</span></p>
-          <a href="/xd/24.html" class="viewmore">阅读更多</a> </li>
-
-        <li>
-          <h3 class="blogtitle"><a href="/xd/34.html" target="_blank">遇见一个未知的你</a></h3>
-
-          <p class="blogtext">听着那熟悉的歌曲看着那一张张可爱的图片.-读着我们共同欣赏的诗……也许我们曾经相遇,看着你远去的背影 ,沿着你来的方向 ,回忆时间穿梭于幸福的点点滴滴.... </p>
-          <p class="bloginfo"><i class="avatar"><script src="/d/js/acmsd/thea6.js"></script></i><span></span><span>2018-11-08</span><span>【<a href="/xd/" target="_blank">设计心得</a>】</span></p>
-          <a href="/xd/34.html" class="viewmore">阅读更多</a> </li>
-
-        <li>
-          <h3 class="blogtitle"><a href="/xd/2.html" target="_blank">网易博客关闭，何不从此开始潇洒行走江湖！</a></h3>
-           <span class="blogpic imgscale"><i><a href="/xd/" target="_blank">设计心得</a></i><a href="/xd/2.html" title="网易博客关闭，何不从此开始潇洒行走江湖！"><img src="http://www.yangqq.com/d/file/blogs/2018-08-22/28e3bbca2ae0205f641a9072ecb7c100.jpg" alt="网易博客关闭，何不从此开始潇洒行走江湖！"></a></span>
-          <p class="blogtext">从网易博客平台的出现，到现在已经有12个年头了，很多人还坚持着，网易博客一宣布关闭，很多人都很惋惜，那么多的文字记忆，又该如何是好？虽然可以一键搬迁到lofter </p>
-          <p class="bloginfo"><i class="avatar"><script src="/d/js/acmsd/thea6.js"></script></i><span>杨青</span><span>2018-11-08</span><span>【<a href="/xd/" target="_blank">设计心得</a>】</span></p>
-          <a href="/xd/2.html" class="viewmore">阅读更多</a> </li>
-
-      </ul>
-      <!--pagelist-->
-      <div class="pagelist"></div>
-      <!--pagelist end-->
-    </div>
-    <!--bloglist end-->
+                  </p>
+                  <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" class="viewmore">阅读全文</a>
+                  <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" class="viewmore">阅读全文</a>
+              </li>
+              <li th:if="${ allArticles eq null or #lists.size(allArticles) eq 0}">
+                   没有任何文章
+              </li>
+          </ul>
+          <!--pagelist-->
+          <div class="pagelist"></div>
+          <!--pagelist end-->
+      </div>
+      <!--bloglist end-->
   </div>
-  <div class="rbox">
-      <div th:replace="~{index::index-click}"></div>
-    <div class="whitebg tuijian">
-      <h2 class="htitle">本栏推荐</h2>
-          <section class="topnews imgscale"><a href="/xd/23.html"><img src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg"><span>作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</span></a></section>
-      <ul>
-        <li><a href="/xd/25.html" title="即便是坑，我也想要拉你入伙！" target="_blank"><i><img src="http://www.yangqq.com/d/file/news/life/2014-07-31/ae167e7d81612318949460aad1143e0d.jpg"></i>
-          <p>即便是坑，我也想要拉你入伙！</p>
-          </a></li>
-        <li><a href="/xd/24.html" title="我是怎么评价自己的？" target="_blank"><i><img src="http://www.yangqq.com/d/file/news/s/2018-07-28/95d1b1577a8a7aa4fe3893f2502617e9.jpg"></i>
-          <p>我是怎么评价自己的？</p>
-          </a></li>
-        <li><a href="/xd/2.html" title="网易博客关闭，何不从此开始潇洒行走江湖！" target="_blank"><i><img src="http://www.yangqq.com/d/file/blogs/2018-08-22/28e3bbca2ae0205f641a9072ecb7c100.jpg"></i>
-          <p>网易博客关闭，何不从此开始潇洒行走江湖！</p>
-          </a></li>
-      </ul>
-    </div>
-    <div th:replace="~{index::index-like}"></div>
-    <!--Ad-->
-    <!--<div class="ad whitebg imgscale">
-      <ul><a href='' target=_blank><img src='/skin/jxhx/images/ad02.jpg'></a></ul>
-    </div>-->
+    <div class="rbox">
+        <!--点击排行-->
+        <div th:replace="~{index::index-click}"></div>
+        <!--栏目推荐的文章-->
+        <div class="whitebg tuijian" th:if="${recommendArticles!=null}">
+            <h2 class="htitle">栏目推荐</h2>
+            <section class="topnews imgscale" th:if="${articleStat.index eq 0}" th:each="article,articleStat:${recommendArticles}">
+                <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}">
+                    <img th:src="@{${article.getArticleFirstPicture()}}" src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg">
+                    <span th:text="${article.getArticleTopic()}"></span></a>
+                <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}">
+                    <img th:src="@{${article.getArticleFirstPicture()}}" src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg">
+                    <span th:text="${article.getArticleTopic()}"></span></a>
+            </section>
+            <ul>
+                <li th:if="${articleStat.index gt 0}" th:each="article,articleStat:${recommendArticles}">
+                    <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" target="_blank" th:title="${article.getArticleTopic()}">
+                        <i><img th:src="@{${article.getArticleFirstPicture()}}" /></i>
+                        <p th:text="${article.getArticleTopic()}">即便是坑，我也想要拉你入伙！</p>
+                    </a>
+                    <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" th:title="${article.getArticleTopic()}">
+                        <i><img th:src="@{${article.getArticleFirstPicture()}}" /></i>
+                        <p th:text="${article.getArticleTopic()}">即便是坑，我也想要拉你入伙！</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div th:replace="~{index::index-like}"></div>
+        <!--Ad-->
+        <!--<div class="ad whitebg imgscale">
+          <ul><a href='' target=_blank><img src='/skin/jxhx/images/ad02.jpg'></a></ul>
+        </div>-->
 
-  </div>
+    </div>
 </article>
 <div th:replace="~{index::index-footer}"></div>
 </body>

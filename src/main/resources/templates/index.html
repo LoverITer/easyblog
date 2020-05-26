@@ -40,7 +40,7 @@
 <body>
 
 <!--top begin-->
-<header id="header" th:fragment="index-nav">
+<header id="header" class="slideDown header-navigation" th:fragment="index-nav">
     <div class="navbox">
         <h2 id="mnavh"><span class="navicon"></span></h2>
         <div class="logo"><a href="/" style="color: #00B5AD"><h2>EasyBlog</h2></a></div>
@@ -49,9 +49,12 @@
                 <li><a href="/" title="首页" th:href="@{/}">首页</a></li>
                 <li class="menu"><a href="/cb" th:href="@{/cb}">计算机基础</a>
                     <ul class="sub">
-                    <li><a href="/cb/algrothim" th:href="@{/cb/algorithm}">数据结构与算法</a></li>
-                    <li><a href="/cb/network" th:href="@{/cb/network}">计算机网络</a></li>
-                    <li><a href="/cb/os" th:href="@{/cb/os}">操作系统</a></li>
+                        <li><a href="/cb/algrothim" th:href="@{/cb/algorithm}">数据结构与算法</a></li>
+                        <li><a href="/cb/network" th:href="@{/cb/network}">计算机网络</a></li>
+                        <li><a href="/cb/os" th:href="@{/cb/os}">操作系统</a></li>
+                      <!--  <li><a href="/cb/pco" th:href="@{/cb/pco}">计算机组成原理</a></li>-->
+                        <li><a href="/cb/dp" th:href="@{/cb/dp}">设计模式</a></li>
+                        <li><a href="/cb/se" th:href="@{/cb/se}">软件工程</a></li>
                 </ul><span></span></li>
                 <li><a href="/java"  th:href="@{/java}">Java</a></li>
                 <li class="menu"><a href="/framework" th:href="@{/framework}">架构/框架</a>
@@ -72,7 +75,7 @@
                     <a href="#" th:if="${user!=null&&user.getUserId()==667020}"  th:href="@{/article/home/667020(visitorUId=${user.getUserId()})}">关于我</a></li>
                 <li th:if="${user==null}"><a class="index_user_login" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
                 <li th:if="${user!=null}">
-                    <div id="header-images" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
+                    <div id="header-images" class="right m-item m-mobile-hide" style="margin-left: 1em !important;">
                         <a href="#" class="index_user_header" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}">
                             <img style="max-height: 35px !important;max-width:35px !important;border-radius: 30px !important;" th:src="@{${user.getUserHeaderImgUrl()}}"/>
                         </a>
@@ -172,14 +175,13 @@
                          <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                          <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                      </a>
-                        <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                     <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
                            th:title="${article.getArticleTopic()}" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                          <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                          <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                      </a>
                     </span>
                     <p th:text="${#strings.abbreviate(article.getArticleContent(),150)}" class="blogtext">
-                        就拿我自己来说吧，有时候会很矛盾，设计好的作品，不把它分享出来，会觉得待在自己电脑里面实在是没有意义。干脆就发布出去吧。我也害怕收到大家不好的评论，有些评论，可能说者无意，但是对于每一个用心的站长来说，都会受很深
                     </p>
                     <p class="bloginfo">
                         <i class="avatar">
@@ -189,6 +191,10 @@
                         </i>
                         <span></span>
                         <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2018-11-08</span>
+                        <span class="text">
+                          <svg style="vertical-align:-5px;fill: #666" t="1568705845189" class="icon eye" viewBox="0 0 1433 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16883" width="20" height="20"><path d="M720.69629629 932.6176963c-213.05768889 0-407.36918519-120.58848889-582.93448888-361.67534074-23.88337036-32.71571111-23.88337036-85.169 0-117.88471112C313.32711111 211.97079259 507.63860741 91.3823037 720.69629629 91.3823037s407.36918519 120.58848889 582.9344889 361.67534074c23.88337036 32.71571111 23.88337036 85.169 0 117.88471112C1128.06548147 812.02920741 933.75398519 932.6176963 720.69629629 932.6176963z m0-721.00740741C542.51734074 211.61028889 377.85727408 309.39691852 222.48017777 512 377.85727408 714.60308148 542.4272148 812.38971111 720.69629629 812.38971111c178.17895556 0 342.83902223-97.78662964 498.21611851-300.38971111C1063.53531852 309.39691852 898.96537777 211.61028889 720.69629629 211.61028889z m0 495.69259259a195.30288148 195.30288148 0 1 1 0-390.60576296 195.30288148 195.30288148 0 0 1 0 390.60576296zM720.69629629 602.12592592a90.12592592 90.12592592 0 1 0 0-180.25185184 90.12592592 90.12592592 0 0 0 0 180.25185184z" p-id="16884" fill=""></path></svg>
+                         <span style="margin-left: 0" th:text="${article.getArticleClick()}"></span>
+                        </span>
                         <span>【<a href="/xd/" th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}" target="_blank" th:text="${article.getArticleCategory()}">设计心得</a>】</span>
                     </p>
                     <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" class="viewmore">阅读全文</a>

@@ -18,7 +18,7 @@ import java.util.concurrent.*;
 @Slf4j
 public class ServiceThreadPool {
 
-    /**获取神设备CPU个数*/
+    /**获取设备CPU个数*/
     private static final int AVAILABLE_CPU_COUNT = Runtime.getRuntime().availableProcessors();
     /**核心线程数*/
     private static final int CORE_POOL_SIZE = Math.max(2, Math.min(AVAILABLE_CPU_COUNT - 1, 4));
@@ -33,7 +33,7 @@ public class ServiceThreadPool {
 
     @Bean
     public Executor executor() {
-        ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("service-task-%d").build();
+        ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("server-task-%d").build();
         return new ThreadPoolExecutor(
                 CORE_POOL_SIZE,
                 MAX_POOL_SIZE,

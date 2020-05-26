@@ -1,12 +1,12 @@
 @charset "utf-8";
 @media screen and (min-width: 1200px) {
-    .index_user_login{ position: absolute;min-width: 70px;left: 56em; }
-    .index_user_header{ padding-top: 8px !important;;    position: absolute;min-width: 70px;left: 56em; }
+    .index_user_login{ position: absolute;min-width: 70px;left: 16em; }
+    .index_user_header{ padding-top: 8px !important;;    position: absolute;min-width: 70px;left: 14em; }
     .copyright{margin-left: 290px}
 }
 @media screen and (min-width: 1024px) and (max-width: 1199px) {
-    .index_user_login{ position: absolute;min-width: 70px;left: 56em; }
-    .index_user_header{ padding-top: 8px !important;; position: absolute;min-width: 70px;left: 56em; }
+    .index_user_login{ position: absolute;min-width: 70px;left: 16em; }
+    .index_user_header{ padding-top: 8px !important;; position: absolute;min-width: 70px;left: 14em; }
     .navbox { width: 96% }
      #starlist li a { padding: 0 10px; }
      #starlist li.menu:before { right: 0 }
@@ -22,8 +22,8 @@
 }
 @media screen and (max-width: 1023px) {
     /*header*/
-    .index_user_login{ position: absolute;min-width: 70px;left: 56em; }
-    .index_user_header{ padding-top: 8px !important;;    position: absolute;min-width: 70px;left: 56em; }
+    .index_user_login{ position: absolute;min-width: 70px;left: 14em; }
+    .index_user_header{ padding-top: 8px !important;;    position: absolute;min-width: 70px;left: 16em; }
     header { position: fixed; z-index: 999 }
     nav { width: 100%; height: auto; background: rgba(0,0,0,0.5); margin-top: 18px; position: fixed; z-index: 999; top: 42px; }
     .searchico { position: absolute; top: 6px; right: 10px; }
@@ -46,7 +46,7 @@
     .menu:before { right: 20px; }
     /**/
     .box, article { width: 96% }
-    article { padding-top: 80px; }
+    article { padding-top: 10px; }
     .lbox { width: 100% }
     .rbox { display: none }
     .qq_join li section { margin: 0 10px }
@@ -57,6 +57,15 @@
     .copyright{margin-left: 260px}
 }
 @media only screen and (max-width: 768px) {
+    footer{
+        background: #1c2327;
+        width: 100%;
+        padding: 30px 0 10px 0;
+        color: #f2f2f2;
+        font-size: 14px;
+        position: relative;
+        top: 60px;
+    }
     .banbox { width: 100%; overflow: hidden; float: left; border-radius: 3px; margin-bottom: 20px; padding-top: 0;}
     .index_user_login{ padding-top: 8px;position: unset; }
     .index_user_header{ padding-top: 8px;position: unset; }
@@ -74,6 +83,15 @@
     .copyright{margin-left: 10px}
 }
 @media only screen and (max-width: 480px) {
+    footer{
+        background: #1c2327;
+        width: 100%;
+        padding: 30px 0 10px 0;
+        color: #f2f2f2;
+        font-size: 14px;
+        position: relative;
+        top: 60px;
+    }
     .index_user_header{ padding-top: 8px;position: unset; }
     .headline { width: 100% }
     .headline ul { height: auto; padding-bottom: 10px; overflow: hidden }
