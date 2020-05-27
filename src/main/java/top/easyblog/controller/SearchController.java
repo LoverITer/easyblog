@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import top.easyblog.bean.Article;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
+import top.easyblog.common.util.UserUtils;
 import top.easyblog.service.impl.ArticleServiceImpl;
 
 /**
@@ -28,14 +29,16 @@ public class SearchController {
     /**
      * 搜索结果显示
      *
-     * @param query
-     * @param pageNo
-     * @param model
+     * @param query   查询的关键字
+     * @param pageNo   分页号
+     * @param model   Model
      */
     @GetMapping("/details")
     public String showSearchResult(@RequestParam String query,
                                    @RequestParam(value = "page", defaultValue = "1") int pageNo,
+                                   @RequestParam(required = false) Integer visitorUId,
                                    Model model) {
+        model.addAttribute("visitor",UserUtils.getUserFromRedis(visitorUId));
         model.addAttribute("query", query);
         PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
         PageInfo<Article> articlePages = articleService.getArticleByTopicPage(query, pageParam);

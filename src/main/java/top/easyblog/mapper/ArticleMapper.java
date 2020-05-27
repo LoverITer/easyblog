@@ -211,8 +211,9 @@ public interface ArticleMapper extends BaseMapper<Article> {
     List<Article> getByCategoryAndUserId(@Param("userId") int userId, @Param("categoryId") int categoryId);
 
     /**
-     * @param query
-     * @return
+     * 根据文章名模糊查询
+     * @param query  模糊查询的key
+     * @return  java.util.List
      */
     List<Article> getUsersArticleByQueryString(@Param("query") String query);
 

@@ -220,21 +220,43 @@
         </where>
     </select>
 
+    <!--
+       根据文章的标题模糊查询
+    -->
     <select id="getUsersArticleByQueryString" resultType="top.easyblog.bean.Article">
-        select article_id,
-               article_topic,
-               article_publish_time,
-               article_content,
-               article_click,
-               article_category,
-               article_comment_num,
+        select article_id,article_topic,  article_publish_time,
+               article_content, article_click,article_category,
+               article_comment_num, article_first_picture,article_user,
                user.user_nickname      AS authorName,
                user.user_headerImg_url AS userHeaderImageUrl
-        from article,
-             user
+        from article, easyblog.user
         where article_topic like #{query}
           AND article_user = user_id
         ORDER BY article_click DESC
+    </select>
+
+    <!--按照文章分类名模糊查找某一类的文章，如果需要排序还可以指定参数order=true-->
+    <select id="getArticleByCategoryNameFuzzy" parameterType="arraylist" resultType="top.easyblog.bean.Article">
+        SELECT
+        article_user, article_id,article_topic, article_publish_time,
+        article_click, article_category, article_content,article_first_picture,
+        user_headerImg_url AS userHeaderImageUrl
+        FROM
+        article LEFT JOIN easyblog.user ON article_user=user_id
+        WHERE
+        <foreach collection="query" item="key" separator=" or">
+            article_category like concat(#{key},'%')
+        </foreach>
+        <!--是否需要排序。在参数中指定，如果为true表示需要排序，否则不排序-->
+        <if test="order==true">
+            ORDER BY article_click DESC
+            <if test="limit>0">
+                limit #{limit}
+            </if>
+        </if>
+        <if test="order==false">
+            ORDER BY article_publish_time DESC
+        </if>
     </select>
 
     <select id="countByUserId" resultType="integer">
@@ -282,29 +304,6 @@
         select * from article where article_first_picture is NULL
     </select>
 
-    <!--按照文章分类名模糊查找某一类的文章，如果需要排序还可以指定参数order=true-->
-    <select id="getArticleByCategoryNameFuzzy" parameterType="arraylist" resultType="top.easyblog.bean.Article">
-        SELECT
-        article_user, article_id,article_topic, article_publish_time,
-        article_click, article_category, article_content,article_first_picture,
-        user_headerImg_url AS userHeaderImageUrl
-        FROM
-        article LEFT JOIN easyblog.user ON article_user=user_id
-        WHERE
-        <foreach collection="query" item="key" separator=" or">
-            article_category like concat(#{key},'%')
-        </foreach>
-        <!--是否需要排序。在参数中指定，如果为true表示需要排序，否则不排序-->
-        <if test="order==true">
-            ORDER BY article_click DESC
-            <if test="limit>0">
-                limit #{limit}
-            </if>
-        </if>
-        <if test="order==false">
-            ORDER BY article_publish_time DESC
-        </if>
-    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete

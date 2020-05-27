@@ -68,7 +68,7 @@ nav { float: left; height: 50px; line-height: 50px; text-align: center; }
 .searchico { margin-top: 5px;margin-right: 10px; width: 39px; height: 39px; float: right; display: inline; cursor: pointer; background: url(../images/search.png) no-repeat center !important; }
 .searchbox { width: 1200px; margin: 10px auto; overflow: hidden; background: rgba(255,255,255,.2);; position: relative; top: 65px}
 .search { width: 50%; margin: 20px auto; background: #d84315; border-radius: 5px; position: relative;  display: none; }
-.search input.input_submit { border: 0; background: 0; color: #fff; outline: none; position: absolute; top: 10px; right: 10% }
+.search input.input_submit { border: 0; cursor: pointer;background: 0; color: #fff; outline: none; position: absolute; top: 10px; right: 10% }
 .search input.input_text { border-radius: 3px;border: 0; line-height: 45px; height: 45px; width: 72%; padding-left: 10px; outline: none ;font-size: 15px}
 .open { display: block !important }
 .searchclose { background: url(../images/close.png) no-repeat; display: block; position: absolute; width: 28px; height: 30px; right: 5px; top: 5px ;cursor: pointer;}

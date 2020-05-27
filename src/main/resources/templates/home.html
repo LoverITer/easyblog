@@ -78,7 +78,7 @@
                 </div>
             </div>
             <!--content-->
-            <div class="ui attached segment border-bt-none">
+            <div class="ui attached segment border-bt-none" style="padding-bottom: 0">
                 <div th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
@@ -148,7 +148,7 @@
             </div>
 
             <!--查看更多-->
-            <div th:if="${#lists.size(articles) gt 25}" class="ui bottom attached segment" style="border-top: none !important;">
+            <div th:if="${#lists.size(articles) ge 15}" class="ui bottom attached segment" style="border-top: none !important;padding-top: 0">
                 <a href="#" th:href="@{/article/index/{uid}(uid=${author.getUserId()})}">
                     <button id="more-btn" class="ui negative basic button m-look-more-margin">查看更多
                     </button>
@@ -156,7 +156,7 @@
             </div>
 
             <!--文章条数>0并且小于等于25-->
-            <div th:if="${!#lists.isEmpty(articles) and #lists.size(articles) le 25}" class="ui bottom attached segment" style="border-top: none !important;padding: 1px !important;">
+            <div th:if="${!#lists.isEmpty(articles) and #lists.size(articles) lt 15}" class="ui bottom attached segment" style="border-top: none !important;padding: 1px !important;">
             </div>
 
 

@@ -11,8 +11,7 @@
     <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
     <link rel="stylesheet" href="../../../static/lib/css/editormd.css" th:href="@{/static/lib/css/editormd.css}">
-    <link rel="stylesheet" href="../../../static/css/semantic-specifc.css"
-          th:href="@{/static/css/semantic-specifc.css}">
+    <link rel="stylesheet" href="../../../static/css/semantic-specifc.css" th:href="@{/static/css/semantic-specifc.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
     <link rel="stylesheet" href="../static/css/loading/zeroModal.css" th:href="@{/static/css/loading/zeroModal.css}">
@@ -533,5 +532,10 @@
             }
         });
     }
+</script>
+<script type="text/javascript">
+    $(window).bind('beforeunload',function(){
+        return '您输入的内容尚未保存，确定离开此页面吗？';
+    });
 </script>
 </html>

@@ -414,7 +414,7 @@ public class ArticleServiceImpl implements IArticleService {
             if (Objects.nonNull(pageParam)) {
                 try {
                     PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
-                    List<Article> articles = articleMapper.getUsersArticleByQueryString(query + "%");
+                    List<Article> articles = articleMapper.getUsersArticleByQueryString("%"+query + "%");
                     pageInfo = new PageInfo<>(parseMarkdowns2Text(articles));
                 } catch (Exception e) {
                     throw new RuntimeException(e.getCause());

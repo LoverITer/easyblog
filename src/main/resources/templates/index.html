@@ -70,9 +70,9 @@
                     </ul><span></span></li>
                 <li><a href="/db" th:href="@{/db}">数据库</a></li>
                 <li><a href="/bigdata" th:href="@{/bigdata}">云计算/大数据</a></li>
-                <li><a href="/others" th:href="@{/others}">其它技术</a></li>
-                <li><a href="#" th:if="${user==null||user.getUserId()!=667020}"  th:href="@{/article/home/667020}">关于我</a>
-                    <a href="#" th:if="${user!=null&&user.getUserId()==667020}"  th:href="@{/article/home/667020(visitorUId=${user.getUserId()})}">关于我</a></li>
+                <li><a href="/others" th:href="@{/others}">其它</a></li>
+                <li><a href="#" th:if="${user==null}"  th:href="@{/article/home/667020}">关于我</a>
+                    <a href="#" th:if="${user!=null}"  th:href="@{/article/home/667020(visitorUId=${user.getUserId()})}">关于我</a></li>
                 <li th:if="${user==null}"><a class="index_user_login" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
                 <li th:if="${user!=null}">
                     <div id="header-images" class="right m-item m-mobile-hide" style="margin-left: 1em !important;">
@@ -92,10 +92,8 @@
             <input name="query" id="keyboard" class="input_text" value="请输入关键字词" style="color: rgb(153, 153, 153);"
                    onfocus="if(value=='请输入关键字词'){this.style.color='#000';value=''}"
                    onblur="if(value==''){this.style.color='#999';value='请输入关键字词'}" type="text">
-            <input name="show" value="title" type="hidden">
-            <input name="tempid" value="1" type="hidden">
-            <input name="tbname" value="news" type="hidden">
-            <input name="Submit" class="input_submit" value="搜索" type="submit">
+            <input class="input_submit"  type="submit">
+            <input hidden th:if="${user!=null}" name="visitorUId" th:value="${user.getUserId()}">
         </form>
     </div>
     <div class="searchclose"></div>
