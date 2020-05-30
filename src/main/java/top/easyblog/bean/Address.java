@@ -1,11 +1,14 @@
 package top.easyblog.bean;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
  * 用户的地址信息
  * @author huangxin
  */
+@Data
 public class Address implements Serializable {
 
     private static final long serialVersionUID = -2744598988959076601L;
@@ -22,32 +25,9 @@ public class Address implements Serializable {
         this.county = county;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCounty() {
-        return county;
-    }
-
-    public void setCounty(String county) {
-        this.county = county;
-    }
-
     @Override
     public String toString() {
         return country +"," + city + "," + county ;
     }
+
 }

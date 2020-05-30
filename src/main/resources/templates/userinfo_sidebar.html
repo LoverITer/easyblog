@@ -100,8 +100,8 @@
             <i class="bookmark icon"></i><strong>最新文章</strong>
         </div>
         <div class="ui segment" th:each="article:${newestArticles}">
-            <a href="#" th:if="${visitor==null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="m-black m-text-thin"></a>
-            <a href="#" th:if="${visitor!=null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class="m-black m-text-thin"></a>
+            <a href="#" th:if="${visitor==null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="m-text-thin" style="color: #333"></a>
+            <a href="#" th:if="${visitor!=null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class=" m-text-thin" style="color: #333"></a>
         </div>
     </div>
     <!--归档-->

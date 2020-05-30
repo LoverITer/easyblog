@@ -42,6 +42,7 @@ public class CookieUtils {
             e.printStackTrace();
         }
         //设置cookie路径
+        assert cookie != null;
         cookie.setPath("/");
         //不设置的话，则cookies不写入硬盘,而是写在内存,只在当前页面有用,以秒为单位
         cookie.setMaxAge(expire);

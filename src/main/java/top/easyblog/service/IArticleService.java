@@ -267,5 +267,7 @@ public interface IArticleService {
      * @return int
      */
     int updateArticlesByCategoryName(String newCategoryName, String oldCategoryName, int userId);
+
+    Article getArticleByPK(Long articleId);
 }
 

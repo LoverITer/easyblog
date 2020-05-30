@@ -62,6 +62,8 @@ public class UserController {
     /***ajax异步请求失败标志*/
     private static final String AJAX_ERROR = "FATAL";
 
+    private static final String LOGIN_PAGE = "redirect:/user/loginPage";
+
 
     @GetMapping("/loginPage")
     public String toLoginPage(HttpServletRequest request) {
@@ -136,10 +138,10 @@ public class UserController {
     /**
      * 发送消息到手机
      *
-     * @param phone
-     * @param code
-     * @param content
-     * @param request
+     * @param phone   手机号
+     * @param code     验证码
+     * @param content  验证消息文本
+     * @param request    request
      */
     private String sendMessage(String phone, String code, String content, HttpServletRequest request) {
 
@@ -341,7 +343,7 @@ public class UserController {
     /**
      * 检查用户的密码是否合法
      *
-     * @param password
+     * @param password   密码
      * @return
      */
     @ResponseBody
@@ -377,12 +379,12 @@ public class UserController {
                 //防止重复登录
                 if (Objects.isNull(UserUtils.getUserFromRedis(user.getUserId()))) {
                     redisUtil.hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), RedisUtils.DB_1);
-                    //会话信息，如果没有主动,会话信息15天有效
+                    //会话信息，如果没有主动退出15天有效
                     redisUtil.expire("user-" + user.getUserId(), 60 * 60 * 24 * 15, RedisUtils.DB_1);
                 }
                 if(Objects.isNull(CookieUtils.getCookieValue(request,"USER-INFO"))) {
                     //添加用户的登录信息到Cookie中
-                    CookieUtils.addCookie(request, response, "USER-INFO", JSONObject.toJSONString(user), 60 * 60 * 24);
+                    CookieUtils.addCookie(request, response, "USER-INFO", JSONObject.toJSONString(user), 60 * 60 * 24 * 15);
                 }
                 // 保存用户名密码一个月
                 if ("on".equals(remember)) {
@@ -401,8 +403,8 @@ public class UserController {
                 }
                 return "redirect:/article/index/" + user.getUserId();
             } else {
-                redirectAttributes.addFlashAttribute("error", "抱歉！用户名和密码不匹配！");
-                return "redirect:/user/loginPage";
+                redirectAttributes.addFlashAttribute("error", "登录失败！用户名和密码不匹配！");
+                return LOGIN_PAGE;
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -414,7 +416,7 @@ public class UserController {
             });
             redirectAttributes.addFlashAttribute("error", "服务异常，请重试！");
             log.error(e.getMessage());
-            return "redirect:/user/loginPage";
+            return LOGIN_PAGE;
         }
     }
 
@@ -537,13 +539,13 @@ public class UserController {
     /**
      * 设置我的联系方式
      *
-     * @param github
-     * @param wechat
-     * @param qq
-     * @param weibo
-     * @param twitter
-     * @param steam
-     * @param userId
+     * @param github  Github
+     * @param wechat  微信
+     * @param qq       QQ
+     * @param weibo    微博
+     * @param twitter  推特
+     * @param steam    Steam
+     * @param userId    用户Id
      */
     @ResponseBody
     @GetMapping(value = "/settingContact")

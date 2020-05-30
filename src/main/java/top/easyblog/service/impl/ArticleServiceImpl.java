@@ -507,6 +507,14 @@ public class ArticleServiceImpl implements IArticleService {
         return 0;
     }
 
+    @Override
+    public Article getArticleByPK(Long articleId) {
+        if(articleId>0){
+            return articleMapper.getByPrimaryKey(articleId);
+        }
+        return null;
+    }
+
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int updateArticlesByCategoryName(String newCategoryName, String oldCategoryName, int userId) {

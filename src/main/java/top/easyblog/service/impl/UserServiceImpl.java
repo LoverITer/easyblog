@@ -107,37 +107,6 @@ public class UserServiceImpl implements IUserService {
     public int register(String nickname, String password, String account, String ipInfo) {
         String headImageUrl = DefaultImageDispatcherUtils.defaultAvatar();
         try {
-
-            /**
-             * (String userNickname,
-             *             String userPassword,
-             *             String userName,
-             *             String userGender,
-             *             Date userBirthday,
-             *             String userPhone,
-             *             String userMail,
-             *             String userAddress,
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *             int userScore,
-             *             int userRank,
-             *             String userHeaderImgUrl,
-             *             String userDescription,
-             *             String userRegisterIp,
-             *             String userLastUpdateTime,
-             *             Integer userLock,
-             *             Integer userFreeze,
-             *             Integer userPower,
-             *             Integer userLevel,
-             *             Integer userVisit)
-             */
             User user = new User(nickname, password, null, null, null, null, null, null, 0, 100000, headImageUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
             if (RegexUtils.isEmail(account)) {
                 user.setUserMail(account);
@@ -173,6 +142,17 @@ public class UserServiceImpl implements IUserService {
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
+    public int registerByThirdPart(User user) {
+        try{
+            return userMapper.saveCoreInfo(user);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+    @Override
     public int updateUserInfo(String account, String newPassword) {
         try {
             User user = new User();
@@ -185,8 +165,8 @@ public class UserServiceImpl implements IUserService {
             return userMapper.updateUserSelective(user);
         } catch (Exception e) {
             e.printStackTrace();
-            return 0;
         }
+        return 0;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
@@ -197,7 +177,6 @@ public class UserServiceImpl implements IUserService {
                 return userMapper.updateByPrimaryKeySelective(user);
             } catch (Exception e) {
                 e.printStackTrace();
-                return 0;
             }
         }
         return 0;
@@ -211,7 +190,6 @@ public class UserServiceImpl implements IUserService {
                 userMapper.deleteByPrimaryKey((long) userId);
             } catch (Exception e) {
                 e.printStackTrace();
-                return 0;
             }
         }
         return 0;

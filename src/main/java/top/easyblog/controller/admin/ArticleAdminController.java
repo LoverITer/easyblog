@@ -3,6 +3,7 @@ package top.easyblog.controller.admin;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,15 +25,17 @@ import top.easyblog.service.impl.CategoryServiceImpl;
 import top.easyblog.service.impl.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.Executor;
 
 
 /**
- * 后台博客管理
+ * 博客后台文章管理
  *
  * @author HuangXin
  */
+@Slf4j
 @Controller
 @RequestMapping(value = "/manage/blog")
 public class ArticleAdminController {
@@ -41,7 +44,9 @@ public class ArticleAdminController {
     private final CategoryServiceImpl categoryService;
     private final UserServiceImpl userService;
     private final QiNiuCloudService qiNiuCloudService;
-    private static final String PREFIX = "admin/blog_manage";
+    private static final String BLOG_MANAGE_PAGE_PREFIX = "admin/blog_manage";
+    private static final String LOGIN_PAGE = "redirect:/user/loginPage";
+    private static final String ERROR_PAGE = "redirect:/error/error";
     @Autowired
     private RedisUtils redisUtil;
     @Autowired
@@ -62,7 +67,7 @@ public class ArticleAdminController {
         String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
             //找不到直接重定位到登录页面
-            return "redirect:/user/loginPage";
+            return LOGIN_PAGE;
         }
         User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.nonNull(user)) {
@@ -77,13 +82,12 @@ public class ArticleAdminController {
                 putArticleNumToModel(user, model);
                 model.addAttribute("user", user);
                 model.addAttribute("visitor", user);
-                return PREFIX + "/blog-manage";
+                return BLOG_MANAGE_PAGE_PREFIX + "/blog-manage";
             } catch (Exception ex) {
-                return "/error/error";
+                return ERROR_PAGE;
             }
-        } else {
-            return "redirect:/user/loginPage";
         }
+        return LOGIN_PAGE;
     }
 
 
@@ -100,7 +104,7 @@ public class ArticleAdminController {
         String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
             //找不到直接重定位到登录页面
-            return "redirect:/user/loginPage";
+            return LOGIN_PAGE;
         }
         User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.nonNull(user)) {
@@ -131,20 +135,20 @@ public class ArticleAdminController {
                 getShareInfo(model, user, year, month, articleType, categoryName);
                 //统计各种状态文章的数量
                 putArticleNumToModel(user, model);
-                return PREFIX + "/blog-manage";
+                return BLOG_MANAGE_PAGE_PREFIX + "/blog-manage";
             } catch (Exception ex) {
-                return "redirect:/error/error";
+                return ERROR_PAGE;
             }
         }
-        return "redirect:/user/loginPage";
+        return LOGIN_PAGE;
     }
 
     /**
      * 写文章页面
      *
-     * @param model
-     * @param userId
-     * @return
+     * @param model  Model
+     * @param userId 用户ID
+     * @return java.lang.String
      */
     @RequestMapping(value = "/post")
     public String writeBlog(Model model,
@@ -154,11 +158,11 @@ public class ArticleAdminController {
         String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
             //找不到直接重定位到登录页面
-            return "redirect:/user/loginPage";
+            return LOGIN_PAGE;
         }
         User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.isNull(user)) {
-            return "redirect:/user/loginPage";
+            return LOGIN_PAGE;
         }
         model.addAttribute("user", user);
         model.addAttribute("visitor", user);
@@ -168,9 +172,9 @@ public class ArticleAdminController {
             model.addAttribute("categories", categories);
             model.addAttribute("userId", userId);
         } catch (Exception ex) {
-            return "/error/error";
+            return ERROR_PAGE;
         }
-        return PREFIX + "/blog-input";
+        return BLOG_MANAGE_PAGE_PREFIX + "/blog-input";
     }
 
     /**
@@ -208,11 +212,11 @@ public class ArticleAdminController {
                         //数据库中用户有这个分类就更新该分类下的文章的数量
                         //id=-1标志这是一篇新文章
                         if (article.getArticleId() == -1) {
-                            Category category0 = new Category();
-                            category0.setCategoryId(category.getCategoryId());
+                            Category c0 = new Category();
+                            c0.setCategoryId(category.getCategoryId());
                             int num = articleService.countUserArticleInCategory(userId, article.getArticleCategory());
-                            category0.setCategoryArticleNum(num + 1);
-                            categoryService.updateByPKSelective(category0);
+                            c0.setCategoryArticleNum(num + 1);
+                            categoryService.updateByPKSelective(c0);
                         }
                     }
                 } else {
@@ -256,6 +260,7 @@ public class ArticleAdminController {
                     result.setMessage(article.getArticleId().toString());
                 }
             } catch (Exception e) {
+                log.error(e.getMessage());
                 result.setMessage("服务异常，请重试！");
             }
         }
@@ -310,6 +315,7 @@ public class ArticleAdminController {
                 model.addAttribute("categories", categories);
                 model.addAttribute("userId", userId);
             } catch (Exception e) {
+                log.error(e.getMessage());
                 result.setMessage("服务异常，请尝试重新提交！");
             }
         }
@@ -325,7 +331,7 @@ public class ArticleAdminController {
         String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
             //找不到直接重定位到登录页面
-            return "redirect:/user/loginPage";
+            return LOGIN_PAGE;
         }
         User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.nonNull(user)) {
@@ -333,9 +339,9 @@ public class ArticleAdminController {
             model.addAttribute("visitor", user);
             Article article = articleService.getArticleById(articleId, TextForm.TXT);
             model.addAttribute("article", article);
-            return PREFIX + "/blog-input-success";
+            return BLOG_MANAGE_PAGE_PREFIX + "/blog-input-success";
         }
-        return "redirect:/usr/loginPage";
+        return LOGIN_PAGE;
     }
 
 
@@ -359,57 +365,64 @@ public class ArticleAdminController {
                 model.addAttribute("categories", categories);
                 model.addAttribute("userId", article.getArticleUser());
             } catch (Exception ex) {
-                return "/error/error";
+                return ERROR_PAGE;
             }
-            return PREFIX + "/blog-input";
+            return BLOG_MANAGE_PAGE_PREFIX + "/blog-input";
         }
-        return "redirect:/user/loginPage";
+        return LOGIN_PAGE;
     }
 
 
     @GetMapping(value = "/delete")
-    public String deleteArticle(@RequestParam("articleId") int articleId,@RequestParam int userId) {
+    public String deleteArticle(@RequestParam("articleId") int articleId,
+                                @RequestParam int userId,
+                                HttpServletRequest request) {
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             try {
                 //删除的文章暂时移动到垃圾桶
                 updateArticle(articleId, "3");
+                log.debug(request.getLocalAddr()+"@"+LocalDateTime.now()+" move article: ["+articleId+"] status to 3");
             } catch (Exception e) {
-                return "redirect:/error/error";
+                return ERROR_PAGE;
             }
             return "redirect:/manage/blog/?userId=" + userId;
         }
-        return "redirect:/user/loginPage";
+        return LOGIN_PAGE;
     }
 
 
     @GetMapping(value = "/deleteDraft")
-    public String deleteDraftArticle(@RequestParam("articleId") int articleId,@RequestParam int userId) {
+    public String deleteDraftArticle(@RequestParam("articleId") int articleId,
+                                     @RequestParam int userId) {
         String updateStatus = deleteArticle2Dash(articleId);
-        return Objects.isNull(updateStatus) ? "redirect:/manage/blog/draft?userId="+userId : updateStatus;
+        return Objects.isNull(updateStatus) ? "redirect:/manage/blog/draft?userId=" + userId : updateStatus;
     }
 
     @GetMapping(value = "/deletePrivateArticle")
-    public String deletePrivateArticle(@RequestParam("articleId") int articleId,@RequestParam int userId) {
+    public String deletePrivateArticle(@RequestParam("articleId") int articleId,
+                                       @RequestParam int userId) {
         String updateStatus = deleteArticle2Dash(articleId);
-        return Objects.isNull(updateStatus) ? "redirect:/manage/blog/private?userId="+userId: updateStatus;
+        return Objects.isNull(updateStatus) ? "redirect:/manage/blog/private?userId=" + userId : updateStatus;
     }
 
     @GetMapping(value = "/deletePublicArticle")
-    public String deletePublicArticle(@RequestParam("articleId") int articleId,@RequestParam int userId) {
+    public String deletePublicArticle(@RequestParam("articleId") int articleId,
+                                      @RequestParam int userId) {
         String updateStatus = deleteArticle2Dash(articleId);
-        return Objects.isNull(updateStatus)? "redirect:/manage/blog/public?userId="+userId : updateStatus;
+        return Objects.isNull(updateStatus) ? "redirect:/manage/blog/public?userId=" + userId : updateStatus;
     }
 
 
     @GetMapping(value = "/recycleToDraft")
-    public String recycleArticleFromDash2Draft(@RequestParam int articleId,@RequestParam int userId) {
+    public String recycleArticleFromDash2Draft(@RequestParam int articleId,
+                                               @RequestParam int userId) {
         try {
             updateArticle(articleId, "2");
         } catch (Exception e) {
-            return "redirect:/error/error";
+            return ERROR_PAGE;
         }
-        return "redirect:/manage/blog/dash?userId="+userId;
+        return "redirect:/manage/blog/dash?userId=" + userId;
     }
 
     private String deleteArticle2Dash(int articleId) {
@@ -417,19 +430,19 @@ public class ArticleAdminController {
             //删除的文章暂时放进垃圾桶
             updateArticle(articleId, "3");
         } catch (Exception e) {
-            return "redirect:/error/error";
+            return ERROR_PAGE;
         }
         return null;
     }
 
     @GetMapping(value = "/deleteComplete")
-    public String deleteComplete(@RequestParam("articleId") int articleId,@RequestParam int userId) {
+    public String deleteComplete(@RequestParam("articleId") int articleId, @RequestParam int userId) {
         try {
             articleService.deleteByPK(articleId);
         } catch (Exception e) {
-            return "redirect:/error/error";
+            return ERROR_PAGE;
         }
-        return "redirect:/manage/blog/dash?userId="+userId;
+        return "redirect:/manage/blog/dash?userId=" + userId;
     }
 
     private void updateArticle(int articleId, String destArticleStatus) {
@@ -470,7 +483,6 @@ public class ArticleAdminController {
     }
 
 
-
     @GetMapping(value = "/public")
     public String publicBlogPage(Model model,
                                  @RequestParam(value = "userId") Integer userId,
@@ -494,14 +506,17 @@ public class ArticleAdminController {
     }
 
     @GetMapping(value = "/dash")
-    public String dashBlogPage(Model model, @RequestParam(value = "userId") Integer userId, @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+    public String dashBlogPage(Model model, @RequestParam(value = "userId") Integer userId,
+                               @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
         return getArticles(model, "3", userId, "/blog-dash", pageParam);
     }
 
     @ResponseBody
     @PostMapping(value = "/upload_article_img/{userId}")
-    public Result editArticleFirstImg(@PathVariable(value = "userId") Integer userId, @RequestParam long articleId, @RequestParam String imgByte64Str) {
+    public Result editArticleFirstImg(@PathVariable(value = "userId") Integer userId,
+                                      @RequestParam long articleId,
+                                      @RequestParam String imgByte64Str) {
         Result result = new Result();
         result.setMessage("请登录后在操作！");
         if (Objects.isNull(userId)) {
@@ -531,7 +546,7 @@ public class ArticleAdminController {
                     result.setMessage("参数非法");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
                 result.setMessage("服务异常，请稍后重试！");
             }
         }
@@ -542,11 +557,11 @@ public class ArticleAdminController {
     /**
      * 返回不同状态的文章并且分页
      *
-     * @param model
-     * @param articleStatus
+     * @param model         Model
+     * @param articleStatus 文章状态
      * @param dest          目标页面
      * @param pageParam     分页参数
-     * @return
+     * @return java.lang.String
      */
     private String getArticles(Model model,
                                String articleStatus,
@@ -565,19 +580,19 @@ public class ArticleAdminController {
                 putArticleNumToModel(user, model);
                 model.addAttribute("user", user);
                 model.addAttribute("visitor", user);
-                return PREFIX + dest;
+                return BLOG_MANAGE_PAGE_PREFIX + dest;
             } catch (Exception e) {
-                return "redirect:/error/error";
+                return ERROR_PAGE;
             }
         }
-        return "redirect:/user/loginPage";
+        return LOGIN_PAGE;
     }
 
     /**
      * 将各种状态的文章统计的数据放到Model中
      *
-     * @param user
-     * @param model
+     * @param user  User对象
+     * @param model Model
      */
     private void putArticleNumToModel(User user, Model model) {
         model.addAttribute("allArticles", getArticlesNum(user, null));
@@ -590,9 +605,9 @@ public class ArticleAdminController {
     /**
      * 得到不同状态的文章数量
      *
-     * @param user
-     * @param articleStatus
-     * @return
+     * @param user          User对象
+     * @param articleStatus 文章的数量
+     * @return 文章的数量
      */
     private int getArticlesNum(User user, String articleStatus) {
         Article article = new Article();

@@ -10,7 +10,7 @@
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
     <link rel="bookmark" th:href="@{/static/favicon.ico}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
-    <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
+    <link rel="stylesheet" href="../../../static/css/easyblog.base.css" th:href="@{/static/css/easyblog.base.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
     <!--百度统计JS脚本-->
@@ -54,7 +54,7 @@
                                 <span th:case="2">翻译</span>
                             </button>
                             <h3 class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">
-                                <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()},userId=${user.getUserId()})}" title="点击查看" class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a>
+                                <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()},userId=${user.getUserId()})}" title="点击查看" style="color: #333333" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a>
                             </h3>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
@@ -83,8 +83,8 @@
                                 <div class="right aligned five wide column">
                                     <div class="five  wide  column">
                                         <div class="ui horizontal list">
-                                            <div class="item"><a href="#" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #349EDF">编辑</a></div>
-                                            <div class="item"><a href="#" th:href="@{/manage/blog/deletePrivateArticle(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #CA0C16">删除</a></div>
+                                            <div class="item"><a href="#" title="点击修改文章" th:if="${article.getArticleStatus() ne '3'}"  th:href="@{/manage/blog/edit(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #349EDF">编辑</a></div>
+                                            <div class="item"><a href="#" th:if="${article.getArticleStatus() ne '3'}" title="点击将文章放入回收站（此文章将在主页面不可见）" th:href="@{/manage/blog/delete(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #CA0C16">删除</a></div>
                                         </div>
                                     </div>
                                 </div>

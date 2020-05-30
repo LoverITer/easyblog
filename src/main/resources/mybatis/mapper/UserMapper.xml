@@ -23,6 +23,13 @@
                 #{userFreeze}, #{userPower}, #{userLevel}, #{userVisit}, #{userHobby}, #{userTech})
     </insert>
 
+    <insert id="saveCoreInfo" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id" parameterType="top.easyblog.bean.User">
+        insert into user(user_nickname,user_password,user_headerImg_url,user_register_time,user_register_ip,
+                         user_lock, user_freeze, user_power)
+        values(#{userNickname},#{userPassword},#{userHeaderImgUrl},now(),#{userRegisterIp},
+              #{userLock},#{userFreeze},#{userPower})
+    </insert>
+
     <update id="updateByPrimaryKeySelective">
         update user
         <set>

@@ -62,4 +62,12 @@ public interface UserMapper extends BaseMapper<User> {
      */
     int updateByPrimaryKeySelective(@Param("user") User user);
 
+    /**
+     * 保存用户的核心信息
+     *
+     * @param user  用户信息
+     * @return  返回是否插入成功，并且在插入对对象中返回了自增主键的Id
+     */
+    int saveCoreInfo(User user);
+
 }

@@ -54,6 +54,14 @@ public interface IUserService {
      */
     int register(User user);
 
+
+    /**
+     * 通过第三方认证授权之后自动绑定到此系统
+     * @param user
+     * @return
+     */
+    int registerByThirdPart(User user);
+
     /**
      * 根据用户Id更新用户密码
      *

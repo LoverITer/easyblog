@@ -87,7 +87,7 @@ public class WelcomeController {
             List<Article> likes = articleService.getYouMayAlsoLikeArticles();
             model.addAttribute("likes", likes);
         } catch (Exception e) {
-            log.error(e.getMessage() + "@ index() line 78");
+            log.error( e.getMessage() + "@ index() line 78");
         }
         return "index";
     }

@@ -12,6 +12,7 @@ import top.easyblog.bean.UserPower;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.mapper.UserPowerMapper;
+import top.easyblog.service.impl.GitHubAuthServiceImpl;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,6 +30,9 @@ public class EasyBlogApplicationTests {
 
     @Autowired
     UserPowerMapper userPowerMapper;
+
+    @Autowired
+    GitHubAuthServiceImpl gitHubAuthService;
 
     @Test
     public void testForArticleMapper(){
@@ -113,6 +117,15 @@ public class EasyBlogApplicationTests {
             System.out.println(e.getMessage());
         }
     }
+
+
+
+    @Test
+    public void testForOauth(){
+        System.out.println(gitHubAuthService.getAccessToken("34"));
+        //System.out.println(gitHubAuthService.getAuthorizationUrl());
+    }
+
 
 
 

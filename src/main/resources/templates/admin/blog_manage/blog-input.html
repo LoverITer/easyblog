@@ -9,7 +9,7 @@
     <title>写文章 - EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
     <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
-    <link rel="stylesheet" href="../../../static/css/me.css" th:href="@{/static/css/me.css}">
+    <link rel="stylesheet" href="../../../static/css/easyblog.base.css" th:href="@{/static/css/easyblog.base.css}">
     <link rel="stylesheet" href="../../../static/lib/css/editormd.css" th:href="@{/static/lib/css/editormd.css}">
     <link rel="stylesheet" href="../../../static/css/semantic-specifc.css" th:href="@{/static/css/semantic-specifc.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
@@ -71,10 +71,9 @@
                     </div>
                 </div>
             </div>
-            <div th:if="${article==null}" class=" left float  center aligned two wide centered column"
+            <div  class=" left float  center aligned two wide centered column"
                  style="padding-left: 0 !important;padding-right: 0 !important;max-width: 100px !important;">
-                <button id="instanceSave" type="button" class="ui medium right floated basic red button"
-                        style="color:#ca0c16 !important;margin-left: 0 !important;">
+                <button id="instanceSave" type="button" class="ui medium right floated basic red button" style="color:#ca0c16 !important;margin-left: 0 !important;">
                     保存草稿
                 </button>
             </div>
@@ -365,10 +364,10 @@
             if (str !== "") {
                 let options = $('#types').find("option");
                 let flag = true;
-                for (let i = 0; i < options.length; i++) {
+                for (let i = 0; parseInt(i) < parseInt(options.length); i++) {
                     let channlVar = options.eq(i).text();   //option中的值
                     channlVar = channlVar.replace(/\s*/g, "");
-                    console.log(channlVar);
+                    //console.log(channlVar);
                     if (channlVar == str) {
                         showErrorMessage('您已经存在' + str + '分类,请不要重复添加！');
                         flag = false;
@@ -390,7 +389,6 @@
     });
 
 </script>
-
 <script type="text/javascript" th:online="javascript">
     /**
      *弹出框按钮控制
@@ -405,7 +403,8 @@
      * @type {string}
      */
     let userId = "[[${user.getUserId()}]]";
-
+    //记录文章保存的次数
+    let savedCount=0;
     //保存为草稿
     function saveDraft() {
         $('#draft-btn,#instanceSave').click(function () {
@@ -445,12 +444,15 @@
                     dataType: "json",     //服务器返回的数据类型
                     success: function (result) {
                         _loadingClose();
-                        //跳转页面
+                        //返回文章的id
                         articleId = result.message;
                         if (result.success) {
                             showSuccessMessage("已成功保存至草稿箱");
                             //把articleId存起来
                             localStorage.setItem('articleId', articleId);
+                            //保存一次就将savedCount+1
+                            savedCount++;
+                            window.location.href="/manage/blog/edit?articleId="+localStorage.getItem("articleId")+"&userId="+userId;
                         } else {
                             showErrorMessage(result.message);
                         }
@@ -533,9 +535,12 @@
         });
     }
 </script>
+<!--未保存关闭或刷新页面时提示-->
 <script type="text/javascript">
-    $(window).bind('beforeunload',function(){
-        return '您输入的内容尚未保存，确定离开此页面吗？';
+    $(window).bind('beforeunload', function () {
+        if(parseInt(savedCount)===parseInt(0)) {
+            return '您输入的内容尚未保存，确定离开此页面吗？';
+        }
     });
 </script>
 </html>
