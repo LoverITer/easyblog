@@ -9,12 +9,13 @@
     <title>EasyBlog - Make Blog Easy</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
     <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
-    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
-    <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/static/css/styles.css}">
+    <link rel="stylesheet" href="../static/css/easyblog.base.css" th:href="@{/static/css/easyblog.base.css}">
+    <link rel="stylesheet" href="../static/css/login.css" th:href="@{/static/css/login.css}">
     <link rel="stylesheet" href="../static/css/jigsaw.css" th:href="@{/static/css/jigsaw.css}">
     <!--弹出框特效-->
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
+    <link rel="stylesheet" href="../static/css/font-awesome.css" th:href="@{/static/css/font-awesome.css}">
     <style type="text/css">
         input::-webkit-calendar-picker-indicator{
             display: none;
@@ -36,7 +37,7 @@
     <!--google Adsense-->
     <script data-ad-client="ca-pub-2311962880414013" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
-<body style="background: url(../static/images/bg.png)">
+<body>
 <div class="jq22-container" style="padding-top:30px">
     <div class="login-wrap">
         <div class="login-html">
@@ -57,14 +58,17 @@
                         </div>
                         <div class="group" >
                            <input id="check1" name="remember-me" type="checkbox" class="check" checked>
-                           <label for="check1" style="font-size: 14px"> <span class="icon"></span> 保持登录</label>
+                           <label for="check1" style="font-size: 14px"> <span class="icon txt1"></span> 保持登录</label>
+                            <a href="#" class="txt1" style="float: right" th:href="@{/user/change_password}">忘记密码?</a>
                         </div>
-                        <div class="group">
+                        <div class="group" style="margin-top: 20px">
                             <input id="login-btn" style="cursor: pointer;"  type="submit"  class="button" value="登录">
                         </div>
-                        <div class="hr"></div>
-                        <div class="foot-lnk">
-                            <a href="#" th:href="@{/user/change_password}">忘记密码?</a>
+                        <div  class="txt1 text-center p-t-54 p-b-20"><span>第三方登录</span></div>
+                        <div class="flex-c-m">
+                            <a href="#" th:href="@{/oauth/github/}" title="GitHub登录" class="login100-social-item bg4"><i class="fa fa-github"></i></a>
+                            <a href="javascript:void(0)" title="开发中，敬请期待！" class="login100-social-item bg5"><i class="fa fa-wechat"></i></a>
+                            <a href="javascript:void(0)" title="开发中，敬请期待！" class="login100-social-item bg2"><i class="fa fa-qq"></i></a>
                         </div>
                     </div>
                 </form>
@@ -106,7 +110,7 @@
                             <input id="sub-btn" style="cursor: pointer;"  type="button" class="button" value="注册">
                         </div>
                         <div class="hr"></div>
-                        <div class="foot-lnk">
+                        <div class="text-center txt1">
                             <label style="cursor: pointer;" for="tab-1">已经有账号了?</label>
                         </div>
                     </div>

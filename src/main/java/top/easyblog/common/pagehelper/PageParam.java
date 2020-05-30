@@ -3,11 +3,18 @@ package top.easyblog.common.pagehelper;
 import java.util.Objects;
 
 /**
+ * 分页参数设置
  * @author huangxin
  */
 public class PageParam {
 
+    /**
+     * 分页页数
+     */
     private Integer page;
+    /**
+     * 分页大小
+     */
     private Integer pageSize;
 
     public PageParam(int page, int pageSize) {

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.easyblog.mapper.OauthMapper">
+  <resultMap id="BaseResultMap" type="top.easyblog.bean.oauth2.Oauth">
+    <id column="oauth_id" jdbcType="INTEGER" property="oauthId" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="app_type" jdbcType="VARCHAR" property="appType" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.easyblog.bean.oauth2.Oauth">
+    <result column="user_id" jdbcType="LONGVARCHAR" property="userId" />
+  </resultMap>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select *
+    from oauth
+    where oauth_id = #{oauthId,jdbcType=INTEGER}
+  </select>
+
+  <select id="getUserSelective"  resultType="top.easyblog.bean.oauth2.Oauth">
+    select * from oauth
+    <where>
+      <if test="oauth.oauthId != null">
+        oauth_id = #{oauth.oauthId,jdbcType=INTEGER}
+      </if>
+      <if test="oauth.openId != null">
+        AND open_id = #{oauth.openId,jdbcType=VARCHAR}
+      </if>
+      <if test="oauth.appType != null">
+        AND app_type = #{oauth.appType,jdbcType=VARCHAR}
+      </if>
+      <if test="oauth.status != null">
+        AND status = #{oauth.status,jdbcType=VARCHAR}
+      </if>
+      <if test="oauth.createTime != null">
+        AND create_time = #{oauth.createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="oauth.userId != null">
+        AND user_id = #{oauth.userId,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from oauth
+    where oauth_id = #{oauthId,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="save" parameterType="top.easyblog.bean.oauth2.Oauth">
+    insert into oauth (oauth_id, open_id, app_type, 
+      status, create_time, user_id )
+    values (#{oauthId,jdbcType=INTEGER}, #{openId,jdbcType=VARCHAR}, #{appType,jdbcType=VARCHAR}, 
+      #{status,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="top.easyblog.bean.oauth2.Oauth">
+    insert into oauth
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="oauthId != null">
+        oauth_id,
+      </if>
+      <if test="openId != null">
+        open_id,
+      </if>
+      <if test="appType != null">
+        app_type,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="oauthId != null">
+        #{oauthId,jdbcType=INTEGER},
+      </if>
+      <if test="openId != null">
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        #{appType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.bean.oauth2.Oauth">
+    update oauth
+    <set>
+      <if test="openId != null">
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        app_type = #{appType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where oauth_id = #{oauthId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="top.easyblog.bean.oauth2.Oauth">
+    update oauth
+    set open_id = #{openId,jdbcType=VARCHAR},
+      app_type = #{appType,jdbcType=VARCHAR},
+      status = #{status,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=LONGVARCHAR}
+    where oauth_id = #{oauthId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="top.easyblog.bean.oauth2.Oauth">
+    update oauth
+    set open_id = #{openId,jdbcType=VARCHAR},
+      app_type = #{appType,jdbcType=VARCHAR},
+      status = #{status,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where oauth_id = #{oauthId,jdbcType=INTEGER}
+  </update>
+</mapper>

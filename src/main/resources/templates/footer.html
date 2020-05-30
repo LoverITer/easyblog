@@ -7,7 +7,7 @@
 <body>
 
 <!--公共片段： 页脚-->
-<footer th:fragment="footbar" class="ui  vertical segment m-padded-tb-massive" style="padding-top: 20px !important;">
+<footer th:fragment="footbar" class="ui  vertical segment m-padded-tb-massive" style="position: relative;bottom: 0">
     <div class="ui center aligned container">
         <p class="copyright" style="margin-top: 0 !important;font-size: 15px;color: #999AAA">Copyright © 2019-[[${#dates.format(new java.util.Date().getTime(),'yyyy')}]]
             <a style="color:#999AAA;font-size: inherit" href="https://www.easyblog.top">www.easyblog.top</a>. 版权所有.

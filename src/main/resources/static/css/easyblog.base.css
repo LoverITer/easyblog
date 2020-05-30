@@ -94,6 +94,7 @@ footer a:hover{
 
 .m-text-thin {
     font-weight: 300 !important;
+    font-size: 16px;
 }
 
 .m-text-spaced {
@@ -453,7 +454,7 @@ footer a:hover{
 /*-----color-----*/
 
 .m-black {
-    color: #333 !important;
+    color: #666 !important;
 }
 
 .m-mobile-show {

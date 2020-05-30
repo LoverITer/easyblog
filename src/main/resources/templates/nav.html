@@ -6,23 +6,25 @@
 </head>
 <body>
 <!--公共的头部导航栏-->
-<nav th:fragment="navbar" class="ui inverted attached segment m-padded-tb-mini m-shadow-small" style="border: none !important;">
+<nav th:fragment="navbar" class="ui inverted attached segment m-padded-tb-mini m-shadow-small" style="border: none !important;height: 61px">
     <!--用户信息-->
     <div class="ui m-container-large">
         <div class="ui inverted secondary stackable menu">
             <a href="#" th:href="@{/}"><h2 class="ui teal header item">EasyBlog</h2></a>
+
             <!--搜索框--->
-            <div class="right m-item item m-mobile-hide">
+            <div class="right  item m-mobile-hide">
                 <form name="search" class="m-full-line" th:action="@{/search/details}" target="_blank" method="get" >
                     <div class="ui icon inverted search input m-margin-tb-tiny m-full-line">
                         <input th:if="${query==null}" name="query" class="prompt" type="text" placeholder="Search....">
                         <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt" type="text" placeholder="Search....">
+                        <input hidden th:if="${visitor!=null}" name="visitorUId" th:value="${visitor.getUserId()}">
                         <i onclick="document.forms['search'].submit()" class="search link icon"></i>
                     </div>
                 </form>
             </div>
 
-            <div class="right m-item m-mobile-hide menu " style=" margin: 1.7em 0 auto 2em !important;">
+            <div class="right  m-mobile-hide menu " style=" margin: 1.7em 0 auto 2em !important;">
                 <a target="_blank" href="#"  th:if="${visitor==null}" th:href="@{/manage/blog/post}"
                    style="color :rgb(0,183,173);font-size: 17px"><i class="paint brush icon" style="color: inherit !important;"></i>写博客</a>
                 <a target="_blank" href="#"  th:if="${visitor!=null}" th:href="@{/manage/blog/post(userId=${visitor.getUserId()})}"
@@ -51,7 +53,7 @@
             </div>
              <!--登录按钮-->
             <div id="login-btn" class="right m-mobile-hide menu m-menu-padding" style="display: flex !important;margin-left: 1em !important">
-                <a href="#" target="_blank" th:href="@{/user/loginPage}" style="font-size: inherit" class="m-item item m-mobile-hide">登录/注册</a>
+                <a href="#" target="_blank" th:href="@{/user/loginPage}" style="font-size: inherit" class=" item m-mobile-hide">登录/注册</a>
             </div>
         </div>
     </div>

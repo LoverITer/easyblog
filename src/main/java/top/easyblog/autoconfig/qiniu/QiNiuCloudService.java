@@ -7,8 +7,7 @@ import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,12 +18,12 @@ import java.util.UUID;
  * @author HuangXin
  * @since 2019/12/29 14:38
  */
+@Slf4j
 public class QiNiuCloudService {
 
     @Autowired
     private QiNiuCloudProperties qiNiuCloudProperties;
 
-    private Logger log = LoggerFactory.getLogger(QiNiuCloudService.class);
 
     /**
      * 获取上传凭证

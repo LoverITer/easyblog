@@ -1,6 +1,7 @@
 package top.easyblog.controller;
 
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +24,12 @@ import top.easyblog.service.impl.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 /**
  * @author huangxin
  */
+@Slf4j
 @Controller
 @RequestMapping("/article")
 public class ArticleController {
@@ -38,9 +41,21 @@ public class ArticleController {
     private final CommentServiceImpl commentService;
     private final UserAttentionImpl userAttention;
     private final UserAccountImpl userAccount;
+
     @Autowired
     RedisUtils redisUtil;
-    private final String PAGE404 = "redirect:/error/404";
+
+    @Autowired
+    private Executor executor;
+    /**
+     * 404页面路径
+     */
+    private static final String PAGE404 = "redirect:/error/404";
+
+    /**
+     * 关于我页面的默认文章显示数
+     **/
+    private static final int HOME_PAGE_DEFAULT_ARTICLE_SIZE = 15;
 
     public ArticleController(CategoryServiceImpl categoryServiceImpl, UserServiceImpl userService, ArticleServiceImpl articleServiceImpl, CommentServiceImpl commentService, UserAttentionImpl userAttention, UserAccountImpl userAccount) {
         this.categoryServiceImpl = categoryServiceImpl;
@@ -53,9 +68,9 @@ public class ArticleController {
 
     /**
      * 访问个人博客首页<br/>
-     * 其中visitor是访问用户，author是文章或此博客页面的作者
+     * 其中visitor是访问用户，author是文章作者
      *
-     * @param model
+     * @param model       Model
      * @param userId      作者Id
      * @param articleType 文章类型 0原创文章 1转载文章 2翻译文章  3全部文章
      * @param page        分页参数-页数
@@ -69,7 +84,8 @@ public class ArticleController {
         User visitor = UserUtils.getUserFromCookie(request);
         model.addAttribute("visitor", visitor);
         try {
-            ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, userId, articleType + "");
+            ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl,
+                    commentService, userAttention).getArticleUserInfo(model, userId, articleType + "");
             User author = userService.getUser(userId);
             PageParam pageParam = new PageParam(page, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
             PageInfo articlePages = articleServiceImpl.getUserArticlesPage(userId, articleType + "", pageParam);
@@ -94,7 +110,6 @@ public class ArticleController {
      * @param userId     用户Id
      * @param model
      * @param visitorUId 访问者用户Id
-     *
      */
     @RequestMapping(value = "/home/{userId}")
     public String homePage(@PathVariable("userId") int userId, Model model, @RequestParam(required = false) Integer visitorUId) {
@@ -105,10 +120,10 @@ public class ArticleController {
             if (Objects.nonNull(articles)) {
                 int articleSize = articles.size();
                 //默认值显示15篇文章
-                if (articleSize < 15) {
+                if (articleSize < HOME_PAGE_DEFAULT_ARTICLE_SIZE) {
                     model.addAttribute("articles", articles);
                 } else {
-                    model.addAttribute("articles", articles.subList(0, 15));
+                    model.addAttribute("articles", articles.subList(0, HOME_PAGE_DEFAULT_ARTICLE_SIZE));
                 }
                 model.addAttribute("articleSize", articleSize);
                 model.addAttribute("author", author);
@@ -143,15 +158,16 @@ public class ArticleController {
 
 
     /**
-     * 查看文章
+     * 文章内容页面
      *
      * @param articleId  文章ID
-     * @param model
+     * @param model      Model
      * @param visitorUId 访问者ID
      * @return
      */
     @GetMapping(value = "/details/{articleId}")
-    public String articleDetails(@PathVariable("articleId") int articleId, Model model, @RequestParam(required = false) Integer visitorUId) {
+    public String articleDetails(@PathVariable("articleId") int articleId, Model model,
+                                 @RequestParam(required = false) Integer visitorUId) {
         try {
             //根据id拿到文章
             Article article = articleServiceImpl.getArticleById(articleId, TextForm.HTML);
@@ -165,27 +181,30 @@ public class ArticleController {
                 model.addAttribute("visitor", visitor);
 
                 User author = userService.getUser(article.getArticleUser());
-                //更新文章作者的信息
                 if (Objects.nonNull(author)) {
                     author.setUserPassword(null);
                     model.addAttribute("author", author);
-                    //更新用户的访问量
-                    User user1 = new User();
-                    user1.setUserId(author.getUserId());
-                    user1.setUserVisit(author.getUserVisit() + 1);
-                    userService.updateUserInfo(user1);
-                    //更新文章的访问量
-                    Article article1 = new Article();
-                    article1.setArticleId(article.getArticleId());
-                    article1.setArticleClick(article.getArticleClick() + 1);
-                    articleServiceImpl.updateSelective(article1);
-                    ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention).getArticleUserInfo(model, author.getUserId(), ArticleType.Original.getArticleType());
-                    return "blog";
+                    //查询共享的信息
+                    ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention)
+                            .getArticleUserInfo(model, author.getUserId(), ArticleType.Original.getArticleType());
+                    executor.execute(() -> {
+                        //更新用户的访问量
+                        User user1 = new User();
+                        user1.setUserId(author.getUserId());
+                        user1.setUserVisit(author.getUserVisit() + 1);
+                        userService.updateUserInfo(user1);
+                        //更新文章的访问量
+                        Article article1 = new Article();
+                        article1.setArticleId(article.getArticleId());
+                        article1.setArticleClick(article.getArticleClick() + 1);
+                        articleServiceImpl.updateSelective(article1);
+                    });
                 }
+                return "blog";
             }
             return PAGE404;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return "redirect:/error/error";
         }
     }

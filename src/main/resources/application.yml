@@ -40,3 +40,10 @@ qiniucloud:
   secretKey: 5No0lIzPOv2pYDX9wPkFFh_kE99lvpPia0nA0ZPH
   domain: image.easyblog.top
   bucket-name: easyblog-pro
+
+#第三方授权登录
+oauth:
+  github:
+    authorizeUrl: https://github.com/login/oauth/authorize
+    accessTokenUrl: https://github.com/login/oauth/access_token
+    userInfoUrl: https://api.github.com/user

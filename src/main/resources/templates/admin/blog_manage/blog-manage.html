@@ -10,7 +10,7 @@
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
     <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
-    <link rel="stylesheet" href="../../../css/me.css" th:href="@{/static/css/me.css}">
+    <link rel="stylesheet" href="../../../css/me.css" th:href="@{/static/css/easyblog.base.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
     <!--加载动画和确认框特效-->
@@ -202,7 +202,7 @@
                             </button>
                             <h3 class="ui header m-inline-block m-margin-top-small m-margin-bottom-small">
                                 <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" title="点击查看"
-                                   class="m-black" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a>
+                                   style="color: #333333" th:text="${article.getArticleTopic()}">你真的理解什么是财富自由吗？</a>
                             </h3>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
@@ -233,17 +233,23 @@
                                     <div class="five  wide  column">
                                         <div class="ui horizontal list">
                                             <div class="item">
-                                                <a href="#" onclick="editArticleFirstImg(this)" th:if="${article.getArticleStatus()!=3}" style="color: #349EDF" title="增加文章入口图片不仅仅会更美观些，还可以让访客能更快速的了解你的文章要义">
+                                                <a href="#" onclick="editArticleFirstImg(this)" th:if="${article.getArticleStatus() ne '3'}" style="color: #349EDF" title="增加文章入口图片不仅仅会更美观些，还可以让访客能更快速的了解你的文章要义">
                                                     配置文章首图
                                                     <input class="articleId" type="text" hidden th:value="${article.getArticleId()}">
                                                     <input class="articleFirstPic" type="text" hidden th:value="${article.getArticleFirstPicture()}">
                                                 </a>
+                                                <a href="javascript:void(0)" th:if="${article.getArticleStatus() eq '3'}" style="color: #666;cursor: not-allowed;" >
+                                                    配置文章首图
+                                                </a>
                                             </div>
                                             <div class="item">
-                                                <a href="#" title="点击修改文章"  th:if="${article.getArticleStatus()!=3}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #349EDF">编辑</a>
+                                                <a href="#" title="点击修改文章" th:if="${article.getArticleStatus() ne '3'}"  th:href="@{/manage/blog/edit(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #349EDF">编辑</a>
+                                                <a href="javascript:void(0)" title="文章已删除请在回收站处理"  th:if="${article.getArticleStatus() eq '3'}"  style="color: #666;cursor: not-allowed;">编辑</a>
                                             </div>
                                             <div class="item">
-                                                <a href="#" title="点击将文章放入回收站（此文章将在主页面不可见）" th:if="${article.getArticleStatus()!=3}" th:href="@{/manage/blog/delete(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #CA0C16">删除</a>
+                                                <a href="#" th:if="${article.getArticleStatus() ne '3'}" title="点击将文章放入回收站（此文章将在主页面不可见）"  th:href="@{/manage/blog/delete(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #CA0C16">删除</a>
+                                                <!--被删除之后的文章删除按钮变成灰色并且删除操作不可在使用-->
+                                                <a href="javascript:void(0)" th:if="${article.getArticleStatus() eq '3'}" title="文章已删除请在回收站处理" style="color: #666;cursor: not-allowed;">删除</a>
                                             </div>
                                         </div>
                                     </div>

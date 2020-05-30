@@ -12,8 +12,11 @@ import top.easyblog.bean.UserPower;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.mapper.UserPowerMapper;
+import top.easyblog.service.impl.GitHubAuthServiceImpl;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -27,6 +30,51 @@ public class EasyBlogApplicationTests {
 
     @Autowired
     UserPowerMapper userPowerMapper;
+
+    @Autowired
+    GitHubAuthServiceImpl gitHubAuthService;
+
+    @Test
+    public void testForArticleMapper(){
+        //获取全部文章
+        List<Article> allArticles = articleMapper.getArticleByCategoryNameFuzzy(new String[]{"java","jvm"},false,-1);
+
+        System.out.println("排序之前：");
+        allArticles.forEach(article -> {
+            System.out.println(String.format("%-10s %-10s %-20s",article.getArticleId(),article.getArticleClick(),article.getArticleTopic()));
+        });
+
+        Objects.requireNonNull(allArticles).sort((o1, o2) -> {
+            if (o1 == null || o2 == null) {
+                throw new IllegalArgumentException("Argument can not be null");
+            }
+            if (o1.getArticleClick().equals(o2.getArticleClick())) {
+                return 0;
+            } else if (o1.getArticleClick() > o2.getArticleClick()) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+        System.out.println("排序之后：");
+        allArticles.forEach(article -> {
+            System.out.println(String.format("%-10s %-10s %-20s",article.getArticleId(),article.getArticleClick(),article.getArticleTopic()));
+        });
+
+
+        //获取排序后的全部文章
+        /*List<Article> articles = articleMapper.getArticleByCategoryNameFuzzy(new String[]{"java","jvm"},true,-1);
+        articles.forEach(article -> {
+            System.out.println(String.format("%-10s %-10s %-20s",article.getArticleId(),article.getArticleClick(),article.getArticleTopic()));
+        });*/
+
+        //获取排序后的部分文章
+        /*List<Article> articles = articleMapper.getArticleByCategoryNameFuzzy(new String[]{"java","jvm"},true,5);
+        articles.forEach(article -> {
+            System.out.println(String.format("%-10s %-10s %-20s",article.getArticleId(),article.getArticleClick(),article.getArticleTopic()));
+        });*/
+
+    }
 
     @Test
     public void UserMapperTest(){
@@ -70,4 +118,19 @@ public class EasyBlogApplicationTests {
         }
     }
 
+
+
+    @Test
+    public void testForOauth(){
+        System.out.println(gitHubAuthService.getAccessToken("34"));
+        //System.out.println(gitHubAuthService.getAuthorizationUrl());
+    }
+
+
+
+
+
 }
+
+
+

@@ -378,4 +378,3 @@ function logOut(userId) {
 }
 
 
-

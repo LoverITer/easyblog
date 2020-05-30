@@ -10,7 +10,7 @@
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
     <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
-    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/static/css/me.css}">
+    <link rel="stylesheet" href="../static/css/easyblog.base.css" th:href="@{/static/css/easyblog.base.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
     <!--加载动画和确认框特效-->
@@ -78,7 +78,7 @@
                 </div>
             </div>
             <!--content-->
-            <div class="ui attached segment border-bt-none">
+            <div class="ui attached segment border-bt-none" style="padding-bottom: 0">
                 <div th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
@@ -134,10 +134,10 @@
 
                         <div class="five wide column">
                             <a target="_blank">
-                                <img th:if="${article.getArticleFirstPicture()==null}"
+                                <img th:if="${article.getArticleFirstPicture() eq null}"
                                      src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
                                      th:alt="${article.getArticleTopic()}" class="ui rounded image">
-                                <img th:if="${article.getArticleFirstPicture()!=null}"
+                                <img th:if="${article.getArticleFirstPicture() ne null}"
                                      th:src="@{${article.getArticleFirstPicture()}}"
                                      th:alt="${article.getArticleTopic()}"
                                      class="ui rounded image">
@@ -148,7 +148,7 @@
             </div>
 
             <!--查看更多-->
-            <div th:if="${#lists.size(articles)>25}" class="ui bottom attached segment" style="border-top: none !important;">
+            <div th:if="${#lists.size(articles) ge 15}" class="ui bottom attached segment" style="border-top: none !important;padding-top: 0">
                 <a href="#" th:href="@{/article/index/{uid}(uid=${author.getUserId()})}">
                     <button id="more-btn" class="ui negative basic button m-look-more-margin">查看更多
                     </button>
@@ -156,7 +156,7 @@
             </div>
 
             <!--文章条数>0并且小于等于25-->
-            <div th:if="${!#lists.isEmpty(articles) and #lists.size(articles)<=25}" class="ui bottom attached segment" style="border-top: none !important;padding: 1px !important;">
+            <div th:if="${!#lists.isEmpty(articles) and #lists.size(articles) lt 15}" class="ui bottom attached segment" style="border-top: none !important;padding: 1px !important;">
             </div>
 
 

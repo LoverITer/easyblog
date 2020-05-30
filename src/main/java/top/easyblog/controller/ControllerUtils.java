@@ -27,18 +27,25 @@ class ControllerUtils {
     private final UserAttentionImpl userAttention;
     volatile private static ControllerUtils controllerUtils;
 
-    private ControllerUtils(CategoryServiceImpl categoryService, ArticleServiceImpl articleService, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
+    private ControllerUtils(CategoryServiceImpl categoryService,
+                            ArticleServiceImpl articleService,
+                            CommentServiceImpl commentService,
+                            UserAttentionImpl userAttention) {
         this.categoryService = categoryService;
         this.articleService = articleService;
         this.commentService = commentService;
         this.userAttention = userAttention;
     }
 
-    public static ControllerUtils getInstance(CategoryServiceImpl categoryService, ArticleServiceImpl articleService, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
+    public static ControllerUtils getInstance(CategoryServiceImpl categoryService,
+                                              ArticleServiceImpl articleService,
+                                              CommentServiceImpl commentService,
+                                              UserAttentionImpl userAttention) {
         if (Objects.isNull(controllerUtils)) {
             synchronized (ControllerUtils.class) {
                 if (Objects.isNull(controllerUtils)) {
-                    controllerUtils = new ControllerUtils(categoryService, articleService, commentService, userAttention);
+                    controllerUtils = new ControllerUtils(categoryService,
+                            articleService, commentService, userAttention);
                 }
             }
         }
@@ -46,10 +53,10 @@ class ControllerUtils {
     }
 
     /***
-     * 这是几个页面公共需要查询数据
-     * @param model
-     * @param userId
-     * @param articleType
+     * 页面共享的数据
+     * @param model    Model
+     * @param userId   用户Id
+     * @param articleType   文章类型
      */
     void getArticleUserInfo(Model model, int userId, String articleType) {
         try {

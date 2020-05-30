@@ -39,7 +39,9 @@ public class UserUtils {
                         String userJsonStr = URLDecoder.decode(cookie.getValue(), String.valueOf(CharsetUtil.UTF_8));
                         if (Objects.nonNull(userJsonStr)) {
                             user = JSON.parseObject(userJsonStr, User.class);
-                            Objects.requireNonNull(user, "user must not be null").setUserPassword(null);
+                            if(user!=null){
+                                user.setUserPassword(null);
+                            }
                         }
                     }
                 }

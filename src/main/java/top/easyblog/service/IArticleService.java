@@ -142,6 +142,7 @@ public interface IArticleService {
      * @param userId 用户Id
      * @param year   年
      * @param month  月
+     * @param pageParam  分页参数
      * @return com.github.pagehelper.PageInfo
      */
     PageInfo<Article> getUserArticlesMonthlyOrderByClickNumPage(int userId, String year, String month, PageParam pageParam);
@@ -195,6 +196,17 @@ public interface IArticleService {
      */
     @Deprecated
     List<Article> getArticleByTopic(String query);
+
+
+    /**
+     * 根据给定的key数组，模糊查询文章
+     * @param keys 分类名
+     * @param order  是否需要排序,指定true为需要排序，false为不需要排序
+     * @param limit  指定一个大于0的数，用于获取Top n个查询结果,如果指定为负数表示获取全部结果
+     * @return java.util.List
+     */
+    List<Article> getArticleByCategoryFuzzy(String[] keys,Boolean order,int limit);
+
 
     /**
      * 根据文章的标题查询文章并分页
@@ -255,5 +267,7 @@ public interface IArticleService {
      * @return int
      */
     int updateArticlesByCategoryName(String newCategoryName, String oldCategoryName, int userId);
+
+    Article getArticleByPK(Long articleId);
 }
 

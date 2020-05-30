@@ -10,7 +10,7 @@
 <!--左边的卡片-->
 <div class="four wide column m-mobile-hide">
     <!--用户信息区域-->
-    <div class="ui segments" th:fragment="sidebar_userinfo" style="padding-right: 0 !important;">
+    <div class="ui segments" th:fragment="sidebar_userinfo" style="padding-right: 0 !important;background: #fff">
         <div class="ui equal width center aligned padded grid">
             <div class="row" style="padding-bottom: 0 !important;">
                 <div class="four wide column" style="padding-right: 0 !important;">
@@ -18,21 +18,21 @@
                         <img class="ui top avatar aligned tiny image medium circular" style="width: 55px !important;height: 55px !important;" th:if="${author!=null}" th:src="@{${author.getUserHeaderImgUrl()}}"/>
                     </a>
                 </div>
-                <div class="twelve wide column grid" style="padding-left: 0!important;">
+                <div class="twelve wide column grid" style="padding-left: 3px !important;">
                     <div class=" m-margin-bottom">
-                        <div style="float: left !important;font-size: 16px" th:text="${author.getUserNickname()}"></div>
+                        <div style="float: left !important;font-size: 17px" th:text="${author.getUserNickname()}"></div>
                     </div>
                     <div style="clear: both !important;"></div>
                     <div class=" m-margin-bottom"></div>
                     <div  class="row" >
-                        <button  class="ui left floated  mini yellow basic button">
+                        <!--<button  class="ui left floated  mini yellow basic button">
                             <a href="#" style="color: orange;font-size: 12px;">私信</a>
                         </button>
                         <button class="ui left floated  mini red basic button">
                             <a href="#" style="color: red;font-size: 12px;">关注</a>
-                        </button>
-                        <a href="#" th:if="${author!=null and visitor==null}" th:href="@{/article/home/{id}(id=${author.getUserId()})}" class="float-right" style="color: #3399ea;font-size: 12px !important;">TA的个人主页&nbsp;></a>
-                        <a href="#" th:if="${author!=null and visitor!=null}" th:href="@{/article/home/{id}(id=${author.getUserId()},visitorUId=${visitor.getUserId()})}" class="float-right" style="color: #3399ea;font-size: 12px !important;">TA的个人主页&nbsp;></a>
+                        </button>-->
+                        <a href="#" th:if="${author!=null and visitor==null}" th:href="@{/article/home/{id}(id=${author.getUserId()})}" style="color: #3399ea;font-size: 12px !important;float: left">TA的个人主页&nbsp;></a>
+                        <a href="#" th:if="${author!=null and visitor!=null}" th:href="@{/article/home/{id}(id=${author.getUserId()},visitorUId=${visitor.getUserId()})}"  style="color: #3399ea;font-size: 12px !important;float: left">TA的个人主页&nbsp;></a>
                     </div>
                 </div>
             </div>
@@ -44,33 +44,33 @@
                         <div><strong th:text="${originalArticleNum}">200</strong></div>
                     </a>
                 </div>
-                <div class="column">
+                <div class="column m-black">
                     粉丝
                     <div><strong th:text="${attentionNumOfMe}">0</strong></div>
                 </div>
-                <div class="column">
+                <div class="column m-black">
                     喜欢
                     <div> <strong>0</strong></div>
                 </div>
-                <div class="column">
+                <div class="column m-black">
                     评论
                     <div><strong th:text="${receiveCommentNum}">0</strong></div>
                 </div>
             </div>
             <div class="ui divider" style="margin-bottom: 5px !important;margin-top: 5px !important;"></div>
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
-                <div class="column m-txt-align-left ">
+                <div class="column m-txt-align-left m-black">
                     等级：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserLevel()==null?0:author.getUserLevel()}"></span></strong>
                 </div>
-                <div class="column m-txt-align-left">
+                <div class="column m-txt-align-left m-black">
                     访问：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserVisit()==null?0:author.getUserVisit()}"></span></strong>
                 </div>
             </div>
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
-                <div class="column m-txt-align-left">
+                <div class="column m-txt-align-left m-black">
                     积分：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserScore()==null?0:author.getUserScore()}"></span></strong>
                 </div>
-                <div class="column m-txt-align-left">
+                <div class="column m-txt-align-left m-black">
                     排名：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserRank()==null?0:author.getUserRank()}">7</span></strong>
                 </div>
             </div>
@@ -88,8 +88,8 @@
         <div class="ui segment" th:each="category:${categories}">
             <!--专栏的图片-->
             <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg" th:src="${category.categoryImageUrl}">
-            <a href="#" th:href="@{/category/details/{id}/{user}(id=${category.categoryId},user=${category.categoryUser})}" target class="m-black m-text-thin m-margin-left" th:text="${category.categoryName}">2019年2月</a>
-            <span class="count float-right">
+            <a href="#" th:href="@{/category/details/{id}/{user}(id=${category.categoryId},user=${category.categoryUser})}" target class="m-text-thin m-margin-left" style="color: #333" th:text="${category.categoryName}">2019年2月</a>
+            <span class="count" style="float:right;">
                 [[${category.categoryArticleNum}]]篇
             </span>
         </div>
@@ -100,8 +100,8 @@
             <i class="bookmark icon"></i><strong>最新文章</strong>
         </div>
         <div class="ui segment" th:each="article:${newestArticles}">
-            <a href="#" th:if="${visitor==null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="m-black m-text-thin"></a>
-            <a href="#" th:if="${visitor!=null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class="m-black m-text-thin"></a>
+            <a href="#" th:if="${visitor==null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="m-text-thin" style="color: #333"></a>
+            <a href="#" th:if="${visitor!=null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class=" m-text-thin" style="color: #333"></a>
         </div>
     </div>
     <!--归档-->
@@ -110,8 +110,8 @@
             <i class="bookmark icon"></i><strong>归档</strong>
         </div>
         <div class="ui segment" th:each="archive:${archives}">
-            <a href="#" th:href="@{/archives/details/{uid}/{date}(uid=${archive.userId},date=${archive.date})}" target class="m-black m-text-thin" th:text="${archive.date}"></a>
-            <span class="count float-right">[[${archive.count}]]篇</span>
+            <a href="#" th:href="@{/archives/details/{uid}/{date}(uid=${archive.userId},date=${archive.date})}" target="" class="m-text-thin" style="color: #333" th:text="${archive.date}"></a>
+            <span class="count" style="float: right;">[[${archive.count}]]篇</span>
         </div>
     </div>
 </div>

@@ -10,7 +10,7 @@
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
     <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
-    <link rel="stylesheet" href="../static/css/me.css">
+    <link rel="stylesheet" href="../static/css/easyblog.base.css">
     <style type="text/css">
         a:hover {
             color: #ca0c16 !important;
@@ -34,7 +34,7 @@
 <body>
 
 <!--导航-->
-<nav th:fragment="navbar" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+<nav th:fragment="navbar" style="border: 0;height: 61px" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
     <!--用户信息-->
     <div class="ui m-container">
         <div class="ui inverted secondary stackable menu">
@@ -42,20 +42,20 @@
             <div style="margin: 0 auto !important;float: right"></div>
             <div class="right m-item m-mobile-hide menu " style="margin: 1.4rem 0 auto 0 !important;">
                 <i class="teal paint brush icon"></i>
-                <a href="#" th:unless="${session.user!=null}" th:href="@{/manage/blog/post}"
+                <a href="#" th:unless="${visitor==null}" th:href="@{/manage/blog/post}"
                    style="color :rgb(0,183,173);font-size: 17px">写博客</a>
-                <a href="#" th:unless="${session.user==null}"
-                   th:href="@{/manage/blog/post(userId=${#session.getAttribute('user').getUserId()})}"
+                <a href="#" th:unless="${visitor!=null}"
+                   th:href="@{/manage/blog/post(userId=${visitor.getUserId()})}"
                    style="color :rgb(0,183,173);font-size: 17px">写博客</a>
             </div>
 
             <!--我的头像-->
-            <div th:if="${session.user!=null}" id="header-images" th:hidden="hidden"
+            <div th:if="${visitor!=null}" id="header-images" th:hidden="hidden"
                  class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
                 <div class="ui dropdown  item ">
                     <div class="text">
                         <img class="ui medium circular image image-42x42" style="max-height: none !important;"
-                             src="" th:src="@{${#session.getAttribute('user').getUserHeaderImgUrl()}}"/>
+                             src="" th:src="@{${visitor.getUserHeaderImgUrl()}}"/>
                     </div>
                     <div class="menu">
                         <a href="#" th:href="@{/manage/uc/follow-list}" class="item"><i
@@ -63,7 +63,7 @@
                         <a href="#" th:href="@{/manage/uc/profile}" class="item"><i class="user icon"></i>个人中心</a>
                         <a href="#" th:href="@{/manage/account/reset/password}" class="item"><i class="cogs icon"></i>账号设置</a>
                         <div class="divider"></div>
-                        <a href="#" th:href="@{/article/index/{uid}(uid=${#session.getAttribute('user').getUserId()})}"
+                        <a href="#" th:href="@{/article/index/(uid=${visitor.getUserId()})}"
                            class="item"><i class="archive icon"></i>我的博客</a>
                         <a href="#" th:href="@{/manage/blog/}" class="item"><i class="edit icon"></i>管理博客</a>
                         <div class="divider"></div>
@@ -74,7 +74,7 @@
                 </div>
             </div>
 
-            <div id="login-btn" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
+            <div  id="login-btn" class="right m-item m-mobile-hide menu" style="margin-left: 1em !important;">
                 <a href="#" th:href="@{/user/loginPage}" class="m-item item m-mobile-hide"><i class="mini  icon"></i>登录/注册</a>
             </div>
         </div>
@@ -82,18 +82,20 @@
     <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
         <i class="sidebar icon"></i>
     </a>
-    <input id="userId" hidden="hidden" th:if="${session.user!=null}"
-           th:value="${#session.getAttribute('user').getUserId()}">
+    <input id="userId" hidden="hidden" th:if="${visitor!=null}"
+           th:value="${visitor.getUserId()}">
 </nav>
 
-<!--中间内容-->
-<div class="m-container-middle m-padded-tb-big">
+<!--搜索内容-->
+<div class="m-container-middle stackable m-padded-tb-big">
     <div class="ui container stackable">
+
         <form name="search" th:action="@{/search/details}"  method="get">
             <div class="ui large icon input" style="width: 100% !important;">
                 <input th:if="${query==null}" name="query" class="prompt" type="text" placeholder="Search....">
                 <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt" type="text"
                        placeholder="Search....">
+                <input hidden th:if="${visitor!=null}" name="visitorUId" th:value="${visitor.getUserId()}">
                 <i onclick="document.forms['search'].submit()" class="red search link icon"></i>
             </div>
         </form>
@@ -111,13 +113,17 @@
             </div>
         </div>
 
-        <div style="padding-top: 0" th:if="${articlePages!=null&&#lists.size(articlePages.getList())>0}" class="ui  attached  segment">
-            <div  th:each="article:${articlePages.getList()}"
+        <div style="padding-top: 0" th:if="${articlePages!=null and #lists.size(articlePages.getList())>0}" class="ui  attached  segment">
+            <div th:each="article:${articlePages.getList()}"
                  class="ui padded vertical segment m-padded-tb-large">
                 <div class="ui middle aligned mobile reversed stackable grid">
                     <div class="eleven wide column">
                         <h3 class="ui header">
-                            <a href="#"  th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank"
+                            <a href="#" th:if="${visitor==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank"
+                               class="m-black topic" th:text="${article.getArticleTopic()}">
+                                你真的理解什么是财富自由吗?
+                            </a>
+                            <a href="#" th:if="${visitor!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUID=${visitor.getUserId()})}" target="_blank"
                                class="m-black topic" th:text="${article.getArticleTopic()}">
                                 你真的理解什么是财富自由吗?
                             </a>
@@ -127,12 +133,11 @@
                         <div class="ui grid">
                             <div class="eleven wide column">
                                 <div class="ui mini horizontal link list">
-                                    <div class="item">
+                                    <div class="item m-margin-left">
                                         <img th:src="${article.getUserHeaderImageUrl()}"
-                                             src="https://unsplash.it/100/100?image=1005" alt=""
                                              class="ui avatar image">
                                         <div class="content">
-                                            <a href="#" class="header" th:text="${article.getAuthorName()}"></a>
+                                            <a href="#" th:if="${article!=null}" th:href="@{/article/index/{id}(id=${article.getArticleUser()})}" class="m-comment-font-user" th:text="${article.getAuthorName()}"></a>
                                         </div>
                                     </div>
                                     <div class="item">
@@ -202,14 +207,7 @@
 </div>
 
 <div style="height: 10em"></div>
-<div class="ui small modal">
-    <div class="header" id="msg_header">删除</div>
-    <div id="msg" class="content">
-    </div>
-    <div class="actions">
-        <div id="msg-btn" class="ui red button">知道了</div>
-    </div>
-</div>
+
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>
 

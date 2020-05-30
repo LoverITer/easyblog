@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 /**
+ * 博客归档页面
+ *
  * @author huangxin
  */
 @Controller
