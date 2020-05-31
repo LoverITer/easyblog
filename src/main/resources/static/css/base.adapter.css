@@ -83,15 +83,7 @@
     .copyright{margin-left: 10px}
 }
 @media only screen and (max-width: 480px) {
-    footer{
-        background: #1c2327;
-        width: 100%;
-        padding: 30px 0 10px 0;
-        color: #f2f2f2;
-        font-size: 14px;
-        position: relative;
-        top: 60px;
-    }
+    footer{background: #1c2327;width: 100%;padding: 30px 0 10px 0;color: #f2f2f2;font-size: 14px;position: relative;top: 60px;}
     .index_user_header{ padding-top: 8px;position: unset; }
     .headline { width: 100% }
     .headline ul { height: auto; padding-bottom: 10px; overflow: hidden }

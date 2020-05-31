@@ -1,26 +1,28 @@
 package top.easyblog.common.util;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * @author huangxin
  */
+@Slf4j
 public final class NetWorkUtils {
 
-    private static Logger log = LoggerFactory.getLogger(NetWorkUtils.class);
-
     private static final String IP138 = "http://www.ip138.com/ips138.asp?ip=";
+    /**Ip解析未知 unknown*/
+    private static final String UNKNOWN_IP="unknown";
 
     /**
      * 解析客户端请求的真实ip地址
@@ -34,30 +36,42 @@ public final class NetWorkUtils {
         }
         String ip = null;
         try {
-            //Squid服务代理
-            ip = request.getHeader("X-Forward-For");
-            if (null == ip || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            //Nginx代理
+            ip=request.getHeader("X-Real-IP");
+            if(!isIpValid(ip)){
+                ip = request.getHeader("X-Forward-For");
+                int index = ip.indexOf(',');
+                if (index != -1) {
+                   ip= ip.substring(0, index);
+                }
+            }
+
+            if (!isIpValid(ip)) {
                 //apache服务代理
                 ip = request.getHeader("Proxy-Client-IP");
             }
-            if (null == ip || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+
+            if (!isIpValid(ip)) {
                 //weblogic服务代理
                 ip = request.getHeader("WL-Proxy-Client-IP");
             }
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+
+            if (!isIpValid(ip)) {
                 ip = request.getHeader("HTTP_CLIENT_IP");
             }
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+
+            if (!isIpValid(ip)) {
                 ip = request.getHeader("HTTP_X_FORWARDED_FOR");
             }
-            if (null == ip || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                //根据本地网卡获取ip地址
+
+            //没有代理，根据本地网卡获取ip地址
+            if (!isIpValid(ip)) {
+
                 ip = request.getRemoteAddr();
                 if ("127.0.0.1".equals(ip)) {
                     InetAddress inept = null;
                     try {
                         inept = InetAddress.getLocalHost();
-
                     } catch (UnknownHostException e) {
                         log.debug(e.getMessage());
                         //do noting
@@ -71,7 +85,7 @@ public final class NetWorkUtils {
                 //***.***.***.***
                 final String[] ips = ip.split(",");
                 for (final String str : ips) {
-                    if (!"unknown".equalsIgnoreCase(str)) {
+                    if (!UNKNOWN_IP.equalsIgnoreCase(str)) {
                         ip = str;
                         break;
                     }
@@ -85,15 +99,29 @@ public final class NetWorkUtils {
         if ("0:0:0:0:0:0:0:1".equals(ip)) {
             ip = "127.0.0.1";
         }
-
         return ip;
+    }
+
+
+    /**
+     * 测试ip地址是否是一个有效的Ip
+     * @param ip  ip
+     * @return 如果有效返回true ,否者返回false
+     */
+    private static boolean isIpValid(String ip){
+        if(StringUtils.isEmpty(ip)||UNKNOWN_IP.equalsIgnoreCase(ip)){
+            return false;
+        }
+        String ipReg="^((1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\.){3}(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
+        Pattern ipModel=Pattern.compile(ipReg);
+        return ipModel.matcher(ip).matches();
     }
 
     /**
      * 使用JSoup结合www.ip138.com抓取一个ip的物理地址信息
      *
-     * @param request
-     * @param ip
+     * @param request 请求
+     * @param ip     IP地址
      * @return
      */
     public static String getLocation(HttpServletRequest request, String ip) {
@@ -104,12 +132,11 @@ public final class NetWorkUtils {
 
         String location="未知地址";
         //通过请求头或者客户端的User-Agent
-        String uSERAGENT = request.getHeader("User-Agent");
+        String userAgent = request.getHeader("User-Agent");
         try {
-            if (Objects.nonNull(uSERAGENT)) {
-
+            if (Objects.nonNull(userAgent)) {
                 //从ip138网站获得所需查询ip的物理地址
-                Document doc = Jsoup.connect(IP138 + ip + "&action=2").timeout(50000).userAgent(uSERAGENT).get();
+                Document doc = Jsoup.connect(IP138 + ip + "&action=2").timeout(50000).userAgent(userAgent).get();
                 if (Objects.nonNull(doc)) {
                     //JSoup支持使用类选择器来选择
                     Element ul = doc.selectFirst(".ul1");

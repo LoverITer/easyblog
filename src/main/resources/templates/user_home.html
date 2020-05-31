@@ -37,9 +37,8 @@
 <div th:replace="~{nav :: navbar}"></div>
 
 <!--中间内容-->
-<div class="m-padded-tb-big">
-    <div class="ui" style="max-width: 96em!important;margin: auto !important;">
-        <div class="ui stackable grid">
+<div class="m-content-container">
+    <div class="ui stackable grid">
             <!--左边的卡片-->
             <div class="four wide column m-mobile-hide"
                  style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
@@ -53,8 +52,7 @@
                 <div th:replace="~{userinfo_sidebar::sidebar_archives}"></div>
                 <h4 class="ui horizontal divider header m-margin-top-large">联系开发者</h4>
                 <div class="ui centered card" style="width: 11em">
-                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt=""
-                         class="ui rounded image">
+                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="" class="ui rounded image">
                 </div>
             </div>
 
@@ -202,7 +200,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
 
 <div style="height: 10em"></div>

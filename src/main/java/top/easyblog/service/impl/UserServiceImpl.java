@@ -144,6 +144,11 @@ public class UserServiceImpl implements IUserService {
     @Override
     public int registerByThirdPart(User user) {
         try{
+            user.setUserFreeze(0);
+            user.setUserLock(0);
+            user.setUserPower(3);
+            user.setUserHeaderImgUrl(DefaultImageDispatcherUtils.defaultAvatar());
+            user.setUserPassword("");
             return userMapper.saveCoreInfo(user);
         }catch (Exception e){
             e.printStackTrace();

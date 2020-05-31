@@ -95,12 +95,7 @@ public class GitHubOauthController {
             //用户首次在系统使用GitHub登录
             User newUser = new User();
             newUser.setUserNickname(gitHubUser.getLogin());
-            newUser.setUserHeaderImgUrl(gitHubUser.getAvatarUrl());
-            newUser.setUserPassword("");
             newUser.setUserRegisterIp(ip + " " + ipInfo);
-            newUser.setUserFreeze(0);
-            newUser.setUserLock(0);
-            newUser.setUserPower(3);
             userService.registerByThirdPart(newUser);
             //返回用户的Id,MyBatis把自增Id返回在对象中
             registerId = newUser.getUserId();
@@ -115,7 +110,8 @@ public class GitHubOauthController {
             }
         }
 
-        //根据用户绑定的用户Id查询用户信息
+        //registerId==-1说明用户已经使用GitHub授权过了，直接登录即可
+        // 登录之前查询之前绑定的用户信息
         if(registerId==-1){
             assert user != null;
             registerId=Integer.parseInt(user.getId());

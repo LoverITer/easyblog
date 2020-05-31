@@ -35,9 +35,8 @@
 <!--导航-->
 <div th:replace="~{nav :: navbar}"></div>
 <!--中间内容-->
-<div id="waypoint" class="m-padded-tb-big animated fadeIn m-article-padding-top">
-    <div class="ui" style="max-width: 96em!important;margin: auto !important;">
-        <div class="ui stackable grid">
+<div id="waypoint" class="animated fadeIn m-content-container">
+    <div class="ui stackable grid">
             <!--左边的卡片-->
             <div class="four wide column m-mobile-hide" style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
                 <div th:replace="~{userinfo_sidebar::sidebar_userinfo}"></div>
@@ -207,7 +206,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
 
 <!--<div class="ui toc-container flowing popup transition hidden" style="width: 250px!important;">

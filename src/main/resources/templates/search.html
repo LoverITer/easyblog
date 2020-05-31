@@ -34,7 +34,7 @@
 <body>
 
 <!--导航-->
-<nav th:fragment="navbar" style="border: 0;height: 61px" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+<nav th:fragment="navbar" style="border: 0;height: 61px" class="ui inverted attached segment m-padded-tb-mini m-shadow-small m-header">
     <!--用户信息-->
     <div class="ui m-container">
         <div class="ui inverted secondary stackable menu">
@@ -87,7 +87,7 @@
 </nav>
 
 <!--搜索内容-->
-<div class="m-container-middle stackable m-padded-tb-big">
+<div class="m-container-middle">
     <div class="ui container stackable">
 
         <form name="search" th:action="@{/search/details}"  method="get">
