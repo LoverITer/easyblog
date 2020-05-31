@@ -31,7 +31,7 @@
 
 
 <!--中间内容-->
-<div class="ui m-container-large m-padded-tb-big stackable">
+<div class="m-content-container">
     <div class="ui stackable grid">
         <!--侧边栏-->
         <div th:replace="~{manage-sidebar::manage}"></div>
@@ -80,9 +80,10 @@
                                 <div class="right aligned five wide column">
                                     <div class="five  wide  column">
                                         <div class="ui horizontal list">
-                                            <div class="item"><a href="#" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #349EDF">编辑</a></div>
-                                            <div class="item"><a href="#" th:href="@{/manage/blog/recycleToDraft(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #349EDF">回收草稿箱</a></div>
-                                            <div class="item"><a href="#" th:href="@{/manage/blog/deleteComplete(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #CA0C16">彻底删除</a></div>
+                                            <div class="item"><a href="#" title="编辑文章可以重新发布" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #349EDF">编辑</a></div>
+                                            <div class="item"><a href="#" title="回收至草稿箱" th:href="@{/manage/blog/recycleToDraft(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #349EDF">回收草稿箱</a></div>
+                                            <div class="item"><a href="#" title="恢复为公开文章" th:href="@{/manage/blog/recycleToPublic(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #349EDF">还原文章</a></div>
+                                            <div class="item"><a href="#" title="彻底在磁盘上删除此文章" th:href="@{/manage/blog/deleteComplete(articleId=${article.getArticleId()},userId=${user.getUserId()})}" style="color: #CA0C16">彻底删除</a></div>
                                         </div>
                                     </div>
                                 </div>

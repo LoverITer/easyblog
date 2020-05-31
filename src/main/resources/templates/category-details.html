@@ -38,7 +38,7 @@
 <div th:replace="~{nav :: navbar}"></div>
 
 <!--中间内容-->
-<div class="m-padded-tb-big" style="max-width: 96em!important;margin: auto !important;">
+<div class="m-content-container">
     <div class="ui stackable grid">
         <!--左边的卡片-->
         <div class="four wide column m-mobile-hide"
@@ -213,7 +213,7 @@
     </div>
 </div>
 <input type="hidden" id="userId" th:value="${author.getUserId()}">
-<div style="height: 25px"></div>
+<div style="height: 10em"></div>
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>
 

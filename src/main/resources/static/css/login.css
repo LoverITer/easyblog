@@ -1,3 +1,5 @@
+@charset "utf-8";
+html,body{height: 100%}
 body{
 	margin:0;
 	overflow: hidden;
@@ -234,4 +236,35 @@ input, button {
 
 .text-center {
 	text-align: center;
+}
+
+
+@media screen and (min-width: 1200px) {
+	.login-container{padding-top:65px;}
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1199px) {
+	.login-container{padding-top:65px;}
+}
+
+
+@media screen and (max-width: 1023px) {
+	.login-container{padding-top:65px;}
+}
+
+@media only screen and (max-width: 768px) {
+	.login-container{padding-top:65px;}
+}
+
+@media only screen and (max-width: 480px) {
+	.login-container{padding-top:0;height: 100%}
+	.login-wrap {
+		min-width: 100%;
+		margin: auto;
+		height: 1000px;
+		position: relative;
+		background: url(../images/login-window.jpg) no-repeat center;
+		/*拉伸图片显示*/
+		background-size: cover;
+	}
 }

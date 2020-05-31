@@ -28,7 +28,7 @@
 <!--导航-->
 <div th:replace="~{nav :: navbar}"></div>
 <!--中间内容-->
-<div class="ui m-container m-padded-tb-big stackable">
+<div class="m-content-container">
     <div class="ui stackable grid">
         <!--侧边栏-->
         <div th:replace="~{manage-sidebar::manage}"></div>
@@ -101,8 +101,7 @@
                 </div>
             </div>
 
-            <div class="ui bottom attached segment " th:if="${categoriesPage.getTotal()==0}"
-                 style="margin: 0 auto !important;">
+            <div class="ui bottom attached segment " th:if="${categoriesPage.getTotal()==0}" style="margin: 0 auto !important;">
                 <div style="padding: 8em 29rem 11em 29rem!important;">
                     <div style="padding-bottom: 1em !important;padding-left: 2.9898em !important;color: grey !important;font-size: 14px !important;">
                        空 空 如 也

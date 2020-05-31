@@ -13,9 +13,12 @@ import top.easyblog.autoconfig.qiniu.QiNiuCloudService;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
+import top.easyblog.common.email.Email;
+import top.easyblog.common.email.SendEmailUtil;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.DefaultImageDispatcherUtils;
+import top.easyblog.common.util.NetWorkUtils;
 import top.easyblog.common.util.RedisUtils;
 import top.easyblog.common.util.UserUtils;
 import top.easyblog.config.web.Result;
@@ -50,6 +53,8 @@ public class ArticleAdminController {
     @Autowired
     private RedisUtils redisUtil;
     @Autowired
+    private SendEmailUtil emailUtil;
+    @Autowired
     private Executor executor;
 
     public ArticleAdminController(ArticleServiceImpl articleService, CategoryServiceImpl categoryService, UserServiceImpl userService1, QiNiuCloudService qiNiuCloudService) {
@@ -60,9 +65,9 @@ public class ArticleAdminController {
     }
 
     @GetMapping(value = "/")
-    public String manageBlog(Model model,
-                             @RequestParam(value = "userId") Integer userId,
-                             @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+    public String manageBlogArticle(Model model,
+                                    @RequestParam(value = "userId") Integer userId,
+                                    @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         //从Redis中查询出已经登录User的登录信息
         String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
@@ -151,8 +156,8 @@ public class ArticleAdminController {
      * @return java.lang.String
      */
     @RequestMapping(value = "/post")
-    public String writeBlog(Model model,
-                            @RequestParam(value = "userId", defaultValue = "-1") int userId) {
+    public String writeArticle(Model model,
+                               @RequestParam(value = "userId", defaultValue = "-1") int userId) {
         //没有登录的话就去登录，登录后才可以写博客
         //从Redis中查询出已经登录User的登录信息
         String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
@@ -376,13 +381,20 @@ public class ArticleAdminController {
     @GetMapping(value = "/delete")
     public String deleteArticle(@RequestParam("articleId") int articleId,
                                 @RequestParam int userId,
-                                HttpServletRequest request) {
+                                final HttpServletRequest request) {
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             try {
                 //删除的文章暂时移动到垃圾桶
                 updateArticle(articleId, "3");
                 log.debug(request.getLocalAddr()+"@"+LocalDateTime.now()+" move article: ["+articleId+"] status to 3");
+                executor.execute(() -> {
+                    String content = NetWorkUtils.getUserIp(request) + " " +
+                            NetWorkUtils.getLocation(request, NetWorkUtils.getUserIp(request)) + " 执行方法【deleteArticle】删除了文章 " +
+                            articleId;
+                    Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
+                    emailUtil.send(e);
+                });
             } catch (Exception e) {
                 return ERROR_PAGE;
             }
@@ -394,8 +406,16 @@ public class ArticleAdminController {
 
     @GetMapping(value = "/deleteDraft")
     public String deleteDraftArticle(@RequestParam("articleId") int articleId,
-                                     @RequestParam int userId) {
+                                     @RequestParam int userId,
+                                     HttpServletRequest request) {
         String updateStatus = deleteArticle2Dash(articleId);
+        executor.execute(() -> {
+            String content = NetWorkUtils.getUserIp(request) + " " +
+                    NetWorkUtils.getLocation(request, NetWorkUtils.getUserIp(request)) + " 执行方法【deleteDraftArticle】删除了文章 " +
+                    articleId;
+            Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
+            emailUtil.send(e);
+        });
         return Objects.isNull(updateStatus) ? "redirect:/manage/blog/draft?userId=" + userId : updateStatus;
     }
 
@@ -425,6 +445,17 @@ public class ArticleAdminController {
         return "redirect:/manage/blog/dash?userId=" + userId;
     }
 
+    @GetMapping(value = "/recycleToPublic")
+    public String recycleArticleFromDash2Public(@RequestParam int articleId,
+                                               @RequestParam int userId) {
+        try {
+            updateArticle(articleId, "0");
+        } catch (Exception e) {
+            return ERROR_PAGE;
+        }
+        return "redirect:/manage/blog/dash?userId=" + userId;
+    }
+
     private String deleteArticle2Dash(int articleId) {
         try {
             //删除的文章暂时放进垃圾桶
@@ -436,9 +467,18 @@ public class ArticleAdminController {
     }
 
     @GetMapping(value = "/deleteComplete")
-    public String deleteComplete(@RequestParam("articleId") int articleId, @RequestParam int userId) {
+    public String deleteComplete(@RequestParam("articleId") int articleId,
+                                 @RequestParam int userId,
+                                 HttpServletRequest request) {
         try {
             articleService.deleteByPK(articleId);
+            executor.execute(() -> {
+                String content = NetWorkUtils.getUserIp(request) + " " +
+                        NetWorkUtils.getLocation(request, NetWorkUtils.getUserIp(request)) + " 执行方法【deleteComplete】删除了文章 " +
+                        articleId;
+                Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
+                emailUtil.send(e);
+            });
         } catch (Exception e) {
             return ERROR_PAGE;
         }
@@ -478,7 +518,7 @@ public class ArticleAdminController {
             model.addAttribute("currentType", type);
             model.addAttribute("currentCategory", category);
         } catch (Exception e) {
-            //
+            log.error(e.getMessage());
         }
     }
 

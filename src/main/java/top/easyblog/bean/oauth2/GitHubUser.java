@@ -16,7 +16,7 @@ public class GitHubUser {
 
     /**用户名*/
     private String login;
-    /**GitHub返回的用户Id*/
+    /**GitHub返回的用户Id 或者是和系统绑定后在系统中User表中的Id*/
     private String id;
     /**node_id*/
     private String nodeId;

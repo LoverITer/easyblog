@@ -104,6 +104,7 @@ pre[class*="language-"] {
 .comment,.comment span{
     color:#35994d;
     font-style: italic ;
+    font-size: 15px;
     font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
 }
 
