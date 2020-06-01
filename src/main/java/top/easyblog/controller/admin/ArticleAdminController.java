@@ -390,7 +390,7 @@ public class ArticleAdminController {
                 log.debug(request.getLocalAddr()+"@"+LocalDateTime.now()+" move article: ["+articleId+"] status to 3");
                 executor.execute(() -> {
                     String content = NetWorkUtils.getUserIp(request) + " " +
-                            NetWorkUtils.getLocation(request, NetWorkUtils.getUserIp(request)) + " 执行方法【deleteArticle】删除了文章 " +
+                            NetWorkUtils.getLocation(NetWorkUtils.getUserIp(request)) + " 执行方法【deleteArticle】删除了文章 " +
                             articleId;
                     Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
                     emailUtil.send(e);
@@ -411,7 +411,7 @@ public class ArticleAdminController {
         String updateStatus = deleteArticle2Dash(articleId);
         executor.execute(() -> {
             String content = NetWorkUtils.getUserIp(request) + " " +
-                    NetWorkUtils.getLocation(request, NetWorkUtils.getUserIp(request)) + " 执行方法【deleteDraftArticle】删除了文章 " +
+                    NetWorkUtils.getLocation(NetWorkUtils.getUserIp(request)) + " 执行方法【deleteDraftArticle】删除了文章 " +
                     articleId;
             Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
             emailUtil.send(e);
@@ -474,7 +474,7 @@ public class ArticleAdminController {
             articleService.deleteByPK(articleId);
             executor.execute(() -> {
                 String content = NetWorkUtils.getUserIp(request) + " " +
-                        NetWorkUtils.getLocation(request, NetWorkUtils.getUserIp(request)) + " 执行方法【deleteComplete】删除了文章 " +
+                        NetWorkUtils.getLocation(NetWorkUtils.getUserIp(request)) + " 执行方法【deleteComplete】删除了文章 " +
                         articleId;
                 Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
                 emailUtil.send(e);

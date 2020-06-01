@@ -36,7 +36,7 @@ public class WebRequestLogAspect {
         String ip = NetWorkUtils.getUserIp(request);
         String url = request.getRequestURL().toString();
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.info(new RequestLog(url, ip + " " + NetWorkUtils.getLocation(request, ip), classMethod, joinPoint.getArgs()).toString());
+        log.info(new RequestLog(url, ip + " " + NetWorkUtils.getLocation(ip), classMethod, joinPoint.getArgs()).toString());
     }
 
     @AfterReturning(pointcut = "log()", returning = "result")

@@ -90,6 +90,8 @@ pre[class*="language-"] {
     color: #c7254e;
     display: inline;
     white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-all;
 }
 
 .token.punctuation

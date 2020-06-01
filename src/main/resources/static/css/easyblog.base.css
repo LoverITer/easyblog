@@ -386,12 +386,7 @@ footer a:hover{color: #00B5AD !important;}
     margin: auto !important;
 }
 
-.m-container-middle {
-    max-width: 75em !important;
-    margin: auto !important;
-    position: relative;
-    top: 120px;
-}
+
 
 .m-container-small {
     max-width: 65em !important;
@@ -680,22 +675,43 @@ span.m-article-type{
     height: 122px !important;
 }
 
+@media only screen and (min-width: 1200px) {
+    .m-container-middle {
+        max-width: 75em !important;
+        margin: auto !important;
+        position: relative;
+        top: 80px;
+    }
+}
+
 /**响应式优化*/
-@media screen and (min-width: 992px) and (max-width: 1200px) {
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
     .m-mobile-margin-left {
         margin-left: 72% !important;
+    }
+    .m-container-middle {
+        max-width: 75em !important;
+        margin: auto !important;
+        position: relative;
+        top: 80px;
     }
 }
 
 
-@media screen and (min-width: 768px) and (max-width: 991px){
+@media only screen and (min-width: 768px) and (max-width: 991px){
     .m-mobile-margin-left {
         margin-left: 72% !important;
+    }
+    .m-container-middle {
+        max-width: 75em !important;
+        margin: auto !important;
+        position: relative;
+        top: 70px;
     }
 }
 
 
-@media screen and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
 
     .m-article-author-info-padding{padding: 0 .5em !important;}
     .m-article-padding-top{padding-top: 14px !important;}
@@ -876,6 +892,13 @@ span.m-article-type{
         margin-left: 0 !important;
     }
 
+    .m-container-middle {
+        max-width: 75em !important;
+        margin: auto !important;
+        position: relative;
+        top: 70px;
+    }
+
 }
 
 @media only screen and (max-width: 480px) {
@@ -890,6 +913,6 @@ span.m-article-type{
         width: 95% !important;
         margin: auto !important;
         position: relative;
-        top: 120px;
+        top: 70px;
     }
 }

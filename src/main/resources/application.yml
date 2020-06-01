@@ -1,7 +1,7 @@
 #公用环境
 spring:
   profiles:
-    active: pro
+    active: dev
   thymeleaf:
    enabled: true
    #默认是classpath:/templates/

@@ -87,7 +87,7 @@ public class GitHubOauthController {
         //在本系统中尝试获取用户的信息和GitHub返回的信息对比
         GitHubUser user = oauthService.getUserByOpenIdAndAppType(gitHubUser.getId(), AppType.GitHub);
         String ip = NetWorkUtils.getUserIp(request);
-        String ipInfo = NetWorkUtils.getLocation(request, ip);
+        String ipInfo = NetWorkUtils.getLocation(ip);
         Integer registerId = -1;
         User userInfo = null;
         //和系统绑定

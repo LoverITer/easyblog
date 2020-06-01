@@ -231,7 +231,7 @@ public class UserController {
                            HttpServletRequest request) {
         String captcha = (String) redisUtil.get("captcha-code-" + account, 1);
         String ip = NetWorkUtils.getUserIp(request);
-        String ipInfo = NetWorkUtils.getLocation(request, ip);
+        String ipInfo = NetWorkUtils.getLocation(ip);
         Result result = new Result();
         if (userService.getUser(nickname) != null) {
             result.setMessage("昵称已存在!");
@@ -372,7 +372,7 @@ public class UserController {
                         HttpServletResponse response) {
         User user = userService.checkUser(username, EncryptUtils.getInstance().SHA1(password, "user"));
         String ip = NetWorkUtils.getUserIp(request);
-        String location = NetWorkUtils.getLocation(request, ip);
+        String location = NetWorkUtils.getLocation( ip);
         try {
             if (user != null) {
                 user.setUserPassword(null);
