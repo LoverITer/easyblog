@@ -78,9 +78,11 @@ oauth:
    client-id: 2d3eaf3a6c76b636e891
    client-secret: d81730cc534c9cc59990625e4d9f573c34bfb499
    redirectUrl: http://127.0.0.1:8081/oauth/github/callback
-
+#日志
 logging:
   level:
     root: debug
     top.easyblog: debug
   file: easyblog-dev.log
+#域名
+domain: 127.0.0.1:8081

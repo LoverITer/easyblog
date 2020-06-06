@@ -57,6 +57,12 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
+    public List<Article> getAllArticles() {
+        return articleMapper.getAll();
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+    @Override
     public List<Article> getAllNoneFirstPicArticles() {
         List<Article> articles = null;
         try {

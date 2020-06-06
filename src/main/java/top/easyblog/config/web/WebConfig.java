@@ -56,6 +56,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/upload/**").addResourceLocations("file:D:/upload/");
+        registry.addResourceHandler("/robots.txt").addResourceLocations("classpath:/robots.txt");
         WebMvcConfigurer.super.addResourceHandlers(registry);
     }
 

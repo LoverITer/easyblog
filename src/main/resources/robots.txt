@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /archive/
+Allow: /category/
+Disallow: /admin/
+Disallow: /*.js$
+Disallow: /*.css$
+Disallow: /*.jpg$
+Disallow: /*.scss$
+
+
+Sitemap: https://www.easyblog.top/sitemap.xml
+Sitemap: https://www.easyblog.top/baidusitemap.xml

@@ -112,10 +112,10 @@ public class GitHubOauthController {
 
         //registerId==-1说明用户已经使用GitHub授权过了，直接登录即可
         // 登录之前查询之前绑定的用户信息
-        if(registerId==-1){
+        if (registerId == -1) {
             assert user != null;
-            registerId=Integer.parseInt(user.getId());
-            userInfo=userService.getUser(registerId);
+            registerId = Integer.parseInt(user.getId());
+            userInfo = userService.getUser(registerId);
         }
 
         //第三方登录
@@ -123,6 +123,9 @@ public class GitHubOauthController {
             redisUtil.hset("user-" + registerId, "user", JSONObject.toJSONString(userInfo), RedisUtils.DB_1);
             //会话信息，如果没有主动退出15天有效
             redisUtil.expire("user-" + registerId, 60 * 60 * 24 * 15, RedisUtils.DB_1);
+        } else {
+            redirectAttributes.addFlashAttribute("error", "您已经登录，请不要重复登录！");
+            return loginRedirectUrl(request);
         }
         if (Objects.isNull(CookieUtils.getCookieValue(request, USER_LOGIN_COOKIE_FLAG))) {
             //添加用户的登录信息到Cookie中
@@ -132,6 +135,11 @@ public class GitHubOauthController {
         executor.execute(() -> {
             userSigninLogService.saveSigninLog(new UserSigninLog(uid, ip, ipInfo, "登录成功"));
         });
+        return loginRedirectUrl(request);
+    }
+
+    private String loginRedirectUrl(HttpServletRequest request) {
+        String ip = NetWorkUtils.getUserIp(request);
         String refererUrl = (String) redisUtil.get("Referer-" + ip, RedisUtils.DB_1);
         if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
             //在每次取登录界面的时候都会在Redis中记录登录之前访问的页面Referer，登录成功后删除对应的Referer
@@ -142,7 +150,6 @@ public class GitHubOauthController {
         log.info("redirect to : index");
         return "redirect:/";
     }
-
 
 
 }

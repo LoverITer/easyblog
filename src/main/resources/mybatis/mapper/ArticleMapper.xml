@@ -41,9 +41,8 @@
         where article_id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="getAll" resultType="list">
-        select *
-        from article
+    <select id="getAll" resultType="top.easyblog.bean.Article">
+        select * from article
     </select>
 
     <select id="countUserArticlesInCategory" resultType="integer">

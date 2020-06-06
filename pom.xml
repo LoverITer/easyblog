@@ -42,12 +42,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <!-- 移除嵌入式tomcat插件 -->
-            <!--<exclusions>
+            <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
-            </exclusions>-->
+            </exclusions>
         </dependency>
 
         <!--外置tomcat-->
@@ -59,12 +59,12 @@
          </dependency>
 
         <!--热部署工具-->
-       <!-- <dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
-        </dependency>-->
+        </dependency>
         <!--mysql数据连接驱动-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -147,7 +147,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.62</version>
+            <version>[1.2.62,)</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -227,6 +227,12 @@
             <artifactId>lombok</artifactId>
             <version>1.16.12</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- sitemap -->
+        <dependency>
+            <groupId>com.github.dfabulich</groupId>
+            <artifactId>sitemapgen4j</artifactId>
+            <version>1.0.6</version>
         </dependency>
     </dependencies>
 
