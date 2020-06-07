@@ -162,7 +162,7 @@ public class WelcomeController {
 
     @GetMapping(value = "/cb")
     public String indexCategoryDetailsOfComputerBase(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request, new String[]{"计算机", "设计模式", "软件工程", "网络", "数据结构", "算法", "操作系统",
+        getSharedArticle(model, request, new String[]{"计算机", "设计模式", "软件工程", "网络","计算机网络", "数据结构", "算法", "操作系统",
                 "Linux", "CentOS", "Windows","Mac OS","ios","Android"});
         model.addAttribute("type", "cb");
         return "index-category";
@@ -177,7 +177,7 @@ public class WelcomeController {
 
     @GetMapping(value = "/cb/network")
     public String indexCategoryDetailsOfNetWork(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request,new String[]{"网络","计网"});
+        getSharedArticle(model, request,new String[]{"网络","计网","计算机网络"});
         model.addAttribute("type", "network");
         return "index-category";
     }

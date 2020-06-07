@@ -42,9 +42,9 @@
             <div style="margin: 0 auto !important;float: right"></div>
             <div class="right m-item m-mobile-hide menu " style="margin: 1.4rem 0 auto 0 !important;">
                 <i class="teal paint brush icon"></i>
-                <a href="#" th:unless="${visitor==null}" th:href="@{/manage/blog/post}"
+                <a href="#" th:if="${visitor eq null}" th:href="@{/manage/blog/post}"
                    style="color :rgb(0,183,173);font-size: 17px">写博客</a>
-                <a href="#" th:unless="${visitor!=null}"
+                <a href="#" th:if="${visitor ne null}"
                    th:href="@{/manage/blog/post(userId=${visitor.getUserId()})}"
                    style="color :rgb(0,183,173);font-size: 17px">写博客</a>
             </div>
@@ -57,7 +57,7 @@
                         <img class="ui medium circular image image-42x42" style="max-height: none !important;"
                              src="" th:src="@{${visitor.getUserHeaderImgUrl()}}"/>
                     </div>
-                    <div class="menu">
+                    <div class="menu m-menu">
                         <a href="#" th:href="@{/manage/uc/follow-list}" class="item"><i
                                 class="bookmark icon"></i>我的关注</a>
                         <a href="#" th:href="@{/manage/uc/profile}" class="item"><i class="user icon"></i>个人中心</a>

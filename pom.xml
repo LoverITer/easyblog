@@ -147,7 +147,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.62</version>
+            <version>[1.2.62,)</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -227,6 +227,12 @@
             <artifactId>lombok</artifactId>
             <version>1.16.12</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- sitemap -->
+        <dependency>
+            <groupId>com.github.dfabulich</groupId>
+            <artifactId>sitemapgen4j</artifactId>
+            <version>1.0.6</version>
         </dependency>
     </dependencies>
 

@@ -20,6 +20,13 @@ public interface IArticleService {
      */
     int saveArticle(Article article);
 
+
+    /**
+     * 获取所有的文章
+     * @return
+     */
+    List<Article> getAllArticles();
+
     /**
      * 根据文章Id获取文章
      *

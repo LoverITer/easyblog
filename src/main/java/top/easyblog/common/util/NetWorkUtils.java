@@ -1,11 +1,17 @@
 package top.easyblog.common.util;
 
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -20,7 +26,14 @@ import java.util.regex.Pattern;
 @Slf4j
 public final class NetWorkUtils {
 
+    /**
+     * IP138 ip查询接口
+     */
     private static final String IP138 = "http://www.ip138.com/ips138.asp?ip=";
+    /**
+     * 太平洋网IP查询接口
+     */
+    private static final String PCONLINE = "http://whois.pconline.com.cn/ipJson.jsp";
     /**Ip解析未知 unknown*/
     private static final String UNKNOWN_IP="unknown";
 
@@ -117,6 +130,33 @@ public final class NetWorkUtils {
         return ipModel.matcher(ip).matches();
     }
 
+    /***
+     * 获取IP的物理地址
+     * @param ip  ip
+     * @return
+     */
+    public static String getLocation(String ip) {
+        if (!isIpValid(ip)) {
+            return "错误IP";
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("accept", "application/json");
+        HttpEntity<String> entity=new HttpEntity<>(headers);
+        RestTemplate template=new RestTemplate();
+        ResponseEntity<String> response = template.exchange(PCONLINE, HttpMethod.GET, entity, String.class);
+        /**
+         * 返回的数据格式： if(window.IPCallBack) {IPCallBack({"ip":"117.136.86.247","pro":"陕西省","proCode":"610000","city":"西安市","cityCode":"610100","region":"","regionCode":"0","addr":"陕西省西安市 移通","regionNames":"","err":""});}
+         */
+        String body = response.getBody();
+        log.info("解析出Ip: {} 的地理信息: {}",ip,body);
+        assert body != null;
+        int start = body.indexOf("{IPCallBack(")+12;
+        String jsonStr=body.substring(start,body.lastIndexOf(')'));
+        System.out.println(jsonStr);
+        JSONObject jsonObject = JSONObject.parseObject(jsonStr);
+        return (String) jsonObject.get("addr");
+    }
+
     /**
      * 使用JSoup结合www.ip138.com抓取一个ip的物理地址信息
      *
@@ -124,6 +164,7 @@ public final class NetWorkUtils {
      * @param ip     IP地址
      * @return
      */
+    @Deprecated
     public static String getLocation(HttpServletRequest request, String ip) {
         if (Objects.isNull(ip)&&Objects.isNull(request)) {
             log.error("ip或request不能为空");

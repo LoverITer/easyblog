@@ -16,7 +16,6 @@ pre[class*="language-"]{
 	word-spacing: normal;
 	word-break: normal;
 	word-wrap: normal;
-	line-height: 28px;
 	-moz-tab-size: 4;
 	-o-tab-size: 4;
 	tab-size: 4;
@@ -90,6 +89,8 @@ pre[class*="language-"] {
     color: #c7254e;
     display: inline;
     white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-all;
 }
 
 .token.punctuation
@@ -169,13 +170,17 @@ span.token.number {
     color: #a626a4;
 }
 
-.token.function,.token.punctuation{
+.token.function{
     color: #4078f2;
 }
 
 
-.token.class-name {
+.token.class-name，.token.punctuation{
     color: #556370;
+}
+
+.token.annotation{
+    color: goldenrod;
 }
 
 .token.regex,

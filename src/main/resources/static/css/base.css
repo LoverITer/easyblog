@@ -177,14 +177,14 @@ nav { float: left; height: 50px; line-height: 50px; text-align: center; }
 .zhuanti li:hover { background: #fff; box-shadow: #ccc 1px 1px 8px; }
 .zhuanti li:hover img { transform: scale(1.05) }
 /*bloglist*/
-article{position: relative;top: 55px}
+article{position: relative;top: 3.5rem}
 .bloglist ul { padding: 10px 0 0 }
 .bloglist li { overflow: hidden; margin-bottom: 20px; border-bottom: #eee 1px dashed; padding-bottom: 20px; position: relative; min-height: 120px; }
 .blogtitle { margin: 0 0 10px 0; font-size: 18px; overflow: hidden; }
 .bloglist li:hover .blogtitle a { color: #337ab7; }
 .blogtitle b { color: #F00 }
 a.viewmore { display: block; right: 10px; bottom: 20px; position: absolute; padding: 3px 10px; background: #12b7de; color: #fff; border-radius: 3px; }
-.blogpic { float: left; width: 23.2%;min-height: 122.58px; margin-right: 20px; display: block; overflow: hidden; border-radius: 3px; position: relative }
+.blogpic { float: left; width: 23.2%; margin-right: 20px; display: block; overflow: hidden; border-radius: 3px; position: relative }
 .blogpic i { display: block; position: absolute; top: 0; left: 0; z-index: 9; font-style: normal; padding: 3px 5px; background: rgba(18,182,221,.8); font-size: 14px; }
 .blogpic i a { color: #FFF }
 .bplist { display: block; overflow: hidden }

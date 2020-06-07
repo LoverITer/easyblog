@@ -64,6 +64,8 @@ public class UserController {
 
     private static final String LOGIN_PAGE = "redirect:/user/loginPage";
 
+    private static final String USER_LOGIN_COOKIE_FLAG = "USER-INFO";
+
 
     @GetMapping("/loginPage")
     public String toLoginPage(HttpServletRequest request) {
@@ -231,7 +233,7 @@ public class UserController {
                            HttpServletRequest request) {
         String captcha = (String) redisUtil.get("captcha-code-" + account, 1);
         String ip = NetWorkUtils.getUserIp(request);
-        String ipInfo = NetWorkUtils.getLocation(request, ip);
+        String ipInfo = NetWorkUtils.getLocation(ip);
         Result result = new Result();
         if (userService.getUser(nickname) != null) {
             result.setMessage("昵称已存在!");
@@ -372,7 +374,7 @@ public class UserController {
                         HttpServletResponse response) {
         User user = userService.checkUser(username, EncryptUtils.getInstance().SHA1(password, "user"));
         String ip = NetWorkUtils.getUserIp(request);
-        String location = NetWorkUtils.getLocation(request, ip);
+        String location = NetWorkUtils.getLocation( ip);
         try {
             if (user != null) {
                 user.setUserPassword(null);
@@ -381,27 +383,23 @@ public class UserController {
                     redisUtil.hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), RedisUtils.DB_1);
                     //会话信息，如果没有主动退出15天有效
                     redisUtil.expire("user-" + user.getUserId(), 60 * 60 * 24 * 15, RedisUtils.DB_1);
+                } else {
+                    redirectAttributes.addFlashAttribute("error", "您已经登录，请不要重复登录！");
+                    return loginRedirectUrl(request, user);
                 }
-                if(Objects.isNull(CookieUtils.getCookieValue(request,"USER-INFO"))) {
+                if(Objects.isNull(CookieUtils.getCookieValue(request,USER_LOGIN_COOKIE_FLAG))) {
                     //添加用户的登录信息到Cookie中
-                    CookieUtils.addCookie(request, response, "USER-INFO", JSONObject.toJSONString(user), 60 * 60 * 24 * 15);
+                    CookieUtils.addCookie(request, response, USER_LOGIN_COOKIE_FLAG, JSONObject.toJSONString(user), 60 * 60 * 24 * 15);
                 }
                 // 保存用户名密码一个月
                 if ("on".equals(remember)) {
-                    Object value = CookieUtils.getCookieValue(request, "USER-COOKIE");
+                    Object value = CookieUtils.getCookieValue(request, USER_LOGIN_COOKIE_FLAG);
                     if (Objects.isNull(value)) {
-                        CookieUtils.setCookie(request, response, "USER-COOKIE", username + "-" + AESCryptUtils.encryptECB(password, "1a2b3c4d5e6f7g8h"), 60 * 60 * 24 * 30);
+                        CookieUtils.setCookie(request, response, USER_LOGIN_COOKIE_FLAG, username + "-" + AESCryptUtils.encryptECB(password, "1a2b3c4d5e6f7g8h"), 60 * 60 * 24 * 30);
                     }
                 }
                 executor.execute(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功")));
-                // 跳转到用户登录前的页面
-                String refererUrl = (String) redisUtil.get("Referer-" + NetWorkUtils.getUserIp(request), RedisUtils.DB_1);
-                if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
-                    //登录成功后删除对应的key
-                    redisUtil.delete(RedisUtils.DB_1, "Referer-" + NetWorkUtils.getUserIp(request));
-                    return "redirect:" + refererUrl;
-                }
-                return "redirect:/article/index/" + user.getUserId();
+                return loginRedirectUrl(request, user);
             } else {
                 redirectAttributes.addFlashAttribute("error", "登录失败！用户名和密码不匹配！");
                 return LOGIN_PAGE;
@@ -418,6 +416,23 @@ public class UserController {
             log.error(e.getMessage());
             return LOGIN_PAGE;
         }
+    }
+
+    /**
+     * 跳转到用户登录前的页面
+     *
+     * @param request HttpServletRequest
+     * @param user    用户信息
+     * @return java.lang.String
+     */
+    public String loginRedirectUrl(HttpServletRequest request, User user) {
+        String refererUrl = (String) redisUtil.get("Referer-" + NetWorkUtils.getUserIp(request), RedisUtils.DB_1);
+        if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
+            //登录成功后删除对应的key
+            redisUtil.delete(RedisUtils.DB_1, "Referer-" + NetWorkUtils.getUserIp(request));
+            return "redirect:" + refererUrl;
+        }
+        return "redirect:/article/index/" + user.getUserId();
     }
 
     /**

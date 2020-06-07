@@ -1,12 +1,12 @@
 @charset "utf-8";
-@media screen and (min-width: 1200px) {
+@media only screen and (min-width: 1200px) {
     .index_user_login{ position: absolute;min-width: 80px;left: 15em; }
-    .index_user_header{ padding-top: 8px !important;;    position: absolute;min-width: 70px;left: 14em; }
+    .index_user_header{ padding-top: 8px !important;;   position: absolute;min-width: 70px;left: 17em; }
     .copyright{margin-left: 290px}
 }
-@media screen and (min-width: 1024px) and (max-width: 1199px) {
+@media only screen and (min-width: 1024px) and (max-width: 1199px) {
     .index_user_login{ position: absolute;min-width: 80px;left: 15em; }
-    .index_user_header{ padding-top: 8px !important;; position: absolute;min-width: 70px;left: 14em; }
+    .index_user_header{ padding-top: 8px !important;; position: absolute;min-width: 70px;left: 17em; }
     .navbox { width: 96% }
      #starlist li a { padding: 0 10px; }
      #starlist li.menu:before { right: 0 }
@@ -20,7 +20,7 @@
     .jianzhan li:nth-child(3) { width: 36.3% }
     .copyright{margin-left: 270px}
 }
-@media screen and (max-width: 1023px) {
+@media only screen and (max-width: 1023px) {
     /*header*/
     .index_user_login{ position: absolute;min-width: 80px;left: 14em; }
     .index_user_header{ padding-top: 8px !important;;    position: absolute;min-width: 70px;left: 16em; }

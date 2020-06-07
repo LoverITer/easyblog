@@ -29,5 +29,10 @@
       "name": "qiniucloud.domain",
       "type": "java.lang.String",
       "description": "Description for qiniuCloud.domain."
+    },
+    {
+      "name": "domain",
+      "type": "java.lang.String",
+      "description": "Description for domain."
     }
   ] }

@@ -382,7 +382,7 @@ public class ArticleAdminController {
     public String deleteArticle(@RequestParam("articleId") int articleId,
                                 @RequestParam int userId,
                                 final HttpServletRequest request) {
-        User user = UserUtils.getUserFromRedis(userId);
+        User user = UserUtils.getUserFromCookie(request);
         if (Objects.nonNull(user)) {
             try {
                 //删除的文章暂时移动到垃圾桶
@@ -390,7 +390,7 @@ public class ArticleAdminController {
                 log.debug(request.getLocalAddr()+"@"+LocalDateTime.now()+" move article: ["+articleId+"] status to 3");
                 executor.execute(() -> {
                     String content = NetWorkUtils.getUserIp(request) + " " +
-                            NetWorkUtils.getLocation(request, NetWorkUtils.getUserIp(request)) + " 执行方法【deleteArticle】删除了文章 " +
+                            NetWorkUtils.getLocation(NetWorkUtils.getUserIp(request)) + " 执行方法【deleteArticle】删除了文章 " +
                             articleId;
                     Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
                     emailUtil.send(e);
@@ -411,7 +411,7 @@ public class ArticleAdminController {
         String updateStatus = deleteArticle2Dash(articleId);
         executor.execute(() -> {
             String content = NetWorkUtils.getUserIp(request) + " " +
-                    NetWorkUtils.getLocation(request, NetWorkUtils.getUserIp(request)) + " 执行方法【deleteDraftArticle】删除了文章 " +
+                    NetWorkUtils.getLocation(NetWorkUtils.getUserIp(request)) + " 执行方法【deleteDraftArticle】删除了文章 " +
                     articleId;
             Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
             emailUtil.send(e);
@@ -474,7 +474,7 @@ public class ArticleAdminController {
             articleService.deleteByPK(articleId);
             executor.execute(() -> {
                 String content = NetWorkUtils.getUserIp(request) + " " +
-                        NetWorkUtils.getLocation(request, NetWorkUtils.getUserIp(request)) + " 执行方法【deleteComplete】删除了文章 " +
+                        NetWorkUtils.getLocation(NetWorkUtils.getUserIp(request)) + " 执行方法【deleteComplete】删除了文章 " +
                         articleId;
                 Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
                 emailUtil.send(e);
@@ -566,9 +566,13 @@ public class ArticleAdminController {
         if (Objects.nonNull(user)) {
             try {
                 if (Objects.nonNull(imgByte64Str) && articleId > 0) {
+                    //base64头部
+                    String imageBase64Header=imgByte64Str.substring(0,imgByte64Str.indexOf(",")+1);
+                    //图片后缀名
+                    String suffix = imageBase64Header.substring(imageBase64Header.indexOf("/") + 1, imageBase64Header.indexOf(";"));
                     //把base64字符串转换为字节数组
-                    byte[] imageBytes = Base64.decodeBase64(imgByte64Str.replace("data:image/jpeg;base64,", ""));
-                    String imageName = System.currentTimeMillis() + UUID.randomUUID().toString() + ".jpg";
+                    byte[] imageBytes = Base64.decodeBase64(imgByte64Str.replace(imageBase64Header, ""));
+                    String imageName = System.currentTimeMillis() + UUID.randomUUID().toString() + "."+suffix;
                     String imageUrl = qiNiuCloudService.putBase64Image(imageBytes, imageName);
                     if (Objects.nonNull(imageUrl)) {
                         Article article = new Article();

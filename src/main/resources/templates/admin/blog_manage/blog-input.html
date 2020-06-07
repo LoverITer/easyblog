@@ -405,6 +405,10 @@
     let userId = "[[${user.getUserId()}]]";
     //记录文章保存的次数
     let savedCount=0;
+    $('#content').keydown(function () {
+        //当键盘按键按下的时候把修改标志置0
+       savedCount=0;
+    });
     //保存为草稿
     function saveDraft() {
         $('#draft-btn,#instanceSave').click(function () {
@@ -450,8 +454,8 @@
                             showSuccessMessage("已成功保存至草稿箱");
                             //把articleId存起来
                             localStorage.setItem('articleId', articleId);
-                            //保存一次就将savedCount+1
-                            savedCount++;
+                            //保存一次就将savedCount值1
+                            savedCount=1;
                             window.location.href="/manage/blog/edit?articleId="+localStorage.getItem("articleId")+"&userId="+userId;
                         } else {
                             showErrorMessage(result.message);
@@ -520,6 +524,7 @@
                         let articleId = result.message;
                         if (result.success) {
                             localStorage.removeItem("articleId");
+                            savedCount=1;
                             //跳转到成功页面
                             window.location.href = "/manage/blog/success/" + articleId+"/"+userId ;
                         } else {

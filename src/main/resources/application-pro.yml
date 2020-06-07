@@ -70,3 +70,5 @@ logging:
     root: info
     top.easyblog.mapper: DEBUG
   file: easyblog-pro.log
+#域名
+domain: www.easyblog.top

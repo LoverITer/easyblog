@@ -9,6 +9,7 @@ import top.easyblog.bean.Address;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserPower;
+import top.easyblog.common.util.NetWorkUtils;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.mapper.UserPowerMapper;
@@ -128,6 +129,11 @@ public class EasyBlogApplicationTests {
 
 
 
+    @Test
+    public void testNetWorkUtils(){
+        String location = NetWorkUtils.getLocation("117.136.86.247");
+        System.out.println(location);
+    }
 
 
 }
