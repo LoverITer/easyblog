@@ -67,12 +67,20 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
                 .build();
     }
 
-    // key键序列化方式
+    /**
+     * key键序列化方式
+     *
+     * @return
+     */
     private RedisSerializer<String> keySerializer() {
         return new StringRedisSerializer();
     }
 
-    // value值序列化方式
+    /**
+     * value值序列化方式
+     *
+     * @return
+     */
     private GenericJackson2JsonRedisSerializer valueSerializer() {
         return new GenericJackson2JsonRedisSerializer();
     }

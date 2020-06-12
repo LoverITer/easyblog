@@ -1,7 +1,9 @@
+easyblog:
+  version: 1.0
 #公用环境
 spring:
   profiles:
-    active: pro
+    active: dev
   thymeleaf:
    enabled: true
    #默认是classpath:/templates/
@@ -10,9 +12,7 @@ spring:
    mode: HTML
    encoding: UTF-8
    servlet:
-     content-type: text/html
-  application:
-    name: EasyBlog
+     content-type: text/htmldev
   #邮件相关配置
   mail:
     host: smtp.qq.com
