@@ -9,16 +9,16 @@
   </cache>
   <resultMap id="BaseResultMap" type="top.easyblog.bean.UserComment">
     <id column="comment_id" jdbcType="INTEGER" property="commentId" />
-    <result column="comment_send" jdbcType="INTEGER" property="commentSend" />
-    <result column="comment_received" jdbcType="INTEGER" property="commentReceived" />
-    <result column="article_id" jdbcType="BIGINT" property="articleId" />
-    <result column="comment_time" jdbcType="TIMESTAMP" property="commentTime" />
-    <result column="like_num" jdbcType="INTEGER" property="likeNum" />
-    <result column="pid" jdbcType="INTEGER" property="pid" />
-    <result column="level" jdbcType="INTEGER" property="level" />
+    <ajaxResult column="comment_send" jdbcType="INTEGER" property="commentSend" />
+    <ajaxResult column="comment_received" jdbcType="INTEGER" property="commentReceived" />
+    <ajaxResult column="article_id" jdbcType="BIGINT" property="articleId" />
+    <ajaxResult column="comment_time" jdbcType="TIMESTAMP" property="commentTime" />
+    <ajaxResult column="like_num" jdbcType="INTEGER" property="likeNum" />
+    <ajaxResult column="pid" jdbcType="INTEGER" property="pid" />
+    <ajaxResult column="level" jdbcType="INTEGER" property="level" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.easyblog.bean.UserComment">
-    <result column="comment_content" jdbcType="LONGVARCHAR" property="commentContent" />
+    <ajaxResult column="comment_content" jdbcType="LONGVARCHAR" property="commentContent" />
   </resultMap>
 
   <!--根据主键查询评论-->

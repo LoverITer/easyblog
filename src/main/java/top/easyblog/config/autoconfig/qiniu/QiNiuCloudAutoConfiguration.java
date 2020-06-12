@@ -1,4 +1,4 @@
-package top.easyblog.autoconfig.qiniu;
+package top.easyblog.config.autoconfig.qiniu;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

@@ -1,4 +1,4 @@
-package top.easyblog.service.impl;
+package top.easyblog.oauth2.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
-import top.easyblog.autoconfig.oauth.GitHubProperties;
-import top.easyblog.bean.oauth2.GitHubUser;
-import top.easyblog.bean.oauth2.Oauth;
-import top.easyblog.common.enums.oauth2.AppType;
+import top.easyblog.config.autoconfig.oauth.GitHubProperties;
 import top.easyblog.mapper.OauthMapper;
-import top.easyblog.service.IAuthService;
+import top.easyblog.oauth2.IAuthService;
+import top.easyblog.oauth2.bean.GitHubUser;
+import top.easyblog.oauth2.bean.Oauth;
+import top.easyblog.oauth2.enums.AppType;
 import top.easyblog.service.IOauthService;
 
 import java.util.List;

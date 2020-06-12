@@ -13,7 +13,7 @@ import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.config.web.Result;
+import top.easyblog.config.web.AjaxResult;
 import top.easyblog.service.impl.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -109,23 +109,23 @@ public class CategoryController {
      */
     @ResponseBody
     @RequestMapping(value = "/care/{categoryId}")
-    public Result careCategory(@PathVariable("categoryId") int categoryId,
-                               @RequestParam("userId") int userId) {
-        Result result = new Result();
-        result.setSuccess(false);
-        result.setMessage("服务异常，请重试！");
+    public AjaxResult careCategory(@PathVariable("categoryId") int categoryId,
+                                   @RequestParam("userId") int userId) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setSuccess(false);
+        ajaxResult.setMessage("服务异常，请重试！");
         HashMap<String, Object> map = new HashMap<>(8);
         //更新关注数
         map.put("categoryCareNum", 1);
         try {
             categoryServiceImpl.updateCategoryInfo(categoryId, map);
             categoryCareService.saveCareInfo(userId, categoryId);
-            result.setSuccess(true);
-            result.setMessage("OK");
+            ajaxResult.setSuccess(true);
+            ajaxResult.setMessage("OK");
         } catch (Exception e) {
-            return result;
+            return ajaxResult;
         }
-        return result;
+        return ajaxResult;
     }
 
 
@@ -138,23 +138,23 @@ public class CategoryController {
      */
     @ResponseBody
     @RequestMapping(value = "/cancelCare/{categoryId}")
-    public Result cancelCare(@PathVariable("categoryId") int categoryId,
-                             @RequestParam("userId") int userId) {
-        Result result = new Result();
-        result.setSuccess(false);
-        result.setMessage("服务异常，请重试！");
+    public AjaxResult cancelCare(@PathVariable("categoryId") int categoryId,
+                                 @RequestParam("userId") int userId) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setSuccess(false);
+        ajaxResult.setMessage("服务异常，请重试！");
         HashMap<String, Object> map = new HashMap<>(8);
         //更新关注数
         map.put("categoryCareNum", -1);
         try {
             categoryServiceImpl.updateCategoryInfo(categoryId, map);
             categoryCareService.deleteCareInfo(userId, categoryId);
-            result.setSuccess(true);
-            result.setMessage("OK");
+            ajaxResult.setSuccess(true);
+            ajaxResult.setMessage("OK");
         } catch (Exception e) {
-            return result;
+            return ajaxResult;
         }
-        return result;
+        return ajaxResult;
     }
 
 

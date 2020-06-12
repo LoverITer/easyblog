@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
+ * 借助此类，可以在非Spring环境下获取Spring容器中的Bean
  * @author huangxin
  */
 @Component

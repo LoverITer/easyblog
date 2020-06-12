@@ -1,4 +1,4 @@
-package top.easyblog.handler.interceptor;
+package top.easyblog.common.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;

@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Encoder;
-import top.easyblog.autoconfig.qiniu.QiNiuCloudService;
 import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.DefaultImageDispatcherUtils;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.config.web.Result;
+import top.easyblog.config.autoconfig.qiniu.QiNiuCloudService;
+import top.easyblog.config.web.AjaxResult;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
 
@@ -67,27 +67,27 @@ public class CategoryAdminController {
 
     @ResponseBody
     @RequestMapping(value = "/changeDisplay")
-    public Result switchCategoryDisplay(@RequestParam(value = "categoryId") int categoryId,
-                                        @RequestParam(value = "displayStatus") String displayStatus,
-                                        @RequestParam(value = "userId") Integer userId) {
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+    public AjaxResult switchCategoryDisplay(@RequestParam(value = "categoryId") int categoryId,
+                                            @RequestParam(value = "displayStatus") String displayStatus,
+                                            @RequestParam(value = "userId") Integer userId) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.isNull(user)) {
-            result.setMessage("请先登录后再操作");
-            return result;
+            ajaxResult.setMessage("请先登录后再操作");
+            return ajaxResult;
         }
         try {
             Category category = new Category();
             category.setCategoryId(categoryId);
             category.setDisplay(displayStatus);
             categoryService.updateByPKSelective(category);
-            result.setSuccess(true);
-            result.setMessage("Ok");
-            return result;
+            ajaxResult.setSuccess(true);
+            ajaxResult.setMessage("Ok");
+            return ajaxResult;
         } catch (Exception e) {
-            result.setMessage("服务异常，请重试！");
-            return result;
+            ajaxResult.setMessage("服务异常，请重试！");
+            return ajaxResult;
         }
     }
 

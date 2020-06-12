@@ -1,4 +1,4 @@
-package top.easyblog.autoconfig.redis;
+package top.easyblog.config.autoconfig.redis;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

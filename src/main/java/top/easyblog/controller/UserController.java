@@ -15,9 +15,9 @@ import top.easyblog.bean.User;
 import top.easyblog.bean.UserAccount;
 import top.easyblog.bean.UserSigninLog;
 import top.easyblog.common.email.Email;
-import top.easyblog.common.email.SendEmailUtil;
+import top.easyblog.common.email.EmailSender;
 import top.easyblog.common.util.*;
-import top.easyblog.config.web.Result;
+import top.easyblog.config.web.AjaxResult;
 import top.easyblog.service.IUserAccountService;
 import top.easyblog.service.impl.UserEmailLogServiceImpl;
 import top.easyblog.service.impl.UserPhoneLogServiceImpl;
@@ -47,7 +47,7 @@ public class UserController {
     @Autowired
     private UserPhoneLogServiceImpl userPhoneLogService;
     @Autowired
-    private SendEmailUtil emailUtil;
+    private EmailSender emailUtil;
     @Autowired
     private UserSigninLogServiceImpl userSigninLogService;
     @Autowired
@@ -226,21 +226,21 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/register")
-    public Result register(@RequestParam(value = "nickname", defaultValue = "") String nickname,
-                           @RequestParam(value = "pwd", defaultValue = "") String password,
-                           @RequestParam(value = "account", defaultValue = "") String account,
-                           @RequestParam(value = "code", defaultValue = "") String captchaCode,
-                           HttpServletRequest request) {
+    public AjaxResult register(@RequestParam(value = "nickname", defaultValue = "") String nickname,
+                               @RequestParam(value = "pwd", defaultValue = "") String password,
+                               @RequestParam(value = "account", defaultValue = "") String account,
+                               @RequestParam(value = "code", defaultValue = "") String captchaCode,
+                               HttpServletRequest request) {
         String captcha = (String) redisUtil.get("captcha-code-" + account, 1);
         String ip = NetWorkUtils.getUserIp(request);
         String ipInfo = NetWorkUtils.getLocation(ip);
-        Result result = new Result();
+        AjaxResult ajaxResult = new AjaxResult();
         if (userService.getUser(nickname) != null) {
-            result.setMessage("昵称已存在!");
+            ajaxResult.setMessage("昵称已存在!");
         } else if (userService.getUser(account) != null) {
-            result.setMessage("此邮箱/手机号已经注册了!");
+            ajaxResult.setMessage("此邮箱/手机号已经注册了!");
         } else if (Objects.isNull(captcha) || !captcha.equals(captchaCode)) {
-            result.setMessage("验证码不正确或验证码已过期!");
+            ajaxResult.setMessage("验证码不正确或验证码已过期!");
         } else {
             try {
                 User user = new User();
@@ -258,8 +258,8 @@ public class UserController {
                     userAccount.setAccountUser(user.getUserId());
                     int var1 = userAccountService.createAccount(userAccount);
                     if (var1 > 0) {
-                        result.setSuccess(true);
-                        result.setMessage("注册成功!");
+                        ajaxResult.setSuccess(true);
+                        ajaxResult.setMessage("注册成功!");
                         log.info("用户：{}注册成功,{}", account, new Date());
                     } else {
                         log.info("用户：{}注册失败,{}", account, new Date());
@@ -267,10 +267,10 @@ public class UserController {
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
-                result.setMessage("服务异常，请重试！");
+                ajaxResult.setMessage("服务异常，请重试！");
             }
         }
-        return result;
+        return ajaxResult;
     }
 
     /**
@@ -280,16 +280,16 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/checkNickname")
-    public Result checkUserNickname(@RequestParam(value = "nickname", defaultValue = "") String nickname) {
-        Result result = new Result();
-        result.setSuccess(true);
+    public AjaxResult checkUserNickname(@RequestParam(value = "nickname", defaultValue = "") String nickname) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setSuccess(true);
         if (!"".equals(nickname)) {
             User user = userService.getUser(nickname);
             if (user != null) {
-                result.setSuccess(false);
+                ajaxResult.setSuccess(false);
             }
         }
-        return result;
+        return ajaxResult;
     }
 
     /**
@@ -300,14 +300,14 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/checkEmailNotExist")
-    public Result checkUserEmailNotExist(@RequestParam(value = "email", defaultValue = "") String email) {
-        Result result = new Result();
+    public AjaxResult checkUserEmailNotExist(@RequestParam(value = "email", defaultValue = "") String email) {
+        AjaxResult ajaxResult = new AjaxResult();
         if (!"".equals(email)) {
             if (Objects.isNull(userService.getUser(email))) {
-                result.setSuccess(true);
+                ajaxResult.setSuccess(true);
             }
         }
-        return result;
+        return ajaxResult;
     }
 
 
@@ -319,27 +319,27 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/checkEmailExist")
-    public Result checkUserEmailExist(@RequestParam(value = "email", defaultValue = "") String email) {
-        Result result = new Result();
+    public AjaxResult checkUserEmailExist(@RequestParam(value = "email", defaultValue = "") String email) {
+        AjaxResult ajaxResult = new AjaxResult();
         if (!"".equals(email)) {
             if (!Objects.isNull(userService.getUser(email))) {
-                result.setSuccess(true);
+                ajaxResult.setSuccess(true);
             }
         }
-        return result;
+        return ajaxResult;
     }
 
     @ResponseBody
     @GetMapping(value = "/checkPhone")
-    public Result checkUserPhone(@RequestParam(value = "phone", defaultValue = "") String phone) {
-        Result result = new Result();
+    public AjaxResult checkUserPhone(@RequestParam(value = "phone", defaultValue = "") String phone) {
+        AjaxResult ajaxResult = new AjaxResult();
         if (!"".equals(phone)) {
             User user = userService.getUser(phone);
             if (user == null) {
-                result.setSuccess(true);
+                ajaxResult.setSuccess(true);
             }
         }
-        return result;
+        return ajaxResult;
     }
 
     /**
@@ -350,7 +350,7 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/checkPassword")
-    public Result checkPassword(@RequestParam("password") String password) {
+    public AjaxResult checkPassword(@RequestParam("password") String password) {
         return userService.isPasswordLegal(password);
     }
 
@@ -444,21 +444,21 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/logout")
-    public Result logout(@RequestParam int userId, HttpServletRequest request, HttpServletResponse response) {
-        Result result = new Result();
-        result.setMessage(AJAX_ERROR);
+    public AjaxResult logout(@RequestParam int userId, HttpServletRequest request, HttpServletResponse response) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage(AJAX_ERROR);
         if (userId <= 0) {
-            return result;
+            return ajaxResult;
         }
         //退出前先删除本次登录的Cookie
         CookieUtils.deleteCookie(request, response, "USER-INFO");
         //删除Redis中保存的登录信息
         Boolean res = redisUtil.delete(RedisUtils.DB_1, "user-" + userId);
         if (res != null && res) {
-            result.setSuccess(true);
-            result.setMessage(AJAX_SUCCESS);
+            ajaxResult.setSuccess(true);
+            ajaxResult.setMessage(AJAX_SUCCESS);
         }
-        return result;
+        return ajaxResult;
     }
 
     /**
@@ -468,14 +468,14 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/checkUserStatus")
-    public Result checkUserLoginStatus(@RequestParam int userId) {
-        Result result = new Result();
-        result.setMessage(UNLOGIN.getStatus() + "");
+    public AjaxResult checkUserLoginStatus(@RequestParam int userId) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage(UNLOGIN.getStatus() + "");
         if (redisUtil.hHasKey("user-" + userId, "user", RedisUtils.DB_1)) {
-            result.setMessage(JSON.toJSONString(UserUtils.getUserFromRedis(userId)));
-            result.setSuccess(true);
+            ajaxResult.setMessage(JSON.toJSONString(UserUtils.getUserFromRedis(userId)));
+            ajaxResult.setSuccess(true);
         }
-        return result;
+        return ajaxResult;
     }
 
     /**
@@ -483,33 +483,33 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping("/modifyPwd")
-    public Result modifyPassword(@RequestParam("account") String account,
-                                 @RequestParam("newPassword") String newPassword,
-                                 @RequestParam(value = "code", defaultValue = "") String code) {
-        Result result = new Result();
-        result.setSuccess(false);
+    public AjaxResult modifyPassword(@RequestParam("account") String account,
+                                     @RequestParam("newPassword") String newPassword,
+                                     @RequestParam(value = "code", defaultValue = "") String code) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setSuccess(false);
         String captchaCode = (String) redisUtil.get("captcha-code-" + account, RedisUtils.DB_1);
         if (!code.equalsIgnoreCase(captchaCode)) {
-            result.setMessage("验证码错误！");
+            ajaxResult.setMessage("验证码错误！");
         } else if (Objects.isNull(newPassword)) {
-            result.setMessage("请填写新密码！");
+            ajaxResult.setMessage("请填写新密码！");
         } else if (Objects.isNull(account)) {
-            result.setMessage("请填写您的账号！");
+            ajaxResult.setMessage("请填写您的账号！");
         } else {
             try {
                 executor.execute(() -> {
                     userService.updateUserInfo(account, EncryptUtils.getInstance().SHA1(newPassword, "user"));
                 });
-                result.setSuccess(true);
-                result.setMessage("密码修改成功，正在跳转到登录页面...");
+                ajaxResult.setSuccess(true);
+                ajaxResult.setMessage("密码修改成功，正在跳转到登录页面...");
             } catch (Exception e) {
-                result.setMessage("抱歉，服务异常，请重试！");
-                return result;
+                ajaxResult.setMessage("抱歉，服务异常，请重试！");
+                return ajaxResult;
             } finally {
                 redisUtil.delete(RedisUtils.DB_1, "captcha-code-" + account);
             }
         }
-        return result;
+        return ajaxResult;
     }
 
     /**
@@ -522,12 +522,12 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/aboutMe")
-    public Result settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo,
-                                 @RequestParam(defaultValue = "-1") Integer userId,
-                                 HttpServletResponse response,
-                                 HttpServletRequest request) {
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+    public AjaxResult settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo,
+                                     @RequestParam(defaultValue = "-1") Integer userId,
+                                     HttpServletResponse response,
+                                     HttpServletRequest request) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             user.setUserDescription(aboutMeInfo);
@@ -537,18 +537,18 @@ public class UserController {
                     UserUtils.updateLoggedUserInfo(user, request, response);
                 });
                 if (res < 0) {
-                    result.setMessage("更新异常，请重试！");
+                    ajaxResult.setMessage("更新异常，请重试！");
                 } else {
-                    result.setMessage("修改成功！");
-                    result.setSuccess(true);
+                    ajaxResult.setMessage("修改成功！");
+                    ajaxResult.setSuccess(true);
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
-                result.setMessage("服务异常，请重试！");
+                ajaxResult.setMessage("服务异常，请重试！");
             }
 
         }
-        return result;
+        return ajaxResult;
     }
 
     /**
@@ -564,15 +564,15 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/settingContact")
-    public Result settingContact(@RequestParam String github,
-                                 @RequestParam String wechat,
-                                 @RequestParam String qq,
-                                 @RequestParam String weibo,
-                                 @RequestParam String twitter,
-                                 @RequestParam String steam,
-                                 @RequestParam(defaultValue = "-1") Integer userId) {
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+    public AjaxResult settingContact(@RequestParam String github,
+                                     @RequestParam String wechat,
+                                     @RequestParam String qq,
+                                     @RequestParam String weibo,
+                                     @RequestParam String twitter,
+                                     @RequestParam String steam,
+                                     @RequestParam(defaultValue = "-1") Integer userId) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, userId);
@@ -583,14 +583,14 @@ public class UserController {
                 res = userAccountService.createAccount(account);
             }
             if (res > 0) {
-                result.setSuccess(true);
-                result.setMessage("修改成功！");
+                ajaxResult.setSuccess(true);
+                ajaxResult.setMessage("修改成功！");
             } else {
-                result.setSuccess(false);
-                result.setMessage("修改失败！");
+                ajaxResult.setSuccess(false);
+                ajaxResult.setMessage("修改失败！");
             }
         }
-        return result;
+        return ajaxResult;
     }
 
     /**
@@ -603,12 +603,12 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/settingHobby")
-    public Result setUserHobby(@RequestParam String hobby,
-                               @RequestParam(defaultValue = "-1") Integer userId,
-                               HttpServletResponse response,
-                               HttpServletRequest request) {
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+    public AjaxResult setUserHobby(@RequestParam String hobby,
+                                   @RequestParam(defaultValue = "-1") Integer userId,
+                                   HttpServletResponse response,
+                                   HttpServletRequest request) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             User userHobby = new User();
@@ -620,13 +620,13 @@ public class UserController {
                 UserUtils.updateLoggedUserInfo(user1, request, response);
             });
             if (res < 0) {
-                result.setMessage("更新失败，请稍后重试！");
-                return result;
+                ajaxResult.setMessage("更新失败，请稍后重试！");
+                return ajaxResult;
             }
-            result.setSuccess(true);
-            result.setMessage("更新成功！");
+            ajaxResult.setSuccess(true);
+            ajaxResult.setMessage("更新成功！");
         }
-        return result;
+        return ajaxResult;
     }
 
     /**
@@ -639,12 +639,12 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/settingTech")
-    public Result settingTech(@RequestParam String techStr,
-                              @RequestParam(defaultValue = "-1") Integer userId,
-                              HttpServletResponse response,
-                              HttpServletRequest request) {
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+    public AjaxResult settingTech(@RequestParam String techStr,
+                                  @RequestParam(defaultValue = "-1") Integer userId,
+                                  HttpServletResponse response,
+                                  HttpServletRequest request) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             User userTech = new User();
@@ -656,13 +656,13 @@ public class UserController {
                 UserUtils.updateLoggedUserInfo(user1, request, response);
             });
             if (res < 0) {
-                result.setMessage("修改失败！请稍后重试！");
-                return result;
+                ajaxResult.setMessage("修改失败！请稍后重试！");
+                return ajaxResult;
             }
-            result.setSuccess(true);
-            result.setMessage("修改成功！");
+            ajaxResult.setSuccess(true);
+            ajaxResult.setMessage("修改成功！");
         }
-        return result;
+        return ajaxResult;
     }
 
 

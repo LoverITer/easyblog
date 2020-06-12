@@ -1,4 +1,4 @@
-package top.easyblog.handler.exception;
+package top.easyblog.common.exception;
 
 /**
  * 分页参数异常

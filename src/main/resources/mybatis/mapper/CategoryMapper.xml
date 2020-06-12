@@ -9,14 +9,14 @@
     </cache>
     <resultMap id="BaseResultMap" type="top.easyblog.bean.Category">
         <id column="category_id" jdbcType="BIGINT" property="categoryId"/>
-        <result column="category_user" jdbcType="INTEGER" property="categoryUser"/>
-        <result column="category_name" jdbcType="VARCHAR" property="categoryName"/>
-        <result column="category_image_url" jdbcType="VARCHAR" property="categoryImageUrl"/>
-        <result column="category_article_num" jdbcType="INTEGER" property="categoryArticleNum"/>
-        <result column="category_click_num" jdbcType="INTEGER" property="categoryClickNum"/>
-        <result column="category_care_num" jdbcType="INTEGER" property="categoryCareNum"/>
-        <result column="display" property="display"/>
-        <result column="create_time" property="createTime"/>
+        <ajaxResult column="category_user" jdbcType="INTEGER" property="categoryUser"/>
+        <ajaxResult column="category_name" jdbcType="VARCHAR" property="categoryName"/>
+        <ajaxResult column="category_image_url" jdbcType="VARCHAR" property="categoryImageUrl"/>
+        <ajaxResult column="category_article_num" jdbcType="INTEGER" property="categoryArticleNum"/>
+        <ajaxResult column="category_click_num" jdbcType="INTEGER" property="categoryClickNum"/>
+        <ajaxResult column="category_care_num" jdbcType="INTEGER" property="categoryCareNum"/>
+        <ajaxResult column="display" property="display"/>
+        <ajaxResult column="create_time" property="createTime"/>
     </resultMap>
 
 

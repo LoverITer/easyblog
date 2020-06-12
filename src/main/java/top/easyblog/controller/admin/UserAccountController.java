@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserSigninLog;
 import top.easyblog.common.email.Email;
-import top.easyblog.common.email.SendEmailUtil;
+import top.easyblog.common.email.EmailSender;
 import top.easyblog.common.util.*;
-import top.easyblog.config.web.Result;
+import top.easyblog.config.web.AjaxResult;
 import top.easyblog.service.impl.UserServiceImpl;
 import top.easyblog.service.impl.UserSigninLogServiceImpl;
 
@@ -37,13 +37,13 @@ public class UserAccountController {
     private static final String LOGIN_PAGE = "redirect:/user/loginPage";
     private final UserSigninLogServiceImpl userSigninLogService;
     private final UserServiceImpl userService;
-    private final SendEmailUtil emailUtil;
+    private final EmailSender emailUtil;
     @Autowired
     private RedisUtils redisUtils;
     @Autowired
     private Executor executor;
 
-    public UserAccountController(UserSigninLogServiceImpl userSigninLogService, UserServiceImpl userService, SendEmailUtil emailUtil) {
+    public UserAccountController(UserSigninLogServiceImpl userSigninLogService, UserServiceImpl userService, EmailSender emailUtil) {
         this.userSigninLogService = userSigninLogService;
         this.userService = userService;
         this.emailUtil = emailUtil;
@@ -64,17 +64,17 @@ public class UserAccountController {
 
     @ResponseBody
     @GetMapping(value = "/reset/password/save")
-    public Result saveResetPassword(@RequestParam Integer userId,
-                                    @RequestParam String oldPwd,
-                                    @RequestParam String newPwd,
-                                    @RequestParam String newPwdConfirm) {
-        Result result = new Result();
-        result.setMessage("请登录后重试");
+    public AjaxResult saveResetPassword(@RequestParam Integer userId,
+                                        @RequestParam String oldPwd,
+                                        @RequestParam String newPwd,
+                                        @RequestParam String newPwdConfirm) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后重试");
         User user = UserUtils.getUserFromRedis(userId);
         if (user != null) {
-            Result authorized = userService.isAuthorized(user, oldPwd);
-            Result isSame = userService.isNewPasswordSameOldPassword(oldPwd, newPwd);
-            Result passwordLegal = userService.isPasswordLegal(newPwd);
+            AjaxResult authorized = userService.isAuthorized(user, oldPwd);
+            AjaxResult isSame = userService.isNewPasswordSameOldPassword(oldPwd, newPwd);
+            AjaxResult passwordLegal = userService.isPasswordLegal(newPwd);
             if (authorized.isSuccess()) {
                 if (!isSame.isSuccess()) {
                     if (passwordLegal.isSuccess()) {
@@ -83,25 +83,25 @@ public class UserAccountController {
                             var0.setUserPassword(EncryptUtils.getInstance().SHA1(newPwdConfirm, "user"));
                             var0.setUserId(user.getUserId());
                             userService.updateUserInfo(var0);
-                            result.setMessage("密码修改成功！");
-                            result.setSuccess(true);
+                            ajaxResult.setMessage("密码修改成功！");
+                            ajaxResult.setSuccess(true);
                         } else {
-                            result.setMessage("两次输入的新密码不一致");
+                            ajaxResult.setMessage("两次输入的新密码不一致");
                         }
                     } else {
-                        result.setMessage(passwordLegal.getMessage());
+                        ajaxResult.setMessage(passwordLegal.getMessage());
                     }
                 } else {
-                    result.setMessage(isSame.getMessage());
+                    ajaxResult.setMessage(isSame.getMessage());
                 }
 
             } else {
-                result.setMessage(authorized.getMessage());
+                ajaxResult.setMessage(authorized.getMessage());
             }
         } else {
-            result.setMessage("请登录后再修改密码，如果忘记密码可以到登录页找回密码");
+            ajaxResult.setMessage("请登录后再修改密码，如果忘记密码可以到登录页找回密码");
         }
-        return result;
+        return ajaxResult;
     }
 
 
@@ -132,34 +132,34 @@ public class UserAccountController {
 
     @ResponseBody
     @GetMapping(value = "/sendByPhone")
-    public Result sendCaptchaCodeByPhone(@RequestParam Integer userId, @RequestParam String phone) {
-        Result result = new Result();
-        result.setSuccess(false);
+    public AjaxResult sendCaptchaCodeByPhone(@RequestParam Integer userId, @RequestParam String phone) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setSuccess(false);
         String code = SendMessageUtils.getRandomCode(6);
         redisUtils.set("code-"+userId, code, RedisUtils.DB_1);
         //60s有效
         redisUtils.expire("code-"+userId, 60, RedisUtils.DB_1);
         String content = "您正在修改绑定的手机，验证码为：" + code + "，60s内有效！";
         SendMessageUtils.send("loveIT", "d41d8cd98f00b204e980", phone, content);
-        result.setSuccess(true);
-        return result;
+        ajaxResult.setSuccess(true);
+        return ajaxResult;
     }
 
     @ResponseBody
     @GetMapping(value = "/reset/phone/next")
-    public Result resetPhoneNext(@RequestParam Integer userId, @RequestParam String code) {
+    public AjaxResult resetPhoneNext(@RequestParam Integer userId, @RequestParam String code) {
         User user = UserUtils.getUserFromRedis(userId);
-        Result result = new Result();
-        result.setMessage("请登录后再操作！");
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后再操作！");
         if (Objects.nonNull(user)) {
             if (code.equals(redisUtils.get("code-"+userId, RedisUtils.DB_1))) {
-                result.setSuccess(true);
+                ajaxResult.setSuccess(true);
                 redisUtils.delete(1, "code-"+userId);
             } else {
-                result.setMessage("验证码输入错误！");
+                ajaxResult.setMessage("验证码输入错误！");
             }
         }
-        return result;
+        return ajaxResult;
     }
 
     @GetMapping(value = "/bindPhonePage")
@@ -175,13 +175,13 @@ public class UserAccountController {
 
     @ResponseBody
     @GetMapping(value = "/bindPhone")
-    public Result saveBindPhone(@RequestParam Integer userId,
-                                @RequestParam String phone,
-                                @RequestParam String code,
-                                HttpServletRequest request,
-                                HttpServletResponse response) {
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+    public AjaxResult saveBindPhone(@RequestParam Integer userId,
+                                    @RequestParam String phone,
+                                    @RequestParam String code,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         String realCode = (String) redisUtils.get("code-"+userId, RedisUtils.DB_1);
         if (Objects.nonNull(user)) {
@@ -190,23 +190,23 @@ public class UserAccountController {
                     user.setUserPhone(phone);
                     int res = userService.updateUserInfo(user);
                     if (res <= 0) {
-                        result.setMessage("服务异常，请重试！");
-                        return result;
+                        ajaxResult.setMessage("服务异常，请重试！");
+                        return ajaxResult;
                     }
                     executor.execute(() -> UserUtils.updateLoggedUserInfo(user,request,response));
-                    result.setMessage("手机号绑定成功!");
-                    result.setSuccess(true);
-                    return result;
+                    ajaxResult.setMessage("手机号绑定成功!");
+                    ajaxResult.setSuccess(true);
+                    return ajaxResult;
                 } catch (Exception e) {
-                    result.setMessage("服务异常，请重试！");
+                    ajaxResult.setMessage("服务异常，请重试！");
                 }
             } else {
-                result.setMessage("验证码输入不正确");
+                ajaxResult.setMessage("验证码输入不正确");
             }
         } else {
-            result.setMessage("请登录后再操作");
+            ajaxResult.setMessage("请登录后再操作");
         }
-        return result;
+        return ajaxResult;
     }
 
 
@@ -224,37 +224,37 @@ public class UserAccountController {
 
     @ResponseBody
     @GetMapping(value = "/reset/email/next")
-    public Result resetEmailNext(@RequestParam Integer userId, @RequestParam String code) {
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+    public AjaxResult resetEmailNext(@RequestParam Integer userId, @RequestParam String code) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             String var0 = (String) redisUtils.get("code-" + userId, RedisUtils.DB_1);
             if (Objects.nonNull(var0)) {
                 if (code.equals(var0)) {
                     redisUtils.delete(RedisUtils.DB_1, "code-" + userId);
-                    result.setSuccess(true);
-                    result.setMessage("OK");
+                    ajaxResult.setSuccess(true);
+                    ajaxResult.setMessage("OK");
                 } else {
-                    result.setMessage("验证码输入错误，请重新输入");
+                    ajaxResult.setMessage("验证码输入错误，请重新输入");
                 }
             } else {
-                result.setMessage("验证码已超时，请重新获取");
+                ajaxResult.setMessage("验证码已超时，请重新获取");
             }
         } else {
             redisUtils.delete(RedisUtils.DB_1, "code-" + userId);
         }
-        return result;
+        return ajaxResult;
     }
 
     @ResponseBody
     @GetMapping(value = "/reset/email/save")
-    public Result saveRestEmail(@RequestParam Integer userId,
-                                @RequestParam String email,
-                                HttpServletResponse response,
-                                HttpServletRequest request) {
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+    public AjaxResult saveRestEmail(@RequestParam Integer userId,
+                                    @RequestParam String email,
+                                    HttpServletResponse response,
+                                    HttpServletRequest request) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             User var0 = new User();
@@ -263,10 +263,10 @@ public class UserAccountController {
             int res = userService.updateUserInfo(var0);
             if (res > 0) {
                 UserUtils.updateLoggedUserInfo(CombineBeans.combine(var0,user),request,response);
-                result.setSuccess(true);
+                ajaxResult.setSuccess(true);
             }
         }
-        return result;
+        return ajaxResult;
     }
 
     @GetMapping(value = "/reset/email/nextPage")
@@ -283,9 +283,9 @@ public class UserAccountController {
 
     @ResponseBody
     @GetMapping(value = "/sendByEmail")
-    public Result sendCaptchaCodeByEmail(@RequestParam Integer userId, @RequestParam String email) {
-        Result result = new Result();
-        result.setSuccess(false);
+    public AjaxResult sendCaptchaCodeByEmail(@RequestParam Integer userId, @RequestParam String email) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setSuccess(false);
         String code = SendMessageUtils.getRandomCode(6);
         redisUtils.set("code-"+userId,code,RedisUtils.DB_1);
         //60s有效
@@ -293,8 +293,8 @@ public class UserAccountController {
         String content = "您正在修改已经绑定的邮箱，验证码为：" + code + "，60秒内有效！";
         Email e = new Email("验证码", email, content, null);
         emailUtil.send(e);
-        result.setSuccess(true);
-        return result;
+        ajaxResult.setSuccess(true);
+        return ajaxResult;
     }
 
 
@@ -324,9 +324,9 @@ public class UserAccountController {
 
     @ResponseBody
     @GetMapping(value = "/destroy")
-    public Result deleteAccount(@RequestParam Integer userId, @RequestParam String password, HttpServletRequest request) {
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+    public AjaxResult deleteAccount(@RequestParam Integer userId, @RequestParam String password, HttpServletRequest request) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
             Cookie[] cookies = request.getCookies();
@@ -337,15 +337,15 @@ public class UserAccountController {
                     break;
                 }
             }
-            Result authorized = userService.isAuthorized(user, password);
+            AjaxResult authorized = userService.isAuthorized(user, password);
             if (authorized.isSuccess()) {
-                result.setSuccess(true);
+                ajaxResult.setSuccess(true);
                 userService.deleteUserByPK(user.getUserId());
             } else {
-                result.setMessage("密码输入错误，请重试！");
+                ajaxResult.setMessage("密码输入错误，请重试！");
             }
         }
-        return result;
+        return ajaxResult;
     }
 
 }

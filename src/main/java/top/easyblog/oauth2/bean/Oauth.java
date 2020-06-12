@@ -1,4 +1,4 @@
-package top.easyblog.bean.oauth2;
+package top.easyblog.oauth2.bean;
 
 import lombok.Data;
 
@@ -17,6 +17,4 @@ public class Oauth {
     private Integer userId;
     private String status;
     private Date createTime;
-
-
 }

@@ -21,7 +21,7 @@ public enum PageSize {
      */
     MAX_PAGE_SIZE(20);
 
-    private int pageSize;
+    private final int pageSize;
 
     PageSize(int pageSize) {
         this.pageSize = pageSize;
@@ -31,7 +31,4 @@ public enum PageSize {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
 }

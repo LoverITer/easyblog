@@ -1,4 +1,4 @@
-package top.easyblog.common.enums.oauth2;
+package top.easyblog.oauth2.enums;
 
 /**
  * 第三方授权认证的APPType

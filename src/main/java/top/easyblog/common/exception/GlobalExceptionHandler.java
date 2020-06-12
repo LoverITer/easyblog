@@ -1,4 +1,4 @@
-package top.easyblog.handler.exception.eh;
+package top.easyblog.common.exception;
 
 
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ import java.util.Date;
  * @author huangxin
  */
 @ControllerAdvice
-public class DefaultExceptionHandler {
+public class GlobalExceptionHandler {
 
     private final Logger log= LoggerFactory.getLogger(this.getClass());
 

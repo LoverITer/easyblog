@@ -1,10 +1,9 @@
-package top.easyblog.aspect;
+package top.easyblog.log;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -18,18 +17,17 @@ import java.util.Arrays;
  *
  * @author huangxin
  */
+@Slf4j
 @Aspect
 @Component
-public class WebAdminRequestLogAspect {
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Pointcut(value = "execution(* top.easyblog.controller.admin.*.*(..))")
-    public void log() {
-    }
+public class WebRequestLogAspect {
 
 
-    @Before(value = "log()")
+    @Pointcut(value = "execution(* top.easyblog.controller.*.*(..))")
+    public void log() { }
+
+
+    @Before( value="log()")
     public void doBefore(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;

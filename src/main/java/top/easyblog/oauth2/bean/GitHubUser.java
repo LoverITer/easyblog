@@ -1,4 +1,4 @@
-package top.easyblog.bean.oauth2;
+package top.easyblog.oauth2.bean;
 
 import lombok.Data;
 

@@ -182,7 +182,7 @@
                     async: true,
                     data: {email: str, option: "register"},
                     dataType: "text",
-                    success: function (result) {
+                    success: function (ajaxResult) {
                         showInfoMessage('验证码已发送到您的邮箱，请注意查收！');
                         timeOut = setInterval('countDown()', 1000);   //倒计时，并设置按钮不可用
                     },
@@ -230,8 +230,8 @@
             data: {nickname: nickname},
             contentType: "application/json",
             dataType: "json",
-            success: function (result) {
-                if (result.success) {
+            success: function (ajaxResult) {
+                if (ajaxResult.success) {
                     if (nickname === "" || nickname === undefined || nickname == null) {
                         $('#nickname-msg').show().css("color", "#d0393f").text("请输入昵称");
                         $('#register-nickname-validate-correct').hide();
@@ -273,8 +273,8 @@
                 data: {email: account},
                 contentType: "application/json",
                 dataType: "json",
-                success: function (result) {
-                    if (result.success) {
+                success: function (ajaxResult) {
+                    if (ajaxResult.success) {
                         if (account === "" || account === undefined || account == null) {
                             $('#account-msg').show().css("color", "#d0393f").text("请输入邮箱");
                             $('#register-account-validate-correct').hide();
@@ -309,8 +309,8 @@
                 data: {phone: account},
                 contentType: "application/json",
                 dataType: "json",
-                success: function (result) {
-                    if (result.success) {
+                success: function (ajaxResult) {
+                    if (ajaxResult.success) {
                         if (account === "" || account === undefined || account == null) {
                             $('#account-msg').show().css("color", "#d0393f").text("请输入手机号");
                             $('#register-account-validate-correct').hide();
@@ -349,8 +349,8 @@
             data: {password: password},
             contentType: "application/json",
             dataType: "json",
-            success: function (result) {
-                if (result.success) {
+            success: function (ajaxResult) {
+                if (ajaxResult.success) {
                     if (password === "" || password === undefined || password == null) {
                         $('#password-msg').show().css("color", "#d0393f").text("请输入密码");
                     } else {
@@ -401,19 +401,19 @@
                 sync: true,
                 data: {nickname: nickname, pwd: password, account: account, code: code},
                 dataType: "json",
-                success: function (result) {
+                success: function (ajaxResult) {
                     _loadingClose();
-                    if(result.success) {
+                    if(ajaxResult.success) {
                         console.log('注册成功');
                         window.location.href = "/user/register-success";
                     }else{
                         console.log('注册失败');
-                        showErrorMessage(result.message);
+                        showErrorMessage(ajaxResult.message);
                     }
                 },
-                error: function (result) {
+                error: function (ajaxResult) {
                     _loadingClose();
-                    showErrorMessage(result.message);
+                    showErrorMessage(ajaxResult.message);
                 }
             })
         }

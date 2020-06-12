@@ -9,19 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import top.easyblog.autoconfig.qiniu.QiNiuCloudService;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
 import top.easyblog.common.email.Email;
-import top.easyblog.common.email.SendEmailUtil;
+import top.easyblog.common.email.EmailSender;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.DefaultImageDispatcherUtils;
 import top.easyblog.common.util.NetWorkUtils;
 import top.easyblog.common.util.RedisUtils;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.config.web.Result;
+import top.easyblog.config.autoconfig.qiniu.QiNiuCloudService;
+import top.easyblog.config.web.AjaxResult;
 import top.easyblog.markdown.TextForm;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CategoryServiceImpl;
@@ -53,7 +53,7 @@ public class ArticleAdminController {
     @Autowired
     private RedisUtils redisUtil;
     @Autowired
-    private SendEmailUtil emailUtil;
+    private EmailSender emailUtil;
     @Autowired
     private Executor executor;
 
@@ -191,15 +191,15 @@ public class ArticleAdminController {
      */
     @ResponseBody
     @PostMapping(value = "/saveArticle/{userId}")
-    public Result publishArticle(@RequestBody Article article,
-                                 @PathVariable(value = "userId") Integer userId) {
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+    public AjaxResult publishArticle(@RequestBody Article article,
+                                     @PathVariable(value = "userId") Integer userId) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         //从Redis中查询出已经登录User的登录信息
         String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
         if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
             //找不到直接重定位到登录页面
-            return result;
+            return ajaxResult;
         }
         User user = JSON.parseObject(userJsonStr, User.class);
         if (Objects.nonNull(user)) {
@@ -225,8 +225,8 @@ public class ArticleAdminController {
                         }
                     }
                 } else {
-                    result.setMessage("请填写文章专栏名");
-                    return result;
+                    ajaxResult.setMessage("请填写文章专栏名");
+                    return ajaxResult;
                 }
                 int updateRes = 0;
                 //id=-1标志这是一篇新文章
@@ -254,32 +254,32 @@ public class ArticleAdminController {
                             user.setUserRank();
                             userService.updateUserInfo(user);
                         });
-                        result.setSuccess(true);
+                        ajaxResult.setSuccess(true);
                         //把文章的ID返回给页面
-                        result.setMessage(article.getArticleId().toString());
+                        ajaxResult.setMessage(article.getArticleId().toString());
                     }
                 } else {
                     //编辑文章重新发布
-                    result.setSuccess(true);
+                    ajaxResult.setSuccess(true);
                     //把文章的ID返回给页面
-                    result.setMessage(article.getArticleId().toString());
+                    ajaxResult.setMessage(article.getArticleId().toString());
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
-                result.setMessage("服务异常，请重试！");
+                ajaxResult.setMessage("服务异常，请重试！");
             }
         }
-        return result;
+        return ajaxResult;
     }
 
 
     @ResponseBody
     @PostMapping(value = "/saveAsDraft/{userId}")
-    public Result saveArticleAsDraft(Model model,
-                                     @PathVariable(value = "userId") Integer userId,
-                                     @RequestBody Article article) {
-        Result result = new Result();
-        result.setMessage("请登录后再操作！");
+    public AjaxResult saveArticleAsDraft(Model model,
+                                         @PathVariable(value = "userId") Integer userId,
+                                         @RequestBody Article article) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后再操作！");
         //从Redis中查询出已经登录User的登录信息
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user) || userId != null) {
@@ -307,24 +307,24 @@ public class ArticleAdminController {
                     article.setArticlePublishTime(new Date());
                     int createRes = articleService.saveArticle(article);
                     if (createRes > 0) {
-                        result.setSuccess(true);
-                        result.setMessage(article.getArticleId().toString());
+                        ajaxResult.setSuccess(true);
+                        ajaxResult.setMessage(article.getArticleId().toString());
                     } else {
-                        result.setMessage("服务异常，请尝试重新提交！");
+                        ajaxResult.setMessage("服务异常，请尝试重新提交！");
                     }
                 } else {
-                    result.setSuccess(true);
-                    result.setMessage(article.getArticleId().toString());
+                    ajaxResult.setSuccess(true);
+                    ajaxResult.setMessage(article.getArticleId().toString());
                 }
                 List<Category> categories = categoryService.getUserAllCategories(userId);
                 model.addAttribute("categories", categories);
                 model.addAttribute("userId", userId);
             } catch (Exception e) {
                 log.error(e.getMessage());
-                result.setMessage("服务异常，请尝试重新提交！");
+                ajaxResult.setMessage("服务异常，请尝试重新提交！");
             }
         }
-        return result;
+        return ajaxResult;
     }
 
 
@@ -554,13 +554,13 @@ public class ArticleAdminController {
 
     @ResponseBody
     @PostMapping(value = "/upload_article_img/{userId}")
-    public Result editArticleFirstImg(@PathVariable(value = "userId") Integer userId,
-                                      @RequestParam long articleId,
-                                      @RequestParam String imgByte64Str) {
-        Result result = new Result();
-        result.setMessage("请登录后在操作！");
+    public AjaxResult editArticleFirstImg(@PathVariable(value = "userId") Integer userId,
+                                          @RequestParam long articleId,
+                                          @RequestParam String imgByte64Str) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后在操作！");
         if (Objects.isNull(userId)) {
-            return result;
+            return ajaxResult;
         }
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
@@ -580,21 +580,21 @@ public class ArticleAdminController {
                         article.setArticleFirstPicture(imageUrl);
                         int res = articleService.updateSelective(article);
                         if (res <= 0) {
-                            result.setMessage("上传失败，请重试！");
-                            return result;
+                            ajaxResult.setMessage("上传失败，请重试！");
+                            return ajaxResult;
                         }
-                        result.setMessage("上传成功！");
-                        result.setSuccess(true);
+                        ajaxResult.setMessage("上传成功！");
+                        ajaxResult.setSuccess(true);
                     }
                 } else {
-                    result.setMessage("参数非法");
+                    ajaxResult.setMessage("参数非法");
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
-                result.setMessage("服务异常，请稍后重试！");
+                ajaxResult.setMessage("服务异常，请稍后重试！");
             }
         }
-        return result;
+        return ajaxResult;
     }
 
 

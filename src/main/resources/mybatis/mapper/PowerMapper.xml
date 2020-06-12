@@ -9,7 +9,7 @@
   </cache>
   <resultMap id="BaseResultMap" type="top.easyblog.bean.Power">
     <id column="power_id" jdbcType="TINYINT" property="powerId" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
+    <ajaxResult column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
 
   <select id="getByPrimaryKey" parameterType="java.lang.Byte" resultMap="BaseResultMap">

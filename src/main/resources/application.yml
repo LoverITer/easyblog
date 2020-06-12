@@ -1,5 +1,7 @@
-easyblog:
+project:
   version: 1.0
+  name: EasyBlog
+  engineering-code: Blue planet
 #公用环境
 spring:
   profiles:

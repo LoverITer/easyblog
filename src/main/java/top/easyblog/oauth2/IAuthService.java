@@ -1,4 +1,4 @@
-package top.easyblog.service;
+package top.easyblog.oauth2;
 
 /**
  * @author ：huangxin

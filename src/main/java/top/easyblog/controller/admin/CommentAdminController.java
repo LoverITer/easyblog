@@ -12,7 +12,7 @@ import top.easyblog.bean.UserComment;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.config.web.Result;
+import top.easyblog.config.web.AjaxResult;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
 import top.easyblog.service.impl.UserServiceImpl;
@@ -71,20 +71,20 @@ public class CommentAdminController {
 
     @ResponseBody
     @GetMapping(value = "/delete")
-    public Result deleteComment(@RequestParam Integer userId,
-                                @RequestParam int commentId) {
+    public AjaxResult deleteComment(@RequestParam Integer userId,
+                                    @RequestParam int commentId) {
         User user = UserUtils.getUserFromRedis(userId);
-        Result result = new Result();
-        result.setMessage("请登录后再操作！");
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("请登录后再操作！");
         if (Objects.nonNull(user)) {
             int var0 = commentService.deleteComment(commentId);
             if (var0 == 1) {
-                result.setSuccess(true);
+                ajaxResult.setSuccess(true);
             }
-            result.setMessage("抱歉！删除失败");
-            return result;
+            ajaxResult.setMessage("抱歉！删除失败");
+            return ajaxResult;
         }
-        return result;
+        return ajaxResult;
     }
 
 

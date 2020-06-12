@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.UserComment;
 import top.easyblog.common.util.RedisUtils;
-import top.easyblog.config.web.Result;
+import top.easyblog.config.web.AjaxResult;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
 
@@ -43,9 +43,9 @@ public class CommentController {
      */
     @ResponseBody
     @PostMapping(value = "/publish", produces = "application/json;charset=UTF-8")
-    public Result publishComment(@RequestBody UserComment comment) {
-        Result result = new Result();
-        result.setMessage("您还未登陆，请登录后重试！");
+    public AjaxResult publishComment(@RequestBody UserComment comment) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setMessage("您还未登陆，请登录后重试！");
         //登录用户就是发评论者，如果没有登录不可以发评论
         if (Objects.nonNull(comment) && Objects.nonNull(comment.getCommentSend()) && Objects.nonNull(comment.getCommentReceived())) {
             //更新文章的评论数
@@ -57,11 +57,11 @@ public class CommentController {
             });
             int re = commentService.save(comment);
             if (re > 0) {
-                result.setSuccess(true);
-                result.setMessage("评论保存成功！");
+                ajaxResult.setSuccess(true);
+                ajaxResult.setMessage("评论保存成功！");
             }
         }
-        return result;
+        return ajaxResult;
     }
 
 

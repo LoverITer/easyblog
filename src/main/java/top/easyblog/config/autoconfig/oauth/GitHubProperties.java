@@ -1,4 +1,4 @@
-package top.easyblog.autoconfig.oauth;
+package top.easyblog.config.autoconfig.oauth;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

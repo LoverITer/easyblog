@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 向页面返回JSON格式信息
  * @author huangxin
  */
-public class Result implements Serializable {
+public class AjaxResult implements Serializable {
 
     private static final long serialVersionUID = 1987961797257523721L;
     private String message="";

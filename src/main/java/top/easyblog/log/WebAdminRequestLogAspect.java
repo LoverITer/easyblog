@@ -1,42 +1,48 @@
-package top.easyblog.aspect;
+package top.easyblog.log;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import top.easyblog.common.util.NetWorkUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 /**
- * service层日志切面
+ * controller层日志切面
+ *
  * @author huangxin
  */
+@Slf4j
 @Aspect
 @Component
-public class ServiceLogAspect {
+public class WebAdminRequestLogAspect {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Pointcut(value = "execution(* top.easyblog.service.*.*(..))")
+    @Pointcut(value = "execution(* top.easyblog.controller.admin.*.*(..))")
     public void log() {
     }
+
 
     @Before(value = "log()")
     public void doBefore(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;
+        HttpServletRequest request = attributes.getRequest();
+        String ip = NetWorkUtils.getUserIp(request);
+        String url = request.getRequestURL().toString();
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.info(classMethod);
+        log.info(new RequestLog(url, ip + " " + NetWorkUtils.getLocation(ip), classMethod, joinPoint.getArgs()).toString());
     }
 
     @AfterReturning(pointcut = "log()", returning = "result")
     public void afterReturn(JoinPoint joinPoint, Object result) {
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.info(classMethod + " has done successfully.");
+        log.info(classMethod + " has done successfully.result value {}", result);
     }
 
     @AfterThrowing(pointcut = "log()", throwing = "throwable")
@@ -45,11 +51,15 @@ public class ServiceLogAspect {
         log.error(classMethod + " occurred an error :" + throwable.getMessage());
     }
 
-    private static class ServiceLog {
+    private static class RequestLog {
+        private String url;
+        private String ipInfo;
         private String classMethod;
         private Object[] args;
 
-        public ServiceLog( String classMethod, Object[] args) {
+        public RequestLog(String url, String ipInfo, String classMethod, Object[] args) {
+            this.url = url;
+            this.ipInfo = ipInfo;
             this.classMethod = classMethod;
             this.args = args;
         }
@@ -57,8 +67,10 @@ public class ServiceLogAspect {
         @Override
         public String toString() {
             return "request log{：" +
-                    ", classMethod='" + classMethod + '\'' +
-                    ", args=" + Arrays.toString(args) + "}";
+                    "url:'" + url + '\'' +
+                    ", ipInfo:'" + ipInfo + '\'' +
+                    ", classMethod:'" + classMethod + '\'' +
+                    ", args:" + Arrays.toString(args) + "}";
         }
     }
 

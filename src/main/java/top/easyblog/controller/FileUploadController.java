@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import top.easyblog.autoconfig.qiniu.QiNiuCloudService;
-import top.easyblog.config.web.Result;
+import top.easyblog.config.autoconfig.qiniu.QiNiuCloudService;
+import top.easyblog.config.web.AjaxResult;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -32,9 +32,9 @@ public class FileUploadController {
     }
 
     @RequestMapping(value = "/interface1")
-    public Result fileUpload(@RequestParam(value = "file") MultipartFile multipartFile, HttpServletRequest request, @RequestParam int categoryId) {
-        Result result = new Result();
-        result.setSuccess(false);
+    public AjaxResult fileUpload(@RequestParam(value = "file") MultipartFile multipartFile, HttpServletRequest request, @RequestParam int categoryId) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setSuccess(false);
         String fileName = multipartFile.getOriginalFilename();
         fileName = System.currentTimeMillis() + "_" + fileName;
         String path = "E:/fileUpload/" + fileName;
@@ -53,22 +53,22 @@ public class FileUploadController {
                     File newFile = new File(path, fileName);
                     //保存文件到服务器
                     multipartFile.transferTo(newFile);
-                    result.setMessage(path + fileName);
+                    ajaxResult.setMessage(path + fileName);
                     //url="http://你自己的域名/项目名/images/"+fileName;//正式项目
                     url = "http://localhost:8080/images/" + fileName;//本地运行项目
-                    result.setMessage(url);
+                    ajaxResult.setMessage(url);
                 } else {
-                    result.setMessage("文件上传失败！只支持jpeg, jpg, png, gif, bmp 格式的图片文件");
+                    ajaxResult.setMessage("文件上传失败！只支持jpeg, jpg, png, gif, bmp 格式的图片文件");
                 }
             } else {
-                result.setMessage("服务异常，请重试！");
+                ajaxResult.setMessage("服务异常，请重试！");
             }
         } catch (IOException e) {
-            result.setMessage("服务异常，请重试！");
+            ajaxResult.setMessage("服务异常，请重试！");
             e.printStackTrace();
-            return result;
+            return ajaxResult;
         }
-        return result;
+        return ajaxResult;
     }
 
     /**
@@ -79,18 +79,18 @@ public class FileUploadController {
      */
     @ResponseBody
     @PostMapping(value = "/interface2")
-    public Result upload2QiNiuCloud(@RequestParam MultipartFile multipartFile) {
-        Result result = new Result();
-        result.setSuccess(false);
+    public AjaxResult upload2QiNiuCloud(@RequestParam MultipartFile multipartFile) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setSuccess(false);
         try {
             String imageUrl = qiNiuCloudService.putMultipartImage(multipartFile);
             //上传成功后把图片的URL带回页面
-            result.setMessage(imageUrl);
-            result.setSuccess(true);
+            ajaxResult.setMessage(imageUrl);
+            ajaxResult.setSuccess(true);
         } catch (Exception e) {
-            result.setMessage("抱歉！服务异常，请稍后重试！");
+            ajaxResult.setMessage("抱歉！服务异常，请稍后重试！");
         }
-        return result;
+        return ajaxResult;
     }
 
 
@@ -132,24 +132,24 @@ public class FileUploadController {
      */
     @ResponseBody
     @PostMapping(value = "/interface4")
-    public Result upload2QiNiuCloud(@RequestParam String imgByte64Str) {
-        Result result = new Result();
+    public AjaxResult upload2QiNiuCloud(@RequestParam String imgByte64Str) {
+        AjaxResult ajaxResult = new AjaxResult();
         try {
             if (StringUtil.isNotEmpty(imgByte64Str)) {
                 //把base64字符串转换为字节数组
                 byte[] imageBytes = Base64.decodeBase64(imgByte64Str.replace("data:image/jpeg;base64,", ""));
                 String imageName = System.currentTimeMillis() + UUID.randomUUID().toString() + ".jpg";
                 String imageUrl = qiNiuCloudService.putBase64Image(imageBytes, imageName);
-                result.setSuccess(true);
-                result.setMessage(imageUrl);
+                ajaxResult.setSuccess(true);
+                ajaxResult.setMessage(imageUrl);
             } else {
-                result.setMessage("上传的图片内容为空");
+                ajaxResult.setMessage("上传的图片内容为空");
             }
         } catch (Exception e) {
-            result.setMessage("图片上传失败，请稍后重试！");
+            ajaxResult.setMessage("图片上传失败，请稍后重试！");
         }
 
-        return result;
+        return ajaxResult;
     }
 
 

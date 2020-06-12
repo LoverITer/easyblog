@@ -1,11 +1,14 @@
 package top.easyblog.common.pagehelper;
 
+import lombok.Data;
+
 import java.util.Objects;
 
 /**
  * 分页参数设置
  * @author huangxin
  */
+@Data
 public class PageParam {
 
     /**
@@ -22,17 +25,6 @@ public class PageParam {
         this.pageSize = pageSize;
     }
 
-    public Integer getPage() {
-        return page;
-    }
-
-    public void setPage(Integer page) {
-        this.page = page;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
 
     public void setPageSize(Integer pageSize) {
         if(Objects.isNull(pageSize)){

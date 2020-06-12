@@ -9,11 +9,11 @@
   </cache>
   <resultMap id="BaseResultMap" type="top.easyblog.bean.UserMailLog">
     <id column="log_id" jdbcType="BIGINT" property="logId" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
+    <ajaxResult column="user_id" jdbcType="INTEGER" property="userId" />
+    <ajaxResult column="log_time" jdbcType="TIMESTAMP" property="logTime" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.easyblog.bean.UserMailLog">
-    <result column="context" jdbcType="LONGVARCHAR" property="context" />
+    <ajaxResult column="context" jdbcType="LONGVARCHAR" property="context" />
   </resultMap>
 
 

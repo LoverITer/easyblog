@@ -312,8 +312,8 @@
                     $('#care_id').val("true");
                     changeBtn();
                 },
-                error: function (result) {
-                    showErrorMessage(result.message);
+                error: function (ajaxResult) {
+                    showErrorMessage(ajaxResult.message);
                 }
             })
         } else if ("取消关注" == btnHtml) {
@@ -327,8 +327,8 @@
                     $('#care_id').val("false");
                     changeBtn();
                 },
-                error: function (result) {
-                    showErrorMessage(result.message);
+                error: function (ajaxResult) {
+                    showErrorMessage(ajaxResult.message);
                 }
             })
         }
