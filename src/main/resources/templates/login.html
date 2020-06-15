@@ -404,10 +404,10 @@
                 success: function (ajaxResult) {
                     _loadingClose();
                     if(ajaxResult.success) {
-                        console.log('注册成功');
+                        //console.log('注册成功');
                         window.location.href = "/user/register-success";
                     }else{
-                        console.log('注册失败');
+                        //console.log('注册失败');
                         showErrorMessage(ajaxResult.message);
                     }
                 },

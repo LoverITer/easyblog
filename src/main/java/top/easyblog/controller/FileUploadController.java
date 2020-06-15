@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import top.easyblog.config.autoconfig.qiniu.QiNiuCloudService;
-import top.easyblog.config.web.AjaxResult;
+import top.easyblog.config.web.WebAjaxResult;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -23,17 +22,11 @@ import java.util.UUID;
  */
 @Controller
 @RequestMapping(value = "/upload")
-public class FileUploadController {
-
-    private final QiNiuCloudService qiNiuCloudService;
-
-    public FileUploadController(QiNiuCloudService qiNiuCloudService) {
-        this.qiNiuCloudService = qiNiuCloudService;
-    }
+public class FileUploadController extends BaseController {
 
     @RequestMapping(value = "/interface1")
-    public AjaxResult fileUpload(@RequestParam(value = "file") MultipartFile multipartFile, HttpServletRequest request, @RequestParam int categoryId) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult fileUpload(@RequestParam(value = "file") MultipartFile multipartFile, HttpServletRequest request, @RequestParam int categoryId) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(false);
         String fileName = multipartFile.getOriginalFilename();
         fileName = System.currentTimeMillis() + "_" + fileName;
@@ -79,8 +72,8 @@ public class FileUploadController {
      */
     @ResponseBody
     @PostMapping(value = "/interface2")
-    public AjaxResult upload2QiNiuCloud(@RequestParam MultipartFile multipartFile) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult upload2QiNiuCloud(@RequestParam MultipartFile multipartFile) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(false);
         try {
             String imageUrl = qiNiuCloudService.putMultipartImage(multipartFile);
@@ -132,8 +125,8 @@ public class FileUploadController {
      */
     @ResponseBody
     @PostMapping(value = "/interface4")
-    public AjaxResult upload2QiNiuCloud(@RequestParam String imgByte64Str) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult upload2QiNiuCloud(@RequestParam String imgByte64Str) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         try {
             if (StringUtil.isNotEmpty(imgByte64Str)) {
                 //把base64字符串转换为字节数组

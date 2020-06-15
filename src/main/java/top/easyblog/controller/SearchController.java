@@ -10,21 +10,13 @@ import top.easyblog.bean.Article;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.service.impl.ArticleServiceImpl;
 
 /**
  * @author huangxin
  */
 @RequestMapping(value = "/search")
 @Controller
-public class SearchController {
-
-    private final ArticleServiceImpl articleService;
-
-
-    public SearchController(ArticleServiceImpl articleService) {
-        this.articleService = articleService;
-    }
+public class SearchController extends BaseController{
 
     /**
      * 搜索结果显示

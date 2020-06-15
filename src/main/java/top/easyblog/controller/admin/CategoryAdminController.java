@@ -2,8 +2,7 @@ package top.easyblog.controller.admin;
 
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +15,8 @@ import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.DefaultImageDispatcherUtils;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.config.autoconfig.qiniu.QiNiuCloudService;
-import top.easyblog.config.web.AjaxResult;
-import top.easyblog.service.impl.ArticleServiceImpl;
-import top.easyblog.service.impl.CategoryServiceImpl;
+import top.easyblog.config.web.WebAjaxResult;
+import top.easyblog.controller.BaseController;
 
 import java.util.Objects;
 
@@ -27,26 +24,15 @@ import java.util.Objects;
 /**
  * 用户后台文章分类管理
  *
- * @visitor huangxin
+ * @author huangxin
  */
+@Slf4j
 @Controller
 @RequestMapping(value = "/manage/category")
-public class CategoryAdminController {
+public class CategoryAdminController extends BaseController {
 
-    private static Logger log = LoggerFactory.getLogger(CategoryAdminController.class);
+
     private final String PREFIX = "/admin/type_manage/";
-    private final String LOGIN_PAGE = "redirect:/user/loginPage";
-    private final CategoryServiceImpl categoryService;
-    private final QiNiuCloudService qiNiuCloudService;
-    private final ArticleServiceImpl articleService;
-
-
-    public CategoryAdminController(CategoryServiceImpl categoryService, QiNiuCloudService qiNiuCloudService, ArticleServiceImpl articleService) {
-        this.categoryService = categoryService;
-        this.qiNiuCloudService = qiNiuCloudService;
-        this.articleService = articleService;
-    }
-
 
     @GetMapping(value = "/list")
     public String categoryPage(@RequestParam(value = "userId") Integer userId,
@@ -67,10 +53,10 @@ public class CategoryAdminController {
 
     @ResponseBody
     @RequestMapping(value = "/changeDisplay")
-    public AjaxResult switchCategoryDisplay(@RequestParam(value = "categoryId") int categoryId,
-                                            @RequestParam(value = "displayStatus") String displayStatus,
-                                            @RequestParam(value = "userId") Integer userId) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult switchCategoryDisplay(@RequestParam(value = "categoryId") int categoryId,
+                                               @RequestParam(value = "displayStatus") String displayStatus,
+                                               @RequestParam(value = "userId") Integer userId) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.isNull(user)) {

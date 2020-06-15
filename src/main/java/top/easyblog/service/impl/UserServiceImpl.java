@@ -10,7 +10,7 @@ import top.easyblog.common.enums.UserPower;
 import top.easyblog.common.util.DefaultImageDispatcherUtils;
 import top.easyblog.common.util.EncryptUtils;
 import top.easyblog.common.util.RegexUtils;
-import top.easyblog.config.web.AjaxResult;
+import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.service.IUserService;
 
@@ -43,9 +43,9 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    public AjaxResult isAuthorized(User user, String inputOldPWD) {
+    public WebAjaxResult isAuthorized(User user, String inputOldPWD) {
         User var0 = getUser(user.getUserId());
-        AjaxResult ajaxResult = new AjaxResult();
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(false);
         if (var0 != null) {
             if (EncryptUtils.getInstance().SHA1(inputOldPWD, "user").equals(var0.getUserPassword())) {
@@ -60,8 +60,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    public AjaxResult isNewPasswordSameOldPassword(String inputOldPWD, String newPWD) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult isNewPasswordSameOldPassword(String inputOldPWD, String newPWD) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(false);
         if (inputOldPWD.equals(newPWD)) {
             ajaxResult.setSuccess(true);
@@ -71,8 +71,9 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-    public AjaxResult isPasswordLegal(String password) {
-        AjaxResult ajaxResult = new AjaxResult();
+    @Override
+    public WebAjaxResult isPasswordLegal(String password) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(true);
         if (password.length() < 11 || password.length() > 20) {
             ajaxResult.setSuccess(false);

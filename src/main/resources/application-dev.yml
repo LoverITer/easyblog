@@ -84,5 +84,3 @@ logging:
     root: debug
     top.easyblog: debug
   file: easyblog-dev.log
-#域名
-domain: 127.0.0.1:8081

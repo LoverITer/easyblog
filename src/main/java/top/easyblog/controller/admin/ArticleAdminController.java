@@ -18,19 +18,15 @@ import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.DefaultImageDispatcherUtils;
 import top.easyblog.common.util.NetWorkUtils;
-import top.easyblog.common.util.RedisUtils;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.config.autoconfig.qiniu.QiNiuCloudService;
-import top.easyblog.config.web.AjaxResult;
+import top.easyblog.config.web.WebAjaxResult;
+import top.easyblog.controller.BaseController;
 import top.easyblog.markdown.TextForm;
 import top.easyblog.service.impl.ArticleServiceImpl;
-import top.easyblog.service.impl.CategoryServiceImpl;
-import top.easyblog.service.impl.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.Executor;
 
 
 /**
@@ -41,28 +37,15 @@ import java.util.concurrent.Executor;
 @Slf4j
 @Controller
 @RequestMapping(value = "/manage/blog")
-public class ArticleAdminController {
+public class ArticleAdminController extends BaseController {
 
-    private final ArticleServiceImpl articleService;
-    private final CategoryServiceImpl categoryService;
-    private final UserServiceImpl userService;
-    private final QiNiuCloudService qiNiuCloudService;
+
     private static final String BLOG_MANAGE_PAGE_PREFIX = "admin/blog_manage";
-    private static final String LOGIN_PAGE = "redirect:/user/loginPage";
-    private static final String ERROR_PAGE = "redirect:/error/error";
     @Autowired
-    private RedisUtils redisUtil;
+    private ArticleServiceImpl articleService;
     @Autowired
     private EmailSender emailUtil;
-    @Autowired
-    private Executor executor;
 
-    public ArticleAdminController(ArticleServiceImpl articleService, CategoryServiceImpl categoryService, UserServiceImpl userService1, QiNiuCloudService qiNiuCloudService) {
-        this.articleService = articleService;
-        this.categoryService = categoryService;
-        this.userService = userService1;
-        this.qiNiuCloudService = qiNiuCloudService;
-    }
 
     @GetMapping(value = "/")
     public String manageBlogArticle(Model model,
@@ -191,9 +174,9 @@ public class ArticleAdminController {
      */
     @ResponseBody
     @PostMapping(value = "/saveArticle/{userId}")
-    public AjaxResult publishArticle(@RequestBody Article article,
-                                     @PathVariable(value = "userId") Integer userId) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult publishArticle(@RequestBody Article article,
+                                        @PathVariable(value = "userId") Integer userId) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
         //从Redis中查询出已经登录User的登录信息
         String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
@@ -275,10 +258,10 @@ public class ArticleAdminController {
 
     @ResponseBody
     @PostMapping(value = "/saveAsDraft/{userId}")
-    public AjaxResult saveArticleAsDraft(Model model,
-                                         @PathVariable(value = "userId") Integer userId,
-                                         @RequestBody Article article) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult saveArticleAsDraft(Model model,
+                                            @PathVariable(value = "userId") Integer userId,
+                                            @RequestBody Article article) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后再操作！");
         //从Redis中查询出已经登录User的登录信息
         User user = UserUtils.getUserFromRedis(userId);
@@ -554,10 +537,10 @@ public class ArticleAdminController {
 
     @ResponseBody
     @PostMapping(value = "/upload_article_img/{userId}")
-    public AjaxResult editArticleFirstImg(@PathVariable(value = "userId") Integer userId,
-                                          @RequestParam long articleId,
-                                          @RequestParam String imgByte64Str) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult editArticleFirstImg(@PathVariable(value = "userId") Integer userId,
+                                             @RequestParam long articleId,
+                                             @RequestParam String imgByte64Str) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后在操作！");
         if (Objects.isNull(userId)) {
             return ajaxResult;

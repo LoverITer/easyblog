@@ -7,21 +7,6 @@
         <property name="size" value="1024"/>
         <property name="readOnly" value="false"/>
     </cache>
-    <resultMap id="BaseResultMap" type="top.easyblog.bean.Article">
-        <id column="article_id" jdbcType="BIGINT" property="articleId"/>
-        <ajaxResult column="article_user" jdbcType="INTEGER" property="articleUser"/>
-        <ajaxResult column="article_topic" jdbcType="VARCHAR" property="articleTopic"/>
-        <ajaxResult column="article_publish_time" jdbcType="TIMESTAMP" property="articlePublishTime"/>
-        <ajaxResult column="article_click" jdbcType="INTEGER" property="articleClick"/>
-        <ajaxResult column="article_category" jdbcType="VARCHAR" property="articleCategory"/>
-        <ajaxResult column="article_status" jdbcType="CHAR" property="articleStatus"/>
-        <ajaxResult column="article_top" jdbcType="BIT" property="articleTop"/>
-        <ajaxResult column="article_type" jdbcType="CHAR" property="articleType"/>
-        <ajaxResult column="article_tags" jdbcType="VARCHAR" property="articleTags"/>
-    </resultMap>
-    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.easyblog.bean.Article">
-        <ajaxResult column="article_content" jdbcType="LONGVARCHAR" property="articleContent"/>
-    </resultMap>
 
     <insert id="save" useGeneratedKeys="true" keyProperty="articleId" keyColumn="article_id"
             parameterType="top.easyblog.bean.Article" flushCache="false">
@@ -35,7 +20,7 @@
     </insert>
 
 
-    <select id="getByPrimaryKey" parameterType="java.lang.Long" useCache="false" resultMap="ResultMapWithBLOBs">
+    <select id="getByPrimaryKey" parameterType="java.lang.Long" useCache="false" resultType="top.easyblog.bean.Article">
         select *
         from article
         where article_id = #{id,jdbcType=BIGINT}

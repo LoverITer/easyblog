@@ -1,7 +1,6 @@
 package top.easyblog.config.schedule;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.easyblog.bean.Article;
@@ -17,11 +16,11 @@ import java.util.Objects;
  * @since 2020/2/8 21:50
  *
  */
+@Slf4j
 @Configuration
 public class UpdateArticleInfoScheduleTask {
 
     private final IArticleService articleService;
-    private static Logger log= LoggerFactory.getLogger(UpdateArticleInfoScheduleTask.class);
 
     public UpdateArticleInfoScheduleTask(IArticleService articleService) {
         this.articleService = articleService;

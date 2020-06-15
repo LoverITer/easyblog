@@ -5,11 +5,10 @@ import com.redfin.sitemapgenerator.WebSitemapGenerator;
 import com.redfin.sitemapgenerator.WebSitemapUrl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import top.easyblog.bean.Article;
 import top.easyblog.service.IArticleService;
-import top.easyblog.service.SeoService;
+import top.easyblog.service.ISeoService;
 
 import java.net.MalformedURLException;
 import java.text.ParseException;
@@ -28,10 +27,9 @@ import java.util.Objects;
  */
 @Slf4j
 @Service
-public class SeoServiceImpl implements SeoService {
+public class SeoServiceImpl implements ISeoService {
 
-    @Value("${domain}")
-    private String domain;
+    private String domain="www.easyblog.top";
     @Autowired
     private IArticleService articleService;
 

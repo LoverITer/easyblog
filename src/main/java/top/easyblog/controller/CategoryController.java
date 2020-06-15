@@ -13,40 +13,23 @@ import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.config.web.AjaxResult;
-import top.easyblog.service.impl.*;
+import top.easyblog.config.web.WebAjaxResult;
+import top.easyblog.service.ICategoryCareService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executor;
 
 /**
  * @author huangxin
  */
 @Controller
 @RequestMapping(value = "/category/details")
-public class CategoryController {
+public class CategoryController extends BaseController{
 
-    private final CategoryServiceImpl categoryServiceImpl;
-    private final CategoryCareServiceImpl categoryCareService;
-    private final ArticleServiceImpl articleService;
-    private final UserServiceImpl userService;
-    private final CommentServiceImpl commentService;
-    private final UserAttentionImpl userAttention;
     @Autowired
-    private Executor executor;
-
-    public CategoryController(CategoryServiceImpl categoryServiceImpl, CategoryCareServiceImpl categoryCareService, ArticleServiceImpl articleService, UserServiceImpl userService, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
-        this.categoryServiceImpl = categoryServiceImpl;
-        this.categoryCareService = categoryCareService;
-        this.articleService = articleService;
-        this.userService = userService;
-        this.commentService = commentService;
-        this.userAttention = userAttention;
-    }
-
+    private ICategoryCareService categoryCareService;
 
     /**
      * 访问分类详细信息页面
@@ -62,9 +45,9 @@ public class CategoryController {
                                       @PathVariable(value = "categoryId") int categoryId,
                                       @PathVariable("userId") int userId,
                                       @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        ControllerUtils.getInstance(categoryServiceImpl, articleService, commentService, userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
+        getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
         //分类的信息
-        Category category = categoryServiceImpl.getCategory(categoryId);
+        Category category = categoryService.getCategory(categoryId);
         if (Objects.nonNull(category)) {
             model.addAttribute("category", category);
         }
@@ -94,7 +77,7 @@ public class CategoryController {
             Category var0 = new Category();
             var0.setCategoryId(categoryId);
             var0.setCategoryClickNum(category.getCategoryClickNum()+1);
-            categoryServiceImpl.updateByPKSelective(var0);
+            categoryService.updateByPKSelective(var0);
         });
         return "category-details";
     }
@@ -109,16 +92,16 @@ public class CategoryController {
      */
     @ResponseBody
     @RequestMapping(value = "/care/{categoryId}")
-    public AjaxResult careCategory(@PathVariable("categoryId") int categoryId,
-                                   @RequestParam("userId") int userId) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult careCategory(@PathVariable("categoryId") int categoryId,
+                                      @RequestParam("userId") int userId) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(false);
         ajaxResult.setMessage("服务异常，请重试！");
         HashMap<String, Object> map = new HashMap<>(8);
         //更新关注数
         map.put("categoryCareNum", 1);
         try {
-            categoryServiceImpl.updateCategoryInfo(categoryId, map);
+            categoryService.updateCategoryInfo(categoryId, map);
             categoryCareService.saveCareInfo(userId, categoryId);
             ajaxResult.setSuccess(true);
             ajaxResult.setMessage("OK");
@@ -138,16 +121,16 @@ public class CategoryController {
      */
     @ResponseBody
     @RequestMapping(value = "/cancelCare/{categoryId}")
-    public AjaxResult cancelCare(@PathVariable("categoryId") int categoryId,
-                                 @RequestParam("userId") int userId) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult cancelCare(@PathVariable("categoryId") int categoryId,
+                                    @RequestParam("userId") int userId) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(false);
         ajaxResult.setMessage("服务异常，请重试！");
         HashMap<String, Object> map = new HashMap<>(8);
         //更新关注数
         map.put("categoryCareNum", -1);
         try {
-            categoryServiceImpl.updateCategoryInfo(categoryId, map);
+            categoryService.updateCategoryInfo(categoryId, map);
             categoryCareService.deleteCareInfo(userId, categoryId);
             ajaxResult.setSuccess(true);
             ajaxResult.setMessage("OK");

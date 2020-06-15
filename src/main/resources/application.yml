@@ -14,7 +14,7 @@ spring:
    mode: HTML
    encoding: UTF-8
    servlet:
-     content-type: text/htmldev
+     content-type: text/html
   #邮件相关配置
   mail:
     host: smtp.qq.com

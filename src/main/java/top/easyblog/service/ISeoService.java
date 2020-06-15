@@ -5,7 +5,7 @@ package top.easyblog.service;
  * @modified ：
  * @since ：2020/06/06 08:26
  */
-public interface SeoService {
+public interface ISeoService {
     /**
      * 生成站点地图内容
      *

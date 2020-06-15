@@ -17,18 +17,12 @@ import top.easyblog.bean.UserSigninLog;
 import top.easyblog.common.email.Email;
 import top.easyblog.common.email.EmailSender;
 import top.easyblog.common.util.*;
-import top.easyblog.config.web.AjaxResult;
-import top.easyblog.service.IUserAccountService;
-import top.easyblog.service.impl.UserEmailLogServiceImpl;
-import top.easyblog.service.impl.UserPhoneLogServiceImpl;
-import top.easyblog.service.impl.UserServiceImpl;
-import top.easyblog.service.impl.UserSigninLogServiceImpl;
+import top.easyblog.config.web.WebAjaxResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.Executor;
 
 import static top.easyblog.bean.UserLoginStatus.UNLOGIN;
 
@@ -38,33 +32,10 @@ import static top.easyblog.bean.UserLoginStatus.UNLOGIN;
 @Slf4j
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController {
 
-    @Autowired
-    private UserServiceImpl userService;
-    @Autowired
-    private UserEmailLogServiceImpl userEmailLogService;
-    @Autowired
-    private UserPhoneLogServiceImpl userPhoneLogService;
     @Autowired
     private EmailSender emailUtil;
-    @Autowired
-    private UserSigninLogServiceImpl userSigninLogService;
-    @Autowired
-    private IUserAccountService userAccountService;
-    @Autowired
-    RedisUtils redisUtil;
-    @Autowired
-    private Executor executor;
-
-    /***ajax异步请求成功标志*/
-    private static final String AJAX_SUCCESS = "OK";
-    /***ajax异步请求失败标志*/
-    private static final String AJAX_ERROR = "FATAL";
-
-    private static final String LOGIN_PAGE = "redirect:/user/loginPage";
-
-    private static final String USER_LOGIN_COOKIE_FLAG = "USER-INFO";
 
 
     @GetMapping("/loginPage")
@@ -141,9 +112,9 @@ public class UserController {
      * 发送消息到手机
      *
      * @param phone   手机号
-     * @param code     验证码
-     * @param content  验证消息文本
-     * @param request    request
+     * @param code    验证码
+     * @param content 验证消息文本
+     * @param request request
      */
     private String sendMessage(String phone, String code, String content, HttpServletRequest request) {
 
@@ -226,15 +197,15 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/register")
-    public AjaxResult register(@RequestParam(value = "nickname", defaultValue = "") String nickname,
-                               @RequestParam(value = "pwd", defaultValue = "") String password,
-                               @RequestParam(value = "account", defaultValue = "") String account,
-                               @RequestParam(value = "code", defaultValue = "") String captchaCode,
-                               HttpServletRequest request) {
+    public WebAjaxResult register(@RequestParam(value = "nickname", defaultValue = "") String nickname,
+                                  @RequestParam(value = "pwd", defaultValue = "") String password,
+                                  @RequestParam(value = "account", defaultValue = "") String account,
+                                  @RequestParam(value = "code", defaultValue = "") String captchaCode,
+                                  HttpServletRequest request) {
         String captcha = (String) redisUtil.get("captcha-code-" + account, 1);
         String ip = NetWorkUtils.getUserIp(request);
         String ipInfo = NetWorkUtils.getLocation(ip);
-        AjaxResult ajaxResult = new AjaxResult();
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         if (userService.getUser(nickname) != null) {
             ajaxResult.setMessage("昵称已存在!");
         } else if (userService.getUser(account) != null) {
@@ -280,8 +251,8 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/checkNickname")
-    public AjaxResult checkUserNickname(@RequestParam(value = "nickname", defaultValue = "") String nickname) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult checkUserNickname(@RequestParam(value = "nickname", defaultValue = "") String nickname) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(true);
         if (!"".equals(nickname)) {
             User user = userService.getUser(nickname);
@@ -300,8 +271,8 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/checkEmailNotExist")
-    public AjaxResult checkUserEmailNotExist(@RequestParam(value = "email", defaultValue = "") String email) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult checkUserEmailNotExist(@RequestParam(value = "email", defaultValue = "") String email) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         if (!"".equals(email)) {
             if (Objects.isNull(userService.getUser(email))) {
                 ajaxResult.setSuccess(true);
@@ -319,8 +290,8 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/checkEmailExist")
-    public AjaxResult checkUserEmailExist(@RequestParam(value = "email", defaultValue = "") String email) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult checkUserEmailExist(@RequestParam(value = "email", defaultValue = "") String email) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         if (!"".equals(email)) {
             if (!Objects.isNull(userService.getUser(email))) {
                 ajaxResult.setSuccess(true);
@@ -331,8 +302,8 @@ public class UserController {
 
     @ResponseBody
     @GetMapping(value = "/checkPhone")
-    public AjaxResult checkUserPhone(@RequestParam(value = "phone", defaultValue = "") String phone) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult checkUserPhone(@RequestParam(value = "phone", defaultValue = "") String phone) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         if (!"".equals(phone)) {
             User user = userService.getUser(phone);
             if (user == null) {
@@ -345,12 +316,12 @@ public class UserController {
     /**
      * 检查用户的密码是否合法
      *
-     * @param password   密码
+     * @param password 密码
      * @return
      */
     @ResponseBody
     @GetMapping(value = "/checkPassword")
-    public AjaxResult checkPassword(@RequestParam("password") String password) {
+    public WebAjaxResult checkPassword(@RequestParam("password") String password) {
         return userService.isPasswordLegal(password);
     }
 
@@ -374,7 +345,7 @@ public class UserController {
                         HttpServletResponse response) {
         User user = userService.checkUser(username, EncryptUtils.getInstance().SHA1(password, "user"));
         String ip = NetWorkUtils.getUserIp(request);
-        String location = NetWorkUtils.getLocation( ip);
+        String location = NetWorkUtils.getLocation(ip);
         try {
             if (user != null) {
                 user.setUserPassword(null);
@@ -383,23 +354,21 @@ public class UserController {
                     redisUtil.hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), RedisUtils.DB_1);
                     //会话信息，如果没有主动退出15天有效
                     redisUtil.expire("user-" + user.getUserId(), 60 * 60 * 24 * 15, RedisUtils.DB_1);
+                    //添加用户的登录信息到Cookie中
+                    CookieUtils.setCookie(request, response, USER_LOGIN_COOKIE_FLAG, JSONObject.toJSONString(user), 60 * 60 * 24 * 15, true);
+                    // 保存用户名密码一个月
+                    if ("on".equals(remember)) {
+                        Object value = CookieUtils.getCookieValue(request, USER_ACCOUNT_FLAG);
+                        if (Objects.isNull(value)) {
+                            CookieUtils.setCookie(request, response, USER_ACCOUNT_FLAG, username + "-" + AESCryptUtils.encryptECB(password, "1a2b3c4d5e6f7g8h"), 60 * 60 * 24 * 30);
+                        }
+                    }
+                    executor.execute(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功")));
+                    return loginRedirectUrl(request);
                 } else {
                     redirectAttributes.addFlashAttribute("error", "您已经登录，请不要重复登录！");
-                    return loginRedirectUrl(request, user);
+                    return loginRedirectUrl(request);
                 }
-                if(Objects.isNull(CookieUtils.getCookieValue(request,USER_LOGIN_COOKIE_FLAG))) {
-                    //添加用户的登录信息到Cookie中
-                    CookieUtils.addCookie(request, response, USER_LOGIN_COOKIE_FLAG, JSONObject.toJSONString(user), 60 * 60 * 24 * 15);
-                }
-                // 保存用户名密码一个月
-                if ("on".equals(remember)) {
-                    Object value = CookieUtils.getCookieValue(request, USER_LOGIN_COOKIE_FLAG);
-                    if (Objects.isNull(value)) {
-                        CookieUtils.setCookie(request, response, USER_LOGIN_COOKIE_FLAG, username + "-" + AESCryptUtils.encryptECB(password, "1a2b3c4d5e6f7g8h"), 60 * 60 * 24 * 30);
-                    }
-                }
-                executor.execute(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功")));
-                return loginRedirectUrl(request, user);
             } else {
                 redirectAttributes.addFlashAttribute("error", "登录失败！用户名和密码不匹配！");
                 return LOGIN_PAGE;
@@ -418,22 +387,6 @@ public class UserController {
         }
     }
 
-    /**
-     * 跳转到用户登录前的页面
-     *
-     * @param request HttpServletRequest
-     * @param user    用户信息
-     * @return java.lang.String
-     */
-    public String loginRedirectUrl(HttpServletRequest request, User user) {
-        String refererUrl = (String) redisUtil.get("Referer-" + NetWorkUtils.getUserIp(request), RedisUtils.DB_1);
-        if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
-            //登录成功后删除对应的key
-            redisUtil.delete(RedisUtils.DB_1, "Referer-" + NetWorkUtils.getUserIp(request));
-            return "redirect:" + refererUrl;
-        }
-        return "redirect:/article/index/" + user.getUserId();
-    }
 
     /**
      * 退出操作
@@ -444,8 +397,8 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/logout")
-    public AjaxResult logout(@RequestParam int userId, HttpServletRequest request, HttpServletResponse response) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult logout(@RequestParam int userId, HttpServletRequest request, HttpServletResponse response) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage(AJAX_ERROR);
         if (userId <= 0) {
             return ajaxResult;
@@ -468,8 +421,8 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/checkUserStatus")
-    public AjaxResult checkUserLoginStatus(@RequestParam int userId) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult checkUserLoginStatus(@RequestParam int userId) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage(UNLOGIN.getStatus() + "");
         if (redisUtil.hHasKey("user-" + userId, "user", RedisUtils.DB_1)) {
             ajaxResult.setMessage(JSON.toJSONString(UserUtils.getUserFromRedis(userId)));
@@ -483,10 +436,10 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping("/modifyPwd")
-    public AjaxResult modifyPassword(@RequestParam("account") String account,
-                                     @RequestParam("newPassword") String newPassword,
-                                     @RequestParam(value = "code", defaultValue = "") String code) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult modifyPassword(@RequestParam("account") String account,
+                                        @RequestParam("newPassword") String newPassword,
+                                        @RequestParam(value = "code", defaultValue = "") String code) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(false);
         String captchaCode = (String) redisUtil.get("captcha-code-" + account, RedisUtils.DB_1);
         if (!code.equalsIgnoreCase(captchaCode)) {
@@ -522,11 +475,11 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/aboutMe")
-    public AjaxResult settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo,
-                                     @RequestParam(defaultValue = "-1") Integer userId,
-                                     HttpServletResponse response,
-                                     HttpServletRequest request) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult settingAboutMe(@RequestParam(value = "aboutMeInfo") String aboutMeInfo,
+                                        @RequestParam(defaultValue = "-1") Integer userId,
+                                        HttpServletResponse response,
+                                        HttpServletRequest request) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
@@ -556,22 +509,22 @@ public class UserController {
      *
      * @param github  Github
      * @param wechat  微信
-     * @param qq       QQ
-     * @param weibo    微博
-     * @param twitter  推特
-     * @param steam    Steam
-     * @param userId    用户Id
+     * @param qq      QQ
+     * @param weibo   微博
+     * @param twitter 推特
+     * @param steam   Steam
+     * @param userId  用户Id
      */
     @ResponseBody
     @GetMapping(value = "/settingContact")
-    public AjaxResult settingContact(@RequestParam String github,
-                                     @RequestParam String wechat,
-                                     @RequestParam String qq,
-                                     @RequestParam String weibo,
-                                     @RequestParam String twitter,
-                                     @RequestParam String steam,
-                                     @RequestParam(defaultValue = "-1") Integer userId) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult settingContact(@RequestParam String github,
+                                        @RequestParam String wechat,
+                                        @RequestParam String qq,
+                                        @RequestParam String weibo,
+                                        @RequestParam String twitter,
+                                        @RequestParam String steam,
+                                        @RequestParam(defaultValue = "-1") Integer userId) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
@@ -603,11 +556,11 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/settingHobby")
-    public AjaxResult setUserHobby(@RequestParam String hobby,
-                                   @RequestParam(defaultValue = "-1") Integer userId,
-                                   HttpServletResponse response,
-                                   HttpServletRequest request) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult setUserHobby(@RequestParam String hobby,
+                                      @RequestParam(defaultValue = "-1") Integer userId,
+                                      HttpServletResponse response,
+                                      HttpServletRequest request) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {
@@ -639,11 +592,11 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping(value = "/settingTech")
-    public AjaxResult settingTech(@RequestParam String techStr,
-                                  @RequestParam(defaultValue = "-1") Integer userId,
-                                  HttpServletResponse response,
-                                  HttpServletRequest request) {
-        AjaxResult ajaxResult = new AjaxResult();
+    public WebAjaxResult settingTech(@RequestParam String techStr,
+                                     @RequestParam(defaultValue = "-1") Integer userId,
+                                     HttpServletResponse response,
+                                     HttpServletRequest request) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
         User user = UserUtils.getUserFromRedis(userId);
         if (Objects.nonNull(user)) {

@@ -53,9 +53,11 @@ public final class NetWorkUtils {
             ip=request.getHeader("X-Real-IP");
             if(!isIpValid(ip)){
                 ip = request.getHeader("X-Forward-For");
-                int index = ip.indexOf(',');
-                if (index != -1) {
-                   ip= ip.substring(0, index);
+                if(ip!=null) {
+                    int index = ip.indexOf(',');
+                    if (index != -1) {
+                        ip = ip.substring(0, index);
+                    }
                 }
             }
 
@@ -148,11 +150,9 @@ public final class NetWorkUtils {
          * 返回的数据格式： if(window.IPCallBack) {IPCallBack({"ip":"117.136.86.247","pro":"陕西省","proCode":"610000","city":"西安市","cityCode":"610100","region":"","regionCode":"0","addr":"陕西省西安市 移通","regionNames":"","err":""});}
          */
         String body = response.getBody();
-        log.info("解析出Ip: {} 的地理信息: {}",ip,body);
         assert body != null;
         int start = body.indexOf("{IPCallBack(")+12;
         String jsonStr=body.substring(start,body.lastIndexOf(')'));
-        System.out.println(jsonStr);
         JSONObject jsonObject = JSONObject.parseObject(jsonStr);
         return (String) jsonObject.get("addr");
     }

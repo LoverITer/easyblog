@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import top.easyblog.service.SeoService;
+import top.easyblog.service.ISeoService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.Writer;
@@ -22,7 +22,7 @@ import java.io.Writer;
 public class SiteMapController {
 
     @Autowired
-    private SeoService seoService;
+    private ISeoService seoService;
 
     @GetMapping(value = {"/sitemap.xml","baidusitemap.xml"})
     public void generateSiteMap(HttpServletResponse response) throws Exception{

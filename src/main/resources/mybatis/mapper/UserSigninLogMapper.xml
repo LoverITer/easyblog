@@ -9,10 +9,10 @@
   </cache>
   <resultMap id="BaseResultMap" type="top.easyblog.bean.UserSigninLog">
     <id column="log_id" jdbcType="BIGINT" property="logId" />
-    <ajaxResult column="user_id" jdbcType="INTEGER" property="userId" />
-    <ajaxResult column="login_ip" jdbcType="VARCHAR" property="loginIp" />
-    <ajaxResult column="login_location" jdbcType="VARCHAR" property="loginLocation" />
-    <ajaxResult column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
+    <result column="login_location" jdbcType="VARCHAR" property="loginLocation" />
+    <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
   </resultMap>
 
 

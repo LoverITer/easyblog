@@ -218,6 +218,10 @@ public class CookieUtils {
             }
             cookie.setPath("/");
             response.addCookie(cookie);
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie1 : cookies) {
+                System.out.println(cookie1.getName());
+            }
         } catch (Exception e) {
             log.error("Cookie Encode Error.", e);
         }
@@ -257,16 +261,22 @@ public class CookieUtils {
         String domainName = null;
 
         String serverName = request.getRequestURL().toString();
-        if (serverName == null || serverName.equals("")) {
+        if (serverName == null || "".equals(serverName)) {
             domainName = "";
         } else {
             serverName = serverName.toLowerCase();
-            serverName = serverName.substring(7);
+            serverName = serverName.substring(serverName.indexOf("//")+2);
             final int end = serverName.indexOf("/");
-            serverName = serverName.substring(0, end);
+            if(end!=-1) {
+                serverName = serverName.substring(0, end);
+            }
             final String[] domains = serverName.split("\\.");
             int len = domains.length;
-            if (len > 3) {
+
+            if (len >= 4) {
+                //127.0.0.1:8080
+                domainName = domains[len - 4] + "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
+            } else if (len > 3) {
                 // www.xxx.com.cn
                 domainName = domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
             } else if (len <= 3 && len > 1) {
@@ -277,10 +287,39 @@ public class CookieUtils {
             }
         }
 
-        if (domainName != null && domainName.indexOf(":") > 0) {
-            String[] ary = domainName.split("\\:");
+       if (domainName != null && domainName.indexOf(":") > 0) {
+            String[] ary = domainName.split(":");
             domainName = ary[0];
         }
         return domainName;
+    }
+
+
+    public static void main(String[] args) {
+        String domainName = null;
+
+        String serverName = "http://127.0.0.1:8081/usr/login";
+        serverName = serverName.toLowerCase();
+        serverName = serverName.substring(serverName.indexOf("//")+2);
+        final int end = serverName.indexOf("/");
+        if(end!=-1) {
+            serverName = serverName.substring(0, end);
+        }
+        final String[] domains = serverName.split("\\.");
+        int len = domains.length;
+
+        if (len >= 4) {
+            //127.0.0.1:8080
+            domainName = domains[len - 4] + "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
+        } else if (len > 3) {
+            // www.xxx.com.cn
+            domainName = domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
+        } else if (len <= 3 && len > 1) {
+            // xxx.com or xxx.cn
+            domainName = domains[len - 2] + "." + domains[len - 1];
+        } else {
+            domainName = serverName;
+        }
+        System.out.println(domainName);
     }
 }

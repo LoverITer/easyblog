@@ -13,7 +13,6 @@ import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.CollectionUtils;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.service.IArticleService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
@@ -27,12 +26,11 @@ import java.util.Objects;
 @Slf4j
 @Controller
 @RequestMapping(value = "/")
-public class WelcomeController {
+public class WelcomeController extends BaseController{
 
-    private final IArticleService articleService;
 
     /**
-     * 点击排序前8的文章数
+     * 点击量排序前8的文章数
      */
     private static final int TOP_EIGHT_ARTICLE = 8;
 
@@ -44,9 +42,6 @@ public class WelcomeController {
     /**默认置顶显示的文章数*/
     private static final int DEFAULT_DISPLAY_HOT_ARTICLE_SIZE = 22;
 
-    public WelcomeController(IArticleService articleService) {
-        this.articleService = articleService;
-    }
 
     /**
      * 访问网站首页
@@ -87,7 +82,7 @@ public class WelcomeController {
             List<Article> likes = articleService.getYouMayAlsoLikeArticles();
             model.addAttribute("likes", likes);
         } catch (Exception e) {
-            log.error( e.getMessage() + "@ index() line 78");
+            log.error( e.getMessage() + " @ index() line 78");
         }
         return "index";
     }

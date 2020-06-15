@@ -2,6 +2,7 @@ package top.easyblog.common.email;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class EmailSender {
 
 
-    private final JavaMailSenderImpl mailSender;
+    private final JavaMailSender mailSender;
 
     public EmailSender(JavaMailSenderImpl mailSender) {
         this.mailSender = mailSender;

@@ -9,9 +9,9 @@
   </cache>
   <resultMap id="BaseResultMap" type="top.easyblog.bean.UserAttention">
     <id column="id" jdbcType="SMALLINT" property="id" />
-    <ajaxResult column="user_id" jdbcType="INTEGER" property="userId" />
-    <ajaxResult column="attention_id" jdbcType="INTEGER" property="attentionId" />
-    <ajaxResult column="attention_time" jdbcType="TIMESTAMP" property="attentionTime" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="attention_id" jdbcType="INTEGER" property="attentionId" />
+    <result column="attention_time" jdbcType="TIMESTAMP" property="attentionTime" />
   </resultMap>
 
   <insert id="save" parameterType="top.easyblog.bean.UserAttention">

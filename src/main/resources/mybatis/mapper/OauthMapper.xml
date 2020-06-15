@@ -3,13 +3,13 @@
 <mapper namespace="top.easyblog.mapper.OauthMapper">
   <resultMap id="BaseResultMap" type="top.easyblog.oauth2.bean.Oauth">
     <id column="oauth_id" jdbcType="INTEGER" property="oauthId" />
-    <ajaxResult column="open_id" jdbcType="VARCHAR" property="openId" />
-    <ajaxResult column="app_type" jdbcType="VARCHAR" property="appType" />
-    <ajaxResult column="status" jdbcType="CHAR" property="status" />
-    <ajaxResult column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="app_type" jdbcType="VARCHAR" property="appType" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.easyblog.oauth2.bean.Oauth">
-    <ajaxResult column="user_id" jdbcType="LONGVARCHAR" property="userId" />
+    <result column="user_id" jdbcType="LONGVARCHAR" property="userId" />
   </resultMap>
 
 

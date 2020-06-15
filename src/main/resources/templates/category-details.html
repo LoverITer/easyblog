@@ -167,7 +167,7 @@
                     </div>
                 </div>
             </div>
-            <div th:if="${!#lists.isEmpty(categoryArticles)&&categoryArticles.getTotal()<=10&&categoryArticles.getTotal()>0}" class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
+            <div th:if="${!#lists.isEmpty(categoryArticles)&&categoryArticles.getTotal()<=10}" class="ui bottom attached segment" style="border-top: none !important;padding: 1px 0 !important;"></div>
 
             <!--分页按钮-->
             <div th:if="${categoryArticles.getTotal()>10}" class="ui bottom attached segment"
