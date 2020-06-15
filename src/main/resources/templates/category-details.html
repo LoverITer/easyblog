@@ -167,7 +167,7 @@
                     </div>
                 </div>
             </div>
-            <div th:if="${!#lists.isEmpty(categoryArticles)&&categoryArticles.getTotal()<=10&&categoryArticles.getTotal()>0}" class="ui bottom attached segment" style="border-top: none !important;padding: 0 0 !important;"></div>
+            <div th:if="${!#lists.isEmpty(categoryArticles)&&categoryArticles.getTotal()<=10}" class="ui bottom attached segment" style="border-top: none !important;padding: 1px 0 !important;"></div>
 
             <!--分页按钮-->
             <div th:if="${categoryArticles.getTotal()>10}" class="ui bottom attached segment"
@@ -312,8 +312,8 @@
                     $('#care_id').val("true");
                     changeBtn();
                 },
-                error: function (result) {
-                    showErrorMessage(result.message);
+                error: function (ajaxResult) {
+                    showErrorMessage(ajaxResult.message);
                 }
             })
         } else if ("取消关注" == btnHtml) {
@@ -327,8 +327,8 @@
                     $('#care_id').val("false");
                     changeBtn();
                 },
-                error: function (result) {
-                    showErrorMessage(result.message);
+                error: function (ajaxResult) {
+                    showErrorMessage(ajaxResult.message);
                 }
             })
         }

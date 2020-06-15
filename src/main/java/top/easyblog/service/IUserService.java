@@ -1,6 +1,7 @@
 package top.easyblog.service;
 
 import top.easyblog.bean.User;
+import top.easyblog.config.web.WebAjaxResult;
 
 /**
  * @author huanxin
@@ -87,4 +88,12 @@ public interface IUserService {
      * @return int
      */
     int deleteUserByPK(int userId);
+
+    /**
+     * 判断用户密码是否合法
+     *
+     * @param password   用户密码
+     * @return
+     */
+    WebAjaxResult isPasswordLegal(String password);
 }

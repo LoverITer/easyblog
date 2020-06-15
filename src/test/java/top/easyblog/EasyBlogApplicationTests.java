@@ -13,7 +13,7 @@ import top.easyblog.common.util.NetWorkUtils;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.mapper.UserPowerMapper;
-import top.easyblog.service.impl.GitHubAuthServiceImpl;
+import top.easyblog.oauth2.impl.GitHubAuthServiceImpl;
 
 import java.io.IOException;
 import java.util.List;

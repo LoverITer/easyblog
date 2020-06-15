@@ -7,6 +7,7 @@
         <property name="size" value="1024" />
         <property name="readOnly" value="false" />
     </cache>
+
     <insert id="save" useGeneratedKeys="true" keyColumn="category_care_id" >
         insert into category_care(category_id, category_care_user_id) value
         (#{categoryId},#{categoryCareUserId})

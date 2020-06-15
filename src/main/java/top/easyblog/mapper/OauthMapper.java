@@ -2,8 +2,8 @@ package top.easyblog.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import top.easyblog.bean.oauth2.Oauth;
 import top.easyblog.mapper.core.BaseMapper;
+import top.easyblog.oauth2.bean.Oauth;
 
 import java.util.List;
 

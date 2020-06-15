@@ -10,7 +10,7 @@ import top.easyblog.common.enums.UserPower;
 import top.easyblog.common.util.DefaultImageDispatcherUtils;
 import top.easyblog.common.util.EncryptUtils;
 import top.easyblog.common.util.RegexUtils;
-import top.easyblog.config.web.Result;
+import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.service.IUserService;
 
@@ -43,42 +43,43 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    public Result isAuthorized(User user, String inputOldPWD) {
+    public WebAjaxResult isAuthorized(User user, String inputOldPWD) {
         User var0 = getUser(user.getUserId());
-        Result result = new Result();
-        result.setSuccess(false);
+        WebAjaxResult ajaxResult = new WebAjaxResult();
+        ajaxResult.setSuccess(false);
         if (var0 != null) {
             if (EncryptUtils.getInstance().SHA1(inputOldPWD, "user").equals(var0.getUserPassword())) {
-                result.setSuccess(true);
+                ajaxResult.setSuccess(true);
             } else {
-                result.setMessage("旧密码输入错误");
+                ajaxResult.setMessage("旧密码输入错误");
             }
         } else {
-            result.setMessage("用户未登录");
+            ajaxResult.setMessage("用户未登录");
         }
-        return result;
+        return ajaxResult;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    public Result isNewPasswordSameOldPassword(String inputOldPWD, String newPWD) {
-        Result result = new Result();
-        result.setSuccess(false);
+    public WebAjaxResult isNewPasswordSameOldPassword(String inputOldPWD, String newPWD) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
+        ajaxResult.setSuccess(false);
         if (inputOldPWD.equals(newPWD)) {
-            result.setSuccess(true);
-            result.setMessage("新旧密码不能一样");
+            ajaxResult.setSuccess(true);
+            ajaxResult.setMessage("新旧密码不能一样");
         }
-        return result;
+        return ajaxResult;
     }
 
 
-    public Result isPasswordLegal(String password) {
-        Result result = new Result();
-        result.setSuccess(true);
+    @Override
+    public WebAjaxResult isPasswordLegal(String password) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
+        ajaxResult.setSuccess(true);
         if (password.length() < 11 || password.length() > 20) {
-            result.setSuccess(false);
-            result.setMessage("密码长度必须介于11-20个字符");
+            ajaxResult.setSuccess(false);
+            ajaxResult.setMessage("密码长度必须介于11-20个字符");
         }
-        return result;
+        return ajaxResult;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)

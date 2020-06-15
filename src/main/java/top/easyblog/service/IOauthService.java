@@ -1,6 +1,6 @@
 package top.easyblog.service;
 
-import top.easyblog.common.enums.oauth2.AppType;
+import top.easyblog.oauth2.enums.AppType;
 
 /**
  * 第三方登录授权后用户信息保存

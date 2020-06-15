@@ -34,5 +34,20 @@
       "name": "domain",
       "type": "java.lang.String",
       "description": "Description for domain."
+    },
+    {
+      "name": "project.version",
+      "type": "java.lang.String",
+      "description": "Description for easyblog.version."
+    },
+    {
+      "name": "project.name",
+      "type": "java.lang.String",
+      "description": "Description for easyblog.name."
+    },
+    {
+      "name": "project.engineering-code",
+      "type": "java.lang.String",
+      "description": "Description for project.engineering-code."
     }
   ] }

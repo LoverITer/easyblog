@@ -16,15 +16,13 @@ import top.easyblog.bean.UserComment;
 import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
-import top.easyblog.common.util.RedisUtils;
 import top.easyblog.common.util.UserUtils;
 import top.easyblog.markdown.TextForm;
-import top.easyblog.service.impl.*;
+import top.easyblog.service.impl.UserAccountImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executor;
 
 /**
  * @author huangxin
@@ -32,39 +30,16 @@ import java.util.concurrent.Executor;
 @Slf4j
 @Controller
 @RequestMapping("/article")
-public class ArticleController {
-
-
-    private final UserServiceImpl userService;
-    private final CategoryServiceImpl categoryServiceImpl;
-    private final ArticleServiceImpl articleServiceImpl;
-    private final CommentServiceImpl commentService;
-    private final UserAttentionImpl userAttention;
-    private final UserAccountImpl userAccount;
+public class ArticleController extends BaseController {
 
     @Autowired
-    RedisUtils redisUtil;
-
-    @Autowired
-    private Executor executor;
-    /**
-     * 404页面路径
-     */
-    private static final String PAGE404 = "redirect:/error/404";
+    private UserAccountImpl userAccount;
 
     /**
      * 关于我页面的默认文章显示数
      **/
     private static final int HOME_PAGE_DEFAULT_ARTICLE_SIZE = 15;
 
-    public ArticleController(CategoryServiceImpl categoryServiceImpl, UserServiceImpl userService, ArticleServiceImpl articleServiceImpl, CommentServiceImpl commentService, UserAttentionImpl userAttention, UserAccountImpl userAccount) {
-        this.categoryServiceImpl = categoryServiceImpl;
-        this.userService = userService;
-        this.articleServiceImpl = articleServiceImpl;
-        this.commentService = commentService;
-        this.userAttention = userAttention;
-        this.userAccount = userAccount;
-    }
 
     /**
      * 访问个人博客首页<br/>
@@ -84,11 +59,10 @@ public class ArticleController {
         User visitor = UserUtils.getUserFromCookie(request);
         model.addAttribute("visitor", visitor);
         try {
-            ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl,
-                    commentService, userAttention).getArticleUserInfo(model, userId, articleType + "");
+            getArticleUserInfo(model, userId, articleType + "");
             User author = userService.getUser(userId);
             PageParam pageParam = new PageParam(page, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
-            PageInfo articlePages = articleServiceImpl.getUserArticlesPage(userId, articleType + "", pageParam);
+            PageInfo articlePages = articleService.getUserArticlesPage(userId, articleType + "", pageParam);
             model.addAttribute("articlePages", articlePages);
             author.setUserPassword(null);
             model.addAttribute("author", author);
@@ -116,7 +90,7 @@ public class ArticleController {
         try {
             User author = userService.getUser(userId);
             author.setUserPassword(null);
-            List<Article> articles = articleServiceImpl.getUserArticles(userId, ArticleType.Unlimited.getArticleType());
+            List<Article> articles = articleService.getUserArticles(userId, ArticleType.Unlimited.getArticleType());
             if (Objects.nonNull(articles)) {
                 int articleSize = articles.size();
                 //默认值显示15篇文章
@@ -170,7 +144,7 @@ public class ArticleController {
                                  @RequestParam(required = false) Integer visitorUId) {
         try {
             //根据id拿到文章
-            Article article = articleServiceImpl.getArticleById(articleId, TextForm.HTML);
+            Article article = articleService.getArticleById(articleId, TextForm.HTML);
             if (Objects.nonNull(article)) {
                 model.addAttribute("article", article);
                 //文章评论
@@ -185,8 +159,7 @@ public class ArticleController {
                     author.setUserPassword(null);
                     model.addAttribute("author", author);
                     //查询共享的信息
-                    ControllerUtils.getInstance(categoryServiceImpl, articleServiceImpl, commentService, userAttention)
-                            .getArticleUserInfo(model, author.getUserId(), ArticleType.Original.getArticleType());
+                    getArticleUserInfo(model, author.getUserId(), ArticleType.Original.getArticleType());
                     executor.execute(() -> {
                         //更新用户的访问量
                         User user1 = new User();
@@ -197,7 +170,7 @@ public class ArticleController {
                         Article article1 = new Article();
                         article1.setArticleId(article.getArticleId());
                         article1.setArticleClick(article.getArticleClick() + 1);
-                        articleServiceImpl.updateSelective(article1);
+                        articleService.updateSelective(article1);
                     });
                 }
                 return "blog";

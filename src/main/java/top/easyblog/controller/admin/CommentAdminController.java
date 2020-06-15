@@ -12,7 +12,8 @@ import top.easyblog.bean.UserComment;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.config.web.Result;
+import top.easyblog.config.web.WebAjaxResult;
+import top.easyblog.controller.BaseController;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
 import top.easyblog.service.impl.UserServiceImpl;
@@ -24,11 +25,9 @@ import java.util.Objects;
  */
 @Controller
 @RequestMapping(value = "/manage/comment")
-public class CommentAdminController {
+public class CommentAdminController extends BaseController {
 
     private static final String PREFIX = "/admin/comment_manage/";
-    private static final String LOGIN_PAGE = "redirect:/user/loginPage";
-    private final CommentServiceImpl commentService;
 
 
     public CommentAdminController(CommentServiceImpl commentService, ArticleServiceImpl articleService, UserServiceImpl userService) {
@@ -71,20 +70,20 @@ public class CommentAdminController {
 
     @ResponseBody
     @GetMapping(value = "/delete")
-    public Result deleteComment(@RequestParam Integer userId,
-                                @RequestParam int commentId) {
+    public WebAjaxResult deleteComment(@RequestParam Integer userId,
+                                       @RequestParam int commentId) {
         User user = UserUtils.getUserFromRedis(userId);
-        Result result = new Result();
-        result.setMessage("请登录后再操作！");
+        WebAjaxResult ajaxResult = new WebAjaxResult();
+        ajaxResult.setMessage("请登录后再操作！");
         if (Objects.nonNull(user)) {
             int var0 = commentService.deleteComment(commentId);
             if (var0 == 1) {
-                result.setSuccess(true);
+                ajaxResult.setSuccess(true);
             }
-            result.setMessage("抱歉！删除失败");
-            return result;
+            ajaxResult.setMessage("抱歉！删除失败");
+            return ajaxResult;
         }
-        return result;
+        return ajaxResult;
     }
 
 

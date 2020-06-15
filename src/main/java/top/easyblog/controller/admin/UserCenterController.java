@@ -1,47 +1,33 @@
 package top.easyblog.controller.admin;
 
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import top.easyblog.autoconfig.qiniu.QiNiuCloudService;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserAttention;
-import top.easyblog.common.util.*;
-import top.easyblog.config.web.Result;
-import top.easyblog.service.impl.UserAttentionImpl;
-import top.easyblog.service.impl.UserServiceImpl;
+import top.easyblog.common.util.CalendarUtils;
+import top.easyblog.common.util.CombineBeans;
+import top.easyblog.common.util.UserProfessionUtils;
+import top.easyblog.common.util.UserUtils;
+import top.easyblog.config.web.WebAjaxResult;
+import top.easyblog.controller.BaseController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.Executor;
 
 /**
  * @author huangxin
  */
 @Controller
 @RequestMapping(value = "/manage/uc")
-public class UserCenterController {
+public class UserCenterController extends BaseController {
 
     private final String PREFIX = "admin/personalInfo";
-    private final String LOGIN_PAGE = "redirect:/user/loginPage";
-    private final UserServiceImpl userService;
-    private final UserAttentionImpl userAttentionService;
-    private final QiNiuCloudService qiNiuCloudService;
-    @Autowired
-    private RedisUtils redisUtils;
-    @Autowired
-    private Executor executor;
 
-    public UserCenterController(UserServiceImpl userService, UserAttentionImpl userAttentionService, QiNiuCloudService qiNiuCloudService) {
-        this.userService = userService;
-        this.userAttentionService = userAttentionService;
-        this.qiNiuCloudService = qiNiuCloudService;
-    }
 
     @GetMapping(value = "/profile")
     public String center(@RequestParam Integer userId, Model model) {
@@ -100,7 +86,7 @@ public class UserCenterController {
             model.addAttribute("visitor", user);
             UserAttention var0 = new UserAttention();
             var0.setAttentionId(user.getUserId());
-            List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var0);
+            List<UserAttention> attentionInfo = userAttention.getAllUserAttentionInfo(var0);
             model.addAttribute("attentionInfo", attentionInfo);
             model.addAttribute("follow-list", 1);
             return PREFIX + "/personal-care";
@@ -110,20 +96,20 @@ public class UserCenterController {
 
     @ResponseBody
     @RequestMapping(value = "/cancelAttention")
-    public Result cancelAttention(@RequestParam Integer userId, @RequestParam(value = "attentionId") int attentionId) {
+    public WebAjaxResult cancelAttention(@RequestParam Integer userId, @RequestParam(value = "attentionId") int attentionId) {
         User user = UserUtils.getUserFromRedis(userId);
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+        WebAjaxResult ajaxResult = new WebAjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         if (Objects.nonNull(user)) {
-            int res = userAttentionService.deleteByPK(attentionId);
+            int res = userAttention.deleteByPK(attentionId);
             if (res > 0) {
-                result.setSuccess(true);
-                result.setMessage("OK");
+                ajaxResult.setSuccess(true);
+                ajaxResult.setMessage("OK");
             } else {
-                result.setMessage("服务异常，请重试！");
+                ajaxResult.setMessage("服务异常，请重试！");
             }
         }
-        return result;
+        return ajaxResult;
     }
 
 
@@ -135,7 +121,7 @@ public class UserCenterController {
             model.addAttribute("visitor", user);
             UserAttention var1 = new UserAttention();
             var1.setUserId(user.getUserId());
-            List<UserAttention> attentionInfo = userAttentionService.getAllUserAttentionInfo(var1);
+            List<UserAttention> attentionInfo = userAttention.getAllUserAttentionInfo(var1);
             model.addAttribute("attentionInfo", attentionInfo);
             model.addAttribute("fans-list", 1);
             return PREFIX + "/personal-follower";
@@ -153,13 +139,13 @@ public class UserCenterController {
      */
     @ResponseBody
     @PostMapping(value = "/uploadImg", produces = "application/json;charset=UTF-8")
-    public Result changeHeaderImage(@RequestBody Map<String, String> map,
-                                    @RequestParam Integer userId,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response) {
+    public WebAjaxResult changeHeaderImage(@RequestBody Map<String, String> map,
+                                           @RequestParam Integer userId,
+                                           HttpServletRequest request,
+                                           HttpServletResponse response) {
         User user = UserUtils.getUserFromRedis(userId);
-        Result result = new Result();
-        result.setMessage("请登录后重试！");
+        WebAjaxResult ajaxResult = new WebAjaxResult();
+        ajaxResult.setMessage("请登录后重试！");
         if (Objects.nonNull(user)) {
             try {
                 String image = map.get("image");
@@ -179,14 +165,14 @@ public class UserCenterController {
                 }
                 User user1 = CombineBeans.combine(var0, user);
                 executor.execute(() -> UserUtils.updateLoggedUserInfo(user1, request, response));
-                result.setSuccess(true);
-                result.setMessage("头像上传成功");
+                ajaxResult.setSuccess(true);
+                ajaxResult.setMessage("头像上传成功");
             } catch (Exception e) {
                 e.printStackTrace();
-                result.setMessage("服务异常，请重试！");
+                ajaxResult.setMessage("服务异常，请重试！");
             }
         }
-        return result;
+        return ajaxResult;
     }
 
 }

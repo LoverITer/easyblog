@@ -6,7 +6,6 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import top.easyblog.bean.User;
 import top.easyblog.config.ApplicationContextHolder;
 import top.easyblog.config.redis.ObjectRedisTemplate;
 
@@ -76,7 +75,7 @@ public class RedisUtils {
 
     public static RedisUtils getRedisUtils() {
         if (Objects.isNull(redisUtils)) {
-            synchronized (User.class) {
+            synchronized (RedisUtils.class) {
                 redisUtils = ApplicationContextHolder.getBean("redisUtils");
             }
         }

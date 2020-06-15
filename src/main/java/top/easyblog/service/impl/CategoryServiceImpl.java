@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.bean.Category;
+import top.easyblog.common.exception.IllegalPageParameterException;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.util.DefaultImageDispatcherUtils;
-import top.easyblog.handler.exception.IllegalPageParameterException;
 import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.service.ICategoryService;
 

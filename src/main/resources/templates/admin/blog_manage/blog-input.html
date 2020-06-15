@@ -446,11 +446,11 @@
                         articleContent: content
                     }),
                     dataType: "json",     //服务器返回的数据类型
-                    success: function (result) {
+                    success: function (ajaxResult) {
                         _loadingClose();
                         //返回文章的id
-                        articleId = result.message;
-                        if (result.success) {
+                        articleId = ajaxResult.message;
+                        if (ajaxResult.success) {
                             showSuccessMessage("已成功保存至草稿箱");
                             //把articleId存起来
                             localStorage.setItem('articleId', articleId);
@@ -458,12 +458,12 @@
                             savedCount=1;
                             window.location.href="/manage/blog/edit?articleId="+localStorage.getItem("articleId")+"&userId="+userId;
                         } else {
-                            showErrorMessage(result.message);
+                            showErrorMessage(ajaxResult.message);
                         }
                     },
-                    error: function (result) {
+                    error: function (ajaxResult) {
                         _loadingClose();
-                        showErrorMessage(result.message);
+                        showErrorMessage(ajaxResult.message);
                     }
                 });
             }
@@ -519,21 +519,21 @@
                         articleContent: content
                     }),
                     dataType: "json",     //服务器返回的数据类型
-                    success: function (result) {
+                    success: function (ajaxResult) {
                         _loadingClose();
-                        let articleId = result.message;
-                        if (result.success) {
+                        let articleId = ajaxResult.message;
+                        if (ajaxResult.success) {
                             localStorage.removeItem("articleId");
                             savedCount=1;
                             //跳转到成功页面
                             window.location.href = "/manage/blog/success/" + articleId+"/"+userId ;
                         } else {
-                            showErrorMessage(result.message);
+                            showErrorMessage(ajaxResult.message);
                         }
                     },
-                    error: function (result) {
+                    error: function (ajaxResult) {
                         _loadingClose();
-                        showErrorMessage(result.message);
+                        showErrorMessage(ajaxResult.message);
                     }
                 });
             }

@@ -10,22 +10,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserSigninLog;
-import top.easyblog.bean.oauth2.GitHubUser;
-import top.easyblog.common.enums.oauth2.AppType;
 import top.easyblog.common.util.CookieUtils;
 import top.easyblog.common.util.NetWorkUtils;
 import top.easyblog.common.util.RedisUtils;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.service.IAuthService;
+import top.easyblog.oauth2.IAuthService;
+import top.easyblog.oauth2.bean.GitHubUser;
+import top.easyblog.oauth2.enums.AppType;
 import top.easyblog.service.IOauthService;
-import top.easyblog.service.IUserService;
-import top.easyblog.service.impl.UserSigninLogServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.concurrent.Executor;
 
 /**
  * 提供各种登录认证的控制器
@@ -37,25 +34,12 @@ import java.util.concurrent.Executor;
 @Slf4j
 @Controller
 @RequestMapping("/oauth/github")
-public class GitHubOauthController {
+public class GitHubOauthController extends BaseController{
 
     @Autowired
     private IAuthService<GitHubUser> githubAuthService;
     @Autowired
     private IOauthService<GitHubUser> oauthService;
-    @Autowired
-    private UserSigninLogServiceImpl userSigninLogService;
-    @Autowired
-    private IUserService userService;
-    @Autowired
-    RedisUtils redisUtil;
-    @Autowired
-    private Executor executor;
-
-    private static final String LOGIN_PAGE = "redirect:/user/loginPage";
-
-    private static final String USER_LOGIN_COOKIE_FLAG = "USER-INFO";
-
 
     /**
      * 让用户跳转到 GitHub授权页面
@@ -123,32 +107,17 @@ public class GitHubOauthController {
             redisUtil.hset("user-" + registerId, "user", JSONObject.toJSONString(userInfo), RedisUtils.DB_1);
             //会话信息，如果没有主动退出15天有效
             redisUtil.expire("user-" + registerId, 60 * 60 * 24 * 15, RedisUtils.DB_1);
+            //添加用户的登录信息到Cookie中
+            CookieUtils.addCookie(request, response, USER_LOGIN_COOKIE_FLAG, JSONObject.toJSONString(userInfo), 60 * 60 * 24 * 15);
+            final int uid = registerId;
+            executor.execute(() -> {
+                userSigninLogService.saveSigninLog(new UserSigninLog(uid, ip, ipInfo, "登录成功"));
+            });
+            return loginRedirectUrl(request);
         } else {
             redirectAttributes.addFlashAttribute("error", "您已经登录，请不要重复登录！");
             return loginRedirectUrl(request);
         }
-        if (Objects.isNull(CookieUtils.getCookieValue(request, USER_LOGIN_COOKIE_FLAG))) {
-            //添加用户的登录信息到Cookie中
-            CookieUtils.addCookie(request, response, USER_LOGIN_COOKIE_FLAG, JSONObject.toJSONString(userInfo), 60 * 60 * 24 * 15);
-        }
-        final int uid = registerId;
-        executor.execute(() -> {
-            userSigninLogService.saveSigninLog(new UserSigninLog(uid, ip, ipInfo, "登录成功"));
-        });
-        return loginRedirectUrl(request);
-    }
-
-    private String loginRedirectUrl(HttpServletRequest request) {
-        String ip = NetWorkUtils.getUserIp(request);
-        String refererUrl = (String) redisUtil.get("Referer-" + ip, RedisUtils.DB_1);
-        if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
-            //在每次取登录界面的时候都会在Redis中记录登录之前访问的页面Referer，登录成功后删除对应的Referer
-            redisUtil.delete(RedisUtils.DB_1, "Referer-" + ip);
-            log.info("redirect to : {}", refererUrl);
-            return "redirect:" + refererUrl;
-        }
-        log.info("redirect to : index");
-        return "redirect:/";
     }
 
 

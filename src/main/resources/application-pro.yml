@@ -67,8 +67,6 @@ oauth:
     redirectUrl: https://www.easyblog.top/oauth/github/callback
 logging:
   level:
-    root: info
+    root: DEBUG
     top.easyblog.mapper: DEBUG
   file: easyblog-pro.log
-#域名
-domain: www.easyblog.top

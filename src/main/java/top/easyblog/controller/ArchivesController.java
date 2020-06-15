@@ -13,7 +13,6 @@ import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.common.util.UserUtils;
-import top.easyblog.service.impl.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
@@ -25,21 +24,7 @@ import java.util.Objects;
  */
 @Controller
 @RequestMapping(value = "/archives/details")
-public class ArchivesController {
-
-    private final ArticleServiceImpl articleService;
-    private final UserServiceImpl userService;
-    private final CategoryServiceImpl categoryServiceImpl;
-    private final CommentServiceImpl commentService;
-    private final UserAttentionImpl userAttention;
-
-    public ArchivesController(ArticleServiceImpl articleService, UserServiceImpl userService, CategoryServiceImpl categoryServiceImpl, CommentServiceImpl commentService, UserAttentionImpl userAttention) {
-        this.articleService = articleService;
-        this.userService = userService;
-        this.categoryServiceImpl = categoryServiceImpl;
-        this.commentService = commentService;
-        this.userAttention = userAttention;
-    }
+public class ArchivesController extends BaseController{
 
 
     @RequestMapping(value = {"/{userId}/{date}", "orderByUpdateTime/{userId}/{date}"})
@@ -91,7 +76,7 @@ public class ArchivesController {
      */
     private String orderArticles(Model model, HttpServletRequest request, int userId, String date, PageInfo<Article> articles) {
         try {
-            ControllerUtils.getInstance(categoryServiceImpl, articleService, commentService, userAttention).getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
+            getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
             model.addAttribute("date", date);
             model.addAttribute("articlePages", articles);
             //作者信息

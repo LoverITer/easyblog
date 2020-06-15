@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
- top.easyblog.autoconfig.qiniu.QiNiuCloudAutoConfiguration
+ top.easyblog.config.autoconfig.qiniu.QiNiuCloudAutoConfiguration
