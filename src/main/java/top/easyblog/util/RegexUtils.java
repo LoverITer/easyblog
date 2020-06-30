@@ -1,4 +1,4 @@
-package top.easyblog.common.util;
+package top.easyblog.util;
 
 import java.util.Objects;
 import java.util.regex.Matcher;

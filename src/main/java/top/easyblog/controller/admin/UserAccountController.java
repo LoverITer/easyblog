@@ -11,10 +11,10 @@ import top.easyblog.bean.User;
 import top.easyblog.bean.UserSigninLog;
 import top.easyblog.common.email.Email;
 import top.easyblog.common.email.EmailSender;
-import top.easyblog.common.util.*;
 import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.controller.BaseController;
 import top.easyblog.service.impl.UserServiceImpl;
+import top.easyblog.util.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

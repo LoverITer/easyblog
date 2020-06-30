@@ -1,4 +1,4 @@
-package top.easyblog.common.util;
+package top.easyblog.util;
 
 
 import top.easyblog.markdown.Markdown2HtmlParser;

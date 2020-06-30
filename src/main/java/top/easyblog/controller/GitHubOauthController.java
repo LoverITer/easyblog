@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserSigninLog;
-import top.easyblog.common.util.CookieUtils;
-import top.easyblog.common.util.NetWorkUtils;
-import top.easyblog.common.util.RedisUtils;
-import top.easyblog.common.util.UserUtils;
 import top.easyblog.oauth2.IAuthService;
 import top.easyblog.oauth2.bean.GitHubUser;
 import top.easyblog.oauth2.enums.AppType;
 import top.easyblog.service.IOauthService;
+import top.easyblog.util.CookieUtils;
+import top.easyblog.util.NetWorkUtils;
+import top.easyblog.util.RedisUtils;
+import top.easyblog.util.UserUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

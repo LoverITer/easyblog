@@ -141,7 +141,7 @@
 
 /* 让链接在 hover 状态下显示下划线 */
 .typo a {
-  color: #61aeee;
+  color: #4183C4;
 }
 
 .typo a:hover {
@@ -151,7 +151,7 @@
 
 .typo a:hover {
   border-bottom-color: #555;
-  color: #61aeee;
+  color: #4183C4;
   text-decoration: none;
 }
 

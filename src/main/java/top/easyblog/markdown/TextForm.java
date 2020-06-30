@@ -5,19 +5,32 @@ package top.easyblog.markdown;
  * @modified ：
  * @since ：2020/03/10 18:31
  */
-public class TextForm {
+public enum TextForm {
 
-    private TextForm() {
+    HTML("html"),
+    TXT("txt"),
+    PDF("pdf"),
+    DOCX("docx"),
+    CSS("css"),
+    MARKDOWN("md");
+
+    private String textFrom;
+
+    TextForm(String textFrom) {
+        this.textFrom = textFrom;
     }
 
-    public static final String HTML = "html";
-    public static final String TXT = "txt";
-    public static final String PDF = "pdf";
-    public static final String DOCX = "docx";
-    public static final String CSS = "css";
-    public static final String JS = "js";
-    public static final String JAVA = "java";
-    public static final String MARKDOWN="md";
+    public String getTextFrom() {
+        return this.textFrom;
+    }
 
-
+    /**
+     * 比较两个文本类型是否相同
+     *
+     * @param textForm
+     * @return
+     */
+    public boolean equalsIgnoreCase(TextForm textForm) {
+        return this.getTextFrom().equalsIgnoreCase(textForm.getTextFrom());
+    }
 }

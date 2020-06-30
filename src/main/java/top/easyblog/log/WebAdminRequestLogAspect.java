@@ -7,7 +7,7 @@ import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import top.easyblog.common.util.NetWorkUtils;
+import top.easyblog.util.NetWorkUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;

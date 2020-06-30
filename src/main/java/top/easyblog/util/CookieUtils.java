@@ -1,4 +1,4 @@
-package top.easyblog.common.util;
+package top.easyblog.util;
 
 import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -298,7 +298,7 @@ public class CookieUtils {
     public static void main(String[] args) {
         String domainName = null;
 
-        String serverName = "http://127.0.0.1:8081/usr/login";
+        String serverName = "https://www.easyblog.top/usr/login";
         serverName = serverName.toLowerCase();
         serverName = serverName.substring(serverName.indexOf("//")+2);
         final int end = serverName.indexOf("/");
@@ -312,11 +312,11 @@ public class CookieUtils {
             //127.0.0.1:8080
             domainName = domains[len - 4] + "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
         } else if (len > 3) {
-            // www.xxx.com.cn
-            domainName = domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
+            // www.xxx.com.cn  为解决跨域的问题，应该在域名前加一个“.”
+            domainName = "."+domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
         } else if (len <= 3 && len > 1) {
             // xxx.com or xxx.cn
-            domainName = domains[len - 2] + "." + domains[len - 1];
+            domainName = "."+domains[len - 2] + "." + domains[len - 1];
         } else {
             domainName = serverName;
         }

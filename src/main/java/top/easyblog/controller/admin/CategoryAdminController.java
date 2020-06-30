@@ -13,11 +13,12 @@ import top.easyblog.bean.Category;
 import top.easyblog.bean.User;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
-import top.easyblog.common.util.DefaultImageDispatcherUtils;
-import top.easyblog.common.util.UserUtils;
 import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.controller.BaseController;
+import top.easyblog.util.DefaultImageDispatcherUtils;
+import top.easyblog.util.UserUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 
@@ -77,19 +78,36 @@ public class CategoryAdminController extends BaseController {
         }
     }
 
+    /**
+     * 删除一个文章分类
+     *
+     * @param categoryId 分类ID
+     * @param userId     分类的用户ID
+     * @param request    HttpServletRequest
+     * @return
+     */
     @GetMapping(value = "/delete")
-    public String deleteCategory(@RequestParam(value = "categoryId") int categoryId, @RequestParam(value = "userId") Integer userId) {
-        if (categoryId > 0) {
+    public String deleteCategory(@RequestParam(value = "categoryId") int categoryId,
+                                 @RequestParam(value = "userId") Integer userId,
+                                 HttpServletRequest request) {
+        User user = UserUtils.getUserFromCookie(request);
+        if (user != null && categoryId > 0) {
             Category category = new Category();
             category.setCategoryId(categoryId);
             category.setDisplay("3");
             categoryService.updateByPKSelective(category);
             return "redirect:/manage/category/list?userId=" + userId;
         }
-        return "/error/404";
+        return LOGIN_PAGE;
     }
 
-
+    /**
+     * 恢复一个删除到回收站的文章分类
+     *
+     * @param userId     文章分类作者ID
+     * @param categoryId 文章分类ID
+     * @return
+     */
     @GetMapping(value = "/restore")
     public String restoreCategory(@RequestParam(value = "userId") Integer userId, @RequestParam int categoryId) {
         if (categoryId > 0) {
@@ -102,23 +120,34 @@ public class CategoryAdminController extends BaseController {
         return LOGIN_PAGE;
     }
 
-
+    /**
+     * 从回收站彻底删除一个文章分类
+     *
+     * @param userId     文章分类作者ID
+     * @param categoryId 文章分类ID
+     * @param imageUrl   文章分类的URL
+     * @return
+     */
     @GetMapping(value = "/deleteComplete")
     public String deleteComplete(@RequestParam(value = "userId") Integer userId,
                                  @RequestParam int categoryId,
-                                 @RequestParam String imageUrl) {
-        if (categoryId > 0) {
-            final Category category = new Category();
-            category.setCategoryId(categoryId);
-            if (!imageUrl.contains("static")) {
-                try {
-                    qiNiuCloudService.delete(imageUrl);
-                } catch (Exception e) {
-                    return "redirect:error/error";
+                                 @RequestParam String imageUrl,
+                                 HttpServletRequest request) {
+        User user = UserUtils.getUserFromCookie(request);
+        if (user != null) {
+            if (categoryId > 0) {
+                final Category category = new Category();
+                category.setCategoryId(categoryId);
+                if (!imageUrl.contains("static")) {
+                    try {
+                        qiNiuCloudService.delete(imageUrl);
+                    } catch (Exception e) {
+                        return "redirect:error/error";
+                    }
                 }
+                categoryService.deleteCategoryByCondition(category);
+                return "redirect:/manage/category/dash?userId=" + userId;
             }
-            categoryService.deleteCategoryByCondition(category);
-            return "redirect:/manage/category/dash?userId=" + userId;
         }
         return LOGIN_PAGE;
     }
@@ -127,8 +156,8 @@ public class CategoryAdminController extends BaseController {
     /**
      * 从分类管理首页删除的分类进入到垃圾箱中，垃圾箱页面
      *
-     * @param userId
-     * @param model
+     * @param userId 文章分类作者ID
+     * @param model Model
      * @return
      */
     @GetMapping(value = "/dash")
@@ -149,9 +178,9 @@ public class CategoryAdminController extends BaseController {
     }
 
     /**
-     * 统计分类的数量
+     * 统计文章各个分类的文章数量
      *
-     * @param displayStatus 分类的状态 0 不在前台显示  1 在前台显示  2 放在垃圾桶中（不会显示）
+     * @param displayStatus 分类的状态: 0 不在前台显示  1 在前台显示  2 放在垃圾桶中（不会显示）
      * @return
      */
     private int getCategoryNum(User user, String displayStatus) {

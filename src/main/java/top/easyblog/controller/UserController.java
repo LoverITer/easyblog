@@ -16,8 +16,8 @@ import top.easyblog.bean.UserAccount;
 import top.easyblog.bean.UserSigninLog;
 import top.easyblog.common.email.Email;
 import top.easyblog.common.email.EmailSender;
-import top.easyblog.common.util.*;
 import top.easyblog.config.web.WebAjaxResult;
+import top.easyblog.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

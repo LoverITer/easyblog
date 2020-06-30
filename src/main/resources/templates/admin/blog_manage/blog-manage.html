@@ -386,10 +386,11 @@
 <script>
 
     /**
-     * 点击“配置文章首图”时把文章的ID记下来
+     *
      * @param identityObj
      */
     function editArticleFirstImg(identityObj) {
+        //点击“配置文章首图”时把文章的ID记下来
         sessionStorage.setItem("articleId", $(identityObj).find('.articleId').val());
         let articleFirstPic = $(identityObj).find('.articleFirstPic').val();
         if (articleFirstPic != null && articleFirstPic != "") {
@@ -425,7 +426,8 @@
                         if (response.success) {
                             _loadingClose();
                             $('.second.modal').modal("hide");
-                            showSuccessMessage("上传成功！")
+                            showSuccessMessage("上传成功！");
+                            history.go(0);
                         } else {
                             showErrorMessage("服务异常，请稍后重试！")
                         }
@@ -451,7 +453,7 @@
             //加载完毕之后获取结果赋值给img
             $('#pre-look').height(300);
             $('#pre-look').width(450);
-            document.getElementById("pre-look").src = this.ajaxResult;
+            document.getElementById("pre-look").src = this.result;
         };
 
     }

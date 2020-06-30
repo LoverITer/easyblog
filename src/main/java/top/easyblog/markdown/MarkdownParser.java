@@ -14,6 +14,7 @@ public interface MarkdownParser {
      */
     String render2Html(String markdown);
 
+
     /**
      * 将markdown渲染为PDF
      *
@@ -21,6 +22,7 @@ public interface MarkdownParser {
      * @return String
      */
     String render2PDF(String markdown);
+
 
 
     /**

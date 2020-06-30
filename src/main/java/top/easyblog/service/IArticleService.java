@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.ArticleCounter;
 import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.markdown.TextForm;
 
 import java.util.List;
 
@@ -31,10 +32,10 @@ public interface IArticleService {
      * 根据文章Id获取文章
      *
      * @param articleId 文章Id
-     * @param flag      要获得的文本类型，支持html和text
+     * @param textForm      要获得的文本类型，支持html和text
      * @return Article
      */
-    Article getArticleById(int articleId, String flag);
+    Article getArticleById(int articleId, TextForm textForm);
 
     /**
      * 查詢所有沒有首圖的文章

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import top.easyblog.bean.Article;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
-import top.easyblog.common.util.UserUtils;
+import top.easyblog.util.UserUtils;
 
 /**
  * @author huangxin

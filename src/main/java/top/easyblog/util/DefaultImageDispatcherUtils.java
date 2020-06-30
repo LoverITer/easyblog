@@ -1,4 +1,4 @@
-package top.easyblog.common.util;
+package top.easyblog.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

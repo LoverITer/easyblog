@@ -1,4 +1,4 @@
-package top.easyblog.common.util;
+package top.easyblog.util;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;

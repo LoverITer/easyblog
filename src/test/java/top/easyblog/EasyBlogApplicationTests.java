@@ -9,11 +9,11 @@ import top.easyblog.bean.Address;
 import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
 import top.easyblog.bean.UserPower;
-import top.easyblog.common.util.NetWorkUtils;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.mapper.UserPowerMapper;
 import top.easyblog.oauth2.impl.GitHubAuthServiceImpl;
+import top.easyblog.util.NetWorkUtils;
 
 import java.io.IOException;
 import java.util.List;

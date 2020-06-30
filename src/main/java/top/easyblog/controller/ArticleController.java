@@ -16,9 +16,9 @@ import top.easyblog.bean.UserComment;
 import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
-import top.easyblog.common.util.UserUtils;
 import top.easyblog.markdown.TextForm;
 import top.easyblog.service.impl.UserAccountImpl;
+import top.easyblog.util.UserUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

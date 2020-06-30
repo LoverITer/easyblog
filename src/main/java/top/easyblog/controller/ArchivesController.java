@@ -12,7 +12,7 @@ import top.easyblog.bean.User;
 import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
-import top.easyblog.common.util.UserUtils;
+import top.easyblog.util.UserUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;

@@ -11,8 +11,8 @@ import top.easyblog.bean.Article;
 import top.easyblog.bean.User;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
-import top.easyblog.common.util.CollectionUtils;
-import top.easyblog.common.util.UserUtils;
+import top.easyblog.util.CollectionUtils;
+import top.easyblog.util.UserUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;

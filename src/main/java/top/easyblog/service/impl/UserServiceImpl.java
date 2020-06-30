@@ -7,12 +7,12 @@ import top.easyblog.bean.User;
 import top.easyblog.common.enums.UserFreeze;
 import top.easyblog.common.enums.UserLock;
 import top.easyblog.common.enums.UserPower;
-import top.easyblog.common.util.DefaultImageDispatcherUtils;
-import top.easyblog.common.util.EncryptUtils;
-import top.easyblog.common.util.RegexUtils;
 import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.service.IUserService;
+import top.easyblog.util.DefaultImageDispatcherUtils;
+import top.easyblog.util.EncryptUtils;
+import top.easyblog.util.RegexUtils;
 
 import java.util.Objects;
 

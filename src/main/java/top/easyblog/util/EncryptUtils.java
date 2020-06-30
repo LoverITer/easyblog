@@ -1,4 +1,4 @@
-package top.easyblog.common.util;
+package top.easyblog.util;
 
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;

@@ -11,12 +11,12 @@ import top.easyblog.bean.User;
 import top.easyblog.bean.UserComment;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
-import top.easyblog.common.util.UserUtils;
 import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.controller.BaseController;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
 import top.easyblog.service.impl.UserServiceImpl;
+import top.easyblog.util.UserUtils;
 
 import java.util.Objects;
 

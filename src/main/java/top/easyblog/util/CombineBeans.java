@@ -1,4 +1,4 @@
-package top.easyblog.common.util;
+package top.easyblog.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

@@ -1,4 +1,4 @@
-package top.easyblog.common.util;
+package top.easyblog.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

@@ -136,7 +136,7 @@ function showInfoMessage(message) {
 
 
 /**
- *错误提示信息框
+ *成功提示信息框
  */
 function showSuccessMessage(message) {
     if (message != "") {
@@ -156,7 +156,7 @@ function showErrorMessage(message) {
     if (message != "") {
         spop({
             template: message,
-            autoclose: 4000,
+            autoclose: 3000,
             position: "top-center",
             style: 'error',
         });
@@ -170,7 +170,7 @@ function showWarningMessage(message) {
     if (message != "") {
         spop({
             template: message,
-            autoclose: 4000,
+            autoclose: 3000,
             position: "top-center",
             style: 'warning',
         });
