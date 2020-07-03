@@ -1,8 +1,8 @@
 package top.easyblog.service;
 
 import com.github.pagehelper.PageInfo;
-import top.easyblog.bean.UserComment;
 import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.entity.UserComment;
 
 import java.util.List;
 

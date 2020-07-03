@@ -1,7 +1,7 @@
 package top.easyblog.mapper;
 
 import org.springframework.stereotype.Repository;
-import top.easyblog.bean.Power;
+import top.easyblog.entity.Power;
 import top.easyblog.mapper.core.BaseMapper;
 
 /**

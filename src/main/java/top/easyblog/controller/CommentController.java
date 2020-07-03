@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.easyblog.bean.Article;
-import top.easyblog.bean.UserComment;
 import top.easyblog.config.web.WebAjaxResult;
+import top.easyblog.entity.Article;
+import top.easyblog.entity.UserComment;
 
 import java.util.Objects;
 

@@ -2,9 +2,9 @@ package top.easyblog.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import top.easyblog.bean.Article;
-import top.easyblog.bean.ArticleCategoryCounter;
-import top.easyblog.bean.ArticleCounter;
+import top.easyblog.entity.Article;
+import top.easyblog.entity.ArticleCategoryCounter;
+import top.easyblog.entity.ArticleCounter;
 import top.easyblog.mapper.core.BaseMapper;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package top.easyblog.bean;
+package top.easyblog.entity;
 
 
 /**

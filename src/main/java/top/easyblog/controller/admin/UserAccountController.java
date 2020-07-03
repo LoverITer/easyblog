@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.easyblog.bean.User;
-import top.easyblog.bean.UserSigninLog;
 import top.easyblog.common.email.Email;
 import top.easyblog.common.email.EmailSender;
 import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.controller.BaseController;
+import top.easyblog.entity.User;
+import top.easyblog.entity.UserSigninLog;
 import top.easyblog.service.impl.UserServiceImpl;
 import top.easyblog.util.*;
 

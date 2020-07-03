@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
-import top.easyblog.bean.User;
+import top.easyblog.entity.User;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

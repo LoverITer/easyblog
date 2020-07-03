@@ -1,6 +1,6 @@
 package top.easyblog.service;
 
-import top.easyblog.bean.UserAttention;
+import top.easyblog.entity.UserAttention;
 
 import java.util.List;
 

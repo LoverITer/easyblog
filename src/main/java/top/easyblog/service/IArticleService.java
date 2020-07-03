@@ -1,9 +1,9 @@
 package top.easyblog.service;
 
 import com.github.pagehelper.PageInfo;
-import top.easyblog.bean.Article;
-import top.easyblog.bean.ArticleCounter;
 import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.entity.Article;
+import top.easyblog.entity.ArticleCounter;
 import top.easyblog.markdown.TextForm;
 
 import java.util.List;

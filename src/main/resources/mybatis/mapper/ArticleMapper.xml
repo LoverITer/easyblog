@@ -9,7 +9,7 @@
     </cache>
 
     <insert id="save" useGeneratedKeys="true" keyProperty="articleId" keyColumn="article_id"
-            parameterType="top.easyblog.bean.Article" flushCache="false">
+            parameterType="top.easyblog.entity.Article" flushCache="false">
         insert into article (article_user, article_topic, article_publish_time,
                              article_click, article_category, article_status,
                              article_top, article_type, article_tags,
@@ -20,13 +20,13 @@
     </insert>
 
 
-    <select id="getByPrimaryKey" parameterType="java.lang.Long" useCache="false" resultType="top.easyblog.bean.Article">
+    <select id="getByPrimaryKey" parameterType="java.lang.Long" useCache="false" resultType="top.easyblog.entity.Article">
         select *
         from article
         where article_id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="getAll" resultType="top.easyblog.bean.Article">
+    <select id="getAll" resultType="top.easyblog.entity.Article">
         select * from article
     </select>
 
@@ -37,7 +37,7 @@
           AND article_category = #{categoryName}
     </select>
 
-    <select id="getUserArticlesSelective" resultType="top.easyblog.bean.Article">
+    <select id="getUserArticlesSelective" resultType="top.easyblog.entity.Article">
         select *
         from article
         where article_user = #{userId}
@@ -46,7 +46,7 @@
         order by article_publish_time DESC
     </select>
 
-    <select id="getUserAllArticles" resultType="top.easyblog.bean.Article">
+    <select id="getUserAllArticles" resultType="top.easyblog.entity.Article">
         select *
         from article
         where article_user = #{userId}
@@ -54,7 +54,7 @@
         order by article_publish_time DESC
     </select>
 
-    <select id="getNewestArticles" resultType="top.easyblog.bean.Article">
+    <select id="getNewestArticles" resultType="top.easyblog.entity.Article">
         select *
         from article
         where article_user = #{userId} AND article_status = '0'
@@ -62,7 +62,7 @@
         limit #{limit}
     </select>
 
-    <select id="getAllMostFamousArticles" resultType="top.easyblog.bean.Article">
+    <select id="getAllMostFamousArticles" resultType="top.easyblog.entity.Article">
         select *
         from article
         where article_status = '0' AND date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
@@ -71,7 +71,7 @@
     </select>
 
 
-    <select id="getAllHistoryFamousArticles" resultType="top.easyblog.bean.Article">
+    <select id="getAllHistoryFamousArticles" resultType="top.easyblog.entity.Article">
         select *
         from article
         where article_status = '0'
@@ -79,7 +79,7 @@
         limit #{limit}
     </select>
 
-    <select id="getArticleCategoryCounter" resultType="top.easyblog.bean.ArticleCategoryCounter">
+    <select id="getArticleCategoryCounter" resultType="top.easyblog.entity.ArticleCategoryCounter">
         select article_category AS category_name, count(*) AS article_num
         from article
         where article_status = '0'and date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 180 DAY)
@@ -87,7 +87,7 @@
         limit #{limit}
     </select>
 
-    <select id="getByCategoryWithLimit" resultType="top.easyblog.bean.Article">
+    <select id="getByCategoryWithLimit" resultType="top.easyblog.entity.Article">
         select *
         from article
         where article_status = '0'
@@ -98,7 +98,7 @@
         limit #{limit}
     </select>
 
-    <select id="getAllUserNewestArticles" resultType="top.easyblog.bean.Article">
+    <select id="getAllUserNewestArticles" resultType="top.easyblog.entity.Article">
         select *
         from article
         where article_status = '0'
@@ -106,7 +106,7 @@
         order by article_publish_time DESC
     </select>
 
-    <select id="getAllUserHistoryNewestArticles" resultType="top.easyblog.bean.Article">
+    <select id="getAllUserHistoryNewestArticles" resultType="top.easyblog.entity.Article">
         select *
         from article
         where article_status = '0'
@@ -115,7 +115,7 @@
     </select>
 
 
-    <select id="getHotArticles" resultType="top.easyblog.bean.Article">
+    <select id="getHotArticles" resultType="top.easyblog.entity.Article">
         select *
         from article
         where article_user = #{userId}
@@ -124,7 +124,7 @@
         limit #{limit}
     </select>
 
-    <select id="countByUserIdMonthly" resultType="top.easyblog.bean.ArticleCounter">
+    <select id="countByUserIdMonthly" resultType="top.easyblog.entity.ArticleCounter">
         SELECT DATE_FORMAT(article_publish_time, "%Y年%m月") AS date, COUNT(*) AS count
         FROM article
         where article_user = #{userId}
@@ -133,7 +133,7 @@
         ORDER BY DATE_FORMAT(article_publish_time, "%Y年%m月") DESC
     </select>
 
-    <select id="getByUserIdMonthly" resultType="top.easyblog.bean.Article">
+    <select id="getByUserIdMonthly" resultType="top.easyblog.entity.Article">
         SELECT *
         FROM article
         WHERE YEAR(article_publish_time) = #{year}
@@ -143,7 +143,7 @@
         ORDER BY article_publish_time DESC
     </select>
 
-    <select id="getByUserIdMonthlyOrderByClickNum" resultType="top.easyblog.bean.Article">
+    <select id="getByUserIdMonthlyOrderByClickNum" resultType="top.easyblog.entity.Article">
         SELECT *
         FROM article
         WHERE YEAR(article_publish_time) = #{year}
@@ -153,7 +153,7 @@
         ORDER BY article_click DESC
     </select>
 
-    <select id="getByCategoryAndUserId" resultType="top.easyblog.bean.Article">
+    <select id="getByCategoryAndUserId" resultType="top.easyblog.entity.Article">
         select *
         from article
         where article_user = #{userId}
@@ -164,7 +164,7 @@
     </select>
 
 
-    <select id="getArticlesSelective" resultType="top.easyblog.bean.Article">
+    <select id="getArticlesSelective" resultType="top.easyblog.entity.Article">
         select * from article
         <where>
             <if test="article.articleTopic != null">
@@ -207,7 +207,7 @@
     <!--
        根据文章的标题模糊查询
     -->
-    <select id="getUsersArticleByQueryString" resultType="top.easyblog.bean.Article">
+    <select id="getUsersArticleByQueryString" resultType="top.easyblog.entity.Article">
         select article_id,article_topic,  article_publish_time,
                article_content, article_click,article_category,
                article_comment_num, article_first_picture,article_user,
@@ -220,7 +220,7 @@
     </select>
 
     <!--按照文章分类名模糊查找某一类的文章，如果需要排序还可以指定参数order=true-->
-    <select id="getArticleByCategoryNameFuzzy" parameterType="arraylist" resultType="top.easyblog.bean.Article">
+    <select id="getArticleByCategoryNameFuzzy" parameterType="arraylist" resultType="top.easyblog.entity.Article">
         SELECT
         article_user, article_id,article_topic, article_publish_time,
         article_click, article_category, article_content,article_first_picture,
@@ -284,7 +284,7 @@
         </where>
     </select>
 
-    <select id="getAllNoneFirstPicArticles" resultType="top.easyblog.bean.Article">
+    <select id="getAllNoneFirstPicArticles" resultType="top.easyblog.entity.Article">
         select * from article where article_first_picture is NULL
     </select>
 
@@ -295,7 +295,7 @@
         where article_id = #{articleId,jdbcType=BIGINT}
     </delete>
 
-    <insert id="saveSelective" parameterType="top.easyblog.bean.Article">
+    <insert id="saveSelective" parameterType="top.easyblog.entity.Article">
         insert into article
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="articleUser != null">
@@ -375,7 +375,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" flushCache="true" parameterType="top.easyblog.bean.Article">
+    <update id="updateByPrimaryKeySelective" flushCache="true" parameterType="top.easyblog.entity.Article">
         update article
         <set>
             <if test="articleUser != null">
@@ -421,7 +421,7 @@
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
-    <update id="updateByPrimaryKeyWithContent" parameterType="top.easyblog.bean.Article">
+    <update id="updateByPrimaryKeyWithContent" parameterType="top.easyblog.entity.Article">
         update article
         set article_user        = #{articleUser,jdbcType=INTEGER},
             article_topic       = #{articleTopic,jdbcType=VARCHAR},
@@ -438,7 +438,7 @@
         where article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
-    <update id="updateByPrimaryKey" parameterType="top.easyblog.bean.Article">
+    <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.Article">
         update article
         set article_user         = #{articleUser,jdbcType=INTEGER},
             article_topic        = #{articleTopic,jdbcType=VARCHAR},

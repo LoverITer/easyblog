@@ -1,6 +1,6 @@
 package top.easyblog.service;
 
-import top.easyblog.bean.UserSigninLog;
+import top.easyblog.entity.UserSigninLog;
 
 import java.util.List;
 

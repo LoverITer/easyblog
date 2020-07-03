@@ -5,14 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import top.easyblog.bean.Article;
-import top.easyblog.bean.Category;
-import top.easyblog.bean.CategoryCare;
-import top.easyblog.bean.User;
 import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.config.web.WebAjaxResult;
+import top.easyblog.entity.Article;
+import top.easyblog.entity.Category;
+import top.easyblog.entity.CategoryCare;
+import top.easyblog.entity.User;
 import top.easyblog.service.ICategoryCareService;
 import top.easyblog.util.UserUtils;
 

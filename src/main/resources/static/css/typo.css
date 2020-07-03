@@ -3,13 +3,12 @@
 .typo p {
   font-size: 16px !important;
   font-weight: 400;
-  line-height: 30px;
-  color: #111;
-  margin: 0 0 16px;
- /* white-space: pre-line;  !*合并空白符序列, 但正常换行*!*/
+  line-height: 1.6;
+  color: #4d4d4d;
+  margin: .5em 0;
   overflow-wrap:break-word;
-  word-break:break-all;
-  letter-spacing: .5px;
+  word-break:break-word;
+  letter-spacing: 1px;
 }
 
 .typo h1 a,.typo h2 a,.typo h3 a,.typo h4 a,.typo h5 a{
@@ -209,7 +208,7 @@
 
 .typo strong,.typo  b {
   font-weight: bold;
-  color: #000;
+  color: #4d4d4d;
 }
 
 /* 可拖动文件添加拖动手势 */

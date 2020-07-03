@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import top.easyblog.bean.Article;
-import top.easyblog.bean.User;
 import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
+import top.easyblog.entity.Article;
+import top.easyblog.entity.User;
 import top.easyblog.util.UserUtils;
 
 import javax.servlet.http.HttpServletRequest;

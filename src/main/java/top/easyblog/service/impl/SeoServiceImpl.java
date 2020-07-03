@@ -6,7 +6,7 @@ import com.redfin.sitemapgenerator.WebSitemapUrl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.easyblog.bean.Article;
+import top.easyblog.entity.Article;
 import top.easyblog.service.IArticleService;
 import top.easyblog.service.ISeoService;
 
