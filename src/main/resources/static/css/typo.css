@@ -50,10 +50,7 @@
   width: 100%;
 }
 
-/* 去除默认边框 */
-.typo fieldset, img {
-  border: 0;
-}
+
 
 /* 块/段落引用 */
 .typo blockquote {
@@ -365,7 +362,14 @@
   content: "・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・";
 }
 
+/* 去除默认边框 */
+.typo fieldset{
+  border: 0;
+}
+
 /* Responsive images */
 .typo img {
+  border: 0;
   max-width: 100%;
+  cursor: zoom-in;
 }
