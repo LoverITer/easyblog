@@ -7,7 +7,7 @@ import top.easyblog.common.enums.UserFreeze;
 import top.easyblog.common.enums.UserLock;
 import top.easyblog.common.enums.UserPower;
 import top.easyblog.config.web.WebAjaxResult;
-import top.easyblog.entity.User;
+import top.easyblog.entity.po.User;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.service.IUserService;
 import top.easyblog.util.DefaultImageDispatcherUtils;

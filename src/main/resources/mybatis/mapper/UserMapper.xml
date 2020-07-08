@@ -23,7 +23,7 @@
                 #{userFreeze}, #{userPower}, #{userLevel}, #{userVisit}, #{userHobby}, #{userTech})
     </insert>
 
-    <insert id="saveCoreInfo" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id" parameterType="top.easyblog.entity.User">
+    <insert id="saveCoreInfo" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id" parameterType="top.easyblog.entity.po.User">
         insert into user(user_nickname,user_password,user_headerImg_url,user_register_time,user_register_ip,
                          user_lock, user_freeze, user_power)
         values(#{userNickname},#{userPassword},#{userHeaderImgUrl},now(),#{userRegisterIp},
@@ -171,19 +171,19 @@
         </choose>
     </update>
 
-    <select id="getByPrimaryKey" resultType="top.easyblog.entity.User">
+    <select id="getByPrimaryKey" resultType="top.easyblog.entity.po.User">
         select *
         from user
         where user_id = #{id}
     </select>
 
-    <select id="getAll" resultType="top.easyblog.entity.User">
+    <select id="getAll" resultType="top.easyblog.entity.po.User">
         select *
         from user
     </select>
 
     <!--通过手机号和用户密码查询一个用户-->
-    <select id="getUserByUserPhoneAndPassword" resultType="top.easyblog.entity.User">
+    <select id="getUserByUserPhoneAndPassword" resultType="top.easyblog.entity.po.User">
         select *
         from user
         where user_password = #{password}
@@ -191,26 +191,26 @@
     </select>
 
     <!--通过Email和用户密码查询一个用户-->
-    <select id="getUserByUserEmailAndPassword" resultType="top.easyblog.entity.User">
+    <select id="getUserByUserEmailAndPassword" resultType="top.easyblog.entity.po.User">
         select *
         from user
         where user_password = #{password}
           AND user_mail = #{userEmail}
     </select>
 
-    <select id="getUserByNickname" resultType="top.easyblog.entity.User">
+    <select id="getUserByNickname" resultType="top.easyblog.entity.po.User">
         select *
         from user
         where user_nickname = #{nickname}
     </select>
 
-    <select id="getUserByPhone" resultType="top.easyblog.entity.User">
+    <select id="getUserByPhone" resultType="top.easyblog.entity.po.User">
         select *
         from user
         where user_phone = #{phone}
     </select>
 
-    <select id="getUserByEmail" resultType="top.easyblog.entity.User">
+    <select id="getUserByEmail" resultType="top.easyblog.entity.po.User">
         select *
         from user
         where user_mail = #{email}

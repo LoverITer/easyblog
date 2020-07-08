@@ -15,7 +15,7 @@
 
 
     <!--按照分类的ID查找这个分类的所有关注-->
-    <select id="getCategoryCareByCategoryId" resultType="top.easyblog.entity.CategoryCare">
+    <select id="getCategoryCareByCategoryId" resultType="top.easyblog.entity.po.CategoryCare">
          select * from category_care where category_id=#{categoryId}
     </select>
 

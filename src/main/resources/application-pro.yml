@@ -10,7 +10,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://mysql:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
-    password: 123456
+    password: 95162437hx$
     druid:
       stat-view-servlet:
         enabled: true
@@ -46,9 +46,9 @@ spring:
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
   redis:
     host: redis      #在docker容器中部署，host地址一定要写你配置的Redis容器的名字
-    port: 6370
+    port: 6379
     database: 0
-    #password:
+    password: CySynWsw5NLzbzHne3XcXaRGPWKpJxSKsHikLYvQ6VI0dNKjScuyYPjt
     timeout: 10000
     lettuce:
       pool:

@@ -13,8 +13,8 @@ import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.controller.BaseController;
-import top.easyblog.entity.Category;
-import top.easyblog.entity.User;
+import top.easyblog.entity.po.Category;
+import top.easyblog.entity.po.User;
 import top.easyblog.util.DefaultImageDispatcherUtils;
 import top.easyblog.util.UserUtils;
 

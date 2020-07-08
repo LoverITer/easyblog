@@ -1,4 +1,4 @@
-package top.easyblog.entity;
+package top.easyblog.entity.po;
 
 import java.io.Serializable;
 import java.util.Date;

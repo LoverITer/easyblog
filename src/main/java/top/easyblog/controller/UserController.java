@@ -14,9 +14,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import top.easyblog.common.email.Email;
 import top.easyblog.common.email.EmailSender;
 import top.easyblog.config.web.WebAjaxResult;
-import top.easyblog.entity.User;
-import top.easyblog.entity.UserAccount;
-import top.easyblog.entity.UserSigninLog;
+import top.easyblog.entity.po.User;
+import top.easyblog.entity.po.UserAccount;
+import top.easyblog.entity.po.UserSigninLog;
 import top.easyblog.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Objects;
 
-import static top.easyblog.entity.UserLoginStatus.UNLOGIN;
+import static top.easyblog.common.enums.UserLoginStatus.UNLOGIN;
 
 /**
  * @author huangxin

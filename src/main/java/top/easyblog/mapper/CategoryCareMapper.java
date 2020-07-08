@@ -1,7 +1,7 @@
 package top.easyblog.mapper;
 
 import org.apache.ibatis.annotations.Param;
-import top.easyblog.entity.CategoryCare;
+import top.easyblog.entity.po.CategoryCare;
 import top.easyblog.mapper.core.BaseMapper;
 
 import java.util.List;

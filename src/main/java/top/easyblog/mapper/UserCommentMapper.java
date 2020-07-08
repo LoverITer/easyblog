@@ -2,7 +2,7 @@ package top.easyblog.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import top.easyblog.entity.UserComment;
+import top.easyblog.entity.po.UserComment;
 import top.easyblog.mapper.core.BaseMapper;
 
 import java.util.List;

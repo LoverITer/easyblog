@@ -1,7 +1,7 @@
 package top.easyblog.mapper;
 
 import org.springframework.stereotype.Repository;
-import top.easyblog.entity.SecretMessage;
+import top.easyblog.entity.po.SecretMessage;
 import top.easyblog.mapper.core.BaseMapper;
 
 /**

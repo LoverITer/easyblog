@@ -9,10 +9,10 @@ import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
 import top.easyblog.config.web.WebAjaxResult;
-import top.easyblog.entity.Article;
-import top.easyblog.entity.Category;
-import top.easyblog.entity.CategoryCare;
-import top.easyblog.entity.User;
+import top.easyblog.entity.po.Article;
+import top.easyblog.entity.po.Category;
+import top.easyblog.entity.po.CategoryCare;
+import top.easyblog.entity.po.User;
 import top.easyblog.service.ICategoryCareService;
 import top.easyblog.util.UserUtils;
 

@@ -7,21 +7,21 @@
     <property name="size" value="1024" />
     <property name="readOnly" value="false" />
   </cache>
-  <resultMap id="BaseResultMap" type="top.easyblog.entity.UserAttention">
+  <resultMap id="BaseResultMap" type="top.easyblog.entity.po.UserAttention">
     <id column="id" jdbcType="SMALLINT" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="attention_id" jdbcType="INTEGER" property="attentionId" />
     <result column="attention_time" jdbcType="TIMESTAMP" property="attentionTime" />
   </resultMap>
 
-  <insert id="save" parameterType="top.easyblog.entity.UserAttention">
+  <insert id="save" parameterType="top.easyblog.entity.po.UserAttention">
     insert into user_attention (id, user_id, attention_id,
                                 attention_time)
     values (#{id,jdbcType=SMALLINT}, #{userId,jdbcType=INTEGER}, #{attentionId,jdbcType=INTEGER},
             #{attentionTime,jdbcType=TIMESTAMP})
   </insert>
 
-  <insert id="saveSelective" parameterType="top.easyblog.entity.UserAttention">
+  <insert id="saveSelective" parameterType="top.easyblog.entity.po.UserAttention">
     insert into user_attention
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -53,7 +53,7 @@
     </trim>
   </insert>
 
-  <select id="getByPrimaryKey"  resultType="top.easyblog.entity.UserAttention">
+  <select id="getByPrimaryKey"  resultType="top.easyblog.entity.po.UserAttention">
     select *
     from user_attention
     where id = #{id,jdbcType=SMALLINT}
@@ -74,7 +74,7 @@
     </where>
   </select>
 
-  <select id="getUserAllAttentionInfoSelective" resultType="top.easyblog.entity.UserAttention">
+  <select id="getUserAllAttentionInfoSelective" resultType="top.easyblog.entity.po.UserAttention">
       select * from user_attention
     <where>
       <choose>
@@ -93,7 +93,7 @@
     where id = #{id,jdbcType=SMALLINT}
   </delete>
 
-  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.entity.UserAttention">
+  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.entity.po.UserAttention">
     update user_attention
     <set>
       <if test="userId != null">
@@ -106,7 +106,7 @@
     where id = #{id,jdbcType=SMALLINT}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.UserAttention">
+  <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.po.UserAttention">
     update user_attention
     set user_id = #{userId,jdbcType=INTEGER},
       attention_id = #{attentionId,jdbcType=INTEGER},

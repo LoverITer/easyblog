@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.easyblog.config.web.WebAjaxResult;
-import top.easyblog.entity.Article;
-import top.easyblog.entity.UserComment;
+import top.easyblog.entity.po.Article;
+import top.easyblog.entity.po.UserComment;
 
 import java.util.Objects;
 

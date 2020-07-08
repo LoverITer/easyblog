@@ -1,6 +1,6 @@
 package top.easyblog.service;
 
-import top.easyblog.entity.CategoryCare;
+import top.easyblog.entity.po.CategoryCare;
 
 import java.util.List;
 

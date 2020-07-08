@@ -1,6 +1,6 @@
 package top.easyblog.service;
 
-import top.easyblog.entity.UserAccount;
+import top.easyblog.entity.po.UserAccount;
 
 /**
  * @author HuangXin

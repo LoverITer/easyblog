@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import top.easyblog.entity.User;
+import top.easyblog.entity.po.User;
 import top.easyblog.util.RedisUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,10 +36,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             String userId = request.getParameter("userId");
             if (Objects.isNull(userId)) {
                 userId = url.substring(url.lastIndexOf('/')+1);
-                if (Objects.isNull(userId)) {
-                    response.sendRedirect(request.getContextPath() + "/user/loginPage");
-                    return false;
-                }
+            }
+            if (Objects.isNull(userId)) {
+                response.sendRedirect(request.getContextPath() + "/user/loginPage");
+                return false;
             }
             String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
             if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {

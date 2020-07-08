@@ -19,6 +19,8 @@ target/
 *.iml
 *.ipr
 *.log
+target
+src/main/resources/application-pro.yml
 
 ### NetBeans ###
 /nbproject/private/

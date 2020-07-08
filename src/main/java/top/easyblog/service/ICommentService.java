@@ -2,7 +2,7 @@ package top.easyblog.service;
 
 import com.github.pagehelper.PageInfo;
 import top.easyblog.common.pagehelper.PageParam;
-import top.easyblog.entity.UserComment;
+import top.easyblog.entity.po.UserComment;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package top.easyblog.mapper;
 
 import org.springframework.stereotype.Repository;
-import top.easyblog.entity.UserSigninLog;
+import top.easyblog.entity.po.UserSigninLog;
 import top.easyblog.mapper.core.BaseMapper;
 
 import java.util.List;

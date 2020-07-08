@@ -7,12 +7,12 @@
     <property name="size" value="1024" />
     <property name="readOnly" value="false" />
   </cache>
-  <resultMap id="BaseResultMap" type="top.easyblog.entity.UserMailLog">
+  <resultMap id="BaseResultMap" type="top.easyblog.entity.po.UserMailLog">
     <id column="log_id" jdbcType="BIGINT" property="logId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.easyblog.entity.UserMailLog">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.easyblog.entity.po.UserMailLog">
     <result column="context" jdbcType="LONGVARCHAR" property="context" />
   </resultMap>
 
@@ -34,13 +34,13 @@
   </delete>
 
   <!--插入一条日志记录-->
-  <insert id="save" parameterType="top.easyblog.entity.UserMailLog">
+  <insert id="save" parameterType="top.easyblog.entity.po.UserMailLog">
     insert into user_mail_log (email, log_time, context)
     values
     ( #{email,jdbcType=INTEGER}, now() ,#{context,jdbcType=LONGVARCHAR})
   </insert>
 
-  <insert id="saveSelective" parameterType="top.easyblog.entity.UserMailLog">
+  <insert id="saveSelective" parameterType="top.easyblog.entity.po.UserMailLog">
     insert into user_mail_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="logId != null">
@@ -72,7 +72,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.entity.UserMailLog" >
+  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.entity.po.UserMailLog" >
     update user_mail_log
     <set>
       <if test="userId != null">
@@ -88,7 +88,7 @@
     where log_id = #{logId,jdbcType=BIGINT}
   </update>
 
-  <update id="updateByPrimaryKeyWithContent" parameterType="top.easyblog.entity.UserMailLog">
+  <update id="updateByPrimaryKeyWithContent" parameterType="top.easyblog.entity.po.UserMailLog">
     update user_mail_log
     set email = #{email,jdbcType=INTEGER},
       log_time = #{logTime,jdbcType=TIMESTAMP},
@@ -96,7 +96,7 @@
     where log_id = #{logId,jdbcType=BIGINT}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.UserMailLog">
+  <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.po.UserMailLog">
     update user_mail_log
     set email = #{email,jdbcType=INTEGER},
       log_time = #{logTime,jdbcType=TIMESTAMP}

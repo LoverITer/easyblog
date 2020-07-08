@@ -4,8 +4,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import top.easyblog.entity.User;
-import top.easyblog.entity.UserAttention;
+import top.easyblog.entity.po.User;
+import top.easyblog.entity.po.UserAttention;
 import top.easyblog.mapper.UserAttentionMapper;
 import top.easyblog.service.IUserAttentionService;
 

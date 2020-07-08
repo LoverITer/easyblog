@@ -2,8 +2,8 @@ package top.easyblog.service;
 
 import com.github.pagehelper.PageInfo;
 import top.easyblog.common.pagehelper.PageParam;
-import top.easyblog.entity.Article;
-import top.easyblog.entity.ArticleCounter;
+import top.easyblog.entity.po.Article;
+import top.easyblog.entity.po.ArticleCounter;
 import top.easyblog.markdown.TextForm;
 
 import java.util.List;
@@ -213,7 +213,7 @@ public interface IArticleService {
      * @param limit  指定一个大于0的数，用于获取Top n个查询结果,如果指定为负数表示获取全部结果
      * @return java.util.List
      */
-    List<Article> getArticleByCategoryFuzzy(String[] keys,Boolean order,int limit);
+    List<Article> getArticleByCategoryFuzzy(String[] keys, Boolean order, int limit);
 
 
     /**

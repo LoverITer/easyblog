@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.exception.IllegalPageParameterException;
 import top.easyblog.common.pagehelper.PageParam;
-import top.easyblog.entity.*;
+import top.easyblog.entity.po.*;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.mapper.UserCommentMapper;
@@ -437,7 +437,14 @@ public class ArticleServiceImpl implements IArticleService {
     public List<Article> getArticleByCategoryFuzzy(String[] keys,Boolean order,int limit) {
         if (Objects.nonNull(keys) && keys.length > 0) {
             List<Article> articles = articleMapper.getArticleByCategoryNameFuzzy(keys,order,limit);
-            return parseMarkdowns2Text(articles);
+            parseMarkdowns2Text(articles);
+            if(articles!=null){
+                articles.stream().parallel().forEach(article -> {
+                    Category category = categoryMapper.getCategoryByUserIdAndName(article.getArticleUser(), article.getArticleCategory());
+                    article.setCategoryId(Objects.requireNonNull(category).getCategoryId());
+                });
+            }
+            return articles;
         } else {
             throw new IllegalArgumentException("illegal args for 'keys':" + Arrays.toString(keys));
         }

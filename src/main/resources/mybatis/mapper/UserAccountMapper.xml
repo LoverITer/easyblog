@@ -8,26 +8,26 @@
         <property name="readOnly" value="false"/>
     </cache>
 
-    <insert id="save" parameterType="top.easyblog.entity.UserAccount">
+    <insert id="save" parameterType="top.easyblog.entity.po.UserAccount">
         insert into user_account (account_user, github, wechat, weibo, twitter, steam, qq)
         values (#{accountUser}, #{github,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{weibo,jdbcType=VARCHAR},
                 #{twitter,jdbcType=VARCHAR}, #{steam,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR})
     </insert>
 
-    <select id="getByPrimaryKey" parameterType="long" resultType="top.easyblog.entity.UserAccount">
+    <select id="getByPrimaryKey" parameterType="long" resultType="top.easyblog.entity.po.UserAccount">
         select *
         from user_account
         where account_id = #{id}
     </select>
 
 
-    <select id="getByUserId" parameterType="integer" resultType="top.easyblog.entity.UserAccount">
+    <select id="getByUserId" parameterType="integer" resultType="top.easyblog.entity.po.UserAccount">
         select *
         from user_account
         where account_user = #{accountUser}
     </select>
 
-    <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.UserAccount">
+    <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.po.UserAccount">
         update user_account
         set github=#{github},
             wechat=#{wechat},
@@ -38,7 +38,7 @@
         where account_user = #{accountUser,jdbcType=INTEGER}
     </update>
 
-    <update id="updateSelective" parameterType="top.easyblog.entity.UserAccount">
+    <update id="updateSelective" parameterType="top.easyblog.entity.po.UserAccount">
         update user_account
         <set>
             <if test="github!=null">github=#{github,jdbcType=VARCHAR},</if>

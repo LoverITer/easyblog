@@ -7,7 +7,7 @@
     <property name="size" value="1024" />
     <property name="readOnly" value="false" />
   </cache>
-  <resultMap id="BaseResultMap" type="top.easyblog.entity.UserSigninLog">
+  <resultMap id="BaseResultMap" type="top.easyblog.entity.po.UserSigninLog">
     <id column="log_id" jdbcType="BIGINT" property="logId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
@@ -16,7 +16,7 @@
   </resultMap>
 
 
-  <select id="getByPrimaryKey" parameterType="java.lang.Long" resultType="top.easyblog.entity.UserSigninLog">
+  <select id="getByPrimaryKey" parameterType="java.lang.Long" resultType="top.easyblog.entity.po.UserSigninLog">
     select * from user_signIn_log where log_id = #{id}
   </select>
 
@@ -28,7 +28,7 @@
     select count(*) from user_signIn_log
   </select>
 
-  <select id="getUserLoginInfo" resultType="top.easyblog.entity.UserSigninLog">
+  <select id="getUserLoginInfo" resultType="top.easyblog.entity.po.UserSigninLog">
     select * from user_signIn_log where user_id=#{userId} ORDER BY login_time DESC limit ${num}
   </select>
 
@@ -38,13 +38,13 @@
   </delete>
 
   <!--update、insert、delete默认会清缓存-->
-  <insert id="save" parameterType="top.easyblog.entity.UserSigninLog">
+  <insert id="save" parameterType="top.easyblog.entity.po.UserSigninLog">
     insert into user_signIn_log (user_id, login_ip,login_location, login_time,login_result)
     values (#{userId}, #{loginIp}, #{loginLocation},now(),#{loginResult})
   </insert>
 
 
-  <insert id="saveSelective" parameterType="top.easyblog.entity.UserSigninLog">
+  <insert id="saveSelective" parameterType="top.easyblog.entity.po.UserSigninLog">
     insert into user_signIn_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -72,7 +72,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.entity.UserSigninLog">
+  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.entity.po.UserSigninLog">
     update user_signIn_log
     <set>
       <if test="userId != null">
@@ -91,7 +91,7 @@
     where log_id = #{logId,jdbcType=BIGINT}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.UserSigninLog">
+  <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.po.UserSigninLog">
     update user_signIn_log
     set user_id = #{userId,jdbcType=INTEGER},
       login_ip = #{loginIp,jdbcType=VARCHAR},

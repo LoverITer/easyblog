@@ -1,4 +1,4 @@
-package top.easyblog.entity;
+package top.easyblog.entity.po;
 
 import top.easyblog.common.enums.ArticleType;
 

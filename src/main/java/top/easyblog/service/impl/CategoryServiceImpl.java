@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.common.exception.IllegalPageParameterException;
 import top.easyblog.common.pagehelper.PageParam;
-import top.easyblog.entity.Category;
+import top.easyblog.entity.po.Category;
 import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.service.ICategoryService;
 import top.easyblog.util.DefaultImageDispatcherUtils;

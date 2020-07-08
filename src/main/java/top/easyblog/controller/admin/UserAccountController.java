@@ -11,8 +11,8 @@ import top.easyblog.common.email.Email;
 import top.easyblog.common.email.EmailSender;
 import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.controller.BaseController;
-import top.easyblog.entity.User;
-import top.easyblog.entity.UserSigninLog;
+import top.easyblog.entity.po.User;
+import top.easyblog.entity.po.UserSigninLog;
 import top.easyblog.service.impl.UserServiceImpl;
 import top.easyblog.util.*;
 
