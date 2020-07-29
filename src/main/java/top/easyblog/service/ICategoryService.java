@@ -1,8 +1,8 @@
 package top.easyblog.service;
 
 import com.github.pagehelper.PageInfo;
-import top.easyblog.bean.Category;
 import top.easyblog.common.pagehelper.PageParam;
+import top.easyblog.entity.po.Category;
 
 import java.util.List;
 import java.util.Map;

@@ -7,7 +7,7 @@
     <property name="size" value="1024" />
     <property name="readOnly" value="false" />
   </cache>
-  <resultMap id="BaseResultMap" type="top.easyblog.bean.UserPower">
+  <resultMap id="BaseResultMap" type="top.easyblog.entity.po.UserPower">
     <id column="power_id" jdbcType="TINYINT" property="powerId" />
     <result column="power_name" jdbcType="VARCHAR" property="powerName" />
   </resultMap>
@@ -31,13 +31,13 @@
     where power_id = #{powerId,jdbcType=TINYINT}
   </delete>
 
-  <insert id="save" parameterType="top.easyblog.bean.UserPower" flushCache="false">
+  <insert id="save" parameterType="top.easyblog.entity.po.UserPower" flushCache="false">
     insert into user_power (power_id, power_name)
     values
     (#{powerId,jdbcType=TINYINT}, #{powerName,jdbcType=VARCHAR})
   </insert>
 
-  <insert id="saveSelective" parameterType="top.easyblog.bean.UserPower" flushCache="false">
+  <insert id="saveSelective" parameterType="top.easyblog.entity.po.UserPower" flushCache="false">
     insert into user_power
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="powerId != null">
@@ -57,7 +57,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.bean.UserPower" >
+  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.entity.po.UserPower" >
     update user_power
     <set>
       <if test="powerName != null">
@@ -67,7 +67,7 @@
     where power_id = #{powerId,jdbcType=TINYINT}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="top.easyblog.bean.UserPower">
+  <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.po.UserPower">
     update user_power
     set power_name = #{powerName,jdbcType=VARCHAR}
     where power_id = #{powerId,jdbcType=TINYINT}

@@ -3,13 +3,12 @@
 .typo p {
   font-size: 16px !important;
   font-weight: 400;
-  line-height: 30px;
-  color: #111;
-  margin: 0 0 16px;
- /* white-space: pre-line;  !*合并空白符序列, 但正常换行*!*/
+  line-height: 1.6;
+  color: #4d4d4d;
+  margin: .5em 0;
   overflow-wrap:break-word;
-  word-break:break-all;
-  letter-spacing: .5px;
+  word-break:break-word;
+  letter-spacing: 1px;
 }
 
 .typo h1 a,.typo h2 a,.typo h3 a,.typo h4 a,.typo h5 a{
@@ -51,10 +50,7 @@
   width: 100%;
 }
 
-/* 去除默认边框 */
-.typo fieldset, img {
-  border: 0;
-}
+
 
 /* 块/段落引用 */
 .typo blockquote {
@@ -141,7 +137,7 @@
 
 /* 让链接在 hover 状态下显示下划线 */
 .typo a {
-  color: #61aeee;
+  color: #4183C4;
 }
 
 .typo a:hover {
@@ -151,7 +147,7 @@
 
 .typo a:hover {
   border-bottom-color: #555;
-  color: #61aeee;
+  color: #4183C4;
   text-decoration: none;
 }
 
@@ -209,7 +205,7 @@
 
 .typo strong,.typo  b {
   font-weight: bold;
-  color: #000;
+  color: #4d4d4d;
 }
 
 /* 可拖动文件添加拖动手势 */
@@ -366,7 +362,14 @@
   content: "・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・";
 }
 
+/* 去除默认边框 */
+.typo fieldset{
+  border: 0;
+}
+
 /* Responsive images */
 .typo img {
+  border: 0;
   max-width: 100%;
+  cursor: zoom-in;
 }

@@ -88,7 +88,7 @@
                 </div>
                 <!--文章主体开始-->
                 <div class="ui attached padded segment m-article-body-inner-padding" >
-                    <div  id="content" th:utext="${article.getArticleContent()}" style="padding:0 10px !important;font-size: 1.1rem !important;" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large"></div>
+                    <div  id="content" th:utext="${article.getArticleContent()}" style="padding:0 10px !important;font-size: 1.1rem !important;line-height: 24px;overflow-wrap: break-word;word-break: break-all;" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large"></div>
                     <!--赞赏-->
                     <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui center aligned basic segment">
                         <button id="payButton" class="ui orange basic circular button">赞赏</button>
@@ -212,7 +212,10 @@
     <ol class="js-toc">
     </ol>
 </div>-->
-
+<!--背景层-->
+<div class="imgViewDom" style="display: none">
+    <img class="bgImg" src="" style="width: 980px;">
+</div>
 <div style="height: 10em"></div>
 <!--底部footer-->
 <div th:replace="~{footer :: footbar}"></div>
@@ -379,5 +382,20 @@
     });
 
 
+</script>
+<!--文章图片点击放大缩小效果-->
+<script>
+    $(document).ready(function(){
+        $('.typo img').addClass('img_zoom');
+        $(".img_zoom").bind("click", function(){
+            $('.bgImg').attr("src",$(this)[0].src);
+            $('.imgViewDom').show();
+        });
+
+        $('.bgImg').bind("click", function(){
+            $('.imgViewDom').hide();
+            $('.bgImg').attr("src",'');
+        });
+    });
 </script>
 </html>

@@ -6,18 +6,18 @@ import com.github.pagehelper.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import top.easyblog.bean.*;
 import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.exception.IllegalPageParameterException;
 import top.easyblog.common.pagehelper.PageParam;
-import top.easyblog.common.util.HtmlParserUtils;
-import top.easyblog.common.util.MarkdownUtils;
+import top.easyblog.entity.po.*;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.CategoryMapper;
 import top.easyblog.mapper.UserCommentMapper;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.markdown.TextForm;
 import top.easyblog.service.IArticleService;
+import top.easyblog.util.HtmlParserUtils;
+import top.easyblog.util.MarkdownUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,14 +75,14 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
-    public Article getArticleById(int articleId, String flag) {
+    public Article getArticleById(int articleId, TextForm textForm) {
         Article article = null;
         if (articleId > 0) {
             try {
                 article = articleMapper.getByPrimaryKey((long) articleId);
-                if (TextForm.HTML.equals(flag)) {
+                if (TextForm.HTML.equalsIgnoreCase(textForm)) {
                     parseMarkdown2HTML(article);
-                } else if (TextForm.TXT.equals(flag)) {
+                } else if (TextForm.TXT.equalsIgnoreCase(textForm)) {
                     parseMarkdown2Text(article);
                 }
             } catch (Exception e) {
@@ -437,7 +437,14 @@ public class ArticleServiceImpl implements IArticleService {
     public List<Article> getArticleByCategoryFuzzy(String[] keys,Boolean order,int limit) {
         if (Objects.nonNull(keys) && keys.length > 0) {
             List<Article> articles = articleMapper.getArticleByCategoryNameFuzzy(keys,order,limit);
-            return parseMarkdowns2Text(articles);
+            parseMarkdowns2Text(articles);
+            if(articles!=null){
+                articles.stream().parallel().forEach(article -> {
+                    Category category = categoryMapper.getCategoryByUserIdAndName(article.getArticleUser(), article.getArticleCategory());
+                    article.setCategoryId(Objects.requireNonNull(category).getCategoryId());
+                });
+            }
+            return articles;
         } else {
             throw new IllegalArgumentException("illegal args for 'keys':" + Arrays.toString(keys));
         }

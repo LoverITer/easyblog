@@ -28,7 +28,7 @@ public class AbstractMarkdownParser implements MarkdownParser {
     }
 
     /**
-     * 将Markdown文本渲染成Microsoft Word文本
+     * 将Markdown文本渲染成Word文本
      *
      * @param markdown markdown文本
      * @return String

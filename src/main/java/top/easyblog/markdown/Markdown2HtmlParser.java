@@ -10,7 +10,7 @@ import com.vladsch.flexmark.util.data.DataHolder;
 /**
  * @author HuangXin
  * @since 2020/1/24 12:00
- * Markdown 渲染为HTML的具体实现
+ * Markdown 渲染为HTML实现
  */
 public class Markdown2HtmlParser extends AbstractMarkdownParser {
     @Override

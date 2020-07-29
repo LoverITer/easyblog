@@ -1,4 +1,4 @@
-EasyBlog
+EasyBlog博客网站
 ======== 
 ![](https://img.shields.io/github/tag/pandao/editor.md.svg) 
 ![](https://img.shields.io/github/release/pandao/editor.md.svg) 
@@ -16,13 +16,12 @@ Features
 How to use it?
 ------------
 #### Website：www.easyblog.top
-#### Demonstration of project operation effect： 
+#### Project operation effect： 
 ##### Website Home page
-![](http://image.easyblog.top/1581419401975088bf0a7-2215-4364-8343-7cb56dec4751.png)
+![](http://image.easyblog.top/15959937128727b75b459-a1cb-4e24-82c4-b4b7b5c6caaa.png)
 
 ##### Login/Registration page
-![](http://image.easyblog.top/15814197771404e2f80e8-c4d3-4156-bf3e-1b3578cf6161.jpg)
-
+![](http://image.easyblog.top/1595993819335b42ba4e2-e57d-4db6-a3ba-f00bfa3827de.png)
 ##### Article content page
 ![](http://image.easyblog.top/158141986451400a9fde4-a91d-4850-a1e6-95ad455d2756.png)
 

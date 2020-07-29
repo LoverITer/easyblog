@@ -7,16 +7,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.easyblog.bean.User;
-import top.easyblog.bean.UserComment;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
-import top.easyblog.common.util.UserUtils;
 import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.controller.BaseController;
+import top.easyblog.entity.po.User;
+import top.easyblog.entity.po.UserComment;
 import top.easyblog.service.impl.ArticleServiceImpl;
 import top.easyblog.service.impl.CommentServiceImpl;
 import top.easyblog.service.impl.UserServiceImpl;
+import top.easyblog.util.UserUtils;
 
 import java.util.Objects;
 

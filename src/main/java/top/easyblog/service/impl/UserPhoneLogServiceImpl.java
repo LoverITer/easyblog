@@ -3,7 +3,7 @@ package top.easyblog.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import top.easyblog.bean.UserPhoneLog;
+import top.easyblog.entity.po.UserPhoneLog;
 import top.easyblog.mapper.UserPhoneLogMapper;
 import top.easyblog.service.IUserPhoneLogService;
 

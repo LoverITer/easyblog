@@ -1,55 +1,47 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+﻿<!DOCTYPE html>
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="renderer" content="webkit">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>404</title>
-<link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-<link rel="bookmark" th:href="@{/static/favicon.ico}"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
-<link rel="stylesheet" href="../css/me.css" th:href="@{/static/css/easyblog.base.css}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>404</title>
+    <link rel="stylesheet" href="../../static/css/error.css" th:href="@{/static/css/error.css}">
+    <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet"  th:href="@{/static/css/easyblog.base.css}">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 </head>
-<body>
 
+<body>
 <!--导航-->
 <div th:replace="~{nav :: navbar}"></div>
 
-<br>
-<br>
-<br>
-
-<div class="m-container-small m-padded-tb-massive m-content-container">
-    <div class="ui error message m-padded-tb-huge">
-        <div class="ui contianer">
-            <h2>404</h2>
-            <p>对不起，您访问的资源不见啦~！</p>
-            <a  href="/" >返回首页</a>
-        </div>
+<svg width="380px" height="500px" viewBox="0 0 837 1045" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <path d="M353,9 L626.664028,170 L626.664028,487 L353,642 L79.3359724,487 L79.3359724,170 L353,9 Z" id="Polygon-1" stroke="#007FB2" stroke-width="6" sketch:type="MSShapeGroup"></path>
+        <path d="M78.5,529 L147,569.186414 L147,648.311216 L78.5,687 L10,648.311216 L10,569.186414 L78.5,529 Z" id="Polygon-2" stroke="#EF4A5B" stroke-width="6" sketch:type="MSShapeGroup"></path>
+        <path d="M773,186 L827,217.538705 L827,279.636651 L773,310 L719,279.636651 L719,217.538705 L773,186 Z" id="Polygon-3" stroke="#795D9C" stroke-width="6" sketch:type="MSShapeGroup"></path>
+        <path d="M639,529 L773,607.846761 L773,763.091627 L639,839 L505,763.091627 L505,607.846761 L639,529 Z" id="Polygon-4" stroke="#F2773F" stroke-width="6" sketch:type="MSShapeGroup"></path>
+        <path d="M281,801 L383,861.025276 L383,979.21169 L281,1037 L179,979.21169 L179,861.025276 L281,801 Z" id="Polygon-5" stroke="#36B455" stroke-width="6" sketch:type="MSShapeGroup"></path>
+    </g>
+</svg>
+<div class="message-box">
+  <h1>404</h1>
+  <p>很抱歉，您要访问的页面不存在！</p>
+    <p id="notice-info">请确认您输入的网址是否正确，如果问题持续存在，请发邮件至 2489868503@qq.com 与站长联系。</p>
+  <div class="buttons-con">
+    <div class="action-link-wrap">
+      <a onClick="history.back(-1)" class="link-button link-back-button">返回上一页</a>
+      <a href="http://www.easyblog.top" class="link-button">返回首页</a>
     </div>
+  </div>
 </div>
-<div style="height: 19rem"></div>
-
-<!--footer-->
-<div th:replace="~{footer :: footbar}"></div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script type="text/javascript">
-
-
-    $(document).ready(function () {
-        let userId=$('#userId').val();
-        showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
-    });
-
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
-    });
-</script>
 </body>
+
 </html>

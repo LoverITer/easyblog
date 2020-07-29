@@ -7,7 +7,7 @@
         <property name="size" value="1024"/>
         <property name="readOnly" value="false"/>
     </cache>
-    <resultMap id="BaseResultMap" type="top.easyblog.bean.Category">
+    <resultMap id="BaseResultMap" type="top.easyblog.entity.po.Category">
         <id column="category_id" jdbcType="BIGINT" property="categoryId"/>
         <result column="category_user" jdbcType="INTEGER" property="categoryUser"/>
         <result column="category_name" jdbcType="VARCHAR" property="categoryName"/>
@@ -20,7 +20,7 @@
     </resultMap>
 
 
-    <insert id="save" parameterType="top.easyblog.bean.Category" flushCache="true">
+    <insert id="save" parameterType="top.easyblog.entity.po.Category" flushCache="true">
         insert into category (category_user, category_name,
                               category_image_url, category_article_num, category_click_num,
                               category_care_num, display, create_time, category_description)
@@ -35,26 +35,26 @@
         where category_id = #{id}
     </select>
 
-    <select id="getUserAllCategory" resultType="top.easyblog.bean.Category">
+    <select id="getUserAllCategory" resultType="top.easyblog.entity.po.Category">
         select *
         from category
         where category_user = #{userId}
           AND display in ('0', '1')
     </select>
 
-    <select id="getUserAllDeletedCategory" resultType="top.easyblog.bean.Category">
+    <select id="getUserAllDeletedCategory" resultType="top.easyblog.entity.po.Category">
         select *
         from category
         where category_user = #{userId}
           AND display = '2'
     </select>
 
-    <select id="getAll" resultType="top.easyblog.bean.Category">
+    <select id="getAll" resultType="top.easyblog.entity.po.Category">
         select *
         from category
     </select>
 
-    <select id="getSelective" resultType="top.easyblog.bean.Category">
+    <select id="getSelective" resultType="top.easyblog.entity.po.Category">
         select *
         from category
         where category_user = #{id}
@@ -62,7 +62,7 @@
     </select>
 
 
-    <select id="getCategoryByUserIdAndName" resultType="top.easyblog.bean.Category">
+    <select id="getCategoryByUserIdAndName" resultType="top.easyblog.entity.po.Category">
         select *
         from category
         where category_user = #{userId}
@@ -134,7 +134,7 @@
     </delete>
 
 
-    <insert id="insertSelective" parameterType="top.easyblog.bean.Category">
+    <insert id="insertSelective" parameterType="top.easyblog.entity.po.Category">
         insert into category
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="categoryId != null">
@@ -192,7 +192,7 @@
     </insert>
 
 
-    <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.bean.Category">
+    <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.entity.po.Category">
         update category
         <set>
             <if test="categoryName != null">
@@ -221,7 +221,7 @@
     </update>
 
 
-    <update id="updateByPrimaryKey" parameterType="top.easyblog.bean.Category">
+    <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.po.Category">
         update category
         set category_user        = #{categoryUser,jdbcType=INTEGER},
             category_name        = #{categoryName,jdbcType=VARCHAR},

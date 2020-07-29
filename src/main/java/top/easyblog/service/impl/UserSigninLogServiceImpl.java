@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.easyblog.bean.UserSigninLog;
+import top.easyblog.entity.po.UserSigninLog;
 import top.easyblog.mapper.UserSigninLogMapper;
 import top.easyblog.service.IUserSigninLogService;
 

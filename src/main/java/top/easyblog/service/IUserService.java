@@ -1,7 +1,7 @@
 package top.easyblog.service;
 
-import top.easyblog.bean.User;
 import top.easyblog.config.web.WebAjaxResult;
+import top.easyblog.entity.po.User;
 
 /**
  * @author huanxin

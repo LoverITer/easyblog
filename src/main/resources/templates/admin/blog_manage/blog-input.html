@@ -404,11 +404,14 @@
      */
     let userId = "[[${user.getUserId()}]]";
     //记录文章保存的次数
-    let savedCount=0;
-    $('#content').keydown(function () {
-        //当键盘按键按下的时候把修改标志置0
-       savedCount=0;
+    let savedCount=-1;
+    $(document).ready(function () {
+        $(document).keydown(function () {
+            //当键盘按键按下的时候把修改标志置0
+            savedCount=0;
+        });
     });
+
     //保存为草稿
     function saveDraft() {
         $('#draft-btn,#instanceSave').click(function () {
@@ -429,7 +432,7 @@
             } else if (content == null || content == "") {
                 _alert1("写点内容再保存吧");
             } else {
-                console.log("articleId:" + articleId);
+                //console.log("articleId:" + articleId);
                 _loading(2);
                 $.ajax({
                     url: "/manage/blog/saveAsDraft/" + userId,

@@ -126,7 +126,7 @@ pre[class*="language-"] {
 .token.constant,
 .token.symbol,
 .token.deleted {
-    color: #556370;
+    color: #c7254e;
 }
 
 span.token.number {

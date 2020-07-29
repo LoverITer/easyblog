@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import top.easyblog.bean.User;
-import top.easyblog.bean.UserAccount;
-import top.easyblog.bean.UserSigninLog;
 import top.easyblog.common.email.Email;
 import top.easyblog.common.email.EmailSender;
-import top.easyblog.common.util.*;
 import top.easyblog.config.web.WebAjaxResult;
+import top.easyblog.entity.po.User;
+import top.easyblog.entity.po.UserAccount;
+import top.easyblog.entity.po.UserSigninLog;
+import top.easyblog.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Objects;
 
-import static top.easyblog.bean.UserLoginStatus.UNLOGIN;
+import static top.easyblog.common.enums.UserLoginStatus.UNLOGIN;
 
 /**
  * @author huangxin
