@@ -189,12 +189,15 @@ public class ArticleAdminController extends BaseController {
             try {
                 //根据分类名查用户的分类
                 Category category = null;
-                if (Objects.nonNull(article.getArticleCategory())) {
-                    category = categoryService.getCategoryByUserIdAndName(userId, article.getArticleCategory());
+                String articleCategoryName=article.getArticleCategory();
+                if (Objects.nonNull(articleCategoryName)) {
+                    articleCategoryName=articleCategoryName.trim();
+                    category = categoryService.getCategoryByUserIdAndName(userId, articleCategoryName);
                     //处理用户文章分类
                     if (Objects.isNull(category)) {
-                        //数据库中用户没有这个分类就新建分类
-                        category = new Category(userId, article.getArticleCategory(), DefaultImageDispatcherUtils.defaultCategoryImage(), 1, 0, 0, "1", "");
+                        //用户没有这个分类就新建分类
+                        category = new Category(userId, articleCategoryName, DefaultImageDispatcherUtils.defaultCategoryImage(),
+                                1, 0, 0, "1", "");
                         categoryService.saveCategory(category);
                     } else {
                         //数据库中用户有这个分类就更新该分类下的文章的数量
@@ -202,7 +205,7 @@ public class ArticleAdminController extends BaseController {
                         if (article.getArticleId() == -1) {
                             Category c0 = new Category();
                             c0.setCategoryId(category.getCategoryId());
-                            int num = articleService.countUserArticleInCategory(userId, article.getArticleCategory());
+                            int num = articleService.countUserArticleInCategory(userId, articleCategoryName);
                             c0.setCategoryArticleNum(num + 1);
                             categoryService.updateByPKSelective(c0);
                         }
@@ -211,26 +214,27 @@ public class ArticleAdminController extends BaseController {
                     ajaxResult.setMessage("请填写文章专栏名");
                     return ajaxResult;
                 }
-                int updateRes = 0;
+                article.setArticleCategory(articleCategoryName);
+                int updateRows = 0;
                 //id=-1标志这是一篇新文章
                 if (article.getArticleId() != -1) {
                     //更新已有的数据
-                    updateRes = articleService.updateSelective(article);
+                    updateRows = articleService.updateSelective(article);
                 } else {
                     //让数据库自增ID
                     article.setArticleId(null);
                 }
 
                 //用户之前的可能把文章已经保存为草稿了，再次提交发布就更新
-                if (updateRes == 0) {
+                if (updateRows == 0) {
                     //数据库新增一条记录
                     article.setArticleUser(userId);
                     article.setArticleTags("");
                     article.setArticleCommentNum(0);
                     article.setArticlePublishTime(new Date());
                     //如果更新影响的行数是0，那就直接保存文章
-                    int createRes = articleService.saveArticle(article);
-                    if (createRes > 0) {
+                    int incrRows = articleService.saveArticle(article);
+                    if (incrRows > 0) {
                         executor.execute(() -> {
                             //根据文章不同的分类给用户加对应的积分
                             user.setUserScore(article.getArticleType());
