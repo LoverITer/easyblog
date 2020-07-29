@@ -1,9 +1,9 @@
 package top.easyblog.config.executor;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.*;
 
@@ -15,8 +15,9 @@ import java.util.concurrent.*;
  * @since ：2020/02/27 08:58
  */
 @Configuration
+@Component
 @Slf4j
-public class ServiceThreadPool {
+public class WorkerThreadPool {
 
     /**获取设备CPU个数*/
     private static final int AVAILABLE_CPU_COUNT = Runtime.getRuntime().availableProcessors();
@@ -27,21 +28,18 @@ public class ServiceThreadPool {
     /**工作线程空闲后，保持存活时间*/
     private static final Long TTL = 30L;
     /**任务过多后，存储任务的一个阻塞队列*/
-    private BlockingQueue<Runnable> workQueue = new SynchronousQueue<>();
+    private BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(100);
     /**线程池任务满载后采取的任务拒绝策略*/
     private RejectedExecutionHandler rejectHandler = new ThreadPoolExecutor.CallerRunsPolicy();
 
+
+
     @Bean
     public Executor executor() {
-        ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("server-task-%d").build();
-        return new ThreadPoolExecutor(
-                CORE_POOL_SIZE,
-                MAX_POOL_SIZE,
-                TTL,
-                TimeUnit.SECONDS,
-                workQueue,
-                factory,
-                rejectHandler);
+        DefaultThreadFactory threadFactory = new DefaultThreadFactory("server-task");
+        return new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE,
+                                      TTL, TimeUnit.SECONDS,
+                                      workQueue, threadFactory, rejectHandler);
     }
 
 }
