@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.exception.IllegalPageParameterException;
@@ -274,7 +275,7 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.SUPPORTS,rollbackFor = Exception.class)
     @Override
     public PageInfo<Article> getUserArticlesMonthlyPage(int userId, String year, String month, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;

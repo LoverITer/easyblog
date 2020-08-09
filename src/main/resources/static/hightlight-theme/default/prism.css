@@ -23,7 +23,6 @@ pre[class*="language-"]{
 	-moz-hyphens: none;
 	-ms-hyphens: none;
 	hyphens: none;
-
 }
 
 
@@ -33,13 +32,12 @@ code[class*="language-"]{
     background: none;
     text-shadow: 0 1px white;
     font-family: Monaco,Menlo,Consolas,"Courier New",monospace !important;
-    font-size: 1.1em;
+    font-size: 1.05em;
     text-align: justify;
     white-space: pre;
     word-spacing: .5px;
     word-break: normal;
     word-wrap: normal;
-    line-height: 28px;
     -moz-tab-size: 4;
     -o-tab-size: 4;
     tab-size: 4;
@@ -71,7 +69,7 @@ code[class*="language-"]::selection, code[class*="language-"] ::selection {
 /* Code blocks */
 pre[class*="language-"] {
     padding: 0.1em;
-    margin: .5em 0;
+    margin: .2em 0;
     overflow: auto;
 }
 
@@ -253,8 +251,10 @@ pre[data-line] {
 }
 
 pre[class*="language-"].line-numbers {
+    padding-top: 6px;
+    padding-bottom: 6px;
     position: relative;
-    padding-left: 3.8em;
+    padding-left: 3em;
     counter-reset: linenumber;
 }
 
@@ -268,11 +268,10 @@ pre[class*="language-"].line-numbers > code {
     pointer-events: none;
     top: 0;
     font-size: 100%;
-    left: -3.8em;
+    left: -3.3em;
     width: 3em; /* works for line-numbers below 1000 lines */
     letter-spacing: -1px;
-    border-right: 1px solid #999;
-
+    border-right: 1px solid rgb(209,215,220);
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -296,6 +295,7 @@ pre[class*="language-"].line-numbers > code {
 
 div.code-toolbar {
     position: relative;
+    margin-bottom: 1em
 }
 
 div.code-toolbar > .toolbar {
