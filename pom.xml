@@ -43,10 +43,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>ognl</groupId>
+            <artifactId>ognl</artifactId>
+            <version>[3.2.15,)</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <!-- 移除嵌入式tomcat插件 -->
-           <!-- <exclusions>
+            <!--<exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -54,13 +59,13 @@
             </exclusions>-->
         </dependency>
 
-        <!--外置tomcat-->
-         <!--<dependency>
+        <!--外置tomcat--><!--<dependency>
              <groupId>javax.servlet</groupId>
              <artifactId>javax.servlet-api</artifactId>
              <version>[3.1.0,)</version>
              <scope>provided</scope>
          </dependency>-->
+
 
         <!--热部署工具-->
         <dependency>

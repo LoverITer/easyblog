@@ -6,15 +6,18 @@ package top.easyblog.common.pagehelper;
  * @author huangxin
  */
 public enum PageSize {
+
+    SINGLE_ARTICLE(1),
+
     /**
      * 最小的页面大小
      */
-    MIN_PAGE_SIZE(10),
+    MIN_PAGE_SIZE(5),
 
     /**
      * 默认的页面大小
      */
-    DEFAULT_PAGE_SIZE(15),
+    DEFAULT_PAGE_SIZE(10),
 
     /**
      * 最大的页面大小

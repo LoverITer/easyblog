@@ -42,7 +42,7 @@ public class CommentAdminController extends BaseController {
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
-            PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
+            PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE);
             PageInfo<UserComment> commentsPage = commentService.getCommentPage(user.getUserId(), "send", pageParam);
             model.addAttribute("commentsPage", commentsPage);
             return PREFIX + "comment-manage-publish";
@@ -59,7 +59,7 @@ public class CommentAdminController extends BaseController {
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
-            PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
+            PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE);
             PageInfo<UserComment> commentsPage = commentService.getCommentPage(user.getUserId(), "receive", pageParam);
             model.addAttribute("commentsPage", commentsPage);
             return PREFIX + "comment-manage-receive";

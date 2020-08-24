@@ -34,7 +34,7 @@ public class ArchivesController extends BaseController{
                                              @RequestParam(value = "page", defaultValue = "1") int pageNo,
                                              Model model) {
         model.addAttribute("defaultOrderFlag", true);
-        PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
+        PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE);
         PageInfo<Article> articles = articleService.getUserArticlesMonthlyPage(userId, date.substring(0, 4), date.substring(5, 7), pageParam);
         return orderArticles(model, request, userId, date, articles);
     }
@@ -47,7 +47,7 @@ public class ArchivesController extends BaseController{
                                                      HttpServletRequest request,
                                                      Model model) {
         model.addAttribute("orderByClickNumFlag", true);
-        PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
+        PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE);
         PageInfo<Article> articles = articleService.getUserArticlesMonthlyOrderByClickNumPage(userId, date.substring(0, 4), date.substring(5, 7), pageParam);
         return orderArticles(model, request, userId, date, articles);
     }
@@ -60,7 +60,7 @@ public class ArchivesController extends BaseController{
                                                        HttpServletRequest request,
                                                        Model model) {
         model.addAttribute("orderByUpdateTimeFlag", true);
-        PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
+        PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE);
         PageInfo<Article> articles = articleService.getUserArticlesMonthlyPage(userId, date.substring(0, 4), date.substring(5, 7), pageParam);
         return orderArticles(model, request, userId, date, articles);
     }

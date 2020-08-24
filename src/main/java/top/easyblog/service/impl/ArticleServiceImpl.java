@@ -5,7 +5,6 @@ import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.exception.IllegalPageParameterException;
@@ -146,7 +145,7 @@ public class ArticleServiceImpl implements IArticleService {
                 PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
                 //查最近一个月内的所有数据
                 List<Article> articles = articleMapper.getAllUserNewestArticles();
-                if (Objects.isNull(articles) || articles.size() < 5) {
+                if (Objects.isNull(articles) || articles.size() < 10) {
                     //查历史最新的20条数据
                     articles = articleMapper.getAllUserHistoryNewestArticles(20);
                 }
@@ -275,7 +274,6 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.SUPPORTS,rollbackFor = Exception.class)
     @Override
     public PageInfo<Article> getUserArticlesMonthlyPage(int userId, String year, String month, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
@@ -295,7 +293,6 @@ public class ArticleServiceImpl implements IArticleService {
         return pageInfo;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public List<Article> getUserArticlesMonthlyOrderByClickNum(int userId, String year, String month) {
         if (userId > 0 && StringUtil.isNotEmpty(year) && StringUtil.isNotEmpty(month)) {
@@ -308,7 +305,22 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+    @Override
+    public PageInfo<Article> getUserAllPage(PageParam pageParam) {
+        PageInfo<Article> pageInfo = null;
+        if(pageParam!=null){
+            try{
+                PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
+                List<Article> articles = articleMapper.getAll();
+                pageInfo=new PageInfo<>(parseMarkdowns2Text(articles));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return pageInfo;
+    }
+
     @Override
     public PageInfo<Article> getUserArticlesMonthlyOrderByClickNumPage(int userId, String year, String month, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
@@ -328,7 +340,6 @@ public class ArticleServiceImpl implements IArticleService {
         return pageInfo;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public List<Article> getByCategoryAndUserId(int userId, int categoryId) {
         if (userId > 0 && categoryId > 0) {
@@ -341,7 +352,6 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public PageInfo<Article> getByCategoryAndUserIdPage(int userId, int categoryId, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
@@ -362,7 +372,6 @@ public class ArticleServiceImpl implements IArticleService {
         return pageInfo;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public List<Article> getArticlesSelective(Article article, String year, String month) {
         try {
@@ -375,13 +384,12 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public PageInfo<Article> getArticlesSelectivePage(Article article, PageParam pageParam) {
         return getArticlesSelectivePage(article, null, null, pageParam);
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+
     public PageInfo<Article> getArticlesSelectivePage(Article article, String year, String month, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;
         if (Objects.nonNull(article)) {
@@ -400,7 +408,6 @@ public class ArticleServiceImpl implements IArticleService {
         return pageInfo;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public List<Article> getArticleByTopic(String query) {
         if (StringUtil.isNotEmpty(query)) {
@@ -413,7 +420,7 @@ public class ArticleServiceImpl implements IArticleService {
         return null;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+
     @Override
     public PageInfo<Article> getArticleByTopicPage(String query, PageParam pageParam) {
         PageInfo<Article> pageInfo = null;

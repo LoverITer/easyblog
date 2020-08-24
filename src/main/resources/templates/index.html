@@ -162,8 +162,8 @@
         </div>
         <div class="whitebg bloglist">
             <h2 class="htitle">最新博文</h2>
-            <ul>
-                <li th:if="${newestArticlesPages!=null&&!#lists.isEmpty(newestArticlesPages.getList())}" th:each="article:${newestArticlesPages.getList()}">
+            <ul class="news">
+                <li  th:if="${newestArticlesPages!=null&&!#lists.isEmpty(newestArticlesPages.getList())}" th:each="article:${newestArticlesPages.getList()}">
                     <h3 class="blogtitle">
                         <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
                         <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
@@ -192,7 +192,7 @@
                         <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2018-11-08</span>
                         <span class="text">
                           <svg style="vertical-align:-5px;fill: #666" t="1568705845189" class="icon eye" viewBox="0 0 1433 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16883" width="20" height="20"><path d="M720.69629629 932.6176963c-213.05768889 0-407.36918519-120.58848889-582.93448888-361.67534074-23.88337036-32.71571111-23.88337036-85.169 0-117.88471112C313.32711111 211.97079259 507.63860741 91.3823037 720.69629629 91.3823037s407.36918519 120.58848889 582.9344889 361.67534074c23.88337036 32.71571111 23.88337036 85.169 0 117.88471112C1128.06548147 812.02920741 933.75398519 932.6176963 720.69629629 932.6176963z m0-721.00740741C542.51734074 211.61028889 377.85727408 309.39691852 222.48017777 512 377.85727408 714.60308148 542.4272148 812.38971111 720.69629629 812.38971111c178.17895556 0 342.83902223-97.78662964 498.21611851-300.38971111C1063.53531852 309.39691852 898.96537777 211.61028889 720.69629629 211.61028889z m0 495.69259259a195.30288148 195.30288148 0 1 1 0-390.60576296 195.30288148 195.30288148 0 0 1 0 390.60576296zM720.69629629 602.12592592a90.12592592 90.12592592 0 1 0 0-180.25185184 90.12592592 90.12592592 0 0 0 0 180.25185184z" p-id="16884" fill=""></path></svg>
-                         <span style="margin-left: 0" th:text="${article.getArticleClick()}"></span>
+                          <span style="margin-left: 0" th:text="${article.getArticleClick()}"></span>
                         </span>
                         <span>【<a href="/xd/" th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}" target="_blank" th:text="${article.getArticleCategory()}">设计心得</a>】</span>
                     </p>
@@ -255,7 +255,7 @@
                             <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
                             <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}">
                         </i>
-                        <p th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</p>
+                        <p th:text="${article.getArticleTopic()}"></p>
                     </a>
                 </li>
             </ul>
@@ -310,9 +310,133 @@
     </a>
 </footer>
 </body>
-<script>
+<script type="text/javascript" src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    let MAX_PAGE_NO = /*[[${articlePagesSize}]]*/ 0;   //最大页码
+    let displayedSize= /*[[${articlePagesSize}}]]*/ 0;  //已经显示的数量
+    let pageSize= /*[[pageSize]]*/ 0;   //分页大小
+    /*]]>*/
+    let pageNo = pageSize===0?5:(displayedSize/pageSize)+1;    //首页最新文章默认前20条数据（前4页），当滑到最后从第5页开始加载
     $(document).ready(function () {
         showPageZoomWarning();
-    })
+        let range = 50;             //距下边界长度/单位px
+        let totalheight = 0;
+        $(window).scroll(function () {
+            let srollPos = $(window).scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)
+            totalheight = parseFloat($(window).height()) + parseFloat(srollPos);
+            if (($(document).height() - range) <= totalheight && pageNo <= MAX_PAGE_NO) {
+                if (loadList(pageNo)) {
+                    pageNo++;
+                }
+            }
+        });
+    });
+
+    //加载新的文章数据
+    function loadList(pageNo) {
+        let ret = false;
+        $.ajax({
+            url: "/article/asyncGetArticles",
+            method: "GET",
+            async: false,
+            data: {page: pageNo},
+            dataType: "json",
+            success: function (response) {
+                ret = response.success;
+                let user=response.message==null?null:eval('(' + response.message + ')');
+                for(var key in response.model) {
+                    dynamicAppendArticle(response.model[key], user);
+                }
+            },
+            error: function () {
+                showErrorMessage("服务异常，请重试！");
+            }
+        });
+
+        return ret;
+    }
+
+    /**
+     * 动态生成文章信息
+     */
+    function dynamicAppendArticle(data, user) {
+        var li = $('<li></li>');
+        //h3
+        var h3 = $('<h3 class="blogtitle"></h3>');
+        var h3_a = $('<a target="_blank"></a>');
+        $(h3_a).html(data.articleTopic);
+        $(h3).append(h3_a);
+        $(li).append(h3);
+        //span
+        var span = $('<span class="blogpic imgscale"></span>');
+        var span_a = $('<a></a>');
+        $(span_a).attr('title', data.articleTopic);
+        var span_a_img = $('<img/>');
+        $(span_a).append(span_a_img);
+        $(span).append(span_a);
+        $(li).append(span);
+        //p
+        var content_p = $('<p class="blogtext"></p>');
+        $(content_p).html(data.articleContent.substring(0, 150));
+        $(li).append(content_p);
+
+        //p
+        var blog_info_p = $('<p class="bloginfo"></p>');
+        $(li).append(blog_info_p);
+        var blog_info_p_li = $('<li class="avatar" style="min-height: unset !important;padding-bottom: 0!important;margin-bottom: 0px;"></li>');
+        var blog_info_p_li_a = $('<a href="#" target="_blank"></a>');
+        var blog_info_p_li_a_img = $('<img src="#" width="30px" height="30px">');
+        $(blog_info_p_li_a).attr('href', "/article/index/" + data.articleUser);
+        $(blog_info_p_li_a_img).attr('src', data.userHeaderImageUrl);
+        $(blog_info_p_li_a).append(blog_info_p_li_a_img);
+        $(blog_info_p_li).append(blog_info_p_li_a);
+        $(blog_info_p).append(blog_info_p_li);
+
+        var blog_info_p_span2 = $('<span></span>');
+        $(blog_info_p_span2).html(formatDate(data.articlePublishTime, false));
+        $(blog_info_p).append(blog_info_p_span2);
+
+        var blog_info_p_span3 = $('<span class="text"></span>');
+        var blog_info_p_span3_svg = $('<svg style="vertical-align:-5px;fill: #666" t="1568705845189" class="icon eye" viewBox="0 0 1433 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16883" width="20" height="20"><path d="M720.69629629 932.6176963c-213.05768889 0-407.36918519-120.58848889-582.93448888-361.67534074-23.88337036-32.71571111-23.88337036-85.169 0-117.88471112C313.32711111 211.97079259 507.63860741 91.3823037 720.69629629 91.3823037s407.36918519 120.58848889 582.9344889 361.67534074c23.88337036 32.71571111 23.88337036 85.169 0 117.88471112C1128.06548147 812.02920741 933.75398519 932.6176963 720.69629629 932.6176963z m0-721.00740741C542.51734074 211.61028889 377.85727408 309.39691852 222.48017777 512 377.85727408 714.60308148 542.4272148 812.38971111 720.69629629 812.38971111c178.17895556 0 342.83902223-97.78662964 498.21611851-300.38971111C1063.53531852 309.39691852 898.96537777 211.61028889 720.69629629 211.61028889z m0 495.69259259a195.30288148 195.30288148 0 1 1 0-390.60576296 195.30288148 195.30288148 0 0 1 0 390.60576296zM720.69629629 602.12592592a90.12592592 90.12592592 0 1 0 0-180.25185184 90.12592592 90.12592592 0 0 0 0 180.25185184z" p-id="16884" fill=""></path></svg>');
+        var blog_info_p_span3_span = $('<span style="margin-left: 0"></span>');
+        $(blog_info_p_span3_span).html(data.articleClick);
+        $(blog_info_p_span3).append(blog_info_p_span3_svg);
+        $(blog_info_p_span3).append(blog_info_p_span3_span);
+        $(blog_info_p).append(blog_info_p_span3);
+
+        var blog_info_p_span4 = $('<span></span>');
+        var blog_info_p_span4_a = $('<a target="_blank"></a>');
+        $(blog_info_p_span4).append(blog_info_p_span4_a);
+        $(blog_info_p).append(blog_info_p_span4);
+        $(blog_info_p_span4_a).html("【"+data.articleCategory+"】");
+        $(blog_info_p_span4_a).attr('href', "/category/details/" + data.categoryId + "/" + data.articleUser)
+
+        //a
+        var a = $('<a href="#" class="viewmore"></a>');
+        $(li).append(a);
+        $(a).html("阅读全文");
+        if (user == null) {
+            $(h3_a).attr('href', "/article/details/" + data.articleId);
+            $(span_a).attr('href', "/article/details/" + data.articleId);
+            if (data.articleFirstPicture != null) {
+                $(span_a_img).attr('src', data.articleFirstPicture);
+            } else {
+                $(span_a_img).attr('src', "https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture");
+            }
+            $(a).attr('href', "/article/details/" + data.articleId);
+        } else {
+            $(h3_a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + user.userId);
+            $(span_a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + user.userId);
+            if (data.articleFirstPicture != null) {
+                $(span_a_img).attr('src', data.articleFirstPicture);
+            } else {
+                $(span_a_img).attr('src', "https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture");
+            }
+            $(a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + user.userId);
+        }
+        $(".news").append(li);
+    }
+
 </script>
 </html>

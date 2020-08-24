@@ -1,17 +1,17 @@
 package top.easyblog.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import top.easyblog.common.enums.ArticleType;
 import top.easyblog.common.pagehelper.PageParam;
 import top.easyblog.common.pagehelper.PageSize;
+import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.entity.po.Article;
 import top.easyblog.entity.po.User;
 import top.easyblog.entity.po.UserAccount;
@@ -61,7 +61,7 @@ public class ArticleController extends BaseController {
         try {
             getArticleUserInfo(model, userId, articleType + "");
             User author = userService.getUser(userId);
-            PageParam pageParam = new PageParam(page, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
+            PageParam pageParam = new PageParam(page, PageSize.DEFAULT_PAGE_SIZE);
             PageInfo articlePages = articleService.getUserArticlesPage(userId, articleType + "", pageParam);
             model.addAttribute("articlePages", articlePages);
             author.setUserPassword(null);
@@ -180,6 +180,37 @@ public class ArticleController extends BaseController {
             log.error(e.getMessage());
             return "redirect:/error/error";
         }
+    }
+
+    /**
+     * 首页异步请求文章
+     *
+     * @param pageNo 请求的文章页数
+     * @return
+     */
+    @ResponseBody
+    @GetMapping(value = "/asyncGetArticles")
+    public WebAjaxResult asyncGetArticles(@RequestParam(value = "page", defaultValue = "1") int pageNo,
+                                          RedirectAttributes redirect,
+                                          HttpServletRequest request) {
+        WebAjaxResult result = new WebAjaxResult();
+        try {
+            User user = UserUtils.getUserFromCookie(request);
+            PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE);
+            PageInfo<Article> articlePages = articleService.getUserAllPage(pageParam);
+            List<Article> articles = articlePages.getList();
+            result.setSuccess(true);
+            for(int i=0;i<articles.size();i++){
+                result.setModel(i+"",articles.get(i));
+            }
+            result.setMessage(user==null?null: JSONObject.toJSONString(user.toString()));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            redirect.addAttribute("error", "抱歉，数据加载异常！");
+        }
+        //只刷新index页面下的dynamic_articles片段
+        //return "index::dynamic_articles";
+        return result;
     }
 
 

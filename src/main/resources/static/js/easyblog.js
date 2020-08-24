@@ -378,4 +378,94 @@ function logOut(userId) {
 }
 
 
+/**时间有关的***********************/
 
+/**
+ * $(function(){
+	$(".time").append("<div>标准转换："+DateToTime("1515640111")+"</div>");
+	$(".time").append("<div>Y-m-d："+DateToTime("1515640111","Y-m-d")+"</div>");
+	$(".time").append("<div>Y-m-d H:i:s："+DateToTime("1515640111","Y-m-d H:i:s")+"</div>");
+	$(".time").append("<div>Y/m/d："+DateToTime("1515640111","Y/m/d")+"</div>");
+	$(".time").append("<div>Y/m/d H:i:s："+DateToTime("1515640111","Y/m/d H:i:s")+"</div>");
+	$(".time").append("<div>Y年m月d日："+DateToTime("1515640111","Y年m月d日")+"</div>");
+	$(".time").append("<div>Y年m月d日 H:i:s："+DateToTime("1515640111","Y年m月d日 H:i:s")+"</div>");
+})
+ 时间戳：1515640111不同格式化结果：
+ 标准转换：2018-01-11 11:08:31
+ Y-m-d：2018-01-11
+ Y-m-d H:i:s：2018-01-11 11:08:31
+ Y/m/d：2018/01/11
+ Y/m/d H:i:s：2018/01/11 11:08:31
+ Y年m月d日：2018年01月11日
+ Y年m月d日 H:i:s：2018年01月11日 11:08:31
+ * 将时间戳格式化为时间字符串
+ * @param unixTime   时间戳
+ * @param type       格式化类型
+ * @returns {string}   返回时间格式化的事假字符串
+ * @constructor
+ */
+function DateToTime(unixTime, type = "Y-M-D H:i:s") {
+    var date = new Date(unixTime * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var datetime = "";
+    datetime += date.getFullYear() + type.substring(1, 2);
+    datetime += (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + type.substring(3, 4);
+    datetime += (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate());
+    if (type.substring(5, 6)) {
+        if (type.substring(5, 6).charCodeAt() > 255) {
+            datetime += type.substring(5, 6);
+            if (type.substring(7, 8)) {
+                datetime += " " + (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours());
+                if (type.substring(9, 10)) {
+                    datetime += type.substring(8, 9) + (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes());
+                    if (type.substring(11, 12)) {
+                        datetime += type.substring(10, 11) + (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                    }
+                }
+            }
+        } else {
+            datetime += " " + (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours());
+            if (type.substring(8, 9)) {
+                datetime += type.substring(7, 8) + (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes());
+                if (type.substring(10, 11)) {
+                    datetime += type.substring(9, 10) + (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                }
+            }
+        }
+    }
+    return datetime;
+}
+
+/**
+ * 格式化日期
+ * @param unixTime   时间戳
+ * @param full    full==true, return yyyy-mm-dd hh-mm-ss  else return yyyy-mm-dd
+ * @returns {*}
+ */
+function formatDate(unixTime, full = false) {
+    var oDate = new Date(unixTime);
+    oYear = oDate.getFullYear();
+    oMonth = oDate.getMonth() + 1;
+    oDay = oDate.getDate();
+    oHour = oDate.getHours();
+    oMin = oDate.getMinutes();
+    oSen = oDate.getSeconds();
+    if (full) {
+        oTime = oYear + '-' + getzf(oMonth) + '-' + getzf(oDay) + ' ' + getzf(oHour) + ':' +
+            getzf(oMin) + ':' + getzf(oSen);//最后拼接时间
+    } else {
+        oTime = oYear + '-' + getzf(oMonth) + '-' + getzf(oDay);
+    }
+    return oTime;
+}
+
+/**
+ * 日期前补0
+ * @param num
+ * @returns {string}
+ */
+function getzf(num) {
+    if (parseInt(num) < 10) {
+        num = '0' + num;
+    }
+    return num;
+}

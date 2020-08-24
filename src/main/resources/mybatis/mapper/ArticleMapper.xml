@@ -24,7 +24,24 @@
     </select>
 
     <select id="getAll" resultType="top.easyblog.entity.po.Article">
-        SELECT * FROM article
+        SELECT
+            article_id,
+            article_topic,
+            article_publish_time,
+            article_content,
+            article_click,
+            article_category,
+            article_comment_num,
+            article_first_picture,
+            article_user,
+            user.user_nickname AS authorName,
+            user.user_headerImg_url AS userHeaderImageUrl,
+            category_id AS categoryId
+        FROM
+            article
+                LEFT JOIN user ON article.article_user = user.user_id
+                LEFT JOIN category ON category.category_user=article_user AND category_name=article_category
+        ORDER BY article_publish_time DESC
     </select>
 
     <select id="countUserArticlesInCategory" resultType="integer">
@@ -32,8 +49,7 @@
         FROM
             article
         WHERE
-            article_user = #{userId}
-            AND article_category = #{categoryName}
+            article_user = #{userId} AND article_category = #{categoryName}
     </select>
 
     <select id="getUserArticlesSelective" resultType="top.easyblog.entity.po.Article">
@@ -337,6 +353,8 @@
         FROM article
         WHERE article_first_picture is NULL
     </select>
+
+
 
     <insert id="saveSelective" parameterType="top.easyblog.entity.po.Article">
         INSERT INTO article

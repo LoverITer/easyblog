@@ -43,7 +43,7 @@ public class CategoryAdminController extends BaseController {
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
-            PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
+            PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE);
             PageInfo<Category> categoriesPage = categoryService.getUserAllCategoriesPage(user.getUserId(), pageParam);
             model.addAttribute("categoriesPage", categoriesPage);
             putCategoryNumInModel(user, model);
@@ -168,7 +168,7 @@ public class CategoryAdminController extends BaseController {
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
-            PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
+            PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE);
             PageInfo<Category> categoriesPage = categoryService.getUserAllDeletedCategoryPage(user.getUserId(), pageParam);
             model.addAttribute("categoriesPage", categoriesPage);
             putCategoryNumInModel(user, model);

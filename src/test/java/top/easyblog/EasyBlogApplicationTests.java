@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import top.easyblog.common.enums.HtmlTemplate;
 import top.easyblog.entity.dto.Address;
 import top.easyblog.entity.po.Article;
 import top.easyblog.entity.po.User;
@@ -13,9 +14,11 @@ import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.mapper.UserPowerMapper;
 import top.easyblog.oauth2.impl.GitHubAuthServiceImpl;
+import top.easyblog.util.HtmlTemplateUtils;
 import top.easyblog.util.NetWorkUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +37,9 @@ public class EasyBlogApplicationTests {
 
     @Autowired
     GitHubAuthServiceImpl gitHubAuthService;
+
+    @Autowired
+    HtmlTemplateUtils htmlTemplateUtils;
 
     @Test
     public void testForArticleMapper(){
@@ -133,6 +139,13 @@ public class EasyBlogApplicationTests {
     public void testNetWorkUtils(){
         String location = NetWorkUtils.getLocation("117.136.86.247");
         System.out.println(location);
+    }
+
+    @Test
+    public void testTemplateEngine(){
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("title","hello,黄鑫");
+        System.out.println(new HtmlTemplateUtils().render(HtmlTemplate.TEST, params));
     }
 
 

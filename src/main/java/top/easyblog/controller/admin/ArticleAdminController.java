@@ -48,7 +48,7 @@ public class ArticleAdminController extends BaseController {
 
 
     @GetMapping(value = "/")
-    public String manageBlogArticle(Model model,
+    public String manageBlogArticles(Model model,
                                     @RequestParam(value = "userId") Integer userId,
                                     @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         //从Redis中查询出已经登录User的登录信息
@@ -61,7 +61,7 @@ public class ArticleAdminController extends BaseController {
         if (Objects.nonNull(user)) {
             try {
                 //去管理页面默认展示所有的已发布的文章
-                PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
+                PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE);
                 Article article = new Article();
                 article.setArticleUser(user.getUserId());
                 PageInfo articlePages = articleService.getArticlesSelectivePage(article, pageParam);
@@ -80,7 +80,7 @@ public class ArticleAdminController extends BaseController {
 
 
     @GetMapping(value = "/search")
-    public String searchByCondition(@RequestParam(defaultValue = "-1") Integer userId,
+    public String searchConditional(@RequestParam(defaultValue = "-1") Integer userId,
                                     @RequestParam(defaultValue = "不限") String year,
                                     @RequestParam(defaultValue = "不限") String month,
                                     @RequestParam(defaultValue = "不限") String articleType,
@@ -115,7 +115,7 @@ public class ArticleAdminController extends BaseController {
                 if (!"".equals(articleTopic)) {
                     article.setArticleTopic(articleTopic);
                 }
-                PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
+                PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE);
                 PageInfo<Article> articlePages = articleService.getArticlesSelectivePage(article, year, month, pageParam);
                 model.addAttribute("articlePages", articlePages);
                 model.addAttribute("articleTopic", articleTopic);
@@ -514,7 +514,7 @@ public class ArticleAdminController extends BaseController {
     public String publicBlogPage(Model model,
                                  @RequestParam(value = "userId") Integer userId,
                                  @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
+        PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE);
         return getArticles(model, "0", userId, "/blog-public", pageParam);
     }
 
@@ -522,20 +522,20 @@ public class ArticleAdminController extends BaseController {
     public String privateBlogPage(Model model,
                                   @RequestParam(value = "userId") Integer userId,
                                   @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
+        PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE);
         return getArticles(model, "1", userId, "/blog-private", pageParam);
     }
 
     @GetMapping(value = "/draft")
     public String draftBlog(Model model, @RequestParam(value = "userId") Integer userId, @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
+        PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE);
         return getArticles(model, "2", userId, "/blog-draft-box", pageParam);
     }
 
     @GetMapping(value = "/dash")
     public String dashBlogPage(Model model, @RequestParam(value = "userId") Integer userId,
                                @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE.getPageSize());
+        PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE);
         return getArticles(model, "3", userId, "/blog-dash", pageParam);
     }
 
