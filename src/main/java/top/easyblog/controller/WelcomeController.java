@@ -56,10 +56,18 @@ public class WelcomeController extends BaseController{
         try {
             User user = UserUtils.getUserFromCookie(request);
             model.addAttribute("user", user);
-            //查询最近1个月内的文章
+            //查询最近1个月内的文章，不足10篇，查询历史的20篇
             PageInfo<Article> newestArticlesPages = articleService.getAllUserNewestArticlesPage(new PageParam(pageNo,
-                    PageSize.DEFAULT_PAGE_SIZE.getPageSize()));
+                    PageSize.DEFAULT_PAGE_SIZE));
             model.addAttribute("newestArticlesPages", newestArticlesPages);
+            PageParam pageParam = new PageParam(pageNo, PageSize.SINGLE_ARTICLE);
+            PageInfo<Article> articlePages = articleService.getUserAllPage(pageParam);
+            int displayedSize = newestArticlesPages.getList().size();
+            //总的文章大小
+            model.addAttribute("articlePagesSize",Math.floorMod(articlePages.getTotal(),PageSize.MIN_PAGE_SIZE.getPageSize()));
+            //已经显示的文章大小
+            model.addAttribute("displayedSize",displayedSize);
+            model.addAttribute("pageSize",PageSize.MIN_PAGE_SIZE);
             //查询访问量最高的22篇最近的文章用于首页大图、访问排行、特别推荐的显示
             List<List<?>> top22Articles = getTopNArticle(DEFAULT_DISPLAY_HOT_ARTICLE_SIZE,new int[]{5, 1, 7, 6});
             if(top22Articles!=null){

@@ -10,162 +10,210 @@
 
     <insert id="save" useGeneratedKeys="true" keyProperty="articleId" keyColumn="article_id"
             parameterType="top.easyblog.entity.po.Article" flushCache="false">
-        insert into article (article_user, article_topic, article_publish_time,
-                             article_click, article_category, article_status,
-                             article_top, article_type, article_tags,
-                             article_content, article_comment_num, article_appreciate)
-        values (#{articleUser}, #{articleTopic}, now(), 0, #{articleCategory},
-                #{articleStatus}, #{articleTop}, #{articleType}, #{articleTags},
-                #{articleContent}, 0, #{articleAppreciate})
+        INSERT INTO article (article_user, article_topic, article_publish_time,article_click, article_category, article_status,article_top, article_type, article_tags,article_content, article_comment_num, article_appreciate)
+        VALUES (#{articleUser}, #{articleTopic}, NOW(), 0, #{articleCategory},#{articleStatus}, #{articleTop}, #{articleType}, #{articleTags},#{articleContent}, 0, #{articleAppreciate})
     </insert>
 
 
-    <select id="getByPrimaryKey" parameterType="java.lang.Long" useCache="false" resultType="top.easyblog.entity.po.Article">
-        select *
-        from article
-        where article_id = #{id,jdbcType=BIGINT}
+    <select id="getByPrimaryKey" parameterType="java.lang.Long" useCache="false"
+            resultType="top.easyblog.entity.po.Article">
+        SELECT *
+        FROM
+            article
+        WHERE article_id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="getAll" resultType="top.easyblog.entity.po.Article">
-        select * from article
+        SELECT
+            article_id,
+            article_topic,
+            article_publish_time,
+            article_content,
+            article_click,
+            article_category,
+            article_comment_num,
+            article_first_picture,
+            article_user,
+            user.user_nickname AS authorName,
+            user.user_headerImg_url AS userHeaderImageUrl,
+            category_id AS categoryId
+        FROM
+            article
+                LEFT JOIN user ON article.article_user = user.user_id
+                LEFT JOIN category ON category.category_user=article_user AND category_name=article_category
+        ORDER BY article_publish_time DESC
     </select>
 
     <select id="countUserArticlesInCategory" resultType="integer">
-        select count(*)
-        from article
-        where article_user = #{userId}
-          AND article_category = #{categoryName}
+        SELECT COUNT(*)
+        FROM
+            article
+        WHERE
+            article_user = #{userId} AND article_category = #{categoryName}
     </select>
 
     <select id="getUserArticlesSelective" resultType="top.easyblog.entity.po.Article">
-        select *
-        from article
-        where article_user = #{userId}
-          AND article_type = #{articleType}
-          AND article_status = '0'
-        order by article_publish_time DESC
+        SELECT *
+        FROM
+            article
+        WHERE
+            article_user = #{userId}
+            AND article_type = #{articleType}
+            AND article_status = '0'
+        ORDER BY
+            article_publish_time DESC
     </select>
 
     <select id="getUserAllArticles" resultType="top.easyblog.entity.po.Article">
-        select *
-        from article
-        where article_user = #{userId}
-          AND article_status = '0'
-        order by article_publish_time DESC
+        SELECT *
+        FROM
+            article
+        WHERE
+            article_user = #{userId}
+            AND article_status = '0'
+        ORDER BY
+            article_publish_time DESC
     </select>
 
     <select id="getNewestArticles" resultType="top.easyblog.entity.po.Article">
-        select *
-        from article
-        where article_user = #{userId} AND article_status = '0'
-        order by article_publish_time DESC
-        limit #{limit}
+        SELECT *
+        FROM article
+        WHERE
+            article_user = #{userId}
+            AND article_status = '0'
+        ORDER BY article_publish_time DESC
+        LIMIT #{limit}
     </select>
 
     <select id="getAllMostFamousArticles" resultType="top.easyblog.entity.po.Article">
-        select *
-        from article
-        where article_status = '0' AND date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+        SELECT *
+        FROM article
+        WHERE
+            article_status = '0'
+            AND DATE(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
         ORDER BY article_click DESC
-        limit #{limit}
+        LIMIT #{limit}
     </select>
 
 
     <select id="getAllHistoryFamousArticles" resultType="top.easyblog.entity.po.Article">
-        select *
-        from article
-        where article_status = '0'
+        SELECT *
+        FROM article
+        WHERE article_status = '0'
         ORDER BY article_click DESC
-        limit #{limit}
+        LIMIT #{limit}
     </select>
 
     <select id="getArticleCategoryCounter" resultType="top.easyblog.entity.po.ArticleCategoryCounter">
-        select article_category AS category_name, count(*) AS article_num
-        from article
-        where article_status = '0'and date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 180 DAY)
+        SELECT article_category AS category_name, count(*) AS article_num
+        FROM article
+        WHERE
+            article_status = '0'
+            AND DATE(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 180 DAY)
         GROUP BY article_category
-        limit #{limit}
+        LIMIT #{limit}
     </select>
 
     <select id="getByCategoryWithLimit" resultType="top.easyblog.entity.po.Article">
-        select *
-        from article
-        where article_status = '0'
-          and date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 180 DAY)
-          and (article_category like #{key}
-            or article_topic like #{key})
-        order by article_click DESC
-        limit #{limit}
+        SELECT *
+        FROM article
+        WHERE
+            article_status = '0'
+            AND DATE(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 180 DAY)
+            AND (article_category like #{key}
+            OR article_topic like #{key})
+        ORDER BY article_click DESC
+        LIMIT #{limit}
     </select>
 
     <select id="getAllUserNewestArticles" resultType="top.easyblog.entity.po.Article">
-        select *
-        from article
-        where article_status = '0'
-          and date(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-        order by article_publish_time DESC
+        SELECT *
+        FROM article
+        WHERE article_status = '0'
+          AND DATE(article_publish_time) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        ORDER BY article_publish_time DESC
     </select>
 
     <select id="getAllUserHistoryNewestArticles" resultType="top.easyblog.entity.po.Article">
-        select *
-        from article
-        where article_status = '0'
-        order by article_publish_time DESC
-        limit #{limit}
+        SELECT *
+        FROM article
+        WHERE article_status = '0'
+        ORDER BY article_publish_time DESC
+        LIMIT #{limit}
     </select>
 
 
     <select id="getHotArticles" resultType="top.easyblog.entity.po.Article">
-        select *
-        from article
-        where article_user = #{userId}
+        SELECT *
+        FROM article
+        WHERE article_user = #{userId}
           AND article_status = '0'
-        order by article_click DESC
-        limit #{limit}
+        ORDER BY article_click DESC
+        LIMIT #{limit}
     </select>
 
     <select id="countByUserIdMonthly" resultType="top.easyblog.entity.po.ArticleCounter">
-        SELECT DATE_FORMAT(article_publish_time, "%Y年%m月") AS date, COUNT(*) AS count
-        FROM article
-        where article_user = #{userId}
-          AND article_status = '0'
-        GROUP BY DATE_FORMAT(article_publish_time, "%Y年%m月")
-        ORDER BY DATE_FORMAT(article_publish_time, "%Y年%m月") DESC
+        SELECT
+            DATE_FORMAT(article_publish_time, "%Y年%m月") AS date,
+            COUNT(*) AS count
+        FROM
+            article
+        WHERE
+            article_user = #{userId}
+            AND article_status = '0'
+        GROUP BY
+            DATE_FORMAT(article_publish_time, "%Y年%m月")
+        ORDER BY
+            DATE_FORMAT(article_publish_time, "%Y年%m月") DESC
     </select>
 
     <select id="getByUserIdMonthly" resultType="top.easyblog.entity.po.Article">
         SELECT *
-        FROM article
-        WHERE YEAR(article_publish_time) = #{year}
-          AND MONTH(article_publish_time) = #{month}
-          AND article_user = #{userId}
-          AND article_status = '0'
-        ORDER BY article_publish_time DESC
+        FROM
+            article
+        WHERE
+            YEAR(article_publish_time) = #{year}
+            AND MONTH(article_publish_time) = #{month}
+            AND article_user = #{userId}
+            AND article_status = '0'
+        ORDER BY
+            article_publish_time DESC
     </select>
 
     <select id="getByUserIdMonthlyOrderByClickNum" resultType="top.easyblog.entity.po.Article">
         SELECT *
-        FROM article
-        WHERE YEAR(article_publish_time) = #{year}
-          AND MONTH(article_publish_time) = #{month}
-          AND article_user = #{userId}
-          AND article_status = '0'
-        ORDER BY article_click DESC
+        FROM
+            article
+        WHERE
+            YEAR(article_publish_time) = #{year}
+            AND MONTH(article_publish_time) = #{month}
+            AND article_user = #{userId}
+            AND article_status = '0'
+        ORDER BY
+            article_click DESC
     </select>
 
     <select id="getByCategoryAndUserId" resultType="top.easyblog.entity.po.Article">
-        select *
-        from article
-        where article_user = #{userId}
-          AND article_status = '0'
-          AND article_category
-            in (select category_name from category where category_id = #{categoryId})
-        ORDER BY article_publish_time DESC
+        SELECT *
+        FROM
+            article
+        WHERE
+            article_user = #{userId}
+            AND article_status = '0'
+            AND article_category IN (
+              SELECT
+                  category_name
+              FROM
+                  category
+              WHERE
+                  category_id = #{categoryId})
+        ORDER BY
+            article_publish_time DESC
     </select>
 
 
     <select id="getArticlesSelective" resultType="top.easyblog.entity.po.Article">
-        select * from article
+        SELECT * FROM article
         <where>
             <if test="article.articleTopic != null">
                 article_topic=#{article.articleTopic} AND
@@ -204,53 +252,70 @@
         </where>
     </select>
 
-    <!--
-       根据文章的标题模糊查询
-    -->
+    <!--根据文章的标题模糊查询-->
     <select id="getUsersArticleByQueryString" resultType="top.easyblog.entity.po.Article">
-        select article_id,article_topic,  article_publish_time,
-               article_content, article_click,article_category,
-               article_comment_num, article_first_picture,article_user,
-               user.user_nickname      AS authorName,
-               user.user_headerImg_url AS userHeaderImageUrl
-        from article, easyblog.user
-        where article_topic like #{query}
-          AND article_user = user_id
+        SELECT
+            article_id,
+            article_topic,
+            article_publish_time,
+            article_content,
+            article_click,
+            article_category,
+            article_comment_num,
+            article_first_picture,
+            article_user,
+            user.user_nickname      AS authorName,
+            user.user_headerImg_url AS userHeaderImageUrl
+        FROM
+            article,
+            easyblog.user
+        WHERE
+            article_topic like #{query}
+            AND article_user = user_id
         ORDER BY article_click DESC
     </select>
 
     <!--按照文章分类名模糊查找某一类的文章，如果需要排序还可以指定参数order=true-->
     <select id="getArticleByCategoryNameFuzzy" parameterType="arraylist" resultType="top.easyblog.entity.po.Article">
-        SELECT article_user, article_id,article_topic, article_publish_time,
-        article_click, article_category, article_content,article_first_picture,
-        user_headerImg_url AS userHeaderImageUrl
+        SELECT
+          article_id,
+          article_user,
+          article_topic,
+          article_publish_time,
+          article_click,
+          article_category,
+          article_content,
+          article_first_picture,
+          user.user_headerImg_url AS userHeaderImageUrl
         FROM
         article LEFT JOIN easyblog.user ON article_user=user_id
         WHERE
-        <foreach collection="query" item="key" separator=" or">
+        <foreach collection="query" item="key" separator=" OR">
             article_category like concat(#{key},'%')
         </foreach>
         <!--是否需要排序。在参数中指定，如果为true表示需要排序，否则不排序-->
         <if test="order==true">
-            ORDER BY article_click DESC
+            ORDER BY
+              article_click DESC
             <if test="limit>0">
-                limit #{limit}
+                LIMIT #{limit}
             </if>
         </if>
         <if test="order==false">
-            ORDER BY article_publish_time DESC
+            ORDER BY
+               article_publish_time DESC
         </if>
     </select>
 
     <select id="countByUserId" resultType="integer">
-        select count(*)
-        from article
-        where article_user = #{userId}
+        SELECT count(*)
+        FROM article
+        WHERE article_user = #{userId}
     </select>
 
 
     <select id="countSelective" resultType="integer">
-        select count(*) from article
+        SELECT COUNT(*) FROM article
         <where>
             <if test="article.articleTopic != null">
                 article_topic=#{article.articleTopic} AND
@@ -284,18 +349,15 @@
     </select>
 
     <select id="getAllNoneFirstPicArticles" resultType="top.easyblog.entity.po.Article">
-        select * from article where article_first_picture is NULL
+        SELECT *
+        FROM article
+        WHERE article_first_picture is NULL
     </select>
 
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete
-        from article
-        where article_id = #{articleId,jdbcType=BIGINT}
-    </delete>
 
     <insert id="saveSelective" parameterType="top.easyblog.entity.po.Article">
-        insert into article
+        INSERT INTO article
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="articleUser != null">
                 article_user,
@@ -375,7 +437,7 @@
     </insert>
 
     <update id="updateByPrimaryKeySelective" flushCache="true" parameterType="top.easyblog.entity.po.Article">
-        update article
+        UPDATE article
         <set>
             <if test="articleUser != null">
                 article_user = #{articleUser,jdbcType=INTEGER},
@@ -417,29 +479,29 @@
                 article_first_picture=#{articleFirstPicture,jdbcType=VARCHAR},
             </if>
         </set>
-        where article_id = #{articleId,jdbcType=BIGINT}
+        WHERE article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
     <update id="updateByPrimaryKeyWithContent" parameterType="top.easyblog.entity.po.Article">
-        update article
-        set article_user        = #{articleUser,jdbcType=INTEGER},
-            article_topic       = #{articleTopic,jdbcType=VARCHAR},
-            article_click       = #{articleClick,jdbcType=INTEGER},
-            article_category    = #{articleCategory,jdbcType=VARCHAR},
-            article_status      = #{articleStatus,jdbcType=CHAR},
-            article_top         = #{articleTop,jdbcType=BIT},
-            article_type        = #{articleType,jdbcType=CHAR},
-            article_tags        = #{articleTags,jdbcType=VARCHAR},
-            article_content     = #{articleContent,jdbcType=LONGVARCHAR},
-            article_comment_num =#{articleCommentNum},
+        UPDATE article
+        SET article_user         = #{articleUser,jdbcType=INTEGER},
+            article_topic        = #{articleTopic,jdbcType=VARCHAR},
+            article_click        = #{articleClick,jdbcType=INTEGER},
+            article_category     = #{articleCategory,jdbcType=VARCHAR},
+            article_status       = #{articleStatus,jdbcType=CHAR},
+            article_top          = #{articleTop,jdbcType=BIT},
+            article_type         = #{articleType,jdbcType=CHAR},
+            article_tags         = #{articleTags,jdbcType=VARCHAR},
+            article_content      = #{articleContent,jdbcType=LONGVARCHAR},
+            article_comment_num  =#{articleCommentNum},
             article_appreciate=#{articleAppreciate},
             article_first_picture=#{articleFirstPicture,jdbcType=VARCHAR}
-        where article_id = #{articleId,jdbcType=BIGINT}
+        WHERE article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
     <update id="updateByPrimaryKey" parameterType="top.easyblog.entity.po.Article">
-        update article
-        set article_user         = #{articleUser,jdbcType=INTEGER},
+        UPDATE article
+        SET article_user         = #{articleUser,jdbcType=INTEGER},
             article_topic        = #{articleTopic,jdbcType=VARCHAR},
             article_publish_time = #{articlePublishTime,jdbcType=TIMESTAMP},
             article_click        = #{articleClick,jdbcType=INTEGER},
@@ -451,21 +513,34 @@
             article_comment_num  =#{articleCommentNum},
             article_appreciate=#{articleAppreciate},
             article_first_picture=#{articleFirstPicture,jdbcType=VARCHAR}
-        where article_id = #{articleId,jdbcType=BIGINT}
+        WHERE article_id = #{articleId,jdbcType=BIGINT}
     </update>
 
     <update id="updateArticlesByUserIdAndArticleCategory">
-        update article set article_category=#{newArticleCategory} where article_category=#{oldArticleCategory} and article_user=#{userId}
+        UPDATE
+            article
+        SET
+            article_category=#{newArticleCategory}
+        WHERE
+            article_category = #{oldArticleCategory}
+            AND article_user = #{userId}
     </update>
 
 
     <!--根据用户的ID和文章标题删除草稿文章-->
     <delete id="deleteArticleByUserIdAndTitle">
-        delete
-        from article
-        where article_user = #{userId}
-          AND article_topic = #{title}
-          AND article_status = '2'
+        DELETE
+        FROM article
+        WHERE
+            article_user = #{userId}
+            AND article_topic = #{title}
+            AND article_status = '2'
+    </delete>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE
+        FROM article
+        WHERE article_id = #{articleId,jdbcType=BIGINT}
     </delete>
 
 

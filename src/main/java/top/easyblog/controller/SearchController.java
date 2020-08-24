@@ -32,7 +32,7 @@ public class SearchController extends BaseController{
                                    Model model) {
         model.addAttribute("visitor",UserUtils.getUserFromRedis(visitorUId));
         model.addAttribute("query", query);
-        PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE.getPageSize());
+        PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE);
         PageInfo<Article> articlePages = articleService.getArticleByTopicPage(query, pageParam);
         model.addAttribute("articlePages", articlePages);
         return "search";

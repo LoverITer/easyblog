@@ -56,7 +56,7 @@
             <div class="twelve wide column m-article-body-outer-padding" style="padding-top: 0 !important;">
                 <div class="ui top attached segment" onmouseenter="function editArticle() {
                       $(this).find('.m-article-quick-edit-btn').toggle();
-                }" onmouseleave="editArticle()" style="padding: 20px 10px 5px !important;">
+                }" onmouseleave="editArticle()" style="padding: 20px 10px 5px !important;border: 1px #f5f6f7 solid;border-radius: 0;">
                     <!--标题-->
                     <div class="ui left aligned basic segment" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
                         <h2 style="max-width: 100% !important;margin-bottom: 5px !important;" class="ui left aligned  m-article-title" th:text="${article.getArticleTopic()}"></h2>
@@ -86,9 +86,10 @@
                         </div>
                     </div>
                 </div>
-                <!--文章主体开始-->
-                <div class="ui attached padded segment m-article-body-inner-padding" >
-                    <div  id="content" th:utext="${article.getArticleContent()}" style="padding:0 10px !important;font-size: 1.1rem !important;line-height: 24px;overflow-wrap: break-word;word-break: break-all;" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large"></div>
+                <div class="ui attached padded segment m-article-body-inner-padding" style="border: 1px solid #f5f6f7;">
+                    <!--文章主体开始-->
+                    <div  id="content" th:utext="${article.getArticleContent()}" style="padding:0 10px !important;line-height: 24px;overflow-wrap: break-word;word-break: break-all;" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large"></div>
+                    <!--文章主体结束-->
                     <!--赞赏-->
                     <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui center aligned basic segment">
                         <button id="payButton" class="ui orange basic circular button">赞赏</button>
@@ -97,35 +98,31 @@
                         <div class="ui black basic label">
                             <div class="ui images" style="font-size: inherit !important;">
                                 <div class="image">
-                                    <img src="../static/images/wechat.jpg" alt="" class="ui rounded bordered image" style="width: 120px">
-                                    <div>支付宝</div>
+                                    <img th:src="@{/static/images/wechat.jpg}" alt="支持一下吧^V^" class="ui rounded bordered image" style="width: 130px">
+                                    <div>微信</div>
                                 </div>
                                 <div class="image">
-                                    <img src="../static/images/wechat.jpg" alt="" class="ui rounded bordered image" style="width: 120px">
-                                    <div>微信</div>
+                                    <img th:src="@{/static/images/alipay.jpg}" alt="支持一下吧^V^" class="ui rounded bordered image" style="width: 130px">
+                                    <div>支付宝</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!--文章主体结束-->
-                <!--声明信息-->
-                <div th:if="${article.getArticleType()=='0'}" class="ui attached positive message bottom m-article-author-info-padding">
+                <!--信息-->
+                <div th:if="${article.getArticleType()=='0'}" class="ui attached message positive bottom m-article-author-info-padding" style="background: #f3f7fb;box-shadow: 0 3px 5px 0 rgba(0,0,0,0.05);">
                     <!--博客信息-->
                     <div class="ui middle aligned grid">
                         <div class="sixteen wide column">
                             <ul class="list">
-                                <li>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：[[${author.getUserNickname()}]]</li>
-                                <li>发表时间：[[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd hh:mm:ss')}]]</li>
-                                <li>版权声明：本文为博主原创文章，遵循<a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="font-size: 16px"> CC 4.0 BY-SA</a> 版权协议，转载请附上原文出处链接和本声明。</li>
+                                <li>版权声明：本文系原创，采用<a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="font-size: 16px"> CC 4.0 BY-SA</a> 版权协议，转载请附上原文出处链接和本声明。</li>
                                 <li>原文链接：<a th:href="${#httpServletRequest.getRequestURL()}" th:text="${#httpServletRequest.getRequestURL()}"></a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="divider"></div>
                 <!--留言信息-->
-                <div style="margin-top: 1em !important;border-radius: 5px !important;" id="comment-container" class="ui attached segment">
+                <div style="margin-top: 1em !important;border:1px solid white !important;box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05)" id="comment-container" class="ui attached segment">
                     <h4 style="color:  #000000 !important;padding-left: 10px;margin: 0 auto 10px;border-left: 10px solid #55895B;font-size: 1.4em;">留言区</h4>
                     <!--留言区域列表-->
                     <div id="commentForm" class="ui form" style="padding-bottom: 15px !important;">
@@ -134,7 +131,7 @@
                         <input id="articleId" type="hidden" th:value="${article.getArticleId()}">
                         <input id="pid" type="hidden" value="0">
                         <div class="comment">
-                            <textarea id="commentInput" rows="2" name="content" placeholder="给作者留言..."></textarea>
+                            <textarea id="commentInput" rows="1" name="content" placeholder="给作者留言..."></textarea>
                         </div>
                         <div id="commentBtn" class="ui grid" style="display:none !important;margin-bottom: 3em;">
                             <div class="five column row" style="padding-bottom: 0 !important;">
@@ -232,6 +229,8 @@
         toggleStatus(userId);
         logOut(userId);
     });
+
+    $("table").addClass('ui striped celled structured table');
 </script>
 <!--实现评论框的各种效果-->
 <script type="text/javascript">
@@ -243,7 +242,7 @@
     });
     /**评论输入框时区焦点后变小为初始大小2行**/
     $('#commentForm').mouseleave(function () {
-        $('#commentInput').attr("rows", "2");
+        $('#commentInput').attr("rows", "1");
         $('#commentBtn').hide();
     });
     <!--控制评论输入的字数-->

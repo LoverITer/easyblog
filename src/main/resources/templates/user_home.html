@@ -173,7 +173,7 @@
                                 <a th:if="${displayOnlyOriginal=='1'}"
                                    th:each="pageNo:${articlePages.getNavigatepageNums()}"
                                    th:href="@{/article/index/{id}(id=${author.getUserId()},articleType=0,page=${pageNo})}">
-                                    <button class="ui button pages" style="background: white !important;font-weight: 100 !important;">
+                                    <button class="ui button pages" style="background: white !important;font-weight: 100 !important;" >
                                         [[${pageNo}]]
                                     </button>
                                 </a>

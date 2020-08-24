@@ -26,7 +26,17 @@ public interface IArticleService {
      * 获取所有的文章
      * @return
      */
+    @Deprecated
     List<Article> getAllArticles();
+
+    /**
+     * 获得所有文章并分页
+     *
+     * @param pageParam 分页参数
+     * @return
+     */
+    PageInfo<Article> getUserAllPage(PageParam pageParam);
+
 
     /**
      * 根据文章Id获取文章
@@ -143,6 +153,8 @@ public interface IArticleService {
      */
     @Deprecated
     List<Article> getUserArticlesMonthlyOrderByClickNum(int userId, String year, String month);
+
+
 
     /**
      * 按月份分类用户的文章并且按访问量排序并且分页

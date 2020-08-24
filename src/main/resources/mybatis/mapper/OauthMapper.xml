@@ -49,11 +49,8 @@
   </delete>
 
   <insert id="save" parameterType="top.easyblog.oauth2.bean.Oauth">
-    insert into oauth (oauth_id, open_id, app_type, 
-      status, create_time, user_id )
-    values (#{oauthId,jdbcType=INTEGER}, #{openId,jdbcType=VARCHAR}, #{appType,jdbcType=VARCHAR}, 
-      #{status,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=LONGVARCHAR}
-      )
+    insert into oauth (oauth_id, open_id, app_type, status, create_time, user_id )
+    values (#{oauthId,jdbcType=INTEGER}, #{openId,jdbcType=VARCHAR}, #{appType,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=LONGVARCHAR})
   </insert>
 
   <insert id="insertSelective" parameterType="top.easyblog.oauth2.bean.Oauth">

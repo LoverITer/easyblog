@@ -52,7 +52,7 @@ public class CategoryController extends BaseController{
             model.addAttribute("category", category);
         }
         //文章细节
-        PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE.getPageSize());
+        PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE);
         PageInfo<Article> categoryArticlesPage = articleService.getByCategoryAndUserIdPage(userId, categoryId, pageParam);
         model.addAttribute("categoryArticles", categoryArticlesPage);
         //分类的关注按钮状态控制

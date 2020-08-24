@@ -295,7 +295,7 @@ public class CookieUtils {
     }
 
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         String domainName = null;
 
         String serverName = "https://www.easyblog.top/usr/login";
@@ -321,5 +321,5 @@ public class CookieUtils {
             domainName = serverName;
         }
         System.out.println(domainName);
-    }
+    }*/
 }
