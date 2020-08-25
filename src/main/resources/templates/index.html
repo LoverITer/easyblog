@@ -53,7 +53,7 @@
                         <li><a href="/cb/algrothim" th:href="@{/cb/algorithm}">数据结构与算法</a></li>
                         <li><a href="/cb/network" th:href="@{/cb/network}">计算机网络</a></li>
                         <li><a href="/cb/os" th:href="@{/cb/os}">操作系统</a></li>
-                      <!--  <li><a href="/cb/pco" th:href="@{/cb/pco}">计算机组成原理</a></li>-->
+                      <!--<li><a href="/cb/pco" th:href="@{/cb/pco}">计算机组成原理</a></li>-->
                         <li><a href="/cb/dp" th:href="@{/cb/dp}">设计模式</a></li>
                         <li><a href="/cb/se" th:href="@{/cb/se}">软件工程</a></li>
                 </ul><span></span></li>
@@ -203,6 +203,7 @@
             </ul>
         </div>
         <!--bloglist end-->
+        <div id="END" style="text-align: center;letter-spacing: -1px;color: #bbb;display: none">———————————<span style="color: #888;display: inline-block;letter-spacing: 0;margin:0 20px;">我是有底线的</span>———————————</div>
     </div>
     <div class="rbox" >
         <div class="whitebg paihang" th:fragment="index-click">
@@ -314,11 +315,12 @@
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
     let MAX_PAGE_NO = /*[[${articlePagesSize}]]*/ 0;   //最大页码
-    let displayedSize= /*[[${articlePagesSize}}]]*/ 0;  //已经显示的数量
-    let pageSize= /*[[pageSize]]*/ 0;   //分页大小
-    /*]]>*/
+    let displayedSize= /*[[${displayedSize}]]*/ 0;  //已经显示的数量
+    let pageSize= /*[[${pageSize}]]*/ 0;   //分页大小
     let pageNo = pageSize===0?5:(displayedSize/pageSize)+1;    //首页最新文章默认前20条数据（前4页），当滑到最后从第5页开始加载
+    /*]]>*/
     $(document).ready(function () {
+        $('#END').hide();
         showPageZoomWarning();
         let range = 50;             //距下边界长度/单位px
         let totalheight = 0;
@@ -329,6 +331,11 @@
                 if (loadList(pageNo)) {
                     pageNo++;
                 }
+            }
+
+            if(pageNo>MAX_PAGE_NO){
+                $('#END').show();
+                console.log("show info...");
             }
         });
     });

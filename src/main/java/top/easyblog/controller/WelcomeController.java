@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.easyblog.common.pagehelper.PageParam;
@@ -64,12 +65,13 @@ public class WelcomeController extends BaseController{
             PageInfo<Article> articlePages = articleService.getUserAllPage(pageParam);
             int displayedSize = newestArticlesPages.getList().size();
             //总的文章大小
-            model.addAttribute("articlePagesSize",Math.floorMod(articlePages.getTotal(),PageSize.MIN_PAGE_SIZE.getPageSize()));
+            int mod;
+            model.addAttribute("articlePagesSize", (int) Math.ceil((double) articlePages.getTotal() / PageSize.MIN_PAGE_SIZE.getPageSize()));
             //已经显示的文章大小
             model.addAttribute("displayedSize",displayedSize);
-            model.addAttribute("pageSize",PageSize.MIN_PAGE_SIZE);
+            model.addAttribute("pageSize", PageSize.MIN_PAGE_SIZE.getPageSize());
             //查询访问量最高的22篇最近的文章用于首页大图、访问排行、特别推荐的显示
-            List<List<?>> top22Articles = getTopNArticle(DEFAULT_DISPLAY_HOT_ARTICLE_SIZE,new int[]{5, 1, 7, 6});
+            List<List<?>> top22Articles = getTopArticle(DEFAULT_DISPLAY_HOT_ARTICLE_SIZE,new int[]{5, 1, 7, 6});
             if(top22Articles!=null){
                 model.addAttribute("articles", top22Articles.get(0));
                 //访问排行侧边栏带首图显示的文章
@@ -109,12 +111,12 @@ public class WelcomeController extends BaseController{
         List<Article> likes = articleService.getYouMayAlsoLikeArticles();
         model.addAttribute("likes", likes);
         //点击排行前8的文章
-        List<List<?>> top10Articles = getTopNArticle(TOP_EIGHT_ARTICLE,new int[]{1, 7});
+        List<List<?>> top10Articles = getTopArticle(TOP_EIGHT_ARTICLE,new int[]{1, 7});
         if(top10Articles!=null){
             model.addAttribute("famousSideBarTopArticle", top10Articles.get(0));
             model.addAttribute("visitRankingArticles", top10Articles.get(1));
         }
-        model.addAttribute(top10Articles);
+        model.addAttribute("top10Articles", top10Articles);
         //推荐的文章，默认不需要排序
         List<Article> allArticles = articleService.getArticleByCategoryFuzzy(categories, false, -1);
         model.addAttribute("allArticles", allArticles);
@@ -149,7 +151,7 @@ public class WelcomeController extends BaseController{
      * @param splitArgs 分隔参数,不允许为null
      * @return java.util.List
      */
-    private List<List<?>> getTopNArticle(int n, @NotBlank int[] splitArgs) {
+    private List<List<?>> getTopArticle(int n, @NotBlank int[] splitArgs) {
         List<List<?>> articles = null;
         //点击排行前n的文章
         List<Article> topArticles = articleService.getMostFamousArticles(n);
@@ -163,54 +165,43 @@ public class WelcomeController extends BaseController{
         return articles;
     }
 
-    @GetMapping(value = "/cb")
-    public String indexCategoryDetailsOfComputerBase(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request, new String[]{"计算机", "设计模式", "软件工程", "网络","计算机网络", "数据结构", "算法", "操作系统",
-                "Linux", "CentOS", "Windows","Mac OS","ios","Android"});
-        model.addAttribute("type", "cb");
-        return "index-category";
-    }
+    @GetMapping(value = {"/cb", "/cb/{category}"})
+    public String indexCategoryDetailsOfComputerBase(Model model,
+                                                     HttpServletRequest request,
+                                                     @PathVariable(value = "category", required = false) String category) {
+        if (category == null || "".equals(category)) {
+            getSharedArticle(model, request, new String[]{"计算机", "设计模式", "软件工程", "网络","计算机网络", "数据结构", "算法", "操作系统",
+                    "Linux", "CentOS", "Windows","Mac OS","ios","Android"});
+            model.addAttribute("type", "cb");
+        } else {
+            switch (category) {
+                case "algorithm":
+                    getSharedArticle(model, request, new String[]{"数据结构", "算法"});
+                    model.addAttribute("type", "algorithm");
+                    break;
+                case "network":
+                    getSharedArticle(model, request,new String[]{"网络","计网","计算机网络"});
+                    model.addAttribute("type", "network");
+                    break;
+                case "os": getSharedArticle(model, request, new String[]{"操作系统", "Linux", "CentOS", "Windows","Mac OS","ios","Android"});
+                    model.addAttribute("type", "os");
+                    break;
+                case "poc":
+                    /*getSharedArticle(model, request);*/
+                    model.addAttribute("type", "pco");
+                    break;
+                case "dp":
+                    getSharedArticle(model, request, new String[]{"设计模式"});
+                    model.addAttribute("type", "dp");
+                    break;
+                case "se":
+                    getSharedArticle(model, request, new String[]{"软件工程", "软工"});
+                    model.addAttribute("type", "se");
+                    break;
+                default: log.error("error request path");
+            }
+        }
 
-    @GetMapping(value = "/cb/algorithm")
-    public String indexCategoryDetailsOfAlgorithm(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request,new String[]{"数据结构","算法"});
-        model.addAttribute("type", "algorithm");
-        return "index-category";
-    }
-
-    @GetMapping(value = "/cb/network")
-    public String indexCategoryDetailsOfNetWork(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request,new String[]{"网络","计网","计算机网络"});
-        model.addAttribute("type", "network");
-        return "index-category";
-    }
-
-
-    @GetMapping(value = "/cb/os")
-    public String indexCategoryDetailsOfOS(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request, new String[]{"操作系统", "Linux", "CentOS", "Windows","Mac OS","ios","Android"});
-        model.addAttribute("type", "os");
-        return "index-category";
-    }
-
-    @GetMapping(value = "/cb/poc")
-    public String indexCategoryDetailsOfPCO(Model model, HttpServletRequest request) {
-        /*getSharedArticle(model, request);*/
-        model.addAttribute("type", "pco");
-        return "index-category";
-    }
-
-    @GetMapping(value = "/cb/dp")
-    public String indexCategoryDetailsOfDesignPattern(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request, new String[]{"设计模式"});
-        model.addAttribute("type", "dp");
-        return "index-category";
-    }
-
-    @GetMapping(value = "/cb/se")
-    public String indexCategoryDetailsOfSoftEngineering(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request, new String[]{"软件工程", "软工"});
-        model.addAttribute("type", "se");
         return "index-category";
     }
 
@@ -221,70 +212,55 @@ public class WelcomeController extends BaseController{
         return "index-category";
     }
 
-    @GetMapping(value = "/framework")
-    public String indexCategoryDetailsOfFramework(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request, new String[]{"架构", "框架", "spring", "spring mvc", "spring boot", "redis", "nginx",
-                "docker", "mybatis","spring cloud","netty"});
-        model.addAttribute("type", "framework");
+    @GetMapping(value = {"/framework/{category}", "/framework"})
+    public String indexCategoryDetailsOfFramework(Model model,
+                                                  HttpServletRequest request,
+                                                  @PathVariable(value = "category", required = false) String category) {
+        if (category == null || "".equals(category)) {
+            getSharedArticle(model, request, new String[]{"架构", "框架", "spring", "spring mvc", "spring boot", "redis", "nginx",
+                    "docker", "mybatis", "spring cloud", "netty"});
+            model.addAttribute("type", "framework");
+        } else {
+            switch (category) {
+                case "spring":
+                    getSharedArticle(model, request, new String[]{"spring"});
+                    model.addAttribute("type", "spring");
+                    break;
+                case "springmvc":
+                    getSharedArticle(model, request, new String[]{"spring mvc"});
+                    model.addAttribute("type", "springmvc");
+                    break;
+                case "springboot":
+                    getSharedArticle(model, request, new String[]{"spring boot", "springboot", "Spring Boot", "SpringBoot"});
+                    model.addAttribute("type", "springboot");
+                    break;
+                case "mybatis":
+                    getSharedArticle(model, request, new String[]{"mybatis", "MyBatis", "iBatis"});
+                    model.addAttribute("type", "mybatis");
+                    break;
+                case "redis":
+                    getSharedArticle(model, request, new String[]{"redis", "Redis"});
+                    model.addAttribute("type", "redis");
+                    break;
+                case "nginx":
+                    getSharedArticle(model, request, new String[]{"nginx", "Nginx"});
+                    model.addAttribute("type", "nginx");
+                    break;
+                case "docker":
+                    getSharedArticle(model, request, new String[]{"docker", "Docker"});
+                    model.addAttribute("type", "docker");
+                    break;
+                case "netty":
+                    getSharedArticle(model, request, new String[]{"netty", "Netty"});
+                    model.addAttribute("type", "netty");
+                    break;
+                default:
+                    log.error("error request path");
+            }
+        }
         return "index-category";
     }
 
-    @GetMapping(value = "/framework/spring")
-    public String indexCategoryDetailsOfSpring(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request,new String[]{"spring"});
-        model.addAttribute("type", "spring");
-        return "index-category";
-    }
-
-    @GetMapping(value = "/framework/springmvc")
-    public String indexCategoryDetailsOfSpringMVC(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request,new String[]{"spring mvc"});
-        model.addAttribute("type", "springmvc");
-        return "index-category";
-    }
-
-
-    @GetMapping(value = "/framework/springboot")
-    public String indexCategoryDetailsOfSpringBoot(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request, new String[]{"spring boot"});
-        model.addAttribute("type", "springboot");
-        return "index-category";
-    }
-
-    @GetMapping(value = "/framework/mybatis")
-    public String indexCategoryDetailsOfMyBatis(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request,new String[]{"mybatis"});
-        model.addAttribute("type", "mybatis");
-        return "index-category";
-    }
-
-    @GetMapping(value = "/framework/redis")
-    public String indexCategoryDetailsOfRedis(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request,new String[]{"redis"});
-        model.addAttribute("type", "redis");
-        return "index-category";
-    }
-
-    @GetMapping(value = "/framework/nginx")
-    public String indexCategoryDetailsOfNginx(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request,new String[]{"nginx"});
-        model.addAttribute("type", "nginx");
-        return "index-category";
-    }
-
-    @GetMapping(value = "/framework/docker")
-    public String indexCategoryDetailsOfDocker(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request,new String[]{"docker"});
-        model.addAttribute("type", "docker");
-        return "index-category";
-    }
-
-    @GetMapping(value = "/framework/netty")
-    public String indexCategoryDetailsOfNetty(Model model, HttpServletRequest request) {
-        getSharedArticle(model, request,new String[]{"netty"});
-        model.addAttribute("type", "netty");
-        return "index-category";
-    }
 
     @GetMapping(value = "/db")
     public String indexCategoryDetailsOfDataBase(Model model, HttpServletRequest request) {

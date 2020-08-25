@@ -60,7 +60,7 @@
                     <!--标题-->
                     <div class="ui left aligned basic segment" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
                         <h2 style="max-width: 100% !important;margin-bottom: 5px !important;" class="ui left aligned  m-article-title" th:text="${article.getArticleTopic()}"></h2>
-                        <a target="_blank" class="m-article-quick-edit-btn m-mobile-hide"  th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()},userId=${visitor.getUserId()})}">修改文章</a>
+                        <a target="_blank" class="m-article-quick-edit-btn m-mobile-hide"  th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()},userId=${visitor.getUserId()})}"><button style="border: none;padding: 5px;border-radius: 3px">修改文章</button></a>
                     </div>
                     <div class="ui horizontal link list">
                         <div class="item">
