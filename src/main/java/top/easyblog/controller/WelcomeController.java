@@ -65,7 +65,6 @@ public class WelcomeController extends BaseController{
             PageInfo<Article> articlePages = articleService.getUserAllPage(pageParam);
             int displayedSize = newestArticlesPages.getList().size();
             //总的文章大小
-            int mod;
             model.addAttribute("articlePagesSize", (int) Math.ceil((double) articlePages.getTotal() / PageSize.MIN_PAGE_SIZE.getPageSize()));
             //已经显示的文章大小
             model.addAttribute("displayedSize",displayedSize);

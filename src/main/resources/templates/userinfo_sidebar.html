@@ -10,7 +10,7 @@
 <!--左边的卡片-->
 <div class="four wide column m-mobile-hide">
     <!--用户信息区域-->
-    <div class="ui segments" th:fragment="sidebar_userinfo" style="padding-right: 0 !important;background: #fff">
+    <div class="ui segments user_info_sidebar" th:fragment="sidebar_userinfo" style="padding-right: 0 !important;background: #fff;">
         <div class="ui equal width center aligned padded grid">
             <div class="row" style="padding-bottom: 0 !important;">
                 <div class="four wide column" style="padding-right: 0 !important;">
@@ -36,7 +36,7 @@
                     </div>
                 </div>
             </div>
-            <div class="ui divider" style="margin-bottom: 5px !important;margin-top: 5px !important;"></div>
+            <div class="ui divider user_info_sidebar_divider" style="margin-bottom: 5px !important;margin-top: 5px !important;border-top: none;background: #f5f6f7;"></div>
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column">
                     <a href="#" th:href="@{/article/index/{id}(id=${author.getUserId()})}" th:alt="originalArticleNum" class="m-black">
@@ -57,7 +57,7 @@
                     <div><strong th:text="${receiveCommentNum}">0</strong></div>
                 </div>
             </div>
-            <div class="ui divider" style="margin-bottom: 5px !important;margin-top: 5px !important;"></div>
+            <div class="ui divider user_info_sidebar_divider" style="margin-bottom: 5px !important;margin-top: 5px !important;border-top: none;background: #f5f6f7;"></div>
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column m-txt-align-left m-black">
                     等级：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserLevel()==null?0:author.getUserLevel()}"></span></strong>
@@ -77,15 +77,15 @@
         </div>
     </div>
     <!--分类专栏-->
-    <div th:if="${categories!=null&&!#lists.isEmpty(categories)}" class="ui segments" th:fragment="sidebar_category">
-        <div class="ui secondary segment" style="background: #f7f8f9">
+    <div th:if="${categories!=null&&!#lists.isEmpty(categories)}" class="ui segments user_info_sidebar" th:fragment="sidebar_category" >
+        <div class="ui secondary segment" style="background: #f1f2fb">
             <div class="ui two column grid">
                 <div class="column">
                     <i class="idea icon"></i><strong>分类专栏</strong>
                 </div>
             </div>
         </div>
-        <div class="ui segment" th:each="category:${categories}">
+        <div class="ui segment" style="border-top: none;padding-top: .8em;padding-bottom: .8em;" th:each="category:${categories}">
             <!--专栏的图片-->
             <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg" th:src="${category.categoryImageUrl}">
             <a href="#" th:href="@{/category/details/{id}/{user}(id=${category.categoryId},user=${category.categoryUser})}" target class="m-text-thin m-margin-left" style="color: #333" th:text="${category.categoryName}">2019年2月</a>
@@ -95,21 +95,21 @@
         </div>
     </div>
     <!--最新文章-->
-    <div th:if="${newestArticles!=null&&!#lists.isEmpty(newestArticles)}" class="ui segments" th:fragment="sidebar_newest_article">
-        <div class="ui secondary segment " style="background: #f7f8f9">
+    <div th:if="${newestArticles!=null&&!#lists.isEmpty(newestArticles)}" class="ui segments user_info_sidebar" th:fragment="sidebar_newest_article" >
+        <div class="ui secondary segment " style="background: #f1f2fb">
             <i class="bookmark icon"></i><strong>最新文章</strong>
         </div>
-        <div class="ui segment" th:each="article:${newestArticles}">
+        <div class="ui segment" style="border-top: none;padding-top: .8em;padding-bottom: .8em;" th:each="article:${newestArticles}">
             <a href="#" th:if="${visitor==null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="m-text-thin" style="color: #333"></a>
             <a href="#" th:if="${visitor!=null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class=" m-text-thin" style="color: #333"></a>
         </div>
     </div>
     <!--归档-->
-    <div th:if="${archives!=null&&!#lists.isEmpty(archives)}" class="ui segments" th:fragment="sidebar_archives">
-        <div class="ui secondary segment " style="background: #f7f8f9">
+    <div th:if="${archives!=null&&!#lists.isEmpty(archives)}" class="ui segments user_info_sidebar" th:fragment="sidebar_archives" >
+        <div class="ui secondary segment " style="background: #f1f2fb">
             <i class="bookmark icon"></i><strong>归档</strong>
         </div>
-        <div class="ui segment" th:each="archive:${archives}">
+        <div class="ui segment" style="border-top: none;padding-top: .8em;padding-bottom: .8em;" th:each="archive:${archives}">
             <a href="#" th:href="@{/archives/details/{uid}/{date}(uid=${archive.userId},date=${archive.date})}" target="" class="m-text-thin" style="color: #333" th:text="${archive.date}"></a>
             <span class="count" style="float: right;">[[${archive.count}]]篇</span>
         </div>

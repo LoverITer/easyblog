@@ -1,6 +1,5 @@
 package top.easyblog.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -203,13 +202,11 @@ public class ArticleController extends BaseController {
             for(int i=0;i<articles.size();i++){
                 result.setModel(i+"",articles.get(i));
             }
-            result.setMessage(user==null?null: JSONObject.toJSONString(user.toString()));
+            result.setMessage(user==null?null: user.getUserId()+"");
         } catch (Exception e) {
             log.error(e.getMessage());
             redirect.addAttribute("error", "抱歉，数据加载异常！");
         }
-        //只刷新index页面下的dynamic_articles片段
-        //return "index::dynamic_articles";
         return result;
     }
 

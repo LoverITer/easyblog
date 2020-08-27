@@ -8,9 +8,9 @@ spring:
     #指定使用Druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.244.128:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
-    username: #用户名
-    password: #密码
+    url: jdbc:mysql://192.168.20.128:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    username: root #用户名
+    password: 95162437hx$ #密码
     #password: huangxin@95162437
     druid:
       stat-view-servlet:
@@ -54,7 +54,7 @@ spring:
     restart:
       additional-paths: src/main/java
   redis:
-    host: 192.168.244.128
+    host: 192.168.20.128
     port: 6379
     database: 0
     timeout: 10000
@@ -71,6 +71,12 @@ spring:
       max-file-size: 5MB
       max-request-size: 10MB
       enabled: true
+  #第三方认证
+oauth:
+  github:
+    client-id: 2d3eaf3a6c76b636e891
+    client-secret: d81730cc534c9cc59990625e4d9f573c34bfb499
+    redirectUrl: http://127.0.0.1:8081/oauth/github/callb
 #日志
 logging:
   level:
