@@ -20,7 +20,7 @@ import java.util.Arrays;
 public class ServiceLogAspect {
 
 
-    @Pointcut(value = "execution(* top.easyblog.service.*.*(..))")
+    @Pointcut(value = "execution(* top.easyblog.web.service.*.*(..))")
     public void log() {
     }
 

@@ -1,6 +1,6 @@
 package top.easyblog.entity.po;
 
-import top.easyblog.common.enums.ArticleType;
+import top.easyblog.global.enums.ArticleType;
 
 import java.io.Serializable;
 import java.util.Date;

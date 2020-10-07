@@ -57,7 +57,7 @@
         <!--右边的分类内容-->
         <div class="twelve wide column" style="padding-top: 0 !important;">
             <!--分类的header-->
-            <div class="ui top attached segment">
+            <div class="ui top attached segment" style="border: none;border-radius: unset;border-bottom: #f0f1f2 3px solid;">
                 <div class="ui middle aligned two column grid">
                     <div th:if="${author!=null}" class="ui  grid">
                         <div class="four row">
@@ -85,18 +85,22 @@
                 </div>
             </div>
 
-            <div class="ui top attached  segment" style="margin-top: 0.1em !important;">
+            <div class="ui top attached  segment" style="margin-top: 0;border: none;padding: 0;">
                 <!--每个归档的文章-->
                 <div th:if="${!#lists.isEmpty(articlePages)&&!#lists.isEmpty(articlePages.getList())}"
-                     th:each="article:${articlePages.getList()}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear m-article-sidebar-padding">
+                     th:each="article:${articlePages.getList()}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear m-article-sidebar-padding" style="border-bottom: #f0f1f2 3px solid;">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
                             <div class="ui stackable  grid">
-                                <div class="two wide column m-mobile-hide" style="max-width: 52px;padding-right: 0 !important;">
-                                    <div th:switch="${article.getArticleType()}" class="ui red mini basic label">
-                                        <span th:case="0">原创</span>
-                                        <span th:case="1">转载</span>
-                                        <span th:case="2">翻译</span>
+                                <div class="two wide column m-mobile-hide" style="max-width: 56px;padding-right: 0 !important;">
+                                    <div th:if="${article.getArticleType() eq '0'}" class="ui red mini basic label">
+                                        <span>原创</span>
+                                    </div>
+                                    <div th:if="${article.getArticleType() eq '1'}" class="ui green mini basic label">
+                                        <span>转载</span>
+                                    </div>
+                                    <div th:if="${article.getArticleType() eq '2'}" class="ui blue mini basic label">
+                                        <span>翻译</span>
                                     </div>
                                 </div>
                                 <div class="fourteen wide column" style="padding-top: 0px !important;padding-left: 10px !important;">
@@ -105,19 +109,22 @@
                                 </div>
                             </div>
                             <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),200)}">
-                                正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
                             </p>
                             <div class="ui stackable grid">
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
                                         <div class="item" style="margin-left:0 !important;">
-                                            <div th:switch="${article.getArticleType()}" class="ui red mini basic label m-mobile-show-only">
-                                                <span th:case="0">原创</span>
-                                                <span th:case="1">转载</span>
-                                                <span th:case="2">翻译</span>
+                                            <div th:if="${article.getArticleType() eq '0'}" class="ui red mini basic label m-mobile-show-only">
+                                                <span>原创</span>
+                                            </div>
+                                            <div th:if="${article.getArticleType() eq '1'}" class="ui green mini basic label m-mobile-show-only">
+                                                <span>转载</span>
+                                            </div>
+                                            <div th:if="${article.getArticleType() eq '2'}" class="ui blue mini basic label m-mobile-show-only">
+                                                <span>翻译</span>
                                             </div>
                                         </div>
-                                        <div class="item" style="margin-left: 0 !important;">
+                                        <div class="item m-mobile-hide" style="margin-left: 0 !important;">
                                             <img th:src="${author.getUserHeaderImgUrl()}"
                                                  src="https://unsplash.it/100/100?image=1005" alt=""
                                                  class="ui avatar image m-mobile-hide">
@@ -163,20 +170,20 @@
             </div>
 
             <!--分页按钮-->
-            <div th:if="${articlePages.getTotal()>10}" class="ui bottom attached segment">
+            <div th:if="${articlePages.getTotal()>10}" class="ui bottom attached segment" style="border: none;border-top: #f0f1f2 3px solid;">
                 <div class="ui middle aligned two column grid">
                     <div  style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
                             <a th:if="${defaultOrderFlag==true}" th:href="@{/archives/details/{uid}/{date}(uid=${author.getUserId()},date=${date},page=${articlePages.getPrePage()})}" >
-                                <button class="ui  button" style="background: white !important;font-weight: 100 !important;">上一页
+                                <button class="ui  button" style="background: white !important;font-weight: 100 !important;"><i class="step backward icon"></i>
                                 </button>
                             </a>
                             <a th:if="${orderByUpdateTimeFlag==true}" th:href="@{/archives/details/orderByUpdateTime/{uid}/{date}(uid=${author.getUserId()},date=${date},page=${articlePages.getPrePage()})}" >
-                                <button class="ui  button" style="background: white !important;font-weight: 100 !important;">上一页
+                                <button class="ui  button" style="background: white !important;font-weight: 100 !important;"><i class="step backward icon"></i>
                                 </button>
                             </a>
                             <a th:if="${orderByClickNumFlag==true}" th:href="@{/archives/details/orderByClickNum/{uid}/{date}(uid=${author.getUserId()},date=${date},page=${articlePages.getPrePage()})}" >
-                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;">上一页
+                                <button class="ui labeled icon button" style="background: white !important;font-weight: 100 !important;"><i class="step backward icon"></i>
                                 </button>
                             </a>
                             <!------------------------------------------------------->
@@ -201,17 +208,17 @@
 
                             <a th:if="${defaultOrderFlag==true}" th:href="@{/archives/details/{uid}/{date}(uid=${author.getUserId()},date=${date},page=${articlePages.getNextPage()})}">
                                 <button class="ui right  button"
-                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                        style="background: white !important;font-weight: 100 !important;"> <i class="step forward icon"></i>
                                 </button>
                             </a>
                             <a th:if="${orderByUpdateTimeFlag==true}" th:href="@{/archives/details/orderByUpdateTime/{uid}/{date}(uid=${author.getUserId()},date=${date},page=${articlePages.getNextPage()})}">
                                 <button class="ui right  button"
-                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                        style="background: white !important;font-weight: 100 !important;"> <i class="step forward icon"></i>
                                 </button>
                             </a>
                             <a th:if="${orderByClickNumFlag==true}" th:href="@{/archives/details/orderByClickNum/{uid}/{date}(uid=${author.getUserId()},date=${date},page=${articlePages.getNextPage()})}">
                                 <button class="ui right labeled icon button"
-                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                        style="background: white !important;font-weight: 100 !important;">  <i class="step forward icon"></i>
                                 </button>
                             </a>
                         </div>
@@ -251,6 +258,7 @@
             }
         })
     }
+    $('.m-article-sidebar-padding:last').css('border-bottom','none');
 </script>
 <script>
     $('#msg-btn').click(function () {

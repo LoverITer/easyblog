@@ -53,7 +53,6 @@
                         <li><a href="/cb/algrothim" th:href="@{/cb/algorithm}">数据结构与算法</a></li>
                         <li><a href="/cb/network" th:href="@{/cb/network}">计算机网络</a></li>
                         <li><a href="/cb/os" th:href="@{/cb/os}">操作系统</a></li>
-                      <!--<li><a href="/cb/pco" th:href="@{/cb/pco}">计算机组成原理</a></li>-->
                         <li><a href="/cb/dp" th:href="@{/cb/dp}">设计模式</a></li>
                         <li><a href="/cb/se" th:href="@{/cb/se}">软件工程</a></li>
                 </ul><span></span></li>
@@ -314,6 +313,7 @@
 <script type="text/javascript" src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
+    let user= /* [[${user}]]*/ null;
     let MAX_PAGE_NO = /*[[${articlePagesSize}]]*/ 0;   //最大页码
     let displayedSize= /*[[${displayedSize}]]*/ 0;  //已经显示的数量
     let pageSize= /*[[${pageSize}]]*/ 0;   //分页大小
@@ -335,7 +335,6 @@
 
             if(pageNo>MAX_PAGE_NO){
                 $('#END').show();
-                console.log("show info...");
             }
         });
     });
@@ -351,9 +350,10 @@
             dataType: "json",
             success: function (response) {
                 ret = response.success;
-                let user=response.message==null?null:eval('(' + response.message + ')');
+                let userId=response.message;
+                console.log(userId);
                 for(var key in response.model) {
-                    dynamicAppendArticle(response.model[key], user);
+                    dynamicAppendArticle(response.model[key], userId);
                 }
             },
             error: function () {
@@ -367,7 +367,7 @@
     /**
      * 动态生成文章信息
      */
-    function dynamicAppendArticle(data, user) {
+    function dynamicAppendArticle(data, userId) {
         var li = $('<li></li>');
         //h3
         var h3 = $('<h3 class="blogtitle"></h3>');
@@ -423,7 +423,7 @@
         var a = $('<a href="#" class="viewmore"></a>');
         $(li).append(a);
         $(a).html("阅读全文");
-        if (user == null) {
+        if (userId == null) {
             $(h3_a).attr('href', "/article/details/" + data.articleId);
             $(span_a).attr('href', "/article/details/" + data.articleId);
             if (data.articleFirstPicture != null) {
@@ -433,14 +433,14 @@
             }
             $(a).attr('href', "/article/details/" + data.articleId);
         } else {
-            $(h3_a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + user.userId);
-            $(span_a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + user.userId);
+            $(h3_a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + userId);
+            $(span_a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + userId);
             if (data.articleFirstPicture != null) {
                 $(span_a_img).attr('src', data.articleFirstPicture);
             } else {
                 $(span_a_img).attr('src', "https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture");
             }
-            $(a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + user.userId);
+            $(a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + userId);
         }
         $(".news").append(li);
     }

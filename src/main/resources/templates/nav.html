@@ -10,23 +10,23 @@
     <!--用户信息-->
     <div class="ui m-container-large">
         <div class="ui inverted secondary stackable menu">
-            <a href="#" th:href="@{/}"><h2 class="ui teal header item">EasyBlog</h2></a>
+            <a href="#" th:href="@{/}"><h2 class="ui teal header item" style="font-size: 1.9em">EasyBlog</h2></a>
             <!--搜索框--->
             <div class="right  item m-mobile-hide">
                 <form name="search" class="m-full-line" th:action="@{/search/details}" target="_blank" method="get" >
                     <div class="ui icon inverted search input m-margin-tb-tiny m-full-line">
-                        <input th:if="${query==null}" name="query" class="prompt" type="text" placeholder="Search....">
-                        <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt" type="text" placeholder="Search....">
+                        <input th:if="${query==null}" name="query" class="prompt" onfocus={$(this).animate({width:'500px'});} onblur={$(this).animate({width:'203px'});} type="text" placeholder="Search....">
+                        <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt" onfocus={$(this).animate({width:'500px'});} onblur={$(this).animate({width:'203px'});} type="text" placeholder="Search....">
                         <input hidden th:if="${visitor!=null}" name="visitorUId" th:value="${visitor.getUserId()}">
                         <i onclick="document.forms['search'].submit()" class="search link icon"></i>
                     </div>
                 </form>
             </div>
-            <div class="right  m-mobile-hide menu " style=" margin: 1.7em 0 auto 2em !important;">
+            <div class="right  m-mobile-hide menu " style="margin: 1em 0 auto 2em !important;background: #ec6149;border-radius: .28571429rem;padding: .7em 15px;color: #ccc;">
                 <a target="_blank" href="#"  th:if="${visitor==null}" th:href="@{/manage/blog/post}"
-                   style="color :rgb(0,183,173);font-size: 17px"><i class="paint brush icon" style="color: inherit !important;"></i>写博客</a>
+                   style="color :#fff;font-size: 17px"><i class="paint brush icon" style="color: inherit !important;"></i>写博客</a>
                 <a target="_blank" href="#"  th:if="${visitor!=null}" th:href="@{/manage/blog/post(userId=${visitor.getUserId()})}"
-                   style="color :rgb(0,183,173);font-size: 17px"><i class="paint brush icon" style="color: inherit !important;"></i>写博客</a>
+                   style="color :#fff;font-size: 17px"><i class="paint brush icon" style="color: inherit !important;"></i>写博客</a>
             </div>
             <!--我的头像-->
             <div th:if="${visitor!=null}"  id="header-images"  class="right m-menu-padding m-mobile-hide menu" style="display: none ;margin-left: 1em !important;">
@@ -50,7 +50,7 @@
             </div>
              <!--登录按钮-->
             <div id="login-btn" class="right m-mobile-hide menu m-menu-padding" style="display: flex !important;margin-left: 1em !important">
-                <a href="#" target="_blank" th:href="@{/user/loginPage}" style="font-size: inherit" class=" item m-mobile-hide">登录/注册</a>
+                <a href="#" target="_blank" th:href="@{/user/loginPage}" style="font-size: inherit;background: #fff;color: #ec6149!important;padding: .65em .8em;" class=" item m-mobile-hide">登录/注册</a>
             </div>
         </div>
     </div>

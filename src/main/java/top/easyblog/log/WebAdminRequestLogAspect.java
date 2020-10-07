@@ -23,7 +23,7 @@ import java.util.Arrays;
 public class WebAdminRequestLogAspect {
 
 
-    @Pointcut(value = "execution(* top.easyblog.controller.admin.*.*(..))")
+    @Pointcut(value = "execution(* top.easyblog.web.controller.admin.*.*(..))")
     public void log() {
     }
 

@@ -236,6 +236,18 @@ CREATE TABLE `user_power`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of user_power
+-- ----------------------------
+INSERT INTO `user_power` VALUES (2, 'Admin');
+INSERT INTO `user_power` VALUES (3, 'NORM_User');
+INSERT INTO `user_power` VALUES (4, 'VIP1_User');
+INSERT INTO `user_power` VALUES (5, 'VIP2_User');
+INSERT INTO `user_power` VALUES (6, 'VIP3_User');
+INSERT INTO `user_power` VALUES (7, 'SVIP_User');
+
+
+
+-- ----------------------------
 -- Table structure for user_signIn_log
 -- ----------------------------
 DROP TABLE IF EXISTS `user_signIn_log`;

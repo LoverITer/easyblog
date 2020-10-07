@@ -36,7 +36,7 @@
 <div class="m-content-container">
     <div class="ui  stackable grid">
         <div class="twelve wide column" style="padding-top: 0 !important;">
-            <div class="ui stackable grid segment m-margin-top m-margin-bottom m-mobile-hide" style="margin-left: unset !important;margin-right: unset !important;">
+            <div class="ui stackable grid segment m-margin-top m-margin-bottom m-mobile-hide" style="margin-left: unset !important;margin-right: unset !important;border: none;border-radius: unset">
                 <div class="three wide column" style="max-width: 130px !important;padding-right: 0 !important;">
                     <!--
                        author是文章的作者
@@ -65,7 +65,7 @@
                 </div>
             </div>
             <!--content header-->
-            <div class="ui  top attached segment">
+            <div class="ui  top attached segment" style=" border: none;border-bottom: #f0f1f2 2px solid;">
                 <div class="ui middle aligned two column grid">
                     <div class="column">
                         <h3 class="ui header m-inline-block m-black"
@@ -78,16 +78,20 @@
                 </div>
             </div>
             <!--content-->
-            <div class="ui attached segment border-bt-none" style="padding-bottom: 0">
-                <div th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear border-bt-none">
+            <div class="ui attached segment border-bt-none" style="border: none;padding: 0">
+                <div th:each="article:${articles}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear" style="border-bottom: #f0f1f2 2px solid">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
                             <div class="ui stackable  grid">
-                                <div class="two wide column m-mobile-hide" style="max-width: 52px;padding-right: 0 !important;">
-                                    <div th:switch="${article.getArticleType()}" class="ui red mini basic label">
-                                        <span th:case="0">原创</span>
-                                        <span th:case="1">转载</span>
-                                        <span th:case="2">翻译</span>
+                                <div class="two wide column m-mobile-hide" style="max-width: 56px;padding-right: 0 !important;">
+                                    <div th:if="${article.getArticleType() eq '0'}" class="ui red mini basic label">
+                                        <span>原创</span>
+                                    </div>
+                                    <div th:if="${article.getArticleType() eq '1'}" class="ui green mini basic label">
+                                        <span>转载</span>
+                                    </div>
+                                    <div th:if="${article.getArticleType() eq '2'}" class="ui blue mini basic label">
+                                        <span>翻译</span>
                                     </div>
                                 </div>
                                 <div class="fourteen wide column" style="padding-top: 0px !important;padding-left: 10px !important;">
@@ -102,13 +106,17 @@
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
                                         <div class="item m-margin-left">
-                                            <div th:switch="${article.getArticleType()}" class="ui red mini basic label m-mobile-show-only">
-                                                <span th:case="0">原创</span>
-                                                <span th:case="1">转载</span>
-                                                <span th:case="2">翻译</span>
+                                            <div th:if="${article.getArticleType() eq '0'}" class="ui red mini basic label m-mobile-show-only">
+                                                <span>原创</span>
+                                            </div>
+                                            <div th:if="${article.getArticleType() eq '1'}" class="ui green mini basic label m-mobile-show-only">
+                                                <span>转载</span>
+                                            </div>
+                                            <div th:if="${article.getArticleType() eq '2'}" class="ui blue mini basic label m-mobile-show-only">
+                                                <span>翻译</span>
                                             </div>
                                         </div>
-                                        <div class="item m-margin-left">
+                                        <div class="item m-margin-left m-mobile-hide">
                                             <img th:src="${author.getUserHeaderImgUrl()}"
                                                  src="https://unsplash.it/100/100?image=1005" alt=""
                                                  class="ui avatar image m-mobile-hide">
@@ -148,9 +156,9 @@
             </div>
 
             <!--查看更多-->
-            <div th:if="${#lists.size(articles) ge 15}" class="ui bottom attached segment" style="border-top: none !important;padding-top: 0">
+            <div th:if="${#lists.size(articles) ge 15}" class="ui bottom attached segment" style="border: none;border-radius: unset">
                 <a href="#" th:href="@{/article/index/{uid}(uid=${author.getUserId()})}">
-                    <button id="more-btn" class="ui negative basic button m-look-more-margin">查看更多
+                    <button id="more-btn" class="ui negative basic button m-look-more-margin" >查看更多
                     </button>
                 </a>
             </div>
@@ -170,8 +178,8 @@
             </div>
         </div>
         <!--关于我面板-->
-        <div class="four wide column m-mobile-hide">
-            <div class="ui attached segment">
+        <div class="four wide column m-mobile-hide" style="border:none">
+            <div class="ui attached segment" style="border: none;border-bottom: #f0f1f2 3px solid;">
                 <div class="ui header about">关于我
                     <a class="toggle-btn" th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" id="about" href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
@@ -180,7 +188,7 @@
                     希望结识可以共同成长的小伙伴.</p>
                 <p id="about-show" class="m-text" th:if="${#strings.isEmpty(author.getUserDescription())}">这人很懒，什么也没留下~~</p>
             </div>
-            <div class="ui attached segment">
+            <div class="ui attached segment" style="border: none;border-bottom: #f0f1f2 3px solid;">
                 <div class="ui header hobby">
                     我的爱好
                     <a class="toggle-btn" th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" id="hobby" href="#"
@@ -192,7 +200,7 @@
                 <p class="m-text" th:if="${userHobby==null}">
                     这人很懒，什么也没留下~~</p>
             </div>
-            <div class="ui attached segment">
+            <div class="ui attached segment" style="border: none;border-bottom: #f0f1f2 3px solid;">
                 <div class="ui header tech">
                     我的技术栈
                     <a class="toggle-btn" th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" id="thchnology" href="#"
@@ -204,7 +212,7 @@
                 <p class="m-text" th:if="${userTech==null}">
                     这人很懒，什么也没留下~~</p>
             </div>
-            <div class="ui bottom attached segment">
+            <div class="ui bottom attached segment" style="border: none;border-bottom: #f0f1f2 3px solid;">
                 <div class="ui header contact">
                     联系我<a class="toggle-btn" th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" id="contact-me" href="#"
                           style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
@@ -1677,6 +1685,7 @@
             sessionStorage.removeItem("hobby-success");
         }
     });
+    $('.m-article-sidebar-padding:last').css('border-bottom','none');
 </script>
 <!--弹框-->
 <script type="text/javascript">

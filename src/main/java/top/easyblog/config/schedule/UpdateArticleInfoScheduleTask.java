@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.easyblog.entity.po.Article;
-import top.easyblog.service.IArticleService;
 import top.easyblog.util.DefaultImageDispatcherUtils;
+import top.easyblog.web.service.IArticleService;
 
 import java.util.Date;
 import java.util.List;

@@ -87,7 +87,7 @@
 </nav>
 
 <!--搜索内容-->
-<div class="m-container-middle">
+<div class="m-container-middle" style="margin: unset !important;">
     <div class="ui container stackable">
 
         <form name="search" th:action="@{/search/details}"  method="get">
@@ -101,7 +101,7 @@
         </form>
 
         <!--header-->
-        <div th:if="${articlePages!=null}" class="ui top attached segment">
+        <div th:if="${articlePages!=null}" class="ui top attached segment" style="border: none;border-bottom: #f1f2f3 3px solid;">
             <div class="ui middle aligned two column grid">
                 <div class="column">
                     <h3 class="ui teal header">搜索结果</h3>
@@ -113,9 +113,9 @@
             </div>
         </div>
 
-        <div style="padding-top: 0" th:if="${articlePages!=null and #lists.size(articlePages.getList())>0}" class="ui  attached  segment">
+        <div th:if="${articlePages!=null and #lists.size(articlePages.getList())>0}" class="ui  attached  segment" style="padding: 0;border: none;">
             <div th:each="article:${articlePages.getList()}"
-                 class="ui padded vertical segment m-padded-tb-large">
+                 class="ui padded vertical segment m-padded-tb-large" style="border: none;border-bottom: #f1f2f3 3px solid;">
                 <div class="ui middle aligned mobile reversed stackable grid">
                     <div class="eleven wide column">
                         <h3 class="ui header">
@@ -184,7 +184,7 @@
                     <div class="ui buttons">
                         <a th:href="@{/search/details(query=${query},page=${articlePages.getPrePage()})}">
                             <button class="ui  button"
-                                    style="background: white !important;font-weight: 100 !important;">上一页
+                                    style="background: white !important;font-weight: 100 !important;"><i class="step backward icon"></i>
                             </button>
                         </a>
                         <a th:each="pageNo:${articlePages.getNavigatepageNums()}"
@@ -196,7 +196,7 @@
                         </a>
                         <a th:href="@{/search/details(query=${query},page=${articlePages.getNextPage()})}">
                             <button class="ui right button"
-                                    style="background: white !important;font-weight: 100 !important;"> 下一页
+                                    style="background: white !important;font-weight: 100 !important;"> <i class="step forward icon"></i>
                             </button>
                         </a>
                     </div>
@@ -216,6 +216,7 @@
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
 <script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script>
+    $('.m-padded-tb-large:last').css('border',"none");
     $(".topic").each(function () {
         var str = $(this).text();
         var key = $('#query').val();
@@ -235,9 +236,11 @@
 </script>
 
 <script type="text/javascript">
-
+    let userId=$('#userId').val();
     $(document).ready(function () {
-        let userId=$('#userId').val();
+        $(".m-container-middle").animate({
+            left:'284.8px',
+        });
         showPageZoomWarning();
         toggleStatus(userId);
         logOut(userId);
