@@ -5,3 +5,5 @@
 .imgViewDom img{cursor: zoom-out;}
 .user_info_sidebar{border: none !important;border-radius: unset !important;box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05) !important;}
 .user_info_sidebar_divider{margin-bottom: 5px !important;margin-top: 5px !important;border-top: none;background: #f5f6f7;}
+.m-img-animate{transition: all 1.5s;width: 55px !important;height: 55px !important;}
+.m-img-animate:hover{transform: rotate(360deg); }

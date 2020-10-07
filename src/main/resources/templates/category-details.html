@@ -65,7 +65,7 @@
         <!--右边的分类内容-->
         <div class="twelve wide column" style="padding-top: 0 !important;">
             <!--分类的header-->
-            <div class="ui top attached segment">
+            <div class="ui top attached segment" style="border: none;border-radius: unset;border-bottom: #f0f1f2 3px solid;">
                 <div class="ui middle aligned two column grid">
                     <input id="category_Id" hidden="hidden" th:value="${category.getCategoryId()}"/>
                     <input id="care_id" hidden="hidden" th:value="${care}">
@@ -107,17 +107,20 @@
             </div>
 
             <!--每个分类的文章-->
-            <div class="ui top attached  segment"
-                 style="padding-top: 0 !important;border-bottom: none !important;margin-top: 0.1em !important;">
-                <div th:if="${!#lists.isEmpty(categoryArticles)&&!#lists.isEmpty(categoryArticles.getList())&&#lists.size(categoryArticles.getList())>0}" th:each="article:${categoryArticles.getList()}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear" style="padding-bottom: 20px !important;padding-top: 10px !important;">
+            <div class="ui top attached  segment" style="margin-top: 0 !important;border: none;padding: 0;">
+                <div th:if="${!#lists.isEmpty(categoryArticles)&&!#lists.isEmpty(categoryArticles.getList())&&#lists.size(categoryArticles.getList())>0}" th:each="article:${categoryArticles.getList()}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear" style="padding-bottom: 20px !important;padding-top: 10px !important;border-bottom: #f0f1f2 3px solid;">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
                             <div class="ui stackable  grid">
-                                    <div class="two wide column m-mobile-hide" style="max-width: 52px;padding-right: 0 !important;">
-                                        <div th:switch="${article.getArticleType()}" class="ui red mini basic label">
-                                            <span th:case="0">原创</span>
-                                            <span th:case="1">转载</span>
-                                            <span th:case="2">翻译</span>
+                                    <div class="two wide column m-mobile-hide" style="max-width: 56px;padding-right: 0 !important;">
+                                        <div th:if="${article.getArticleType() eq '0'}" class="ui red mini basic label">
+                                            <span>原创</span>
+                                        </div>
+                                        <div th:if="${article.getArticleType() eq '1'}" class="ui green mini basic label">
+                                            <span>转载</span>
+                                        </div>
+                                        <div th:if="${article.getArticleType() eq '2'}" class="ui blue mini basic label">
+                                            <span>翻译</span>
                                         </div>
                                     </div>
                                     <div class="fourteen wide column" style="padding-top: 0px !important;padding-left: 10px !important;">
@@ -132,13 +135,17 @@
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
                                         <div class="item">
-                                            <div th:switch="${article.getArticleType()}" class="ui red mini basic label m-mobile-show-only">
-                                                <span th:case="0">原创</span>
-                                                <span th:case="1">转载</span>
-                                                <span th:case="2">翻译</span>
+                                            <div th:if="${article.getArticleType() eq '0'}" class="ui red mini basic label m-mobile-show-only">
+                                                <span>原创</span>
+                                            </div>
+                                            <div th:if="${article.getArticleType() eq '1'}" class="ui green mini basic label m-mobile-show-only">
+                                                <span>转载</span>
+                                            </div>
+                                            <div th:if="${article.getArticleType() eq '2'}" class="ui blue mini basic label m-mobile-show-only">
+                                                <span>翻译</span>
                                             </div>
                                         </div>
-                                        <div class="item" style="margin-left: 0 !important;">
+                                        <div class="item m-mobile-hide" style="margin-left: 0 !important;">
                                             <img th:src="${author.getUserHeaderImgUrl()}"
                                                  src="https://unsplash.it/100/100?image=1005" alt=""
                                                  class="ui avatar image m-mobile-hide">
@@ -167,17 +174,16 @@
                     </div>
                 </div>
             </div>
-            <div th:if="${!#lists.isEmpty(categoryArticles)&&categoryArticles.getTotal()<=10}" class="ui bottom attached segment" style="border-top: none !important;padding: 1px 0 !important;"></div>
 
             <!--分页按钮-->
             <div th:if="${categoryArticles.getTotal()>10}" class="ui bottom attached segment"
-                 style="border-top: solid 1px #ccc !important;">
+                 style="border:none;border-top: #f0f1f2 3px solid;">
                 <div class="ui middle aligned two column grid">
                     <div  style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
                             <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${author.getUserId()},page=${categoryArticles.getPrePage()})}">
                                 <button class="ui  button"
-                                        style="background: white !important;font-weight: 100 !important;">上一页
+                                        style="background: white !important;font-weight: 100 !important;"> <i class="step backward icon"></i>
                                 </button>
                             </a>
                             <a th:each="pageNo:${categoryArticles.getNavigatepageNums()}"
@@ -189,7 +195,7 @@
                             </a>
                             <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${author.getUserId()},page=${categoryArticles.getNextPage()})}">
                                 <button class="ui right button"
-                                        style="background: white !important;font-weight: 100 !important;"> 下一页
+                                        style="background: white !important;font-weight: 100 !important;">  <i class="step forward icon"></i>
                                 </button>
                             </a>
                         </div>
@@ -223,7 +229,7 @@
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script type="text/javascript" th:online="javascript">
-
+    $('.m-mobile-lr-clear:last').css('border-bottom','none');
     $(document).ready(function () {
         let userId=$('#userId').val();
         showPageZoomWarning();

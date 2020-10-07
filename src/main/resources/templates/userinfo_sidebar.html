@@ -15,7 +15,7 @@
             <div class="row" style="padding-bottom: 0 !important;">
                 <div class="four wide column" style="padding-right: 0 !important;">
                     <a href="#" th:if="${author!=null}" th:href="@{/article/index/{id}(id=${author.getUserId()})}" class="m-black">
-                        <img class="ui top avatar aligned tiny image medium circular" style="width: 55px !important;height: 55px !important;" th:if="${author!=null}" th:src="@{${author.getUserHeaderImgUrl()}}"/>
+                        <img class="ui top avatar aligned tiny image medium circular m-img-animate"  th:if="${author!=null}" th:src="@{${author.getUserHeaderImgUrl()}}"/>
                     </a>
                 </div>
                 <div class="twelve wide column grid" style="padding-left: 3px !important;">

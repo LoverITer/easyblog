@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.easyblog.mapper.OauthMapper">
-  <resultMap id="BaseResultMap" type="top.easyblog.oauth2.bean.Oauth">
+  <resultMap id="BaseResultMap" type="top.easyblog.web.oauth2.bean.Oauth">
     <id column="oauth_id" jdbcType="INTEGER" property="oauthId" />
     <result column="open_id" jdbcType="VARCHAR" property="openId" />
     <result column="app_type" jdbcType="VARCHAR" property="appType" />
     <result column="status" jdbcType="CHAR" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.easyblog.oauth2.bean.Oauth">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.easyblog.web.oauth2.bean.Oauth">
     <result column="user_id" jdbcType="LONGVARCHAR" property="userId" />
   </resultMap>
 
@@ -19,7 +19,7 @@
     where oauth_id = #{oauthId,jdbcType=INTEGER}
   </select>
 
-  <select id="getUserSelective"  resultType="top.easyblog.oauth2.bean.Oauth">
+  <select id="getUserSelective"  resultType="top.easyblog.web.oauth2.bean.Oauth">
     select * from oauth
     <where>
       <if test="oauth.oauthId != null">
@@ -48,12 +48,12 @@
     where oauth_id = #{oauthId,jdbcType=INTEGER}
   </delete>
 
-  <insert id="save" parameterType="top.easyblog.oauth2.bean.Oauth">
+  <insert id="save" parameterType="top.easyblog.web.oauth2.bean.Oauth">
     insert into oauth (oauth_id, open_id, app_type, status, create_time, user_id )
     values (#{oauthId,jdbcType=INTEGER}, #{openId,jdbcType=VARCHAR}, #{appType,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=LONGVARCHAR})
   </insert>
 
-  <insert id="insertSelective" parameterType="top.easyblog.oauth2.bean.Oauth">
+  <insert id="insertSelective" parameterType="top.easyblog.web.oauth2.bean.Oauth">
     insert into oauth
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="oauthId != null">
@@ -97,7 +97,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.oauth2.bean.Oauth">
+  <update id="updateByPrimaryKeySelective" parameterType="top.easyblog.web.oauth2.bean.Oauth">
     update oauth
     <set>
       <if test="openId != null">
@@ -119,7 +119,7 @@
     where oauth_id = #{oauthId,jdbcType=INTEGER}
   </update>
 
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="top.easyblog.oauth2.bean.Oauth">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="top.easyblog.web.oauth2.bean.Oauth">
     update oauth
     set open_id = #{openId,jdbcType=VARCHAR},
       app_type = #{appType,jdbcType=VARCHAR},
@@ -129,7 +129,7 @@
     where oauth_id = #{oauthId,jdbcType=INTEGER}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="top.easyblog.oauth2.bean.Oauth">
+  <update id="updateByPrimaryKey" parameterType="top.easyblog.web.oauth2.bean.Oauth">
     update oauth
     set open_id = #{openId,jdbcType=VARCHAR},
       app_type = #{appType,jdbcType=VARCHAR},

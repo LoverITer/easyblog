@@ -2,7 +2,7 @@ package top.easyblog.util;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import top.easyblog.common.enums.HtmlTemplate;
+import top.easyblog.global.enums.HtmlTemplate;
 
 import java.util.Map;
 

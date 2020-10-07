@@ -68,5 +68,5 @@ oauth:
 logging:
   level:
     root: info
-    top.easyblog.mapper: DEBUG
+    top.easyblog.mapper: info
   file: easyblog-pro.log
