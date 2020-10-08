@@ -232,13 +232,17 @@
     let commentContent = ""; //输入的评论内容
     /**评论输入框被点击的时候变大为10行**/
     $('#commentInput').click(function () {
-        $('#commentInput').attr("rows", "10");
+        $(this).animate({
+            rows:'10'
+        });
         $('#commentBtn').show();
     });
-    /**评论输入框时区焦点后变小为初始大小2行**/
+    /**评论输入框时区焦点后变小为初始大小1行**/
     $('#commentForm').mouseleave(function () {
-        $('#commentInput').attr("rows", "1");
         $('#commentBtn').hide();
+        $('#commentInput').animate({
+            rows:'1'
+        });
     });
     <!--控制评论输入的字数-->
     $(function () {

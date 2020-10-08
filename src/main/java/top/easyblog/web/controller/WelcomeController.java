@@ -53,7 +53,9 @@ public class WelcomeController extends BaseController{
      * @return
      */
     @GetMapping(value = "/")
-    public String index(Model model, @RequestParam(defaultValue = "1") int pageNo, HttpServletRequest request) {
+    public String index(Model model,
+                        @RequestParam(defaultValue = "1") int pageNo,
+                        HttpServletRequest request) {
         try {
             User user = UserUtils.getUserFromCookie(request);
             model.addAttribute("user", user);
