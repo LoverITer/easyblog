@@ -22,9 +22,7 @@
             display: inline-block !important;
         }
     </style>
-    <!--[if lt IE 9]>
-    <script src="js/modernizr.js"></script>
-    <![endif]-->
+    <!--[endif]-->
     <!--百度统计JS脚本-->
     <script>
         var _hmt = _hmt || [];
@@ -73,7 +71,7 @@
                 <li><a href="/others" th:href="@{/others}">其它</a></li>
                 <li><a href="#" th:if="${user==null}"  th:href="@{/article/home/667020}">关于我</a>
                     <a href="#" th:if="${user!=null}"  th:href="@{/article/home/667020(visitorUId=${user.getUserId()})}">关于我</a></li>
-                <li th:if="${user==null}"><a class="index_user_login" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
+                <li th:if="${user==null}"><a class="index_user_login login-btn" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
                 <li th:if="${user!=null}">
                     <div id="header-images" class="right m-item m-mobile-hide" style="margin-left: 1em !important;">
                         <a href="#" class="index_user_header" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}">
@@ -351,7 +349,6 @@
             success: function (response) {
                 ret = response.success;
                 let userId=response.message;
-                console.log(userId);
                 for(var key in response.model) {
                     dynamicAppendArticle(response.model[key], userId);
                 }
