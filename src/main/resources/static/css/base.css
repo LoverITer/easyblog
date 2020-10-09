@@ -64,6 +64,15 @@ nav { float: left; height: 50px; line-height: 50px; text-align: center; }
 .open .navicon:before, .open .navicon:after { content: ''; display: block; width: 30px; height: 5px; position: absolute; background: #fff; }
 /*menu+*/
 .menu span { display: none; width: 50px; height: 50px; background: #12b7de; opacity: 0.5; position: absolute; top: 0; right: 0; border-left: #49ccea 1px solid; }
+.login-btn{
+    background: #ffffff;
+    border-radius: .28571429rem;
+    color: #ec6149 !important;
+    padding: 0px 5px !important;
+    width: 20px;
+    height: 2.5em;
+    margin-top: 5px;
+    line-height: 2.5;}
 /*search*/
 .searchico { margin-top: 5px;margin-right: 10px; width: 39px; height: 39px; float: right; display: inline; cursor: pointer; background: url(../images/search.png) no-repeat center !important; }
 .searchbox { width: 1200px; margin: 10px auto; overflow: hidden; background: rgba(255,255,255,.2);; position: relative; top: 65px}

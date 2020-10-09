@@ -16,12 +16,18 @@ $(document).ready(function () {
 
     //search
     $(".searchico").click(function(){
+        /*$('.search').animate({
+           display:'block !important'
+        });*/
         $(".search").toggleClass("open");
     });
 
     //searchclose
     $(".searchclose").click(function(){
         $(".search").removeClass("open");
+        /*$('.search').animate({
+            display:'none'
+        });*/
     });
 
     //banner
