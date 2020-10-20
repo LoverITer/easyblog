@@ -198,17 +198,14 @@
                             <div class="inline fields">
                                 <div class="field">
                                     <div class="ui radio checkbox">
-                                        <input id="public" type="radio" name="frequency" th:if="${article!=null}"
-                                               th:selected="${article.getArticleStatus()=='0'}">
-                                        <input id="public" type="radio" name="frequency" th:if="${article==null}"
-                                               checked="checked">
+                                        <input id="public" type="radio" name="frequency"  th:if="${article!=null and article.getArticleStatus()=='0'}" checked>
+                                        <input th:if="${article==null}" id="public" type="radio" name="frequency" checked>
                                         <label>公开</label>
                                     </div>
                                 </div>
                                 <div class="field">
                                     <div class="ui radio checkbox">
-                                        <input id="private" type="radio" th:if="${article!=null}"
-                                               th:selected="${article.getArticleStatus()=='1'}" name="frequency">
+                                        <input id="private" type="radio" th:if="${article!=null and article.getArticleStatus()=='1'}" name="frequency" checked>
                                         <input id="private" type="radio" th:if="${article==null}" name="frequency">
                                         <label>私有</label>
                                     </div>
@@ -367,7 +364,6 @@
                 for (let i = 0; parseInt(i) < parseInt(options.length); i++) {
                     let channlVar = options.eq(i).text();   //option中的值
                     channlVar = channlVar.replace(/\s*/g, "");
-                    //console.log(channlVar);
                     if (channlVar == str) {
                         showErrorMessage('您已经存在' + str + '分类,请不要重复添加！');
                         flag = false;
@@ -435,7 +431,7 @@
                 //console.log("articleId:" + articleId);
                 _loading(2);
                 $.ajax({
-                    url: "/manage/blog/saveAsDraft/" + userId,
+                    url: "/manage/blog/saveAsDraft/",
                     method: "POST",
                     sync: true,
                     contentType: "application/json",
@@ -459,7 +455,7 @@
                             localStorage.setItem('articleId', articleId);
                             //保存一次就将savedCount值1
                             savedCount=1;
-                            window.location.href="/manage/blog/edit?articleId="+localStorage.getItem("articleId")+"&userId="+userId;
+                            window.location.href="/manage/blog/edit?articleId="+localStorage.getItem("articleId");
                         } else {
                             showErrorMessage(ajaxResult.message);
                         }
@@ -508,7 +504,7 @@
             } else {
                 _loading(2);
                 $.ajax({
-                    url: "/manage/blog/saveArticle/" + userId,
+                    url: "/manage/blog/saveArticle/",
                     method: "POST",
                     sync: true,
                     contentType: "application/json",
@@ -529,7 +525,7 @@
                             localStorage.removeItem("articleId");
                             savedCount=1;
                             //跳转到成功页面
-                            window.location.href = "/manage/blog/success/" + articleId+"/"+userId ;
+                            window.location.href = "/manage/blog/success/" + articleId ;
                         } else {
                             showErrorMessage(ajaxResult.message);
                         }

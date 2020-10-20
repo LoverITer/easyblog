@@ -2,15 +2,11 @@ package top.easyblog.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
 import top.easyblog.entity.po.User;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Objects;
 
 /**
@@ -29,7 +25,7 @@ public class UserUtils {
      * @param request
      * @return
      */
-    public static User getUserFromCookie(HttpServletRequest request) {
+    /*public static User getUserFromCookie(HttpServletRequest request) {
         User user = null;
         try {
             Cookie[] cookies = request.getCookies();
@@ -51,20 +47,21 @@ public class UserUtils {
         }
         return user;
     }
-
+*/
 
     /**
      * 从Redis中查找指定Id的用户的登录信息
      *
-     * @param userId 用户Id
+     * @param sessionId 用户Id
      * @return User对象
      */
-    public static User getUserFromRedis(Integer userId) {
+    public static User getUserFromRedis(String sessionId) {
         //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) RedisUtils.getRedisUtils().hget("user-" + userId, "user", RedisUtils.DB_1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            return null;
-        }
+        String userJsonStr = (String) RedisUtils.getRedisUtils().get(sessionId, RedisUtils.DB_1);
+        if (Objects.isNull(userJsonStr) || userJsonStr.length() == 0) {return null;}
+        //将字符串放入redis后，redis会自动为我们添加转义字符，这会导致json格式被破坏，
+        // 因此这里需要把从redis获取到的字符串先转义回来
+        userJsonStr=JSON.parse(userJsonStr).toString();
         return JSON.parseObject(userJsonStr, User.class);
     }
 

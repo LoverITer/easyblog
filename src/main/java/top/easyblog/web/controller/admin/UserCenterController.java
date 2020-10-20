@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.entity.po.User;
 import top.easyblog.entity.po.UserAttention;
-import top.easyblog.util.CalendarUtils;
-import top.easyblog.util.CombineBeans;
-import top.easyblog.util.UserProfessionUtils;
-import top.easyblog.util.UserUtils;
+import top.easyblog.util.*;
 import top.easyblog.web.controller.BaseController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +27,9 @@ public class UserCenterController extends BaseController {
 
 
     @GetMapping(value = "/profile")
-    public String center(@RequestParam Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String center(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -58,7 +56,8 @@ public class UserCenterController extends BaseController {
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
         User user1 = null;
-        if (Objects.nonNull(user1 = UserUtils.getUserFromRedis(userId))) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        if (Objects.nonNull(user1 = UserUtils.getUserFromRedis(sessionId))) {
             if (Objects.nonNull(user)) {
                 if (Objects.nonNull(birthday)) {
                     user.setUserBirthday(CalendarUtils.getInstance().getDate(birthday));
@@ -79,8 +78,9 @@ public class UserCenterController extends BaseController {
 
 
     @GetMapping(value = "/follow-list")
-    public String care(@RequestParam Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String care(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -96,8 +96,9 @@ public class UserCenterController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/cancelAttention")
-    public WebAjaxResult cancelAttention(@RequestParam Integer userId, @RequestParam(value = "attentionId") int attentionId) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public WebAjaxResult cancelAttention(HttpServletRequest request, @RequestParam(value = "attentionId") int attentionId) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
         if (Objects.nonNull(user)) {
@@ -114,8 +115,9 @@ public class UserCenterController extends BaseController {
 
 
     @GetMapping(value = "/fans-list")
-    public String fans(@RequestParam Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String fans(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -133,17 +135,16 @@ public class UserCenterController extends BaseController {
      * 更换用户头像
      *
      * @param map
-     * @param userId   用户Id
      * @param request
      * @param response
      */
     @ResponseBody
     @PostMapping(value = "/uploadImg", produces = "application/json;charset=UTF-8")
     public WebAjaxResult changeHeaderImage(@RequestBody Map<String, String> map,
-                                           @RequestParam Integer userId,
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
         if (Objects.nonNull(user)) {

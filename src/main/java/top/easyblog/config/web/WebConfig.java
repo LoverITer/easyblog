@@ -34,7 +34,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        final InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor(redisUtil));
+        final InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
         registration.addPathPatterns("/**");
         /**
          * 排除拦截classpath:/static下的所有静态资源

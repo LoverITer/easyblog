@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.Arrays;
-
 /**
  * 系统日志记录
  * @author huangxin
@@ -29,37 +27,21 @@ public class ServiceLogAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.info(classMethod);
+        log.info(String.valueOf(new ServiceLog(classMethod,joinPoint.getArgs())));
     }
 
     @AfterReturning(pointcut = "log()", returning = "result")
     public void afterReturn(JoinPoint joinPoint, Object result) {
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.info(classMethod + " has done successfully.");
+        log.info(classMethod + " 执行成功. 返回值："+result);
     }
 
     @AfterThrowing(pointcut = "log()", throwing = "throwable")
     public void afterThrow(JoinPoint joinPoint, Throwable throwable) {
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.error(classMethod + " occurred an error :" + throwable.getMessage());
+        log.error(classMethod + " 执行过程发生异常:" + throwable.getMessage());
     }
 
-    private static class ServiceLog {
-        private String classMethod;
-        private Object[] args;
-
-        public ServiceLog( String classMethod, Object[] args) {
-            this.classMethod = classMethod;
-            this.args = args;
-        }
-
-        @Override
-        public String toString() {
-            return "request log{：" +
-                    ", classMethod='" + classMethod + '\'' +
-                    ", args=" + Arrays.toString(args) + "}";
-        }
-    }
 
 
 }

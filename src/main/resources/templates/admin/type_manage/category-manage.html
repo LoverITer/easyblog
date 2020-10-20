@@ -27,7 +27,7 @@
 <body>
 
 <!--导航-->
-<div th:replace="~{nav :: navbar}"></div>
+<div th:replace="~{fragment/nav :: navbar}"></div>
 
 
 <!--中间内容-->
@@ -178,21 +178,12 @@
 
 <div style="height: 16em"></div>
 <!--底部footer-->
-<div th:replace="~{footer :: footbar}"></div>
+<div th:replace="~{ fragment/common :: footbar}"></div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script src="../../../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
-<script>
-    $(document).ready(function () {
-        let userId=$('#userId').val();
-        showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
-        showCurrentPageNum();
-    });
-</script>
-<script th:online="javascript">
+
+<div th:replace="~{ fragment/common :: common_js}"></div>
+
+<script th:inline="javascript">
     function changeDisplayOrNot(obj) {
         let userId="[[${user.getUserId()}]]";
         var categoryId=$(obj).val();
@@ -233,16 +224,7 @@
             })
         }
     }
-</script>
-<script>
-    $('#add-btn').mouseenter(function () {
-        $('#add-btn').removeClass("basic");
-    })
-    $('#add-btn').mouseleave(function () {
-        $('#add-btn').addClass("basic");
-    })
-</script>
-<script type="text/javascript">
+
     function showCurrentPageNum() {
         let obj=document.getElementsByClassName('pages');
         let page=[[${categoriesPage.pageNum}]];
@@ -252,6 +234,14 @@
             }
         }
     }
+</script>
+<script>
+    $('#add-btn').mouseenter(function () {
+        $('#add-btn').removeClass("basic");
+    });
+    $('#add-btn').mouseleave(function () {
+        $('#add-btn').addClass("basic");
+    });
 </script>
 <script>
     $('.menu.toggle').click(function () {

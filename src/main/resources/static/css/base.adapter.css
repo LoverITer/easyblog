@@ -3,6 +3,11 @@
     .index_user_login{ position: absolute;min-width: 80px;left: 15em; }
     .index_user_header{ padding-top: 8px !important;;   position: absolute;min-width: 70px;left: 17em; }
     .copyright{margin-left: 290px}
+    .header {height: 300px}
+    .header-left{width: 75%;float:left;display: inline-block}
+    .header-right{width: 25%;float:right;display: inline-block}
+    .banbox-right{height: inherit;width: 31%;float: right}
+    .banbox {width: 68.5%;overflow: hidden;float: left;margin-bottom: 20px;padding-top: 0}
 }
 @media only screen and (min-width: 1024px) and (max-width: 1199px) {
     .index_user_login{ position: absolute;min-width: 80px;left: 15em; }
@@ -19,6 +24,11 @@
     .jianzhan li:nth-child(1) { width: 30% }
     .jianzhan li:nth-child(3) { width: 36.3% }
     .copyright{margin-left: 270px}
+    .header {height: 300px}
+    .header-left{width: 75%;float:left;display: inline-block}
+    .header-right{width: 25%;float:right;display: inline-block}
+    .banbox-right{height: inherit;width: 31%;float: right}
+    .banbox {width: 68.5%;overflow: hidden;float: left;margin-bottom: 20px;padding-top: 0}
 }
 @media only screen and (max-width: 1023px) {
     /*header*/
@@ -55,18 +65,14 @@
     .jianzhan li:nth-child(3) { width: 36.3% }
     .zhuanti li { width: 27%; }
     .copyright{margin-left: 260px}
+    .header {height: 300px}
+    .header-left{width: 75%;float:left;display: inline-block}
+    .header-right{width: 25%;float:right;display: inline-block}
+    .banbox-right{height: inherit;width: 31%;float: right}
+    .banbox {width: 68.5%;overflow: hidden;float: left;margin-bottom: 20px;padding-top: 0}
 }
 @media only screen and (max-width: 768px) {
-    footer{
-        background: #1c2327;
-        width: 100%;
-        padding: 30px 0 10px 0;
-        color: #f2f2f2;
-        font-size: 14px;
-        position: relative;
-        top: 60px;
-    }
-    .banbox { width: 100%; overflow: hidden; float: left; border-radius: 3px; margin-bottom: 20px; padding-top: 0;}
+    footer{background: #1c2327;width: 100%;padding: 30px 0 10px 0;color: #f2f2f2;font-size: 14px;position: relative;top: 60px;}
     .index_user_login{ padding-top: 8px;position: unset; }
     .index_user_header{ padding-top: 8px;position: unset; }
     .zhuanti li { padding: 15px; }
@@ -81,6 +87,11 @@
     .muban li section { margin: 0 5px; height: 260px; overflow: hidden }
     .zhuanti li { width: 27.6%; padding: 8px }
     .copyright{margin-left: 10px}
+    .header {height: 220px}
+    .header-left{width: 100%;float:left;display: inline-block}
+    .header-right{display: none}
+    .banbox { width: 65%; overflow: hidden; float: left;  margin-bottom: 20px; padding-top: 0;}
+    .banbox-right{height: inherit;width: 34.5%;float: right}
 }
 @media only screen and (max-width: 480px) {
     footer{background: #1c2327;width: 100%;padding: 30px 0 10px 0;color: #f2f2f2;font-size: 14px;position: relative;top: 60px;}
@@ -90,7 +101,9 @@
     .headline ul li { width: 49%; float: left; }
     .headline ul li:last-child { float: right }
     .headline ul li span { padding: 0 20px }
+    .header {height: 220px}
     .banbox { width: 100% ;padding-top: 0;}
+    .banbox-right{display: none}
     .fader { height: 200px; }
     .newspic { width: 100%; height: auto }
     .newspic li { width: 49%; float: left }
@@ -142,4 +155,6 @@
     .tab_buttons li {margin-right: 30px;width: auto;}
     .newscurrent:after{width:100%}
     .copyright{margin-left: 5px}
+    .header-left{width: 100%;float:left;display: inline-block}
+    .header-right{display: none}
 }

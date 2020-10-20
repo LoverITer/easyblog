@@ -1,13 +1,13 @@
 package top.easyblog.web.oauth2.enums;
 
 /**
- * 第三方授权认证的APPType
+ * 第三方授权认证的APP类型
  *
  * @author ：huangxin
  * @modified ：
  * @since ：2020/05/29 10:58
  */
-public enum AppType {
+public enum ThirdPartAppType {
 
     /**
      * QQ
@@ -27,7 +27,7 @@ public enum AppType {
 
     private String appType;
 
-    AppType(String appType) {
+    ThirdPartAppType(String appType) {
         this.appType = appType;
     }
 

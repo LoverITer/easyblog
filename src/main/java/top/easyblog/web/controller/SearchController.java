@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.easyblog.entity.po.Article;
+import top.easyblog.entity.po.User;
 import top.easyblog.global.pagehelper.PageParam;
 import top.easyblog.global.pagehelper.PageSize;
+import top.easyblog.util.CookieUtils;
 import top.easyblog.util.UserUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,14 +36,15 @@ public class SearchController extends BaseController{
     @GetMapping("/details")
     public String showSearchResult(@RequestParam String query,
                                    @RequestParam(value = "page", defaultValue = "1") int pageNo,
-                                   @RequestParam(required = false) Integer visitorUId,
                                    HttpServletRequest request,
                                    Model model) {
         if(query==null||query.replaceAll(" ","").length()==0||PLACEHOLDER.equals(query)){
             String backward = request.getHeader(HttpHeaders.REFERER);
             return "redirect:" + backward;
         }
-        model.addAttribute("visitor", UserUtils.getUserFromRedis(visitorUId));
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User visitor= UserUtils.getUserFromRedis(sessionId);
+        model.addAttribute("visitor", visitor);
         model.addAttribute("query", query);
         PageParam pageParam = new PageParam(pageNo, PageSize.MAX_PAGE_SIZE);
         PageInfo<Article> articlePages = articleService.getArticleByTopicPage(query, pageParam);

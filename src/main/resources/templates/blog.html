@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="keywords" th:content="${article.getArticleTopic()}" content="EasyBlog博客网站,个人博客,个人网站,开发技术">
+    <meta name="description" th:content="${articleDescription}">
     <title>[[${article.getArticleTopic()}]]_[[${author.getUserNickname()}]]的博客—EasyBlog博客</title>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
     <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
@@ -15,7 +17,7 @@
     <link rel="stylesheet" href="../static/hightlight-theme/okaida/prism.css" th:href="@{/static/hightlight-theme/default/prism.css}">
     <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
     <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
-    <script>
+    <script type="text/javascript">
         var _hmt = _hmt || [];
         (function() {
             var hm = document.createElement("script");
@@ -28,7 +30,7 @@
 </head>
 <body>
 <!--导航-->
-<div th:replace="~{nav :: navbar}"></div>
+<div th:replace="~{ fragment/nav :: navbar}"></div>
 <!--中间内容-->
 <div id="waypoint" class="animated fadeIn m-content-container">
     <div class="ui stackable grid">
@@ -55,14 +57,18 @@
                     <!--标题-->
                     <div class="ui left aligned basic segment" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
                         <h2 style="max-width: 100% !important;margin-bottom: 5px !important;" class="ui left aligned  m-article-title" th:text="${article.getArticleTopic()}"></h2>
-                        <a target="_blank" class="m-article-quick-edit-btn m-mobile-hide"  th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()},userId=${visitor.getUserId()})}"><button style="border: none;padding: 5px;border-radius: 3px">修改文章</button></a>
+                        <a target="_blank" class="m-article-quick-edit-btn m-mobile-hide"  th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}"><button style="border: none;padding: 5px;border-radius: 3px">修改文章</button></a>
                     </div>
                     <div class="ui horizontal link list">
                         <div class="item">
-                            <div th:switch="${article.getArticleType()}" class="ui red mini basic label" style="margin-right: 5px">
-                                <span th:case="0">原创</span>
-                                <span th:case="1">转载</span>
-                                <span th:case="2">翻译</span>
+                            <div th:if="${article.getArticleType() eq '0'}" class="ui red mini basic label" style="margin-right: 5px">
+                                <span>原创</span>
+                            </div>
+                            <div th:if="${article.getArticleType() eq '1'}" class="ui green mini basic label" style="margin-right: 5px">
+                                <span>转载</span>
+                            </div>
+                            <div th:if="${article.getArticleType() eq '2'}" class="ui blue mini basic label" style="margin-right: 5px">
+                                <span>翻译</span>
                             </div>
                         </div>
                         <div class="item" style="margin-left: 0 !important;">
@@ -90,7 +96,7 @@
                         <button id="payButton" class="ui orange basic circular button">赞赏</button>
                     </div>
                     <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui payQR flowing popup transition hidden">
-                        <div class="ui black basic label">
+                        <div class="ui black basic label" style="border: #fff !important;">
                             <div class="ui images" style="font-size: inherit !important;">
                                 <div class="image">
                                     <img th:src="@{/static/images/wechat.jpg}" alt="支持一下吧^V^" class="ui rounded bordered image" style="width: 130px">
@@ -200,36 +206,26 @@
         </div>
 </div>
 
-<!--<div class="ui toc-container flowing popup transition hidden" style="width: 250px!important;">
-    <ol class="js-toc">
-    </ol>
-</div>-->
-<!--背景层-->
+<!--图片放大显示背景层-->
 <div class="imgViewDom" style="display: none">
     <img class="bgImg" src="" style="width: 980px;">
 </div>
 <div style="height: 10em"></div>
 <!--底部footer-->
-<div th:replace="~{footer :: footbar}"></div>
+<div th:replace="~{fragment/common :: footbar}"></div>
+
 </body>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+
+<th:block th:replace="~{fragment/common :: common_js}"/>
 <script src="../static/hightlight-theme/okaida/prism.js" th:src="@{/static/hightlight-theme/default/prism.js}"></script>
-<script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
-<script>
+<!--评论框的各种效果-->
+<script type="text/javascript">
+    let commentContent = ""; //输入的评论内容
     $(document).ready(function () {
-        let userId=$('#userId').val();
         showModifyButton('.editArticle');
-        showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
     });
 
     $("table").addClass('ui striped celled structured table');
-</script>
-<!--实现评论框的各种效果-->
-<script type="text/javascript">
-    let commentContent = ""; //输入的评论内容
     /**评论输入框被点击的时候变大为10行**/
     $('#commentInput').click(function () {
         $(this).animate({
@@ -318,10 +314,10 @@
 
     function toggleChildComment(obj) {
        let node=$(obj).parent().parent().next();
-       if(node.css('display')=='none'){
+       if(node.css('display')==='none'){
            node.show();
            $(obj).text('收起回复');
-       }else if(node.css('display')!='none'){
+       }else if(node.css('display')!=='none'){
            node.hide();
            $(obj).text('查看回复('+$(obj).attr('title')+')');
        }
@@ -346,15 +342,6 @@
         on: 'hover'
     });
 
-    tocbot.init({
-        // Where to render the table of contents.
-        tocSelector: '.js-toc',
-        // Where to grab the headings to build the table of contents.
-        contentSelector: '.js-toc-content',
-        // Which headings to grab inside of the contentSelector element.
-        headingSelector: 'h1, h2, h3',
-    });
-
     $('.toc.button').popup({
         popup: $('.toc-container.popup'),
         on: 'click',
@@ -375,9 +362,6 @@
         correctLevel: QRCode.CorrectLevel.H
     });
 
-    $('#toTop-button').click(function () {
-        $(window).scrollTo(0, 500);
-    });
 
 
 </script>

@@ -48,7 +48,7 @@ public class FileUploadController extends BaseController {
                     multipartFile.transferTo(newFile);
                     ajaxResult.setMessage(path + fileName);
                     //url="http://你自己的域名/项目名/images/"+fileName;//正式项目
-                    url = "http://localhost:8080/images/" + fileName;//本地运行项目
+                    url = "http://localhost:8080/images/" + fileName;
                     ajaxResult.setMessage(url);
                 } else {
                     ajaxResult.setMessage("文件上传失败！只支持jpeg, jpg, png, gif, bmp 格式的图片文件");

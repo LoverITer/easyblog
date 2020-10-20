@@ -35,7 +35,7 @@
 
 
 <!--导航-->
-<div th:replace="~{nav :: navbar}"></div>
+<div th:replace="~{ fragment/nav :: navbar}"></div>
 
 <!--中间内容-->
 <div class="m-content-container">
@@ -108,7 +108,7 @@
 
             <!--每个分类的文章-->
             <div class="ui top attached  segment" style="margin-top: 0 !important;border: none;padding: 0;">
-                <div th:if="${!#lists.isEmpty(categoryArticles)&&!#lists.isEmpty(categoryArticles.getList())&&#lists.size(categoryArticles.getList())>0}" th:each="article:${categoryArticles.getList()}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear" style="padding-bottom: 20px !important;padding-top: 10px !important;border-bottom: #f0f1f2 3px solid;">
+                <div th:if="${!#lists.isEmpty(articlePages)&&!#lists.isEmpty(articlePages.getList())&&#lists.size(articlePages.getList())>0}" th:each="article:${articlePages.getList()}" class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear" style="padding-bottom: 20px !important;padding-top: 10px !important;border-bottom: #f0f1f2 3px solid;">
                     <div class="ui mobile reversed stackable grid">
                         <div class="eleven wide column">
                             <div class="ui stackable  grid">
@@ -124,8 +124,7 @@
                                         </div>
                                     </div>
                                     <div class="fourteen wide column" style="padding-top: 0px !important;padding-left: 10px !important;">
-                                        <a href="#" th:if="${visitor==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
-                                        <a href="#" th:if="${visitor!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                        <a  th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
                                     </div>
                             </div>
                             <!--文章内容预览-->
@@ -166,9 +165,9 @@
                         </div>
 
                         <div class="five wide column">
-                            <a target="_blank">
-                                <img style="border-radius: 5px" th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}"  class="ui rounded image m-prev-image-style">
-                                <img style="border-radius: 5px" th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" class="ui rounded image m-prev-image-style">
+                            <a target="_blank" class="category-img">
+                                <img style="border-radius: 0;min-height: 170px;width: 300px !important;" th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}"  class="ui rounded image m-prev-image-style">
+                                <img style="border-radius: 0;min-height: 170px;width: 300px !important;" th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" class="ui rounded image m-prev-image-style">
                             </a>
                         </div>
                     </div>
@@ -176,24 +175,21 @@
             </div>
 
             <!--分页按钮-->
-            <div th:if="${categoryArticles.getTotal()>10}" class="ui bottom attached segment"
+            <div th:if="${articlePages.getTotal()>10}" class="ui bottom attached segment"
                  style="border:none;border-top: #f0f1f2 3px solid;">
                 <div class="ui middle aligned two column grid">
                     <div  style="margin: 5px auto;float: left !important;">
                         <div class="ui buttons">
-                            <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${author.getUserId()},page=${categoryArticles.getPrePage()})}">
-                                <button class="ui  button"
-                                        style="background: white !important;font-weight: 100 !important;"> <i class="step backward icon"></i>
-                                </button>
+                            <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${author.getUserId()},page=${articlePages.getPrePage()})}">
+                                <button class="ui  button" style="background: white !important;font-weight: 100 !important;"> <i class="step backward icon"></i></button>
                             </a>
-                            <a th:each="pageNo:${categoryArticles.getNavigatepageNums()}"
+                            <a th:each="pageNo:${articlePages.getNavigatepageNums()}"
                                th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${author.getUserId()},page=${pageNo})}">
-                                <button class="ui button pages"
-                                        style="background: white !important;font-weight: 100 !important;">
+                                <button class="ui button pages" style="background: white !important;font-weight: 100 !important;">
                                     [[${pageNo}]]
                                 </button>
                             </a>
-                            <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${author.getUserId()},page=${categoryArticles.getNextPage()})}">
+                            <a th:href="@{/category/details/{categryId}/{userId}(categryId=${category.getCategoryId()},userId=${author.getUserId()},page=${articlePages.getNextPage()})}">
                                 <button class="ui right button"
                                         style="background: white !important;font-weight: 100 !important;">  <i class="step forward icon"></i>
                                 </button>
@@ -205,12 +201,11 @@
 
 
             <!--没有任何数据时候显示-->
-            <div th:if="${categoryArticles.getTotal()==0}" class="ui bottom attached segment"
+            <div th:if="${articlePages.getTotal()==0}" class="ui bottom attached segment"
                  style="border-top: none !important;">
                 <div class="ui middle aligned two column grid">
                     <div style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
-                        分类 <strong><span style="color: black !important;"
-                                         th:text="${category.getCategoryName()}"></span></strong> 目前没有任何文章
+                        分类 <strong><span style="color: black !important;" th:text="${category.getCategoryName()}"></span></strong> 目前没有任何文章
                     </div>
                 </div>
             </div>
@@ -221,41 +216,35 @@
 <input type="hidden" id="userId" th:value="${author.getUserId()}">
 <div style="height: 10em"></div>
 <!--底部footer-->
-<div th:replace="~{footer :: footbar}"></div>
-
-
+<div th:replace="~{fragment/common :: footbar}"></div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
-<script type="text/javascript" th:online="javascript">
-    $('.m-mobile-lr-clear:last').css('border-bottom','none');
-    $(document).ready(function () {
-        let userId=$('#userId').val();
-        showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
-        showCurrentPageNum();
-    });
 
-    function showCurrentPageNum() {
-        var obj = document.getElementsByClassName('pages');
-        var page = [[${categoryArticles.pageNum}]];
-        //console.log(obj, page);
-        for (var i = 0; i < obj.length; i++) {
-            if (obj[i].textContent == page) {
-                $(obj[i]).css('background', '#eee');
-            }
-        }
-    }
-</script>
+<th:block th:replace="~{fragment/common :: common_js}"/>
 <script>
+    $('.m-mobile-lr-clear:last').css('border-bottom','none');
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
     $('.ui.dropdown').dropdown({
         on: 'hover'
     });
+    /*
+     * 显示分页页码标识
+     */
+    function showCurrentPageNum() {
+        if([[${articlePages eq null}]]) return;
+        try{
+            let obj = document.getElementsByClassName('pages');
+            let page = [[${articlePages.pageNum}]];
+            for (let i = 0; i < obj.length; i++) {
+                if (obj[i].textContent == page) {
+                    $(obj[i]).css('background', '#ddd');
+                }
+            }
+        }catch (e) {
+            console.log(e);
+        }
+    }
 </script>
 <!--控制关注按钮的状态-->
 <script type="text/javascript">
@@ -265,8 +254,8 @@
     });
 
     function changeBtn() {
-        var str = $('#care_id').val();
-        if ("false" == str) {
+        let str = $('#care_id').val();
+        if ("false" === str) {
             $('#care-btn').css("color", "inherit").text("关注");
             $('#care-btn').addClass("red");
             $('#care-btn').addClass("basic");
@@ -307,7 +296,7 @@
         //异步请求
         var id = $('#category_Id').val();
         var btnHtml = $('#care-btn').html();
-        if ("关注" == btnHtml) {
+        if ("关注" === btnHtml) {
             $.ajax({
                 url: "/category/details/care/" + id,
                 method: "GET",
@@ -322,7 +311,7 @@
                     showErrorMessage(ajaxResult.message);
                 }
             })
-        } else if ("取消关注" == btnHtml) {
+        } else if ("取消关注" === btnHtml) {
             $.ajax({
                 url: "/category/details/cancelCare/" + id,
                 method: "GET",
@@ -340,16 +329,5 @@
         }
     })
 </script>
-<script>
-    $(document).ready(function () {
-        if (detectZoom() != 125) {
-            spop({
-                template: '您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%',
-                autoclose: 4000,
-                position: "top-center",
-                style: 'info',
-            });
-        }
-    });
-</script>
+
 </html>

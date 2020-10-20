@@ -99,12 +99,12 @@ public class CookieUtils {
         }
         String retValue = null;
         try {
-            for (int i = 0; i < cookieList.length; i++) {
-                if (cookieList[i].getName().equals(cookieName)) {
+            for (Cookie cookie : cookieList) {
+                if (cookie.getName().equals(cookieName)) {
                     if (isDecoder) {
-                        retValue = URLDecoder.decode(cookieList[i].getValue(), "UTF-8");
+                        retValue = URLDecoder.decode(cookie.getValue(), "UTF-8");
                     } else {
-                        retValue = cookieList[i].getValue();
+                        retValue = cookie.getValue();
                     }
                     break;
                 }
@@ -129,9 +129,9 @@ public class CookieUtils {
         }
         String retValue = null;
         try {
-            for (int i = 0; i < cookieList.length; i++) {
-                if (cookieList[i].getName().equals(cookieName)) {
-                    retValue = URLDecoder.decode(cookieList[i].getValue(), encodeString);
+            for (Cookie cookie : cookieList) {
+                if (cookie.getName().equals(cookieName)) {
+                    retValue = URLDecoder.decode(cookie.getValue(), encodeString);
                     break;
                 }
             }
@@ -218,10 +218,6 @@ public class CookieUtils {
             }
             cookie.setPath("/");
             response.addCookie(cookie);
-            Cookie[] cookies = request.getCookies();
-            for (Cookie cookie1 : cookies) {
-                System.out.println(cookie1.getName());
-            }
         } catch (Exception e) {
             log.error("Cookie Encode Error.", e);
         }
@@ -292,6 +288,11 @@ public class CookieUtils {
             domainName = ary[0];
         }
         return domainName;
+    }
+
+
+    public static void expire(){
+
     }
 
 

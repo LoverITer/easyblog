@@ -43,8 +43,9 @@ public class UserAccountController extends BaseController {
 
 
     @GetMapping(value = "/reset/password")
-    public String resetPassword(@RequestParam Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String resetPassword(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (user != null) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -56,13 +57,14 @@ public class UserAccountController extends BaseController {
 
     @ResponseBody
     @GetMapping(value = "/reset/password/save")
-    public WebAjaxResult saveResetPassword(@RequestParam Integer userId,
+    public WebAjaxResult saveResetPassword(HttpServletRequest request,
                                            @RequestParam String oldPwd,
                                            @RequestParam String newPwd,
                                            @RequestParam String newPwdConfirm) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试");
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (user != null) {
             WebAjaxResult authorized = userService.isAuthorized(user, oldPwd);
             WebAjaxResult isSame = userService.isNewPasswordSameOldPassword(oldPwd, newPwd);
@@ -98,8 +100,9 @@ public class UserAccountController extends BaseController {
 
 
     @GetMapping(value = "/reset/phone")
-    public String resetPhone(@RequestParam Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String resetPhone(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             user.setUserPassword(null);
             model.addAttribute("user", user);
@@ -111,8 +114,9 @@ public class UserAccountController extends BaseController {
 
 
     @GetMapping(value = "/reset/phone/nextPage")
-    public String resetPhoneNextPage(@RequestParam Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String resetPhoneNextPage(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (user != null) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -139,8 +143,9 @@ public class UserAccountController extends BaseController {
 
     @ResponseBody
     @GetMapping(value = "/reset/phone/next")
-    public WebAjaxResult resetPhoneNext(@RequestParam Integer userId, @RequestParam String code) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public WebAjaxResult resetPhoneNext(@RequestParam Integer userId,HttpServletRequest request, @RequestParam String code) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后再操作！");
         if (Objects.nonNull(user)) {
@@ -155,8 +160,9 @@ public class UserAccountController extends BaseController {
     }
 
     @GetMapping(value = "/bindPhonePage")
-    public String bindPhonePage(@RequestParam Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String bindPhonePage(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -174,7 +180,8 @@ public class UserAccountController extends BaseController {
                                        HttpServletResponse response) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         String realCode = (String) redisUtil.get("code-" + userId, RedisUtils.DB_1);
         if (Objects.nonNull(user)) {
             if (code.equals(realCode)) {
@@ -203,8 +210,9 @@ public class UserAccountController extends BaseController {
 
 
     @GetMapping(value = "/reset/email")
-    public String resetEmail(@RequestParam Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String resetEmail(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             user.setUserPassword(null);
             model.addAttribute("user", user);
@@ -216,10 +224,11 @@ public class UserAccountController extends BaseController {
 
     @ResponseBody
     @GetMapping(value = "/reset/email/next")
-    public WebAjaxResult resetEmailNext(@RequestParam Integer userId, @RequestParam String code) {
+    public WebAjaxResult resetEmailNext(@RequestParam Integer userId,HttpServletRequest request, @RequestParam String code) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             String var0 = (String) redisUtil.get("code-" + userId, RedisUtils.DB_1);
             if (Objects.nonNull(var0)) {
@@ -247,7 +256,8 @@ public class UserAccountController extends BaseController {
                                        HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             User var0 = new User();
             var0.setUserId(user.getUserId());
@@ -262,8 +272,9 @@ public class UserAccountController extends BaseController {
     }
 
     @GetMapping(value = "/reset/email/nextPage")
-    public String toResetEmailNextPage(@RequestParam Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String toResetEmailNextPage(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -291,8 +302,9 @@ public class UserAccountController extends BaseController {
 
 
     @GetMapping(value = "/logs")
-    public String loginLog(@RequestParam Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String loginLog(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (user != null) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -304,8 +316,9 @@ public class UserAccountController extends BaseController {
     }
 
     @GetMapping(value = "/accountDestroy")
-    public String accountDestroyPage(@RequestParam Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String accountDestroyPage(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -316,10 +329,11 @@ public class UserAccountController extends BaseController {
 
     @ResponseBody
     @GetMapping(value = "/destroy")
-    public WebAjaxResult deleteAccount(@RequestParam Integer userId, @RequestParam String password, HttpServletRequest request) {
+    public WebAjaxResult deleteAccount(HttpServletRequest request, @RequestParam String password) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             Cookie[] cookies = request.getCookies();
             for(Cookie cookie:cookies){

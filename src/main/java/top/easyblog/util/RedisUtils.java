@@ -153,7 +153,7 @@ public class RedisUtils {
      * @param key 键
      * @return true 存在 false不存在
      */
-    public Boolean hasKey(String key, int indexdb) {
+    public Boolean exists(String key, int indexdb) {
         try {
             this.setDbIndex(indexdb);
             return redisTemplate.hasKey(key);

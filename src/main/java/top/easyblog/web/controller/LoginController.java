@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import top.easyblog.config.executor.WorkerThreadPoolExecutor;
 import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.entity.po.User;
 import top.easyblog.entity.po.UserAccount;
@@ -22,6 +23,7 @@ import top.easyblog.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.Objects;
 
@@ -33,16 +35,22 @@ import static top.easyblog.global.enums.UserLoginStatus.UNLOGIN;
 @Slf4j
 @Controller
 @RequestMapping("/user")
-public class UserController extends BaseController {
+public class LoginController extends BaseController {
 
     @Autowired
     private EmailSender emailUtil;
+
+    private static final String REFERER_PREFIX="Referer-";
+
+    /***AES ECB加密的key*/
+    private static final String PASSWORD_KEY="1a2b3c4d5e6f7g8h";
+
 
 
     @GetMapping("/loginPage")
     public String toLoginPage(HttpServletRequest request) {
         //把用户登录前的地址存下来
-        String refererUrl = (String) redisUtil.get("Referer-" + NetWorkUtils.getUserIp(request), 1);
+        String refererUrl = (String) redisUtil.get(REFERER_PREFIX+ NetWorkUtils.getUserIp(request), 1);
         if (Objects.isNull(refererUrl)) {
             String referUrl = request.getHeader(HttpHeaders.REFERER);
             //服务器的根路径
@@ -58,7 +66,12 @@ public class UserController extends BaseController {
                     !referUrl.contains("/article/index") &&
                     !referUrl.equalsIgnoreCase(baseUrl)) {
                 //存到Redis中
-                redisUtil.set("Referer-" + NetWorkUtils.getUserIp(request), referUrl, 1);
+                WorkerThreadPoolExecutor.setThreadName("Save Referer URL To Redis");
+                executor.execute(()->{
+                    String key="Referer-" + NetWorkUtils.getUserIp(request);
+                    redisUtil.set(key, referUrl, RedisUtils.DB_1);
+                    redisUtil.expire(key,30,RedisUtils.DB_1);
+                });
             }
         }
         return "login";
@@ -332,9 +345,6 @@ public class UserController extends BaseController {
      * @param username           用户的账号
      * @param password           密码
      * @param remember           "记住我"功能状态
-     * @param redirectAttributes
-     * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "/login")
@@ -347,23 +357,31 @@ public class UserController extends BaseController {
         User user = userService.checkUser(username, EncryptUtils.getInstance().SHA1(password, "user"));
         String ip = NetWorkUtils.getUserIp(request);
         String location = NetWorkUtils.getLocation(ip);
+        String sessionId=null;
         try {
             if (user != null) {
                 user.setUserPassword(null);
+                //登录的逻辑：服务器端会产生一个sessionId，客户端保存这个sessionId到本地，并将session为key，User的信息为val，存入Redis中
+                //之后涉及到访问页面的时候首先客户单带着sessionId去Redis中检查，如果有对应的sessionId，那么继续。否则重定向到登录页面
+                //request.getSeesion()执行之后会给客户端设置一个名为JSESSIONID的Cookie，这里面保存了第一次和服务器会话的sessionId
+                HttpSession session = request.getSession(true);
+                sessionId= session.getId();
                 //防止重复登录
-                if (Objects.isNull(UserUtils.getUserFromRedis(user.getUserId()))) {
-                    redisUtil.hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), RedisUtils.DB_1);
+                Boolean exists = redisUtil.exists(sessionId, RedisUtils.DB_1);
+                if (exists==null||!exists) {
+                    //更新用户的
+                    CookieUtils.updateCookie(request,response,JSESSIONID,sessionId,MAX_USER_LOGIN_STATUS_KEEP_TIME);
                     //会话信息，如果没有主动退出15天有效
-                    redisUtil.expire("user-" + user.getUserId(), 60 * 60 * 24 * 15, RedisUtils.DB_1);
-                    //添加用户的登录信息到Cookie中
-                    CookieUtils.setCookie(request, response, USER_LOGIN_COOKIE_FLAG, JSONObject.toJSONString(user), 60 * 60 * 24 * 15, true);
-                    // 保存用户名密码一个月
+                    redisUtil.set(sessionId, JSONObject.toJSONString(user), RedisUtils.DB_1);
+                    redisUtil.expire(sessionId, MAX_USER_LOGIN_STATUS_KEEP_TIME, RedisUtils.DB_1);
+                    // 记住我功能：保存用户名密码一个月
                     if ("on".equals(remember)) {
-                        Object value = CookieUtils.getCookieValue(request, USER_ACCOUNT_FLAG);
+                        Object value = CookieUtils.getCookieValue(request, REMEMBER_ME_COOKIE);
                         if (Objects.isNull(value)) {
-                            CookieUtils.setCookie(request, response, USER_ACCOUNT_FLAG, username + "-" + AESCryptUtils.encryptECB(password, "1a2b3c4d5e6f7g8h"), 60 * 60 * 24 * 30);
+                            CookieUtils.setCookie(request, response, REMEMBER_ME_COOKIE, username + "-" + AESCryptUtils.encryptECB(password, PASSWORD_KEY), REMEMBER_ME_TIME);
                         }
                     }
+                    WorkerThreadPoolExecutor.setThreadName("Save Sign In Log");
                     executor.execute(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功")));
                     return loginRedirectUrl(request);
                 } else {
@@ -376,9 +394,11 @@ public class UserController extends BaseController {
             }
         } catch (Exception e) {
             log.error(e.getMessage());
+            WorkerThreadPoolExecutor.setThreadName("Save Sign In Exception Log");
+            String finalSessionId = sessionId;
             executor.execute(() -> {
                 if (Objects.nonNull(user)) {
-                    redisUtil.delete(RedisUtils.DB_1, "user-" + user.getUserId());
+                    redisUtil.delete(RedisUtils.DB_1, finalSessionId);
                     userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录失败"));
                 }
             });
@@ -392,23 +412,20 @@ public class UserController extends BaseController {
     /**
      * 退出操作
      *
-     * @param userId   用户ID
      * @param request
      * @param response
      */
     @ResponseBody
     @RequestMapping(value = "/logout")
-    public WebAjaxResult logout(@RequestParam int userId, HttpServletRequest request, HttpServletResponse response) {
+    public WebAjaxResult logout(HttpServletRequest request, HttpServletResponse response) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage(AJAX_ERROR);
-        if (userId <= 0) {
-            return ajaxResult;
-        }
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
         //退出前先删除本次登录的Cookie
-        CookieUtils.deleteCookie(request, response, "USER-INFO");
+        CookieUtils.deleteCookie(request, response, JSESSIONID);
         //删除Redis中保存的登录信息
-        Boolean res = redisUtil.delete(RedisUtils.DB_1, "user-" + userId);
-        if (res != null && res) {
+        Boolean ret = redisUtil.delete(RedisUtils.DB_1,sessionId);
+        if (ret != null && ret) {
             ajaxResult.setSuccess(true);
             ajaxResult.setMessage(AJAX_SUCCESS);
         }
@@ -418,15 +435,16 @@ public class UserController extends BaseController {
     /**
      * 检查用户的登录状态
      *
-     * @param userId 用户Id
      */
     @ResponseBody
     @RequestMapping(value = "/checkUserStatus")
-    public WebAjaxResult checkUserLoginStatus(@RequestParam int userId) {
+    public WebAjaxResult checkUserLoginStatus(HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage(UNLOGIN.getStatus() + "");
-        if (redisUtil.hHasKey("user-" + userId, "user", RedisUtils.DB_1)) {
-            ajaxResult.setMessage(JSON.toJSONString(UserUtils.getUserFromRedis(userId)));
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
+        if (user!=null) {
+            ajaxResult.setMessage(JSON.toJSONString(user));
             ajaxResult.setSuccess(true);
         }
         return ajaxResult;
@@ -451,9 +469,7 @@ public class UserController extends BaseController {
             ajaxResult.setMessage("请填写您的账号！");
         } else {
             try {
-                executor.execute(() -> {
-                    userService.updateUserInfo(account, EncryptUtils.getInstance().SHA1(newPassword, "user"));
-                });
+                executor.execute(() -> userService.updateUserInfo(account, EncryptUtils.getInstance().SHA1(newPassword, "user")));
                 ajaxResult.setSuccess(true);
                 ajaxResult.setMessage("密码修改成功，正在跳转到登录页面...");
             } catch (Exception e) {
@@ -482,11 +498,13 @@ public class UserController extends BaseController {
                                         HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             user.setUserDescription(aboutMeInfo);
             try {
                 int res = userService.updateUserInfo(user);
+                WorkerThreadPoolExecutor.setThreadName("Update User Sign Info:About Me");
                 executor.execute(() -> {
                     UserUtils.updateLoggedUserInfo(user, request, response);
                 });
@@ -524,10 +542,12 @@ public class UserController extends BaseController {
                                         @RequestParam String weibo,
                                         @RequestParam String twitter,
                                         @RequestParam String steam,
-                                        @RequestParam(defaultValue = "-1") Integer userId) {
+                                        @RequestParam(defaultValue = "-1") Integer userId,
+                                        HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             UserAccount account = new UserAccount(github, wechat, qq, steam, twitter, weibo, userId);
             //尝试更新用户的account
@@ -563,13 +583,15 @@ public class UserController extends BaseController {
                                       HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             User userHobby = new User();
             userHobby.setUserId(user.getUserId());
             userHobby.setUserHobby(hobby);
             int res = userService.updateUserInfo(userHobby);
             User user1 = CombineBeans.combine(userHobby, user);
+            WorkerThreadPoolExecutor.setThreadName("Update User Sign Info:Hobby");
             executor.execute(() -> {
                 UserUtils.updateLoggedUserInfo(user1, request, response);
             });
@@ -599,13 +621,15 @@ public class UserController extends BaseController {
                                      HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             User userTech = new User();
             userTech.setUserId(user.getUserId());
             userTech.setUserTech(techStr);
             int res = userService.updateUserInfo(userTech);
             User user1 = CombineBeans.combine(userTech, user);
+            WorkerThreadPoolExecutor.setThreadName("Update User Sign Info:Tech");
             executor.execute(() -> {
                 UserUtils.updateLoggedUserInfo(user1, request, response);
             });

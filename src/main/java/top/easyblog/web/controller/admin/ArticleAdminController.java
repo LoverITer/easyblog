@@ -1,7 +1,6 @@
 package top.easyblog.web.controller.admin;
 
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -18,6 +17,7 @@ import top.easyblog.global.email.EmailSender;
 import top.easyblog.global.markdown.TextForm;
 import top.easyblog.global.pagehelper.PageParam;
 import top.easyblog.global.pagehelper.PageSize;
+import top.easyblog.util.CookieUtils;
 import top.easyblog.util.DefaultImageDispatcherUtils;
 import top.easyblog.util.NetWorkUtils;
 import top.easyblog.util.UserUtils;
@@ -49,15 +49,11 @@ public class ArticleAdminController extends BaseController {
 
     @GetMapping(value = "/")
     public String manageBlogArticles(Model model,
-                                    @RequestParam(value = "userId") Integer userId,
+                                    HttpServletRequest request,
                                     @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            //找不到直接重定位到登录页面
-            return LOGIN_PAGE;
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             try {
                 //去管理页面默认展示所有的已发布的文章
@@ -69,7 +65,6 @@ public class ArticleAdminController extends BaseController {
                 getShareInfo(model, user, "年", "月", "文章类型", "分类专栏");
                 putArticleNumToModel(user, model);
                 model.addAttribute("user", user);
-                model.addAttribute("visitor", user);
                 return BLOG_MANAGE_PAGE_PREFIX + "/blog-manage";
             } catch (Exception ex) {
                 return ERROR_PAGE;
@@ -80,7 +75,7 @@ public class ArticleAdminController extends BaseController {
 
 
     @GetMapping(value = "/search")
-    public String searchConditional(@RequestParam(defaultValue = "-1") Integer userId,
+    public String searchConditional(HttpServletRequest request,
                                     @RequestParam(defaultValue = "不限") String year,
                                     @RequestParam(defaultValue = "不限") String month,
                                     @RequestParam(defaultValue = "不限") String articleType,
@@ -89,12 +84,8 @@ public class ArticleAdminController extends BaseController {
                                     @RequestParam(value = "page", defaultValue = "1") int pageNo,
                                     Model model) {
         //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            //找不到直接重定位到登录页面
-            return LOGIN_PAGE;
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             try {
                 Article article = new Article();
@@ -135,30 +126,24 @@ public class ArticleAdminController extends BaseController {
      * 写文章页面
      *
      * @param model  Model
-     * @param userId 用户ID
      * @return java.lang.String
      */
     @RequestMapping(value = "/post")
     public String writeArticle(Model model,
-                               @RequestParam(value = "userId", defaultValue = "-1") int userId) {
+                               HttpServletRequest request) {
         //没有登录的话就去登录，登录后才可以写博客
         //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            //找不到直接重定位到登录页面
-            return LOGIN_PAGE;
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.isNull(user)) {
             return LOGIN_PAGE;
         }
         model.addAttribute("user", user);
         model.addAttribute("visitor", user);
-        userId = userId == -1 ? user.getUserId() : userId;
         try {
-            List<Category> categories = categoryService.getUserAllCategories(userId);
+            List<Category> categories = categoryService.getUserAllCategories(user.getUserId());
             model.addAttribute("categories", categories);
-            model.addAttribute("userId", userId);
+            model.addAttribute("userId", user.getUserId());
         } catch (Exception ex) {
             return ERROR_PAGE;
         }
@@ -169,22 +154,17 @@ public class ArticleAdminController extends BaseController {
      * 发布文章
      *
      * @param article 文章类容
-     * @param userId  用户ID
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "/saveArticle/{userId}")
+    @PostMapping(value = "/saveArticle")
     public WebAjaxResult publishArticle(@RequestBody Article article,
-                                        @PathVariable(value = "userId") Integer userId) {
+                                        HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
         //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            //找不到直接重定位到登录页面
-            return ajaxResult;
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             try {
                 //根据分类名查用户的分类
@@ -192,11 +172,11 @@ public class ArticleAdminController extends BaseController {
                 String articleCategoryName=article.getArticleCategory();
                 if (Objects.nonNull(articleCategoryName)) {
                     articleCategoryName=articleCategoryName.trim();
-                    category = categoryService.getCategoryByUserIdAndName(userId, articleCategoryName);
+                    category = categoryService.getCategoryByUserIdAndName(user.getUserId(), articleCategoryName);
                     //处理用户文章分类
                     if (Objects.isNull(category)) {
                         //用户没有这个分类就新建分类
-                        category = new Category(userId, articleCategoryName, DefaultImageDispatcherUtils.defaultCategoryImage(),
+                        category = new Category(user.getUserId(), articleCategoryName, DefaultImageDispatcherUtils.defaultCategoryImage(),
                                 1, 0, 0, "1", "");
                         categoryService.saveCategory(category);
                     } else {
@@ -205,7 +185,7 @@ public class ArticleAdminController extends BaseController {
                         if (article.getArticleId() == -1) {
                             Category c0 = new Category();
                             c0.setCategoryId(category.getCategoryId());
-                            int num = articleService.countUserArticleInCategory(userId, articleCategoryName);
+                            int num = articleService.countUserArticleInCategory(user.getUserId(), articleCategoryName);
                             c0.setCategoryArticleNum(num + 1);
                             categoryService.updateByPKSelective(c0);
                         }
@@ -228,7 +208,7 @@ public class ArticleAdminController extends BaseController {
                 //用户之前的可能把文章已经保存为草稿了，再次提交发布就更新
                 if (updateRows == 0) {
                     //数据库新增一条记录
-                    article.setArticleUser(userId);
+                    article.setArticleUser(user.getUserId());
                     article.setArticleTags("");
                     article.setArticleCommentNum(0);
                     article.setArticlePublishTime(new Date());
@@ -261,24 +241,25 @@ public class ArticleAdminController extends BaseController {
 
 
     @ResponseBody
-    @PostMapping(value = "/saveAsDraft/{userId}")
+    @PostMapping(value = "/saveAsDraft")
     public WebAjaxResult saveArticleAsDraft(Model model,
-                                            @PathVariable(value = "userId") Integer userId,
-                                            @RequestBody Article article) {
+                                            @RequestBody Article article,
+                                            HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后再操作！");
         //从Redis中查询出已经登录User的登录信息
-        User user = UserUtils.getUserFromRedis(userId);
-        if (Objects.nonNull(user) || userId != null) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
+        if (Objects.nonNull(user)) {
             try {
                 int updateRes = 0;
                 //尝试更新文章
                 if (article.getArticleId() != -1) {
                     String categoryName = article.getArticleCategory();
                     if (Objects.nonNull(categoryName)) {
-                        Category category = categoryService.getCategoryByUserIdAndName(userId, categoryName);
+                        Category category = categoryService.getCategoryByUserIdAndName(user.getUserId(), categoryName);
                         if (Objects.isNull(category)) {
-                            categoryService.saveCategory(new Category(userId, article.getArticleCategory(), DefaultImageDispatcherUtils.defaultCategoryImage(), 1, 0, 0, "1", ""));
+                            categoryService.saveCategory(new Category(user.getUserId(), article.getArticleCategory(), DefaultImageDispatcherUtils.defaultCategoryImage(), 1, 0, 0, "1", ""));
                         }
                     }
                     //让数据库自动分配ID
@@ -286,7 +267,7 @@ public class ArticleAdminController extends BaseController {
                 }
                 //更新发现没有再插入一条新纪录
                 if (updateRes == 0) {
-                    article.setArticleUser(userId);
+                    article.setArticleUser(user.getUserId());
                     article.setArticleTags("");
                     article.setArticleCommentNum(0);
                     article.setArticleTop("0");
@@ -303,9 +284,9 @@ public class ArticleAdminController extends BaseController {
                     ajaxResult.setSuccess(true);
                     ajaxResult.setMessage(article.getArticleId().toString());
                 }
-                List<Category> categories = categoryService.getUserAllCategories(userId);
+                List<Category> categories = categoryService.getUserAllCategories(user.getUserId());
                 model.addAttribute("categories", categories);
-                model.addAttribute("userId", userId);
+                model.addAttribute("userId", user.getUserId());
             } catch (Exception e) {
                 log.error(e.getMessage());
                 ajaxResult.setMessage("服务异常，请尝试重新提交！");
@@ -315,17 +296,13 @@ public class ArticleAdminController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/success/{articleId}/{userId}")
+    @RequestMapping(value = "/success/{articleId}")
     public String articlePublishSuccess(@PathVariable(value = "articleId") int articleId,
-                                        @PathVariable(value = "userId") int userId,
+                                        HttpServletRequest request,
                                         Model model) {
         //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) redisUtil.hget("user-" + userId, "user", 1);
-        if (Objects.isNull(userJsonStr) || userJsonStr.length() <= 0) {
-            //找不到直接重定位到登录页面
-            return LOGIN_PAGE;
-        }
-        User user = JSON.parseObject(userJsonStr, User.class);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -339,10 +316,10 @@ public class ArticleAdminController extends BaseController {
 
     @GetMapping(value = "/edit")
     public String editArticle(Model model,
-                              @RequestParam(value = "userId") Integer userId,
                               @RequestParam("articleId") int articleId,
                               HttpServletRequest request) {
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -368,8 +345,9 @@ public class ArticleAdminController extends BaseController {
     @GetMapping(value = "/delete")
     public String deleteArticle(@RequestParam("articleId") int articleId,
                                 @RequestParam int userId,
-                                final HttpServletRequest request) {
-        User user = UserUtils.getUserFromCookie(request);
+                                HttpServletRequest request) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             try {
                 //删除的文章暂时移动到垃圾桶
@@ -512,44 +490,53 @@ public class ArticleAdminController extends BaseController {
 
     @GetMapping(value = "/public")
     public String publicBlogPage(Model model,
+                                 HttpServletRequest request,
                                  @RequestParam(value = "userId") Integer userId,
                                  @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE);
-        return getArticles(model, "0", userId, "/blog-public", pageParam);
+        return getArticles(model, "0", userId, "/blog-public", pageParam,request);
     }
 
     @GetMapping(value = "/private")
     public String privateBlogPage(Model model,
+                                  HttpServletRequest request,
                                   @RequestParam(value = "userId") Integer userId,
                                   @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE);
-        return getArticles(model, "1", userId, "/blog-private", pageParam);
+        return getArticles(model, "1", userId, "/blog-private", pageParam,request);
     }
 
     @GetMapping(value = "/draft")
-    public String draftBlog(Model model, @RequestParam(value = "userId") Integer userId, @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+    public String draftBlog(Model model,
+                            HttpServletRequest request,
+                            @RequestParam(value = "userId") Integer userId,
+                            @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE);
-        return getArticles(model, "2", userId, "/blog-draft-box", pageParam);
+        return getArticles(model, "2", userId, "/blog-draft-box", pageParam,request);
     }
 
     @GetMapping(value = "/dash")
-    public String dashBlogPage(Model model, @RequestParam(value = "userId") Integer userId,
+    public String dashBlogPage(Model model,
+                               HttpServletRequest request,
+                               @RequestParam(value = "userId") Integer userId,
                                @RequestParam(value = "page", defaultValue = "1") int pageNo) {
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE);
-        return getArticles(model, "3", userId, "/blog-dash", pageParam);
+        return getArticles(model, "3", userId, "/blog-dash", pageParam,request);
     }
 
     @ResponseBody
     @PostMapping(value = "/upload_article_img/{userId}")
     public WebAjaxResult editArticleFirstImg(@PathVariable(value = "userId") Integer userId,
                                              @RequestParam long articleId,
-                                             @RequestParam String imgByte64Str) {
+                                             @RequestParam String imgByte64Str,
+                                             HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后在操作！");
         if (Objects.isNull(userId)) {
             return ajaxResult;
         }
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             try {
                 if (Objects.nonNull(imgByte64Str) && articleId > 0) {
@@ -598,9 +585,11 @@ public class ArticleAdminController extends BaseController {
                                String articleStatus,
                                Integer userId,
                                String dest,
-                               PageParam pageParam) {
+                               PageParam pageParam,
+                               HttpServletRequest request) {
         //从Redis中查询出已经登录User的登录信息
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             try {
                 Article article = new Article();
