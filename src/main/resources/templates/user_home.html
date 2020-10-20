@@ -34,7 +34,7 @@
 </head>
 <body>
 <!--导航-->
-<div th:replace="~{nav :: navbar}"></div>
+<div th:replace="~{fragment/nav :: navbar}"></div>
 
 <!--中间内容-->
 <div class="m-content-container">
@@ -67,10 +67,8 @@
                                 <input id="checkbox" type="checkbox" checked th:if="${displayOnlyOriginal=='1'}">
                                 <input id="checkbox" type="checkbox" th:if="${displayOnlyOriginal=='0'}">
                                 <label>只看原创</label>
-                                <a id="display1" style="color: #0a001f" hidden
-                                   th:href="@{/article/index/{id}(id=${author.getUserId()},articleType=0)}">只看原创</a>
-                                <a id="display2" style="color: #0a001f" hidden
-                                   th:href="@{/article/index/{id}(id=${author.getUserId()})}">查看全部</a>
+                                <a id="display1" style="color: #0a001f" hidden th:href="@{/article/index/{id}(id=${author.getUserId()},articleType=0)}">只看原创</a>
+                                <a id="display2" style="color: #0a001f" hidden th:href="@{/article/index/{id}(id=${author.getUserId()})}">查看全部</a>
                             </div>
                         </div>
                         <div class="right aligned column m-mobile-info-width">
@@ -100,8 +98,7 @@
                                         </div>
                                     </div>
                                     <div class="fourteen wide column" style="padding-top: 0 !important;padding-left: 10px !important;">
-                                        <a href="#" th:if="${visitor==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
-                                        <a href="#" th:if="${visitor!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                        <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
                                     </div>
                                 </div>
                                 <p class="m-column_article_desc"  th:text="${#strings.abbreviate(article.getArticleContent(),200)}"></p>
@@ -120,9 +117,7 @@
                                                 </div>
                                             </div>
                                             <div class="item m-margin-left m-mobile-hide">
-                                                <img th:src="${author.getUserHeaderImgUrl()}"
-                                                     src="https://unsplash.it/100/100?image=1005" alt=""
-                                                     class="ui avatar image m-mobile-hide">
+                                                <img th:src="${author.getUserHeaderImgUrl()}" src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image m-mobile-hide">
                                                 <div class="content">
                                                     <a href="#" class="m-comment-font-user" th:text="${author.getUserNickname()}"></a>
                                                 </div>
@@ -213,12 +208,12 @@
 
 <div style="height: 10em"></div>
 <!--底部footer-->
-<div th:replace="~{footer :: footbar}"></div>
+<div th:replace="~{fragment/common :: footbar}"></div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
+
+<th:block th:replace="~{fragment/common :: common_js}"/>
 <script>
+
     $('.m-article-sidebar-padding:last').css('border-bottom','none');
     $('#msg-btn').click(function () {
         $('.ui.modal').modal('hide');
@@ -230,38 +225,35 @@
     $('.ui.dropdown').dropdown({
         on: 'hover'
     });
-</script>
-
-<script type="text/javascript" th:online="javascript">
-
-    $(document).ready(function () {
-        let userId=$('#userId').val();
-        showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
-        showCurrentPageNum();
-    });
-
+    /*
+     * 显示分页页码标识
+     */
     function showCurrentPageNum() {
-        let obj = document.getElementsByClassName('pages');
-        let page = [[${articlePages.pageNum}]];
-        for (let i = 0; i < obj.length; i++) {
-            if (obj[i].textContent == page) {
-                $(obj[i]).css('background', '#eee');
+        if([[${articlePages eq null}]]) return;
+        try{
+            let obj = document.getElementsByClassName('pages');
+            let page = [[${articlePages.pageNum}]];
+            for (let i = 0; i < obj.length; i++) {
+                if (obj[i].textContent == page) {
+                    $(obj[i]).css('background', '#ddd');
+                }
             }
+        }catch (e) {
+            console.log(e);
         }
     }
 
-</script>
-<script>
     //只看原创按钮是否按下
-    $('#checkbox').click(function () {
-        if ($('#checkbox').is(":checked")) {
-            window.location.href = $('#display1').attr("href");
-        } else {
-            window.location.href = $('#display2').attr("href");
-        }
-    });
-
+    try{
+        $('#checkbox').click(function () {
+            if ($('#checkbox').is(":checked")) {
+                window.location.href = $('#display1').attr("href");
+            } else {
+                window.location.href = $('#display2').attr("href");
+            }
+        });
+    }catch (e) {
+        console.log(e);
+    }
 </script>
 </html>

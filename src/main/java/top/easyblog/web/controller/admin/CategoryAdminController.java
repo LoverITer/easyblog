@@ -14,6 +14,7 @@ import top.easyblog.entity.po.Category;
 import top.easyblog.entity.po.User;
 import top.easyblog.global.pagehelper.PageParam;
 import top.easyblog.global.pagehelper.PageSize;
+import top.easyblog.util.CookieUtils;
 import top.easyblog.util.DefaultImageDispatcherUtils;
 import top.easyblog.util.UserUtils;
 import top.easyblog.web.controller.BaseController;
@@ -36,10 +37,10 @@ public class CategoryAdminController extends BaseController {
     private final String PREFIX = "/admin/type_manage/";
 
     @GetMapping(value = "/list")
-    public String categoryPage(@RequestParam(value = "userId") Integer userId,
-                               Model model,
+    public String categoryPage(HttpServletRequest request, Model model,
                                @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -56,10 +57,11 @@ public class CategoryAdminController extends BaseController {
     @RequestMapping(value = "/changeDisplay")
     public WebAjaxResult switchCategoryDisplay(@RequestParam(value = "categoryId") int categoryId,
                                                @RequestParam(value = "displayStatus") String displayStatus,
-                                               @RequestParam(value = "userId") Integer userId) {
+                                               HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后重试！");
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.isNull(user)) {
             ajaxResult.setMessage("请先登录后再操作");
             return ajaxResult;
@@ -90,7 +92,8 @@ public class CategoryAdminController extends BaseController {
     public String deleteCategory(@RequestParam(value = "categoryId") int categoryId,
                                  @RequestParam(value = "userId") Integer userId,
                                  HttpServletRequest request) {
-        User user = UserUtils.getUserFromCookie(request);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (user != null && categoryId > 0) {
             Category category = new Category();
             category.setCategoryId(categoryId);
@@ -133,7 +136,8 @@ public class CategoryAdminController extends BaseController {
                                  @RequestParam int categoryId,
                                  @RequestParam String imageUrl,
                                  HttpServletRequest request) {
-        User user = UserUtils.getUserFromCookie(request);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (user != null) {
             if (categoryId > 0) {
                 final Category category = new Category();
@@ -156,15 +160,15 @@ public class CategoryAdminController extends BaseController {
     /**
      * 从分类管理首页删除的分类进入到垃圾箱中，垃圾箱页面
      *
-     * @param userId 文章分类作者ID
      * @param model Model
      * @return
      */
     @GetMapping(value = "/dash")
     public String deleteCategory2DashBoxPage(Model model,
-                                             @RequestParam(value = "userId") Integer userId,
+                                             HttpServletRequest request,
                                              @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -202,8 +206,9 @@ public class CategoryAdminController extends BaseController {
     }
 
     @GetMapping(value = "/add")
-    public String categoryAddPage(@RequestParam(value = "userId") Integer userId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String categoryAddPage(HttpServletRequest request, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -217,8 +222,10 @@ public class CategoryAdminController extends BaseController {
                           @RequestParam String categoryName,
                           @RequestParam(required = false, defaultValue = "") String categoryDesc,
                           @RequestParam(required = false) MultipartFile categoryImg,
-                          RedirectAttributes attributes) {
-        User user = UserUtils.getUserFromRedis(userId);
+                          RedirectAttributes attributes,
+                          HttpServletRequest request) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             //用于回显
             attributes.addFlashAttribute("categoryDesc", categoryDesc);
@@ -264,8 +271,9 @@ public class CategoryAdminController extends BaseController {
 
 
     @GetMapping(value = "/edit")
-    public String categoryEditor(@RequestParam(value = "userId") Integer userId, @RequestParam int categoryId, Model model) {
-        User user = UserUtils.getUserFromRedis(userId);
+    public String categoryEditor(HttpServletRequest request, @RequestParam int categoryId, Model model) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -285,8 +293,10 @@ public class CategoryAdminController extends BaseController {
                              @RequestParam String categoryDesc,
                              @RequestParam String oldCategoryImg,
                              @RequestParam MultipartFile categoryImage,
-                             RedirectAttributes redirectAttributes) {
-        User user = UserUtils.getUserFromRedis(userId);
+                             RedirectAttributes redirectAttributes,
+                             HttpServletRequest request) {
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             //判断编辑后的分类名是否为空
             if (StringUtil.isEmpty(categoryName)) {

@@ -41,9 +41,13 @@ public abstract class BaseController {
     /***错误页面*/
     protected static final String ERROR_PAGE = "redirect:/error/error";
     /***用户登录标记*/
-    protected static final String USER_LOGIN_COOKIE_FLAG = "USER-INFO";
+    public static final String JSESSIONID = "JSESSIONID";
     /***用户信息标记*/
-    protected static final String USER_ACCOUNT_FLAG = "USER-COOKIE";
+    protected static final String REMEMBER_ME_COOKIE = "REMEMBER-ME-COOKIE";
+    /**用户登录信息最大保存时间（免登陆最大时间）*/
+    protected static final int MAX_USER_LOGIN_STATUS_KEEP_TIME=60 * 60 * 24 * 15;
+    /**浏览器保存用户名，密码90天*/
+    protected static final int REMEMBER_ME_TIME =60*60*24*90;
     @Autowired
     protected ICategoryService categoryService;
     @Autowired

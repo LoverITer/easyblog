@@ -1,5 +1,6 @@
 package top.easyblog.config.executor;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,11 +16,11 @@ public class DefaultThreadFactory implements ThreadFactory {
     private final AtomicInteger nextId = new AtomicInteger(1);
 
     public DefaultThreadFactory(final String namePrefix) {
-        this.namePrefix = "From DefaultThreadFactory's " + namePrefix + "-Worker-";
+        this.namePrefix = namePrefix;
     }
 
     @Override
-    public Thread newThread(Runnable task) {
+    public Thread newThread(@Nonnull Runnable task) {
         String threadName=namePrefix+nextId.getAndIncrement();
         return new Thread(null, task, threadName);
     }

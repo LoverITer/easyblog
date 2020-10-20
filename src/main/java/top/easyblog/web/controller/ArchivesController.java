@@ -12,6 +12,7 @@ import top.easyblog.entity.po.User;
 import top.easyblog.global.enums.ArticleType;
 import top.easyblog.global.pagehelper.PageParam;
 import top.easyblog.global.pagehelper.PageSize;
+import top.easyblog.util.CookieUtils;
 import top.easyblog.util.UserUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -86,7 +87,8 @@ public class ArchivesController extends BaseController{
             } else {
                 return "redirect:/error/404";
             }
-            User visitor = UserUtils.getUserFromCookie(request);
+            String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+            User visitor= UserUtils.getUserFromRedis(sessionId);
             model.addAttribute("visitor", visitor);
         } catch (Exception e) {
             return "redirect:/error/error";

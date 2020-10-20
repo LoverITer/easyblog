@@ -31,8 +31,7 @@
                         <button class="ui left floated  mini red basic button">
                             <a href="#" style="color: red;font-size: 12px;">关注</a>
                         </button>-->
-                        <a href="#" th:if="${author!=null and visitor==null}" th:href="@{/article/home/{id}(id=${author.getUserId()})}" style="color: #3399ea;font-size: 12px !important;float: left">TA的个人主页&nbsp;></a>
-                        <a href="#" th:if="${author!=null and visitor!=null}" th:href="@{/article/home/{id}(id=${author.getUserId()},visitorUId=${visitor.getUserId()})}"  style="color: #3399ea;font-size: 12px !important;float: left">TA的个人主页&nbsp;></a>
+                        <a href="#" th:if="${author!=null}" th:href="@{/article/home/{id}(id=${author.getUserId()})}" style="color: #3399ea;font-size: 12px !important;float: left">TA的个人主页&nbsp;></a>
                     </div>
                 </div>
             </div>
@@ -88,7 +87,7 @@
         <div class="ui segment" style="border-top: none;padding-top: .8em;padding-bottom: .8em;" th:each="category:${categories}">
             <!--专栏的图片-->
             <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg" th:src="${category.categoryImageUrl}">
-            <a href="#" th:href="@{/category/details/{id}/{user}(id=${category.categoryId},user=${category.categoryUser})}" target class="m-text-thin m-margin-left" style="color: #333" th:text="${category.categoryName}">2019年2月</a>
+            <a href="#" th:href="@{/category/details/{id}/{user}(id=${category.categoryId},user=${category.categoryUser})}" target class="m-text-thin m-margin-left" style="color: #333;font-weight: 400 !important;" th:text="${category.categoryName}">2019年2月</a>
             <span class="count" style="float:right;">
                 [[${category.categoryArticleNum}]]篇
             </span>
@@ -100,8 +99,7 @@
             <i class="bookmark icon"></i><strong>最新文章</strong>
         </div>
         <div class="ui segment" style="border-top: none;padding-top: .8em;padding-bottom: .8em;" th:each="article:${newestArticles}">
-            <a href="#" th:if="${visitor==null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="m-text-thin" style="color: #333"></a>
-            <a href="#" th:if="${visitor!=null&&article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class=" m-text-thin" style="color: #333"></a>
+            <a href="#" th:if="${article!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="m-text-thin" style="color: #333;font-weight: 400 !important;"></a>
         </div>
     </div>
     <!--归档-->
@@ -110,7 +108,7 @@
             <i class="bookmark icon"></i><strong>归档</strong>
         </div>
         <div class="ui segment" style="border-top: none;padding-top: .8em;padding-bottom: .8em;" th:each="archive:${archives}">
-            <a href="#" th:href="@{/archives/details/{uid}/{date}(uid=${archive.userId},date=${archive.date})}" target="" class="m-text-thin" style="color: #333" th:text="${archive.date}"></a>
+            <a href="#" th:href="@{/archives/details/{uid}/{date}(uid=${archive.userId},date=${archive.date})}" target="" class="m-text-thin" style="color: #333;font-weight: 400 !important;" th:text="${archive.date}"></a>
             <span class="count" style="float: right;">[[${archive.count}]]篇</span>
         </div>
     </div>

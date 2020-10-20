@@ -18,7 +18,7 @@ import top.easyblog.mapper.OauthMapper;
 import top.easyblog.web.oauth2.IAuthService;
 import top.easyblog.web.oauth2.bean.GitHubUser;
 import top.easyblog.web.oauth2.bean.Oauth;
-import top.easyblog.web.oauth2.enums.AppType;
+import top.easyblog.web.oauth2.enums.ThirdPartAppType;
 import top.easyblog.web.service.IOauthService;
 
 import java.util.List;
@@ -126,7 +126,7 @@ public class GitHubAuthServiceImpl implements IAuthService<GitHubUser>, IOauthSe
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
-    public GitHubUser getUserByOpenIdAndAppType(String openId, AppType appType) {
+    public GitHubUser getUserByOpenIdAndAppType(String openId, ThirdPartAppType appType) {
         try {
             if (!StringUtils.isEmpty(openId) && !StringUtils.isEmpty(appType)) {
                 Oauth oauth = new Oauth();

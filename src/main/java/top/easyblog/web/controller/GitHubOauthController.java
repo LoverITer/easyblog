@@ -13,14 +13,14 @@ import top.easyblog.entity.po.UserSigninLog;
 import top.easyblog.util.CookieUtils;
 import top.easyblog.util.NetWorkUtils;
 import top.easyblog.util.RedisUtils;
-import top.easyblog.util.UserUtils;
 import top.easyblog.web.oauth2.IAuthService;
 import top.easyblog.web.oauth2.bean.GitHubUser;
-import top.easyblog.web.oauth2.enums.AppType;
+import top.easyblog.web.oauth2.enums.ThirdPartAppType;
 import top.easyblog.web.service.IOauthService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -69,7 +69,7 @@ public class GitHubOauthController extends BaseController{
         //获得用户在Github上的账户信息
         GitHubUser gitHubUser = githubAuthService.getUserInfo(accessToken);
         //在本系统中尝试获取用户的信息和GitHub返回的信息对比
-        GitHubUser user = oauthService.getUserByOpenIdAndAppType(gitHubUser.getId(), AppType.GitHub);
+        GitHubUser user = oauthService.getUserByOpenIdAndAppType(gitHubUser.getId(), ThirdPartAppType.GitHub);
         String ip = NetWorkUtils.getUserIp(request);
         String ipInfo = NetWorkUtils.getLocation(ip);
         Integer registerId = -1;
@@ -102,17 +102,16 @@ public class GitHubOauthController extends BaseController{
             userInfo = userService.getUser(registerId);
         }
 
+        HttpSession session = request.getSession();
+        String sessionId = session.getId();
         //第三方登录
-        if (Objects.isNull(UserUtils.getUserFromRedis(registerId))) {
-            redisUtil.hset("user-" + registerId, "user", JSONObject.toJSONString(userInfo), RedisUtils.DB_1);
+        if (Objects.isNull(redisUtil.exists(sessionId,RedisUtils.DB_1))) {
+            CookieUtils.updateCookie(request,response,JSESSIONID,sessionId,MAX_USER_LOGIN_STATUS_KEEP_TIME);
             //会话信息，如果没有主动退出15天有效
-            redisUtil.expire("user-" + registerId, 60 * 60 * 24 * 15, RedisUtils.DB_1);
-            //添加用户的登录信息到Cookie中
-            CookieUtils.addCookie(request, response, USER_LOGIN_COOKIE_FLAG, JSONObject.toJSONString(userInfo), 60 * 60 * 24 * 15);
+            redisUtil.set(sessionId,JSONObject.toJSONString(userInfo), RedisUtils.DB_1);
+            redisUtil.expire(sessionId, MAX_USER_LOGIN_STATUS_KEEP_TIME, RedisUtils.DB_1);
             final int uid = registerId;
-            executor.execute(() -> {
-                userSigninLogService.saveSigninLog(new UserSigninLog(uid, ip, ipInfo, "登录成功"));
-            });
+            executor.execute(() -> userSigninLogService.saveSigninLog(new UserSigninLog(uid, ip, ipInfo, "登录成功")));
             return loginRedirectUrl(request);
         } else {
             redirectAttributes.addFlashAttribute("error", "您已经登录，请不要重复登录！");

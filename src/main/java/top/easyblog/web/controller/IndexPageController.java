@@ -13,6 +13,7 @@ import top.easyblog.entity.po.User;
 import top.easyblog.global.pagehelper.PageParam;
 import top.easyblog.global.pagehelper.PageSize;
 import top.easyblog.util.CollectionUtils;
+import top.easyblog.util.CookieUtils;
 import top.easyblog.util.UserUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,21 +28,15 @@ import java.util.Objects;
 @Slf4j
 @Controller
 @RequestMapping(value = "/")
-public class WelcomeController extends BaseController{
+public class IndexPageController extends BaseController{
 
 
-    /**
-     * 点击量排序前8的文章数
-     */
+    /***点击量排序前8的文章数*/
     private static final int TOP_EIGHT_ARTICLE = 8;
-
-    /**
-     * 默认推荐的文章列表长度
-     */
+    /***默认推荐的文章列表长度 */
     private static final int DEFAULT_RECOMMEND_ARTICLE_SIZE = 10;
-
     /**默认置顶显示的文章数*/
-    private static final int DEFAULT_DISPLAY_HOT_ARTICLE_SIZE = 22;
+    private static final int DEFAULT_DISPLAY_HOT_ARTICLE_SIZE = 16;
 
 
     /**
@@ -57,7 +52,8 @@ public class WelcomeController extends BaseController{
                         @RequestParam(defaultValue = "1") int pageNo,
                         HttpServletRequest request) {
         try {
-            User user = UserUtils.getUserFromCookie(request);
+            String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+            User user= UserUtils.getUserFromRedis(sessionId);
             model.addAttribute("user", user);
             //查询最近1个月内的文章，不足10篇，查询历史的20篇
             PageInfo<Article> newestArticlesPages = articleService.getAllUserNewestArticlesPage(new PageParam(pageNo,
@@ -66,20 +62,20 @@ public class WelcomeController extends BaseController{
             PageParam pageParam = new PageParam(pageNo, PageSize.SINGLE_ARTICLE);
             PageInfo<Article> articlePages = articleService.getUserAllPage(pageParam);
             int displayedSize = newestArticlesPages.getList().size();
-            //总的文章大小
+            //总的文章数量
             model.addAttribute("articlePagesSize", (int) Math.ceil((double) articlePages.getTotal() / PageSize.MIN_PAGE_SIZE.getPageSize()));
-            //已经显示的文章大小
+            //已经显示的文章数量
             model.addAttribute("displayedSize",displayedSize);
             model.addAttribute("pageSize", PageSize.MIN_PAGE_SIZE.getPageSize());
-            //查询访问量最高的22篇最近的文章用于首页大图、访问排行、特别推荐的显示
-            List<List<?>> top22Articles = getTopArticle(DEFAULT_DISPLAY_HOT_ARTICLE_SIZE,new int[]{5, 1, 7, 6});
-            if(top22Articles!=null){
-                model.addAttribute("articles", top22Articles.get(0));
+            //查询访问量最高的16篇最近的文章用于首页大图、访问排行、特别推荐的显示
+            List<List<?>> topVisitArticles = getTopArticle(DEFAULT_DISPLAY_HOT_ARTICLE_SIZE,new int[]{5, 1, 7, 3});
+            if(topVisitArticles!=null){
+                model.addAttribute("articles", topVisitArticles.get(0));
                 //访问排行侧边栏带首图显示的文章
-                model.addAttribute("famousSideBarTopArticle", top22Articles.get(1));
+                model.addAttribute("famousSideBarTopArticle", topVisitArticles.get(1));
                 //访问排行侧边栏其他文章
-                model.addAttribute("visitRankingArticles", top22Articles.get(2));
-                model.addAttribute("specialRecommendArticles", top22Articles.get(3));
+                model.addAttribute("visitRankingArticles", topVisitArticles.get(2));
+                model.addAttribute("specialRecommendArticles", topVisitArticles.get(3));
             }
 
             //文章推荐
@@ -93,7 +89,7 @@ public class WelcomeController extends BaseController{
             List<Article> likes = articleService.getYouMayAlsoLikeArticles();
             model.addAttribute("likes", likes);
         } catch (Exception e) {
-            log.error( e.getMessage() + " @ index() line 78");
+            log.error( e.getMessage());
         }
         return "index";
     }
@@ -106,7 +102,8 @@ public class WelcomeController extends BaseController{
      */
     private void getSharedArticle(Model model, HttpServletRequest request, String[] categories) {
         //从Redis中尝试获取用户的登录信息
-        User user = UserUtils.getUserFromCookie(request);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         model.addAttribute("user", user);
         //给用用户推荐猜你喜欢的文章
         List<Article> likes = articleService.getYouMayAlsoLikeArticles();

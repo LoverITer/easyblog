@@ -27,7 +27,7 @@
 <body>
 
 <!--导航-->
-<div th:replace="~{nav :: navbar}"></div>
+<div th:replace="~{fragment/nav :: navbar}"></div>
 
 
 <!--中间内容-->
@@ -78,7 +78,7 @@
 
 <div style="height: 10em"></div>
 <!--底部footer-->
-<div th:replace="~{footer :: footbar}"></div>
+<div th:replace="~{ fragment/common :: footbar}"></div>
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
@@ -88,8 +88,8 @@
     $(document).ready(function () {
         let userId=$('#userId').val();
         showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
+        toggleStatus();
+        logOut();
     });
 </script>
 <!--控制按钮的禁用和可用状态-->

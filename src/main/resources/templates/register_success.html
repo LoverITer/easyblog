@@ -50,23 +50,12 @@
 <div style="margin-top: 18.5em"></div>
 
 <!--footer-->
-<div th:replace="~{footer :: footbar}"></div>
+<div th:replace="~{fragment/common :: footbar}"></div>
 
+<th:block th:replace="~{fragment/common :: common_js}"/>
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
-<script>
-    $(document).ready(function () {
-        let userId=$('#userId').val();
-        showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
-    });
-</script>
 <script type="text/javascript">
-
-    var t = 5;
+    let t = 5;
     $(document).ready(function () {
         $('.ui.dropdown').dropdown({
             on: 'hover'

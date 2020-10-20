@@ -10,7 +10,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import top.easyblog.util.NetWorkUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 
 /**
  * controller层日志切面
@@ -42,37 +41,13 @@ public class WebAdminRequestLogAspect {
     @AfterReturning(pointcut = "log()", returning = "result")
     public void afterReturn(JoinPoint joinPoint, Object result) {
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.info(classMethod + " has done successfully.result value {}", result);
+        log.info(classMethod + " 成功执行结束.返回值： {}", result);
     }
 
     @AfterThrowing(pointcut = "log()", throwing = "throwable")
     public void afterThrow(JoinPoint joinPoint, Throwable throwable) {
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        log.error(classMethod + " occurred an error :" + throwable.getMessage());
+        log.error(classMethod + " 执行过程发生异常:" + throwable.getMessage());
     }
-
-    private static class RequestLog {
-        private String url;
-        private String ipInfo;
-        private String classMethod;
-        private Object[] args;
-
-        public RequestLog(String url, String ipInfo, String classMethod, Object[] args) {
-            this.url = url;
-            this.ipInfo = ipInfo;
-            this.classMethod = classMethod;
-            this.args = args;
-        }
-
-        @Override
-        public String toString() {
-            return "request log{：" +
-                    "url:'" + url + '\'' +
-                    ", ipInfo:'" + ipInfo + '\'' +
-                    ", classMethod:'" + classMethod + '\'' +
-                    ", args:" + Arrays.toString(args) + "}";
-        }
-    }
-
 
 }

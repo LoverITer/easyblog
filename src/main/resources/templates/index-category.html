@@ -60,9 +60,9 @@
         <img th:case="springboot"  src="http://image.easyblog.top/15945392391494cc24189-a902-4d3f-82f8-2aa8cbe0832e.jpg"/>
         <img th:case="mybatis"  src="http://image.easyblog.top/1594539272147c127bc73-ccbb-4a65-a6f8-9c48a49665d7.jpg"/>
         <img th:case="redis"  src="http://image.easyblog.top/159453922122440f2b15e-f606-4201-bd29-8d584cc63d8e.jpg"/>
-        <img th:case="nginx"  src="http://image.easyblog.top/1585019402615663c0a6d-2edd-49ef-88d8-c7e72ae53088.jpg"/>
+        <img th:case="nginx"  src="http://image.easyblog.top/159896521900821af99b6-e300-49ee-b836-6f2d91eb589a.jpg"/>
         <img th:case="netty"  src="http://image.easyblog.top/15903228174299138239d-57d1-4de6-9292-e1b5f6077b33.jpg"/>
-        <img th:case="docker"  src="http://image.easyblog.top/1590484169892bca4ea69-3d92-47c2-b1a1-07fd10e2983e.jpg"/>
+        <img th:case="docker"  src="http://image.easyblog.top/1596264809127b841de6e-16c8-4a14-b7fb-338a87bfedcf.jpg"/>
         <img th:case="db"  src="http://image.easyblog.top/1587906779529875bfa2c-1be7-4bc1-88dd-f6a49e34c818.jpg"/>
         <img th:case="bigdata"  src="http://image.easyblog.top/15903299809772aa9b5a5-ee49-44c6-a382-ea3b5a81dfb1.jpg"/>
         <img th:case="others"  src="http://image.easyblog.top/15903233387258b4e7141-25d4-4faa-8051-eb6d353c4582.jpg"/>
@@ -118,17 +118,11 @@
               <li th:if="${allArticles!=null and article!=null}" th:each="article,articleStat:${allArticles}">
                   <h3 class="blogtitle">
                       <b th:if="${articleStat.index le 2}">【顶】</b>
-                      <a href="#" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
-                      <a href="#" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
+                      <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
                   </h3>
                   <span class="blogpic imgscale">
                       <i><a href="/xd/" th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}" target="_blank" th:text="${article.getArticleCategory()}">设计心得</a></i>
-                      <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
-                         th:title="${article.getArticleTopic()}" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
-                         <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
-                         <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
-                      </a>
-                      <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}"
+                      <a  th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
                          th:title="${article.getArticleTopic()}" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                          <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
                          <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
@@ -151,8 +145,7 @@
                       </span>
 
                   </p>
-                  <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" class="viewmore">阅读全文</a>
-                  <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" class="viewmore">阅读全文</a>
+                  <a  th:href="@{/article/details/{id}(id=${article.getArticleId()})}" class="viewmore">阅读全文</a>
               </li>
               <li th:if="${ allArticles eq null or #lists.size(allArticles) eq 0}">
                    没有任何文章
@@ -171,20 +164,13 @@
         <div class="whitebg tuijian" th:if="${recommendArticles!=null}">
             <h2 class="htitle">栏目推荐</h2>
             <section class="topnews imgscale" th:if="${articleStat.index eq 0}" th:each="article,articleStat:${recommendArticles}">
-                <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}">
-                    <img th:src="@{${article.getArticleFirstPicture()}}" src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg">
-                    <span th:text="${article.getArticleTopic()}"></span></a>
-                <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}">
+                <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}">
                     <img th:src="@{${article.getArticleFirstPicture()}}" src="http://www.yangqq.com/d/file/news/life/2018-06-29/75842f4d1e18d692a66c38eb172a40ab.jpg">
                     <span th:text="${article.getArticleTopic()}"></span></a>
             </section>
             <ul>
                 <li th:if="${articleStat.index gt 0}" th:each="article,articleStat:${recommendArticles}">
-                    <a href="/xd/23.html" th:if="${user!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" target="_blank" th:title="${article.getArticleTopic()}">
-                        <i><img th:src="@{${article.getArticleFirstPicture()}}" /></i>
-                        <p th:text="${article.getArticleTopic()}">即便是坑，我也想要拉你入伙！</p>
-                    </a>
-                    <a href="/xd/23.html" th:if="${user==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" th:title="${article.getArticleTopic()}">
+                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" th:title="${article.getArticleTopic()}">
                         <i><img th:src="@{${article.getArticleFirstPicture()}}" /></i>
                         <p th:text="${article.getArticleTopic()}">即便是坑，我也想要拉你入伙！</p>
                     </a>
@@ -201,4 +187,9 @@
 </article>
 <div th:replace="~{index::index-footer}"></div>
 </body>
+<script type="text/javascript">
+    $(window).ready(function () {
+        scrollTop();
+    });
+</script>
 </html>

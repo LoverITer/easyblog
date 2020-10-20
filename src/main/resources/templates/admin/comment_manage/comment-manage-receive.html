@@ -27,7 +27,7 @@
 <body>
 
 <!--导航-->
-<div th:replace="~{nav :: navbar}"></div>
+<div th:replace="~{fragment/nav :: navbar}"></div>
 
 
 <!--中间内容-->
@@ -152,7 +152,7 @@
 </div>
 <div style="height: 10em"></div>
 <!--底部footer-->
-<div th:replace="~{footer :: footbar}"></div>
+<div th:replace="~{ fragment/common :: footbar}"></div>
 <!--提示框-->
 <div id="model1" class="ui small modal">
     <div class="header" id="msg_header">删除</div>
@@ -170,8 +170,8 @@
     $(document).ready(function () {
         let userId=$('#userId').val();
         showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
+        toggleStatus();
+        logOut();
         showCurrentPageNum();
     });
 </script>

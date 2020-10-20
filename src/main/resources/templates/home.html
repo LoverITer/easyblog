@@ -31,7 +31,7 @@
 <body>
 
 <!--导航-->
-<div th:replace="~{nav :: navbar}"></div>
+<div th:replace="~{fragment/nav :: navbar}"></div>
 <!--中间内容-->
 <div class="m-content-container">
     <div class="ui  stackable grid">
@@ -95,8 +95,7 @@
                                     </div>
                                 </div>
                                 <div class="fourteen wide column" style="padding-top: 0px !important;padding-left: 10px !important;">
-                                    <a href="#" th:if="${visitor==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
-                                    <a href="#" th:if="${visitor!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                    <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
                                 </div>
                             </div>
                             <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),300)}">
@@ -183,9 +182,7 @@
                 <div class="ui header about">关于我
                     <a class="toggle-btn" th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" id="about" href="#" style="float: right;margin: 0 auto;font-size: 14px;font-weight: 400;display: none">修改</a>
                 </div>
-                <p id="about-show" style="word-break:break-all;" class="m-text" th:if="${!#strings.isEmpty(author.getUserDescription())}"
-                   th:text="${author.getUserDescription()}">黄鑫，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环.
-                    希望结识可以共同成长的小伙伴.</p>
+                <p id="about-show" style="word-break:break-all;font-weight: 500 !important;" class="m-text" th:if="${!#strings.isEmpty(author.getUserDescription())}" th:text="${author.getUserDescription()}"></p>
                 <p id="about-show" class="m-text" th:if="${#strings.isEmpty(author.getUserDescription())}">这人很懒，什么也没留下~~</p>
             </div>
             <div class="ui attached segment" style="border: none;border-bottom: #f0f1f2 3px solid;">
@@ -1653,22 +1650,16 @@
 
 <div style="height: 10em"></div>
 <!--底部footer-->
-<div th:replace="~{footer :: footbar}"></div>
+<div th:replace="~{fragment/common :: footbar}"></div>
 </body>
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
+<th:block th:replace="~{fragment/common :: common_js}"/>
 <script src="../static/js/loading/mustache.js" th:src="@{/static/js/loading/mustache.js}"></script>
 <script src="../static/js/loading/zeroModal.js" th:src="@{/static/js/loading/zeroModal.js}"></script>
 <script>
     let obj = window.document.location;
     let BASE_PATH = obj.href.substring(0, obj.href.indexOf(obj.pathname));
     $(document).ready(function () {
-        let userId = $('#userId').val();
-        showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
         //控制“修改按钮的显示和隐藏”
         showModifyButton(".ui.header.about");
         showModifyButton(".ui.header.hobby");
@@ -1684,6 +1675,7 @@
             showSuccessMessage("修改成功！");
             sessionStorage.removeItem("hobby-success");
         }
+
     });
     $('.m-article-sidebar-padding:last').css('border-bottom','none');
 </script>
@@ -1748,7 +1740,7 @@
     });
     $('#about-commit').click(function () {
         let about_me_info = $('#about-me').val();
-        if(userJSONStr!=null&&userJSONStr!="") {
+        if(userJSONStr!=null&&userJSONStr!=="") {
             $.ajax({
                 url: "/user/aboutMe",
                 method: "GET",
@@ -2058,7 +2050,5 @@
         }
     }
 </script>
-
-
 
 </html>

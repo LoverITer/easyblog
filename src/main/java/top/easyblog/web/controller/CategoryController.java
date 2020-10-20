@@ -13,6 +13,7 @@ import top.easyblog.entity.po.User;
 import top.easyblog.global.enums.ArticleType;
 import top.easyblog.global.pagehelper.PageParam;
 import top.easyblog.global.pagehelper.PageSize;
+import top.easyblog.util.CookieUtils;
 import top.easyblog.util.UserUtils;
 import top.easyblog.web.service.ICategoryCareService;
 
@@ -34,10 +35,10 @@ public class CategoryController extends BaseController{
     /**
      * 访问分类详细信息页面
      *
-     * @param categoryId
-     * @param userId
-     * @param model
-     * @param pageNo
+     * @param categoryId   分类ID
+     * @param userId       文章作者Id
+     * @param model         Model
+     * @param pageNo        分页参数：页码
      */
     @GetMapping(value = "/{categoryId}/{userId}")
     public String categoryDetailsPage(Model model,
@@ -52,7 +53,7 @@ public class CategoryController extends BaseController{
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE);
         PageInfo<Article> categoryArticlesPage = articleService.getByCategoryAndUserIdPage(userId, categoryId, pageParam);
         model.addAttribute("category", category);
-        model.addAttribute("categoryArticles", categoryArticlesPage);
+        model.addAttribute("articlePages", categoryArticlesPage);
         //分类的关注按钮状态控制
         model.addAttribute("care", "false");
         List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);
@@ -68,7 +69,8 @@ public class CategoryController extends BaseController{
         author.setUserPassword(null);
         model.addAttribute("author", author);
         //访问者的信息
-        User visitor = UserUtils.getUserFromCookie(request);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User visitor= UserUtils.getUserFromRedis(sessionId);
         model.addAttribute("visitor", visitor);
         executor.execute(()->{
             //更新专栏的访问量
@@ -124,7 +126,7 @@ public class CategoryController extends BaseController{
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(false);
         ajaxResult.setMessage("服务异常，请重试！");
-        HashMap<String, Object> map = new HashMap<>(8);
+        HashMap<String, Object> map = new HashMap<>(16);
         //更新关注数
         map.put("categoryCareNum", -1);
         try {

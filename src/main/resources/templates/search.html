@@ -42,11 +42,7 @@
             <div style="margin: 0 auto !important;float: right"></div>
             <div class="right m-item m-mobile-hide menu " style="margin: 1.4rem 0 auto 0 !important;">
                 <i class="teal paint brush icon"></i>
-                <a href="#" th:if="${visitor eq null}" th:href="@{/manage/blog/post}"
-                   style="color :rgb(0,183,173);font-size: 17px">写博客</a>
-                <a href="#" th:if="${visitor ne null}"
-                   th:href="@{/manage/blog/post(userId=${visitor.getUserId()})}"
-                   style="color :rgb(0,183,173);font-size: 17px">写博客</a>
+                <a href="#"  th:href="@{/manage/blog/post}" style="color :rgb(0,183,173);font-size: 17px">写博客</a>
             </div>
 
             <!--我的头像-->
@@ -209,12 +205,11 @@
 <div style="height: 10em"></div>
 
 <!--底部footer-->
-<div th:replace="~{footer :: footbar}"></div>
+<div th:replace="~{fragment/common :: footbar}"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<th:block th:replace="~{fragment/common :: common_js}" />
+
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
-<script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
 <script>
     $('.m-padded-tb-large:last').css('border',"none");
     $(".topic").each(function () {
@@ -242,8 +237,8 @@
             left:'284.8px',
         });
         showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
+        toggleStatus();
+        logOut();
     });
 
     function showCurrentPageNum() {

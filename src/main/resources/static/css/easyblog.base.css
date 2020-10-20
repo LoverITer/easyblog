@@ -7,3 +7,6 @@
 .user_info_sidebar_divider{margin-bottom: 5px !important;margin-top: 5px !important;border-top: none;background: #f5f6f7;}
 .m-img-animate{transition: all 1.5s;width: 55px !important;height: 55px !important;}
 .m-img-animate:hover{transform: rotate(360deg); }
+.category-img img{cursor: pointer}
+.scrollTop { width: 44px; height: 44px;border-radius: 50%;cursor: pointer ;display: block; background: #ffffff; right: 20px; bottom: 10%; position: fixed; text-align: center}
+.scrollTop img{width: 24px;height: 24px;margin: 10px}

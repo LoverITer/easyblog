@@ -12,12 +12,14 @@ import top.easyblog.entity.po.User;
 import top.easyblog.entity.po.UserComment;
 import top.easyblog.global.pagehelper.PageParam;
 import top.easyblog.global.pagehelper.PageSize;
+import top.easyblog.util.CookieUtils;
 import top.easyblog.util.UserUtils;
 import top.easyblog.web.controller.BaseController;
 import top.easyblog.web.service.impl.ArticleServiceImpl;
 import top.easyblog.web.service.impl.CommentServiceImpl;
 import top.easyblog.web.service.impl.UserServiceImpl;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 /**
@@ -35,10 +37,11 @@ public class CommentAdminController extends BaseController {
     }
 
     @GetMapping(value = "/publish")
-    public String commentPublishListPage(@RequestParam Integer userId,
+    public String commentPublishListPage(HttpServletRequest request,
                                          Model model,
                                          @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -53,9 +56,10 @@ public class CommentAdminController extends BaseController {
 
     @GetMapping(value = "/receive")
     public String commentReceiveListPage(Model model,
-                                         @RequestParam Integer userId,
+                                         HttpServletRequest request,
                                          @RequestParam(value = "page", defaultValue = "1") int pageNo) {
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
             model.addAttribute("user", user);
             model.addAttribute("visitor", user);
@@ -70,9 +74,10 @@ public class CommentAdminController extends BaseController {
 
     @ResponseBody
     @GetMapping(value = "/delete")
-    public WebAjaxResult deleteComment(@RequestParam Integer userId,
+    public WebAjaxResult deleteComment(HttpServletRequest request,
                                        @RequestParam int commentId) {
-        User user = UserUtils.getUserFromRedis(userId);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user= UserUtils.getUserFromRedis(sessionId);
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后再操作！");
         if (Objects.nonNull(user)) {

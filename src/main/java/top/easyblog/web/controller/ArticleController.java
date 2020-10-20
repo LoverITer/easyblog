@@ -16,10 +16,13 @@ import top.easyblog.global.enums.ArticleType;
 import top.easyblog.global.markdown.TextForm;
 import top.easyblog.global.pagehelper.PageParam;
 import top.easyblog.global.pagehelper.PageSize;
+import top.easyblog.util.CookieUtils;
+import top.easyblog.util.HtmlParserUtils;
 import top.easyblog.util.UserUtils;
 import top.easyblog.web.service.impl.UserAccountImpl;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,7 +58,8 @@ public class ArticleController extends BaseController {
                         @PathVariable("userId") int userId,
                         @RequestParam(value = "articleType", defaultValue = "3") int articleType,
                         @RequestParam(value = "page", defaultValue = "1") int page) {
-        User visitor = UserUtils.getUserFromCookie(request);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User visitor= UserUtils.getUserFromRedis(sessionId);
         model.addAttribute("visitor", visitor);
         try {
             getArticleUserInfo(model, userId, articleType + "");
@@ -85,7 +89,7 @@ public class ArticleController extends BaseController {
      * @param visitorUId 访问者用户Id
      */
     @RequestMapping(value = "/home/{userId}")
-    public String homePage(@PathVariable("userId") int userId, Model model, @RequestParam(required = false) Integer visitorUId) {
+    public String homePage(@PathVariable("userId") int userId,HttpServletRequest request ,Model model, @RequestParam(required = false) Integer visitorUId) {
         try {
             User author = userService.getUser(userId);
             author.setUserPassword(null);
@@ -119,7 +123,8 @@ public class ArticleController extends BaseController {
                 UserAccount authorAccounts = userAccount.getAccountByUserId(author.getUserId());
                 model.addAttribute("authorAccounts", authorAccounts);
                 //从Redis中查用户的登录信息
-                User visitor = UserUtils.getUserFromRedis(visitorUId);
+                String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+                User visitor= UserUtils.getUserFromRedis(sessionId);
                 model.addAttribute("visitor", visitor);
                 return "home";
             }
@@ -135,24 +140,25 @@ public class ArticleController extends BaseController {
      *
      * @param articleId  文章ID
      * @param model      Model
-     * @param visitorUId 访问者ID
      * @return
      */
     @GetMapping(value = "/details/{articleId}")
-    public String articleDetails(@PathVariable("articleId") int articleId, Model model,
-                                 @RequestParam(required = false) Integer visitorUId) {
+    public String articleDetails(@PathVariable("articleId") int articleId, Model model, HttpServletResponse response, HttpServletRequest request) {
         try {
             //根据id拿到文章
             Article article = articleService.getArticleById(articleId, TextForm.HTML);
             if (Objects.nonNull(article)) {
                 model.addAttribute("article", article);
+                //关于文章的描述
+                model.addAttribute("articleDescription", HtmlParserUtils.HTML2Text(article.getArticleContent()).substring(0,80));
                 //文章评论
                 List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
                 model.addAttribute("articleComments", articleComments);
-                //从Redis中查访客的登录信息
-                User visitor = UserUtils.getUserFromRedis(visitorUId);
+                //从Redis中查询访客的登录信息
+                String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+                User visitor= UserUtils.getUserFromRedis(sessionId);
                 model.addAttribute("visitor", visitor);
-
+                //文章作者的信息
                 User author = userService.getUser(article.getArticleUser());
                 if (Objects.nonNull(author)) {
                     author.setUserPassword(null);
@@ -194,7 +200,8 @@ public class ArticleController extends BaseController {
                                           HttpServletRequest request) {
         WebAjaxResult result = new WebAjaxResult();
         try {
-            User user = UserUtils.getUserFromCookie(request);
+            String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+            User user= UserUtils.getUserFromRedis(sessionId);
             PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE);
             PageInfo<Article> articlePages = articleService.getUserAllPage(pageParam);
             List<Article> articles = articlePages.getList();

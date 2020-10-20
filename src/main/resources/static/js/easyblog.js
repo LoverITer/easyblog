@@ -31,24 +31,9 @@ function detectZoom() {
  * 当页面的缩放比例不是100%显示此提示
  */
 function showPageZoomWarning() {
-    //sessionStorage.getItem("isReload") 检测页面是否第一次加载，只在第一次加载的时候提示
-    if (detectZoom() != 125 && !sessionStorage.getItem("isReload")) {
+    if (detectZoom() !== 125 && !sessionStorage.getItem("isReload")) {
         showInfoMessage("您当前的页面处于缩放，页面可能会错乱，建议缩放比例100%");
         sessionStorage.setItem("isReload", true);
-    }
-}
-
-/**
- * 高亮显示当前的页码，条件是将需要高亮显示的元素中加入pages类
- */
-function showCurrentPageNum(page) {
-    var obj = document.getElementsByClassName('pages');
-    //var page=[[${articlePages.pageNum}]];
-    console.log(obj, page);
-    for (var i = 0; i < obj.length; i++) {
-        if (obj[i].textContent == page) {
-            $(obj[i]).css('background', '#eee');
-        }
     }
 }
 
@@ -294,34 +279,34 @@ function showModifyButton(identity) {
 /**
  * 向服务器发送AJAX请求检查检查用户的登录情况用于判断显示头像还是显示登录按钮
  */
-function toggleStatus(userId) {
-    let userJSONStr = localStorage.getItem("user");
-    //console.log(userJSONStr);
-    if (userJSONStr != null && userJSONStr !== "0" && userJSONStr !== "undefined") {
-        changeUserLogState2Login();
-    } else if (userId >= 0) {
-        $.ajax({
-            url: "/user/checkUserStatus",
-            method: "GET",
-            sync: true,
-            data: {userId: userId},
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    //console.log('用户登录了');
-                    localStorage.setItem("user", response.message);
-                    changeUserLogState2Login();
-                } else {
-                    //console.log('用户没登录');
+function toggleStatus() {
+    try{
+        let userJSONStr = localStorage.getItem("user");
+        //console.log(userJSONStr);
+        if (userJSONStr != null && userJSONStr !== "0" && userJSONStr !== "undefined") {
+            changeUserLogState2Login();
+        } else {
+            $.ajax({
+                url: "/user/checkUserStatus",
+                method: "GET",
+                sync: true,
+                success: function (response) {
+                    if (response.success) {
+                        //console.log('用户登录了');
+                        localStorage.setItem("user", response.message);
+                        changeUserLogState2Login();
+                    } else {
+                        //console.log('用户没登录');
+                        changeUserLogState2LogOut();
+                    }
+                },
+                error: function () {
                     changeUserLogState2LogOut();
                 }
-            },
-            error: function () {
-                changeUserLogState2LogOut();
-            }
-        });
-    } else {
-        changeUserLogState2LogOut();
+            });
+        }
+    }catch (e) {
+        console.log(e);
     }
 }
 
@@ -329,10 +314,10 @@ function toggleStatus(userId) {
  * @private
  */
 function changeUserLogState2Login() {
-    if ($('#login-btn').css('display') != "none") {
+    if ($('#login-btn').css('display') !== "none") {
         $('#login-btn').css("cssText", 'display:none ;margin-left: 1em !important;');
     }
-    if ($('#header-images').css('display') == "none") {
+    if ($('#header-images').css('display') === "none") {
         $('#header-images').css("cssText", 'display:block ;margin-left: 1em !important;');
     }
 }
@@ -341,10 +326,10 @@ function changeUserLogState2Login() {
  * @private
  */
 function changeUserLogState2LogOut() {
-    if ($('#header-images').css('display') != "none") {
+    if ($('#header-images').css('display') !== "none") {
         $('#header-images').css("cssText", 'display:none ;margin-left: 1em !important;');
     }
-    if ($('#login-btn').css('display') == "none") {
+    if ($('#login-btn').css('display') === "none") {
         $('#login-btn').css("cssText", 'display:flex ;margin-left: 1em !important;');
     }
 }
@@ -354,27 +339,28 @@ function changeUserLogState2LogOut() {
  * 用户退出登录AJAX请求
  * @param userId
  */
-function logOut(userId) {
-    //console.log("userid:"+userId);
-    $('#logout').click(function () {
-        $.ajax({
-            url: "/user/logout",
-            method: "GET",
-            sync: true,
-            data: {userId: userId},
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    localStorage.removeItem("user");
-                    changeUserLogState2LogOut();
-                    window.location.reload();
+function logOut() {
+    try{
+        $('#logout').click(function () {
+            $.ajax({
+                url: "/user/logout",
+                method: "GET",
+                sync: true,
+                success: function (response) {
+                    if (response.success) {
+                        localStorage.removeItem("user");
+                        changeUserLogState2LogOut();
+                        window.location.reload();
+                    }
+                },
+                error: function () {
+                    showErrorMessage("服务异常，请重试！");
                 }
-            },
-            error: function () {
-                showErrorMessage("服务异常，请重试！");
-            }
+            });
         });
-    });
+    }catch (e) {
+        console.log(e);
+    }
 }
 
 
@@ -468,4 +454,17 @@ function getzf(num) {
         num = '0' + num;
     }
     return num;
+}
+
+/**
+ * 点击返回顶部
+ */
+function scrollTop(){
+    try{
+        $(".scrollTop").click(function () {
+            $("html,body").stop().animate({scrollTop:0},1000);
+        })
+    }catch (e) {
+        console.log(e);
+    }
 }

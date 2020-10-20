@@ -34,7 +34,7 @@
 <body>
 
 <!--导航-->
-<div th:replace="~{nav :: navbar}"></div>
+<div th:replace="~{ fragment/nav :: navbar}"></div>
 
 <!--中间内容-->
 <div class="m-content-container">
@@ -104,8 +104,7 @@
                                     </div>
                                 </div>
                                 <div class="fourteen wide column" style="padding-top: 0px !important;padding-left: 10px !important;">
-                                    <a href="#" th:if="${visitor==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
-                                    <a href="#" th:if="${visitor!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${visitor.getUserId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
+                                    <a href="#"  th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:text="${article.getArticleTopic()}" class="ui m-inline-block m-margin-top-small m-margin-bottom-small m-article-list-title"></a>
                                 </div>
                             </div>
                             <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),200)}">
@@ -232,63 +231,38 @@
 
 <div style="height: 10em"></div>
 <!--底部footer-->
-<div th:replace="~{footer :: footbar}"></div>
+<div th:replace="~{fragment/common :: footbar}"></div>
 
 </body>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-<script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
+<th:block th:replace="~{fragment/common :: common_js}"/>
 <script>
-    function RandomPic(obj) {
-        $.ajax({
-            url: "https://bing.ioliu.cn/v1/rand?type=json",
-            method: "GET",
-            sync: true,
-            dataType: "json",
-            success: function (response) {
-                $(obj).attr("src", response.data.url);
-            },
-            error: function () {
-                spop({
-                    template: '服务异常，请重试！',
-                    autoclose: 4000,
-                    position: "top-center",
-                    style: 'error',
-                });
-            }
-        })
-    }
     $('.m-article-sidebar-padding:last').css('border-bottom','none');
-</script>
-<script>
     $('#msg-btn').click(function () {
         $('.ui.modal').modal('hide');
     });
-    $(document).ready(function () {
-        let userId=$('#userId').val();
-        showPageZoomWarning();
-        toggleStatus(userId);
-        logOut(userId);
-        showCurrentPageNum();
-    });
-
-    function showCurrentPageNum() {
-        var obj=document.getElementsByClassName('pages');
-        var page=[[${articlePages.pageNum}]];
-        for(var i=0;i<obj.length;i++){
-            if(obj[i].textContent==page){
-                $(obj[i]).css('background','#eee');
-            }
-        }
-    }
-</script>
-
-<script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
     $('.ui.dropdown').dropdown({
         on: 'hover'
     });
+    /*
+         * 显示分页页码标识
+         */
+    function showCurrentPageNum() {
+        if([[${articlePages eq null}]]) return;
+        try{
+            let obj = document.getElementsByClassName('pages');
+            let page = [[${articlePages.pageNum}]];
+            for (let i = 0; i < obj.length; i++) {
+                if (obj[i].textContent == page) {
+                    $(obj[i]).css('background', '#ddd');
+                }
+            }
+        }catch (e) {
+            console.log(e);
+        }
+    }
 </script>
+
 </html>

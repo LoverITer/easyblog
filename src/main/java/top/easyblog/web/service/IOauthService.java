@@ -1,6 +1,6 @@
 package top.easyblog.web.service;
 
-import top.easyblog.web.oauth2.enums.AppType;
+import top.easyblog.web.oauth2.enums.ThirdPartAppType;
 
 /**
  * 第三方登录授权后用户信息保存
@@ -27,7 +27,7 @@ public interface IOauthService<T> {
      * @param appType  app_type, 比如 : QQ、GitHub
      * @return   T
      */
-    T getUserByOpenIdAndAppType(String openId, AppType appType);
+    T getUserByOpenIdAndAppType(String openId, ThirdPartAppType appType);
 
 
 

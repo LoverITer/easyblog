@@ -104,18 +104,7 @@ public class AESCryptUtils {
             final Base64.Encoder encoder = Base64.getEncoder();
             final String result = encoder.encodeToString(data);
             return result;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
+        } catch (UnsupportedEncodingException | NoSuchPaddingException | InvalidKeyException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException e) {
             e.printStackTrace();
         }
 
