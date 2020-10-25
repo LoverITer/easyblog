@@ -2,6 +2,7 @@ package top.easyblog.util;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.vladsch.flexmark.util.html.Attribute;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -194,6 +196,27 @@ public final class NetWorkUtils {
             log.error(e.getMessage());
         }
         return location;
+    }
+
+    /**
+     * 获取一个连接中的主机地址
+     * @param href
+     * @return
+     */
+    public static Optional<String> getHost(Attribute href) {
+        String value = href.getValue();
+        if(value==null){
+            return Optional.empty();
+        }
+        int start = value.indexOf("://");
+        if(start!=-1) {
+            value = value.replaceFirst("://", ":::");
+        }
+        int end=value.indexOf('/',start);
+        if(end!=-1) {
+            value = value.substring(start + 3, end);
+        }
+        return Optional.of(value);
     }
 
 }
