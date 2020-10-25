@@ -86,7 +86,7 @@
         </div>
         <div class="ui segment" style="border-top: none;padding-top: .8em;padding-bottom: .8em;" th:each="category:${categories}">
             <!--专栏的图片-->
-            <img class="ui middle aligned tiny image image-32x32" src="../static/images/wechat.jpg" th:src="${category.categoryImageUrl}">
+            <img class="ui middle aligned tiny image image-32x32" src="../../static/images/wechat.jpg" th:src="${category.categoryImageUrl}">
             <a href="#" th:href="@{/category/details/{id}/{user}(id=${category.categoryId},user=${category.categoryUser})}" target class="m-text-thin m-margin-left" style="color: #333;font-weight: 400 !important;" th:text="${category.categoryName}">2019年2月</a>
             <span class="count" style="float:right;">
                 [[${category.categoryArticleNum}]]篇

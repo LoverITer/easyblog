@@ -11,7 +11,7 @@
     <groupId>top.easyblog</groupId>
     <artifactId>easyblog</artifactId>
     <name>easyblog</name>
-    <version>1.0.3_20201025</version>
+    <version>1.0.4_20201025</version>
     <packaging>war</packaging>
     <description>personal-blog</description>
 

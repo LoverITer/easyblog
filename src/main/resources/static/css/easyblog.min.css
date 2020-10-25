@@ -10,3 +10,6 @@
 .category-img img{cursor: pointer}
 .scrollTop { width: 44px; height: 44px;border-radius: 50%;cursor: pointer ;display: block; background: #ffffff; right: 20px; bottom: 10%; position: fixed; text-align: center}
 .scrollTop img{width: 24px;height: 24px;margin: 10px}
+.m-box-shadow{-webkit-box-shadow: 0 1px 3px rgba(34,36,38,.15) !important; box-shadow: 0 1px 3px rgba(34,36,38,.15) !important;}
+.pages{background: white !important;font-weight: 100 !important;}
+.pages:hover{background: #ddd !important;}
