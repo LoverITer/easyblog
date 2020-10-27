@@ -23,21 +23,109 @@
                 <div th:replace="~{ fragment/userinfo_sidebar::sidebar_category}"></div>
                 <!--归档-->
                 <div th:replace="~{ fragment/userinfo_sidebar::sidebar_archives}"></div>
-                <h4 class="ui horizontal divider header m-margin-top-large">联系开发者</h4>
-                <div class="ui centered card" style="width: 11em">
+                <div id="menu" class="ui segments user_info_sidebar" style="display: none;position: fixed;width: 300px;min-height:510px;margin-top: 0;background: #fff">
+                    <div class="ui secondary segment" style="background: #f1f2fb">
+                        <div class="ui two column grid">
+                            <div class="column">
+                                <i class="icon book"></i><strong>目录</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui segment" style="border-top: none;padding-top: .8em;padding-bottom: .8em;">
+                        <li class="m-outline-item-wrapper m-outline-h3 m-outline-item-open">
+                            <div class="m-outline-item">
+                                <span class="m-outline-expander"></span>
+                                <i id="main-menu" class="icon angle down"></i>
+                                <!--文章标题-->
+                                <span  class="m-outline-label m-outline-active" data-ref="n0">图解redis五种数据结构底层实现</span>
+                            </div>
+                            <ul class="m-outline-children" style="margin-top: 5px">
+                                <div class="m-outline-item">
+                                    <span class="m-outline-expander"></span>
+                                    <i class="icon angle right"></i>
+                                    <!--一级标题-->
+                                    <span class="m-outline-label" data-ref="n5">一、Redis对象底层数据结构</span>
+                                    <ul class="m-outline-children" style="display: none">
+                                        <li class="m-outline-item-wrapper m-outline-h5 m-outline-item-signle">
+                                            <div class="m-outline-item">
+                                                <span class="m-outline-expander"></span>
+                                                <!--二级标题-->
+                                                <span class="m-outline-label" data-ref="n35">1、SDS（简单动态字符串）</span>
+                                            </div>
+                                            <ul class="m-outline-children"></ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="m-outline-item">
+                                    <span class="m-outline-expander"></span>
+                                    <i class="icon angle right"></i>
+                                    <!--一级标题-->
+                                    <span class="m-outline-label" data-ref="n5">一、Redis对象底层数据结构</span>
+                                    <ul class="m-outline-children" style="display: none">
+                                        <li class="m-outline-item-wrapper m-outline-h5 m-outline-item-signle">
+                                            <div class="m-outline-item">
+                                                <span class="m-outline-expander"></span>
+                                                <!--二级标题-->
+                                                <span class="m-outline-label" data-ref="n35">1、SDS（简单动态字符串）</span>
+                                            </div>
+                                            <ul class="m-outline-children"></ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="m-outline-item">
+                                    <span class="m-outline-expander"></span>
+                                    <i class="icon angle right"></i>
+                                    <!--一级标题-->
+                                    <span class="m-outline-label" data-ref="n5">一、Redis对象底层数据结构</span>
+                                    <ul class="m-outline-children" style="display: none">
+                                        <li class="m-outline-item-wrapper m-outline-h5 m-outline-item-signle">
+                                            <div class="m-outline-item">
+                                                <span class="m-outline-expander"></span>
+                                                <!--二级标题-->
+                                                <span class="m-outline-label" data-ref="n35">1、SDS（简单动态字符串）</span>
+                                            </div>
+                                            <ul class="m-outline-children"></ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="m-outline-item">
+                                    <span class="m-outline-expander"></span>
+                                    <i class="icon angle right"></i>
+                                    <!--一级标题-->
+                                    <span class="m-outline-label" data-ref="n5">一、Redis对象底层数据结构</span>
+                                    <ul class="m-outline-children" style="display: none">
+                                        <li class="m-outline-item-wrapper m-outline-h5 m-outline-item-signle">
+                                            <div class="m-outline-item">
+                                                <span class="m-outline-expander"></span>
+                                                <!--二级标题-->
+                                                <span class="m-outline-label" data-ref="n35">1、SDS（简单动态字符串）</span>
+                                            </div>
+                                            <ul class="m-outline-children"></ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </ul>
+                        </li>
+                    </div>
+                </div>
+                <h4 class="ui horizontal divider header m-margin-top-large menu-info-ctl">联系开发者</h4>
+                <div class="ui centered card menu-info-ctl" style="width: 11em">
                     <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="我的微信" class="ui rounded image">
                 </div>
             </div>
 
             <!--右边文章-->
             <div class="twelve wide column m-article-body-outer-padding" style="padding-top: 0 !important;">
-                <div class="ui top attached segment" onmouseenter="function editArticle() {
-                      $(this).find('.m-article-quick-edit-btn').toggle();
-                }" onmouseleave="editArticle()" style="padding: 20px 10px 5px !important;border: 1px #f5f6f7 solid;border-radius: 0;">
+                <div class="ui top attached segment" style="padding: 20px 10px 5px !important;border: 1px #f5f6f7 solid;border-radius: 0;">
                     <!--标题-->
                     <div class="ui left aligned basic segment" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
                         <h2 style="max-width: 100% !important;margin-bottom: 5px !important;" class="ui left aligned  m-article-title" th:text="${article.getArticleTopic()}"></h2>
-                        <a target="_blank" class="m-article-quick-edit-btn m-mobile-hide"  th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}"><button style="border: none;padding: 5px;border-radius: 3px">修改文章</button></a>
+                        <a target="_blank" class="m-article-quick-edit-btn m-mobile-hide"  th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}">
+                            <button>修改文章</button></a>
+                        <a class="m-article-meum-show-btn m-mobile-hide" href="javascript:void 0">
+                            <button style="display: inline-block" id="show-btn">显示目录</button>
+                            <button style="display: none" id="hide-btn">隐藏目录</button>
+                        </a>
                     </div>
                     <div class="ui horizontal link list">
                         <div class="item">
@@ -345,8 +433,8 @@
 
 
 </script>
-<!--文章图片点击放大缩小效果-->
 <script>
+    //文章图片点击放大缩小效果
     $(document).ready(function(){
         $('.typo img').addClass('img_zoom');
         $(".img_zoom").bind("click", function(){
@@ -359,5 +447,46 @@
             $('.bgImg').attr("src",'');
         });
     });
+
+
+    let menuStatus=0;  //目录控制变量为1 表示目录显示，0表示目录没有显示
+   $(document).ready(function () {
+
+       let htmlHeight = window.innerHeight-100 + 'px';
+       $('#menu').css('height',htmlHeight);
+       //显示或隐藏目录
+       $('.m-article-meum-show-btn').click(function () {
+           if(menuStatus===0){
+               //按钮点击之前，菜单是隐藏的
+               $('#menu').show(500);
+               $('.menu-info-ctl').hide(100);
+               $('#show-btn').hide();
+               $('#hide-btn').show();
+               menuStatus=1;
+           }else if(menuStatus===1){
+               //按钮点击之前，菜单是显示的
+               $('#menu').hide(100);
+               $('.menu-info-ctl').show(500);
+               $('#show-btn').show();
+               $('#hide-btn').hide();
+               menuStatus=0;
+           }
+       });
+   });
+
+   //实现目录中子标题的隐藏与显示
+   $(document).ready(function () {
+       $('.m-outline-item i').click(function () {
+           $(this).siblings('ul').toggle();
+           $(this).toggleClass("right");
+           $(this).toggleClass("down");
+       });
+
+       $('#main-menu').click(function () {
+           $('.m-outline-children').toggle();
+       })
+   });
+
+
 </script>
 </html>

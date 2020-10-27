@@ -102,14 +102,12 @@ pre[class*="language-"] {
 
 .comment,.comment span{
     color:#35994d;
-    font-style: italic ;
     font-size: 15px;
     font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
 }
 
 .comment.token.keyword span{
     color:#35994d !important;
-    font-style: italic !important;
     font-weight: 600;
     font-family: Monaco,Menlo,Consolas,"Courier New",monospace !important;
 }
@@ -131,8 +129,12 @@ span.token.number {
     color: #5599FF;
 }
 
-.token.boolean,.token .keyword .keyword-return{
-    color: #f2711c !important;
+.token.boolean{
+    color: #219;
+}
+
+.token .keyword .keyword-return{
+    color: #708 !important;
 }
 
 .token.selector,
@@ -165,7 +167,7 @@ span.token.number {
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-    color: #a626a4;
+    color: #708;
 }
 
 .token.function{
@@ -177,7 +179,11 @@ li .token.function {
 }
 
 
-.token.class-name，.token.punctuation{
+.token.class-name{
+    color: #00f;
+}
+
+.token.punctuation{
     color: #556370;
 }
 
