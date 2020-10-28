@@ -289,5 +289,12 @@ public interface IArticleService {
     int updateArticlesByCategoryName(String newCategoryName, String oldCategoryName, int userId);
 
     Article getArticleByPK(Long articleId);
+
+    /**
+     * 解析文章HTML为目录
+     * @param articleContent 文章内容的HTML
+     * @return
+     */
+    List<List<String>> parseArticleContentList(String articleContent);
 }
 

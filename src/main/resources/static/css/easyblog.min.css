@@ -45,6 +45,10 @@
     cursor: pointer;
     display: inline-block;
     vertical-align: middle;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    max-width: 240px;
+}
 }
 .m-outline-active{
     font-weight: 700;
