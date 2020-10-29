@@ -9,7 +9,7 @@ spring:
     #指定使用Druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.117.128:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.171.128:3306/easyblog?autoReconnect=true&useSSL=false&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
     username: root #用户名
     password: 95162437hx$ #密码
     druid:
@@ -54,7 +54,7 @@ spring:
     restart:
       additional-paths: src/main/java
   redis:
-    host: 192.168.117.128
+    host: 192.168.171.128
     port: 6379
     database: 0
     timeout: 10000

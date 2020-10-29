@@ -23,7 +23,8 @@
                 <div th:replace="~{ fragment/userinfo_sidebar::sidebar_category}"></div>
                 <!--归档-->
                 <div th:replace="~{ fragment/userinfo_sidebar::sidebar_archives}"></div>
-                <div id="menu" class="ui segments user_info_sidebar" style="display: none;position: fixed;width: 300px;min-height:510px;margin-top: 0;background: #fff;overflow-y: auto">
+                <!--目录-->
+                <div id="menu" class="ui segments user_info_sidebar">
                     <div class="ui secondary segment" style="background: #f1f2fb">
                         <div class="ui two column grid">
                             <div class="column">
@@ -37,21 +38,21 @@
                                 <span class="m-outline-expander"></span>
                                 <i id="main-menu" class="icon angle down"></i>
                                 <!--文章标题-->
-                                <span  class="m-outline-label m-outline-active" data-ref="n0" style="font-weight: 700 !important;" th:text="${article.getArticleTopic()}"></span>
+                                <span  class="m-outline-label m-outline-active" data-ref="n0" style="font-weight: 700 !important;"><a th:href="'#'+${article.getArticleTopic()}" th:text="${article.getArticleTopic()}"></a></span>
                             </div>
                             <ul class="m-outline-children" style="margin-top: 5px">
                                 <div class="m-outline-item" th:each="contentList:${tableContentLists}">
                                     <span class="m-outline-expander"></span>
                                     <i style="margin: 0 !important;" class="icon angle right" th:if="${#lists.size(contentList)>1}"></i>
                                     <!--一级标题-->
-                                    <span class="m-outline-label" data-ref="n5" style="max-width: 205px" th:if="${#lists.size(contentList)>1}"  th:text="${contentList.get(0)}">一、Redis对象底层数据结构</span>
-                                    <span class="m-outline-label" data-ref="n5" style="max-width: 205px;margin-left: 20.1px" th:if="${#lists.size(contentList)==1}" th:text="${contentList.get(0)}">一、Redis对象底层数据结构</span>
+                                    <span class="m-outline-label" data-ref="n5" style="max-width: 205px" th:if="${#lists.size(contentList)>1}" ><a th:href="'#'+${#strings.replace(contentList.get(0),'[、|.]','')}" th:text="${contentList.get(0)}"></a></span>
+                                    <span class="m-outline-label" data-ref="n5" style="max-width: 205px;margin-left: 20.1px" th:if="${#lists.size(contentList)==1}"><a th:href="'#'+${#strings.replace(contentList.get(0),'[、|.]','')}" th:text="${contentList.get(0)}"></a></span>
                                     <ul class="m-outline-children" style="display: none" th:each="content,contentStat:${contentList}" th:unless="${contentStat.first}">
                                         <li class="m-outline-item-wrapper m-outline-h5 m-outline-item-signle">
                                             <div class="m-outline-item">
                                                 <span class="m-outline-expander"></span>
                                                 <!--二级标题-->
-                                                <span class="m-outline-label" data-ref="n35" th:text="${content}">1、SDS（简单动态字符串）</span>
+                                                <span class="m-outline-label" data-ref="n35"><a th:href="'#'+${content}" th:text="${content}"></a></span>
                                             </div>
                                             <ul class="m-outline-children"></ul>
                                         </li>
@@ -243,7 +244,7 @@
     let menuStatus=0;  //目录控制变量为1 表示目录显示，0表示目录没有显示
     $(document).ready(function () {
 
-        let htmlHeight = window.innerHeight-100 + 'px';
+        let htmlHeight = window.innerHeight+ 'px';
         $('#menu').css('height',htmlHeight);
         //显示或隐藏目录
         $('.m-article-meum-show-btn').click(function () {
@@ -277,6 +278,45 @@
             $('.m-outline-children').toggle();
         })
     });
+
+
+    $(document).ready(function(){
+        //给文章的个标题段添加id
+        //id用于目录的跳转
+      $("#content :header").each(function(){
+          $(this).attr('id',this.innerText);
+      });
+      //TOC标签生成的目录修改href属性的值
+      $(".toc li a").each(function(){
+          $(this).attr('href','#'+this.innerText);
+      });
+      sendAsk();
+      window.addEventListener("scroll",function () {
+          sendAsk();
+      })
+    });
+
+    //可视区目录高亮显示
+    function sendAsk(){
+        let headers= $('#content :header');
+        let tocs=$('#menu a');
+        //swHeight=滚动的高度+窗体的高度；当h的offset高度<=swHeight,那么说明当前h显示在可视区域了
+        let swHeight=$(window).height();
+        $.each(headers, function (index, item) {
+            mTop=item.getBoundingClientRect().top;
+            let key='#'+this.innerText;
+            if(mTop<=swHeight){
+                $.each(tocs,function () {
+                    if($(this).attr('href')==key){
+                        $(this).css('color','#4183C4');
+                    }else{
+                        $(this).css('color','');
+                    }
+                })
+            }
+        });
+
+    }
 </script>
 <!--评论框的各种效果-->
 <script type="text/javascript">
@@ -412,18 +452,6 @@
         popup: $('.wechat-qr'),
         position: 'left center'
     });
-
-    var qrcode = new QRCode("qrcode", {
-        text: "http://jindo.dev.naver.com/collie",
-        width: 110,
-        height: 110,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
-
-
-
 </script>
 <script>
     //文章图片点击放大缩小效果

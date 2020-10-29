@@ -112,7 +112,7 @@ public class HtmlParserUtils {
             }
         }
         for(int i=0;i<hTag.size();i++){
-            queue.offer(hTag.get(i).html());
+            queue.offer(hTag.get(i).text());
             if(H_TAG_LEVEL_MAP.get(lastTag)<= H_TAG_LEVEL_MAP.get(hTag.get(i).nodeName())){
                 lastTag=hTag.get(i).nodeName();
             }

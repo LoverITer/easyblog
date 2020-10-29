@@ -50,7 +50,8 @@ public class LinkTargetAttributeProvider implements AttributeProvider {
     }
 
     @Override
-    public void setAttributes(@NotNull Node node, @NotNull AttributablePart attributablePart, @NotNull MutableAttributes mutableAttributes) {
+    public void setAttributes(@NotNull Node node, @NotNull AttributablePart attributablePart,
+                              @NotNull MutableAttributes mutableAttributes) {
         //只处理链接
         if (node instanceof Link && attributablePart == AttributablePart.LINK) {
             //获取href标签

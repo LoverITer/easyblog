@@ -49,19 +49,64 @@
     overflow-wrap: break-word;
     max-width: 240px;
 }
-}
-.m-outline-active{
-    font-weight: 700;
+
+.m-outline-label a{
+    color: inherit;
+    text-decoration: none;
 }
 
-#menu li{
-    list-style-type: none;
+.m-outline-label a:hover{
+    color: #4183C4;
+}
+
+.m-outline-active{
+    font-weight: 700;
 }
 
 .m-outline-item-open>.m-outline-children {
     display: block;
 }
 
+html{
+    /*隐藏滚动条，当IE下溢出，仍然可以滚动*/
+    -ms-overflow-style:none;
+    /*火狐下隐藏滚动条*/
+    overflow:-moz-scrollbars-none;
+}
+#menu{
+    display: none;
+    position: fixed;
+    width: 300px;
+    margin-top: 0;
+    background: #fff;
+    overflow-y: auto
+}
+#menu li,.toc ul,.toc li{
+    list-style-type: none;
+}
 #menu ul:last-child, #menu ol:last-child {
     margin-bottom: 0;
 }
+#menu::-webkit-scrollbar{
+    /*滚动条整体样式*/
+    width: 6px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+#menu::-webkit-scrollbar-thumb{
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: lightgrey;
+}
+#menu::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.toc ul{
+    padding-left: 20px !important;
+}
+
+
