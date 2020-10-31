@@ -2,27 +2,8 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>文章管理 - EasyBlog博客</title>
-    <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
-    <link rel="bookmark" th:href="@{/static/favicon.ico}" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
-    <link rel="stylesheet" href="../../../static/css/easyblog.base.css" th:href="@{/static/css/easyblog.base.css}">
-    <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
-    <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
-    <!--百度统计JS脚本-->
-    <script>
-        var _hmt = _hmt || [];
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?1d2b1074de8c4606d68aa61802a74c14";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-    </script>
+    <th:block th:replace="~{ fragment/common::common_head}" />
 </head>
 <body>
 
@@ -34,12 +15,12 @@
 <div class="m-content-container">
     <div class="ui stackable grid">
         <!--侧边栏-->
-        <div th:replace="~{manage-sidebar::manage}"></div>
+        <div th:replace="~{fragment/blog-manage::manage}"></div>
         <!--博客内容-->
         <div class="thirteen wide column">
 
             <!--header-->
-            <div th:replace="~{blog-manage-header::header}"></div>
+            <div th:replace="~{fragment/blog-manage::header}"></div>
 
             <!--content-->
             <div class="ui attached bottom segment border-bt-none" style="padding-top: 0 !important;padding-bottom: 0 !important;">
@@ -107,7 +88,7 @@
                             </a>
                             <a  th:each="pageNo:${articlePages.getNavigatepageNums()}"
                                 th:href="@{/manage/blog/private(page=${pageNo},userId=${user.getUserId()})}">
-                                <button  class="ui button pages"  style="background: white !important;font-weight: 100 !important;">
+                                <button  class="ui button pages" >
                                     [[${pageNo}]]
                                 </button>
                             </a>
@@ -149,7 +130,7 @@
         let page=[[${articlePages.pageNum}]];
         for(let i=0;i<obj.length;i++){
             if(obj[i].textContent==page){
-                $(obj[i]).css('background','#eee');
+                $(obj[i]).css("cssText", "background:#ddd !important");
             }
         }
     }

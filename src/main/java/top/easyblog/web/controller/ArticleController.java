@@ -148,11 +148,13 @@ public class ArticleController extends BaseController {
             //根据id拿到文章
             Article article = articleService.getArticleById(articleId, TextForm.HTML);
             if (Objects.nonNull(article)) {
-                model.addAttribute("article", article);
-                //关于文章的描述
-                model.addAttribute("articleDescription", HtmlParserUtils.HTML2Text(article.getArticleContent()).substring(0,80));
+                List<List<String>> tableContentLists = articleService.parseArticleContentList(article.getArticleContent());
                 //文章评论
                 List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
+                model.addAttribute("article", article);
+                model.addAttribute("tableContentLists", tableContentLists);
+                //关于文章的描述
+                model.addAttribute("articleDescription", HtmlParserUtils.HTML2Text(article.getArticleContent()).substring(0,80));
                 model.addAttribute("articleComments", articleComments);
                 //从Redis中查询访客的登录信息
                 String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
@@ -186,6 +188,7 @@ public class ArticleController extends BaseController {
             return "redirect:/error/error";
         }
     }
+
 
     /**
      * 首页异步请求文章

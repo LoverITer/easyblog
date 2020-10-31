@@ -590,4 +590,14 @@ public class ArticleServiceImpl implements IArticleService {
         return article;
     }
 
+
+    /**
+     * 解析一段HTML文本中的目录
+     * @param articleContent
+     */
+    @Override
+    public List<List<String>> parseArticleContentList(String articleContent) {
+        return HtmlParserUtils.parseHTag(articleContent);
+    }
+
 }

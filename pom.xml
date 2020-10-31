@@ -11,7 +11,7 @@
     <groupId>top.easyblog</groupId>
     <artifactId>easyblog</artifactId>
     <name>easyblog</name>
-    <version>1.0.2_20201008</version>
+    <version>1.1.0_20201028</version>
     <packaging>war</packaging>
     <description>personal-blog</description>
 
@@ -193,7 +193,7 @@
         <dependency>
             <groupId>com.vladsch.flexmark</groupId>
             <artifactId>flexmark-all</artifactId>
-            <version>0.50.44</version>
+            <version>0.62.2</version>
         </dependency>
         <!--七牛云SDK-->
         <dependency>
