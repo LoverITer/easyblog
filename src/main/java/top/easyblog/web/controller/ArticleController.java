@@ -41,6 +41,8 @@ public class ArticleController extends BaseController {
      * 关于我页面的默认文章显示数
      **/
     private static final int HOME_PAGE_DEFAULT_ARTICLE_SIZE = 15;
+    /***默认文章描述长度*/
+    private static final int ARTICLE_DESCRIPTION_SIZE = 80;
 
 
     /**
@@ -147,42 +149,50 @@ public class ArticleController extends BaseController {
         try {
             //根据id拿到文章
             Article article = articleService.getArticleById(articleId, TextForm.HTML);
-            if (Objects.nonNull(article)) {
-                List<List<String>> tableContentLists = articleService.parseArticleContentList(article.getArticleContent());
-                //文章评论
-                List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
-                model.addAttribute("article", article);
-                model.addAttribute("tableContentLists", tableContentLists);
-                //关于文章的描述
-                model.addAttribute("articleDescription", HtmlParserUtils.HTML2Text(article.getArticleContent()).substring(0,80));
-                model.addAttribute("articleComments", articleComments);
-                //从Redis中查询访客的登录信息
-                String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
-                User visitor= UserUtils.getUserFromRedis(sessionId);
-                model.addAttribute("visitor", visitor);
-                //文章作者的信息
-                User author = userService.getUser(article.getArticleUser());
-                if (Objects.nonNull(author)) {
-                    author.setUserPassword(null);
-                    model.addAttribute("author", author);
-                    //查询共享的信息
-                    getArticleUserInfo(model, author.getUserId(), ArticleType.Original.getArticleType());
-                    executor.execute(() -> {
-                        //更新用户的访问量
-                        User user1 = new User();
-                        user1.setUserId(author.getUserId());
-                        user1.setUserVisit(author.getUserVisit() + 1);
-                        userService.updateUserInfo(user1);
-                        //更新文章的访问量
-                        Article article1 = new Article();
-                        article1.setArticleId(article.getArticleId());
-                        article1.setArticleClick(article.getArticleClick() + 1);
-                        articleService.updateSelective(article1);
-                    });
-                }
-                return "blog";
+            if (Objects.isNull(article)) {
+                return PAGE404;
             }
-            return PAGE404;
+            //文章目录列表
+            List<List<String>> tableContentLists = articleService.parseArticleContentList(article.getArticleContent());
+            //文章评论
+            List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
+            model.addAttribute("article", article);
+            model.addAttribute("tableContentLists", tableContentLists);
+            String articleDescription = "";
+            String text=HtmlParserUtils.HTML2Text(article.getArticleContent());
+            //关于文章的描述
+            if (text.length() > ARTICLE_DESCRIPTION_SIZE) {
+                articleDescription = text.substring(0, ARTICLE_DESCRIPTION_SIZE);
+            } else {
+                articleDescription = text;
+            }
+            model.addAttribute("articleDescription", articleDescription);
+            model.addAttribute("articleComments", articleComments);
+            //从Redis中查询访客的登录信息
+            String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+            User visitor = UserUtils.getUserFromRedis(sessionId);
+            model.addAttribute("visitor", visitor);
+            //文章作者的信息
+            User author = userService.getUser(article.getArticleUser());
+            if (Objects.nonNull(author)) {
+                author.setUserPassword(null);
+                model.addAttribute("author", author);
+                //查询共享的信息
+                getArticleUserInfo(model, author.getUserId(), ArticleType.Original.getArticleType());
+                executor.execute(() -> {
+                    //更新用户的访问量
+                    User user1 = new User();
+                    user1.setUserId(author.getUserId());
+                    user1.setUserVisit(author.getUserVisit() + 1);
+                    userService.updateUserInfo(user1);
+                    //更新文章的访问量
+                    Article article1 = new Article();
+                    article1.setArticleId(article.getArticleId());
+                    article1.setArticleClick(article.getArticleClick() + 1);
+                    articleService.updateSelective(article1);
+                });
+            }
+            return "blog";
         } catch (Exception e) {
             log.error(e.getMessage());
             return "redirect:/error/error";

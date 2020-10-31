@@ -11,7 +11,7 @@
     <groupId>top.easyblog</groupId>
     <artifactId>easyblog</artifactId>
     <name>easyblog</name>
-    <version>1.1.0_20201028</version>
+    <version>1.1.1_20201029</version>
     <packaging>war</packaging>
     <description>personal-blog</description>
 
@@ -242,6 +242,16 @@
 
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>static/images/**</exclude>
+                    <exclude>mybatis/generator/**</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -525,16 +525,12 @@ public class ArticleAdminController extends BaseController {
     }
 
     @ResponseBody
-    @PostMapping(value = "/upload_article_img/{userId}")
-    public WebAjaxResult editArticleFirstImg(@PathVariable(value = "userId") Integer userId,
-                                             @RequestParam long articleId,
+    @PostMapping(value = "/upload_article_img")
+    public WebAjaxResult editArticleFirstImg(@RequestParam long articleId,
                                              @RequestParam String imgByte64Str,
                                              HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后在操作！");
-        if (Objects.isNull(userId)) {
-            return ajaxResult;
-        }
         String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
         User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
