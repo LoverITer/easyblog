@@ -187,17 +187,14 @@
                             <div class="inline fields">
                                 <div class="field">
                                     <div class="ui radio checkbox">
-                                        <input id="public" type="radio" name="frequency" th:if="${article!=null}"
-                                               th:selected="${article.getArticleStatus()=='0'}">
-                                        <input id="public" type="radio" name="frequency" th:if="${article==null}"
-                                               checked="checked">
+                                        <input id="public" type="radio" name="frequency"  th:if="${article!=null and article.getArticleStatus()=='0'}" checked>
+                                        <input th:if="${article==null}" id="public" type="radio" name="frequency" checked>
                                         <label>公开</label>
                                     </div>
                                 </div>
                                 <div class="field">
                                     <div class="ui radio checkbox">
-                                        <input id="private" type="radio" th:if="${article!=null}"
-                                               th:selected="${article.getArticleStatus()=='1'}" name="frequency">
+                                        <input id="private" type="radio" th:if="${article!=null and article.getArticleStatus()=='1'}" name="frequency" checked>
                                         <input id="private" type="radio" th:if="${article==null}" name="frequency">
                                         <label>私有</label>
                                     </div>
@@ -284,7 +281,7 @@
         on: 'hover'
     });
 </script>
-<!--弹出框js-->
+<!--文章发布信息框-->
 <script type="text/javascript">
     $(function () {
         $('a[rel*=leanModal]').leanModal({top: 200, closeButton: ".modal_close"});

@@ -16,6 +16,7 @@ import top.easyblog.global.enums.ArticleType;
 import top.easyblog.global.markdown.TextForm;
 import top.easyblog.global.pagehelper.PageParam;
 import top.easyblog.global.pagehelper.PageSize;
+import top.easyblog.util.CalendarUtils;
 import top.easyblog.util.CookieUtils;
 import top.easyblog.util.HtmlParserUtils;
 import top.easyblog.util.UserUtils;
@@ -152,12 +153,21 @@ public class ArticleController extends BaseController {
             if (Objects.isNull(article)) {
                 return PAGE404;
             }
+            //检查用户的访问设备
+            String userAgent = request.getHeader("User-Agent");
+            if(userAgent.contains("Android") || userAgent.contains("iPhone")){
+                model.addAttribute("mobileDevice",true);
+                String dayInfo= CalendarUtils.getDateDistanceInfo(article.getArticlePublishTime());
+                model.addAttribute("dayInfo",dayInfo);
+            }else{
+                model.addAttribute("mobileDevice",false);
+            }
             //文章目录列表
             List<List<String>> tableContentLists = articleService.parseArticleContentList(article.getArticleContent());
+            model.addAttribute("tableContentLists", tableContentLists);
             //文章评论
             List<UserComment> articleComments = commentService.getArticleComments(article.getArticleId());
             model.addAttribute("article", article);
-            model.addAttribute("tableContentLists", tableContentLists);
             String articleDescription = "";
             String text=HtmlParserUtils.HTML2Text(article.getArticleContent());
             //关于文章的描述

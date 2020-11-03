@@ -11,11 +11,40 @@
 <body>
 <!--导航-->
 <div th:replace="~{ fragment/nav :: navbar}"></div>
+<i th:if="${mobileDevice}" class="m-return-btn">
+    <svg t="1604249675997" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+         p-id="1746" width="24" height="24">
+        <path d="M353.638 512.46l351.386-351.385a30.72 30.72 0 0 0-43.469-43.315L288.461 490.752a30.72 30.72 0 0 0 0 43.418l373.094 373.094a30.72 30.72 0 0 0 43.469-43.418z"
+              fill="#2c2c2c" p-id="1747"></path>
+    </svg>
+</i>
+<i th:if="${mobileDevice}" class="m-more-option-btn">
+    <svg t="1604249197729" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+         p-id="3444" width="24" height="24">
+        <path d="M150.1184 436.6336c-41.6768 0-75.3664 33.792-75.3664 75.3664 0 41.6768 33.792 75.3664 75.3664 75.3664 41.6768 0 75.3664-33.792 75.3664-75.3664 0-41.6768-33.6896-75.3664-75.3664-75.3664zM512 436.6336c-41.6768 0-75.3664 33.792-75.3664 75.3664 0 41.6768 33.792 75.3664 75.3664 75.3664 41.6768 0 75.3664-33.792 75.3664-75.3664 0-41.6768-33.6896-75.3664-75.3664-75.3664zM873.8816 436.6336c-41.6768 0-75.3664 33.792-75.3664 75.3664 0 41.6768 33.792 75.3664 75.3664 75.3664 41.6768 0 75.3664-33.792 75.3664-75.3664 0-41.6768-33.792-75.3664-75.3664-75.3664z"
+              p-id="3445" fill="#2c2c2c"></path>
+    </svg>
+</i>
+<div th:if="${mobileDevice}" class="m-title-author-info">
+    <div class="ui horizontal link list" style="width: 100%">
+        <div class="m-author-avatar">
+            <img th:src="${author.getUserHeaderImgUrl()}" class="m-author-avatar-img"
+                 th:alt="${author.getUserNickname()}">
+        </div>
+        <div class="m-author-info">
+            <div class="m-author-info-name" th:text="${author.getUserNickname()}"></div>
+            <div class="m-author-info-desc">
+                <span><span th:text="${dayInfo}">前天16:57</span><span>· [[${article.getArticleClick()}]]阅读</span></span>
+            </div>
+        </div>
+    </div>
+</div>
 <!--中间内容-->
 <div id="waypoint" class="animated fadeIn m-content-container">
     <div class="ui stackable grid">
             <!--左边的卡片-->
-            <div class="four wide column m-mobile-hide" style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
+        <div th:unless="${mobileDevice}" class="four wide column m-mobile-hide"
+             style="max-width: 315px !important;padding-top: 0 !important;padding-right: 0 !important;">
                 <div th:replace="~{ fragment/userinfo_sidebar::sidebar_userinfo}"></div>
                 <!--最新文章-->
                 <div th:replace="~{ fragment/userinfo_sidebar::sidebar_newest_article}"></div>
@@ -70,7 +99,45 @@
 
             <!--右边文章-->
             <div class="twelve wide column m-article-body-outer-padding" style="padding-top: 0 !important;">
-                <div class="ui top attached segment" style="padding: 20px 10px 5px !important;border: 1px #f5f6f7 solid;border-radius: 0;">
+                <!--移动设备文章标题-->
+                <div th:if="${mobileDevice}" class="ui top attached segment m-article-title-info">
+                    <!--标题-->
+                    <div class="ui left aligned basic segment"
+                         style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
+                        <h2 class="ui left aligned m-article-title" th:text="${article.getArticleTopic()}"></h2>
+                    </div>
+                    <div class="ui horizontal link list" style="width: 100%">
+                        <div class="m-author-avatar">
+                            <img th:src="${author.getUserHeaderImgUrl()}" class="m-author-avatar-img"
+                                 th:alt="${author.getUserNickname()}">
+                        </div>
+                        <div class="m-author-info">
+                            <div class="m-author-info-name" th:text="${author.getUserNickname()}"></div>
+                            <div class="m-author-info-desc">
+                                <div class="item" style="display: inline-block;">
+                                    <div th:if="${article.getArticleType() eq '0'}" class="ui red mini basic label"
+                                         style="margin-right: 5px">
+                                        <span>原创</span>
+                                    </div>
+                                    <div th:if="${article.getArticleType() eq '1'}" class="ui green mini basic label"
+                                         style="margin-right: 5px">
+                                        <span>转载</span>
+                                    </div>
+                                    <div th:if="${article.getArticleType() eq '2'}" class="ui blue mini basic label"
+                                         style="margin-right: 5px">
+                                        <span>翻译</span>
+                                    </div>
+                                </div>
+                                <span><span th:text="${dayInfo}">前天16:57</span> <span>· [[${author.getUserPrefession()}]]</span></span>
+                            </div>
+                        </div>
+                        <div class="m-care-author">关注</div>
+                    </div>
+
+                </div>
+                <!--非移动设备文章标题-->
+                <div th:unless="${mobileDevice}" class="ui top attached segment"
+                     style="padding: 20px 10px 5px !important;border: 1px #f5f6f7 solid;border-radius: 0;">
                     <!--标题-->
                     <div class="ui left aligned basic segment" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
                         <h2 style="max-width: 100% !important;margin-bottom: 5px !important;" class="ui left aligned  m-article-title" th:text="${article.getArticleTopic()}"></h2>
@@ -109,10 +176,9 @@
                         </div>
                     </div>
                 </div>
+                <!--文章主体-->
                 <div class="ui attached padded segment m-article-body-inner-padding" style="border: 1px solid #f5f6f7;">
-                    <!--文章主体开始-->
                     <div  id="content" th:utext="${article.getArticleContent()}" style="padding:0 10px !important;line-height: 24px;overflow-wrap: break-word;word-break: break-all;" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large"></div>
-                    <!--文章主体结束-->
                     <!--赞赏-->
                     <div th:if="${#strings.equals(article.getArticleAppreciate(),'1')}" class="ui center aligned basic segment">
                         <button id="payButton" class="ui orange basic circular button">赞赏</button>
@@ -146,15 +212,16 @@
                 </div>
                 <!--留言信息-->
                 <div style="margin-top: 1em !important;border:1px solid white !important;box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05)" id="comment-container" class="ui attached segment">
-                    <h4 style="color:  #000000 !important;padding-left: 10px;margin: 0 auto 10px;border-left: 10px solid #55895B;font-size: 1.4em;">留言区</h4>
+                    <h4 id="comment-list" style="color:  #000000 !important;padding-left: 10px;margin: 0 auto 10px;border-left: 10px solid #55895B;font-size: 1.4em;">留言区</h4>
                     <!--留言区域列表-->
-                    <div id="commentForm" class="ui form" style="padding-bottom: 15px !important;">
+                    <div th:unless="${mobileDevice}" id="commentForm" class="ui form"
+                         style="padding-bottom: 15px !important;">
                         <!--默认存放文章作者的ID,评论默认发送给文章的作者-->
                         <input id="sendCommentTo" type="hidden" th:value="${article.getArticleUser()}">
                         <input id="articleId" type="hidden" th:value="${article.getArticleId()}">
                         <input id="pid" type="hidden" value="0">
                         <div class="comment">
-                            <textarea id="commentInput" rows="1" name="content" placeholder="给作者留言..."></textarea>
+                            <textarea id="commentInput" rows="1" name="content" placeholder="写评论..."></textarea>
                         </div>
                         <div id="commentBtn" class="ui grid" style="display:none !important;margin-bottom: 3em;">
                             <div class="five column row" style="padding-bottom: 0 !important;">
@@ -170,7 +237,7 @@
                             </div>
                         </div>
                     </div>
-                    <!--留言信息-->
+                    <!--留言-->
                     <div th:if="${articleComments!=null&&!#lists.isEmpty(articleComments)}" class="ui threaded comments"
                          style="max-width: none !important;border: none !important;margin: unset !important;">
                         <div th:each="comment:${articleComments}" class="comment" style="padding-top: 0 !important;">
@@ -188,8 +255,8 @@
                                     <p th:text="${comment.getCommentContent()}" class="m-comment-font-user" ></p>
                                 </div>
                                 <!--th:if="${user!=null&&user.getUserId()!=comment.getCommentSend()}"-->
-                                <div  class="actions m-comment-location-replay">
-                                    <a  class="reply m-comment-font-btn" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
+                                <div id="m-comment-font-btn" class="actions m-comment-location-replay">
+                                    <a  id="m-comment-font-btn" class="reply m-comment-font-btn" th:value="${comment.getCommentSend()}+@{/}+${comment.getSendUserNickname()}+@{/}+${comment.getCommentId()}"
                                        onclick="changeInfo(this)">回复</a>
                                 </div>
                                 <div th:if="${comment.getChildComment()!=null&&!#lists.isEmpty(comment.getChildComment())}" class="m-comment-location-see-comment">
@@ -206,7 +273,7 @@
                                     <div class="content">
                                         <a th:href="@{/article/index/{sendUserId}(sendUserId=${childComment.getCommentSend()})}" class="author m-comment-font-user"
                                            th:text="${childComment.getSendUserNickname()}">Jenny Hess</a>
-                                        <span class="m-comment-font-user-other">回复</span>
+                                        <span id="m-comment-font-btn" class="m-comment-font-user-other">回复</span>
                                         <span th:text="${childComment.getReceivedUserNickname()}" class="m-comment-font-user"></span>
                                         <div class="metadata">
                                             <span class="date m-comment-font-user-other" th:text="${#dates.format(childComment.getCommentTime(),'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
@@ -223,16 +290,102 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div th:if="${articleComments==null||#lists.isEmpty(articleComments)}" class="m-comment-empty">
+                        <div id="m-commont-sofa">
+                            <svg id="m-commont-sofa" t="1604317457818" class="icon" viewBox="0 0 1142 1024"
+                                 version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="44991" width="48" height="48">
+                                <path d="M903.463385 1016.221538a24.566154 24.566154 0 0 1-25.097847-24.083692v-67.593846H263.788308v67.150769a25.245538 25.245538 0 0 1-7.581539 17.506462 23.532308 23.532308 0 0 1-17.959384 7.030154 25.166769 25.166769 0 0 1-25.432616-24.536616v-67.150769h-86.222769C57.668923 925.44 1.004308 870.340923 0 801.408V414.365538a123.864615 123.864615 0 0 1 94.030769-119.236923l1.220923-137.964307a138.466462 138.466462 0 0 1 67.032616-113.10277A266.712615 266.712615 0 0 1 311.857231 0.886154h518.104615a266.397538 266.397538 0 0 1 149.907692 43.165538 138.830769 138.830769 0 0 1 66.806154 113.10277l-1.447384 137.294769A124.081231 124.081231 0 0 1 1142.153846 414.365538v386.924308c-1.112615 69.051077-57.895385 124.150154-126.818461 123.254154h-86.22277v67.150769c0 6.695385-2.786462 12.937846-7.581538 17.506462a23.808 23.808 0 0 1-16.836923 7.030154 2.284308 2.284308 0 0 1-1.230769 0zM50.638769 414.375385v386.924307c0.669538 41.275077 34.688 74.062769 75.844923 73.511385h888.743385c41.156923 0.669538 75.057231-32.236308 75.726769-73.393231V414.365538c-0.551385-41.265231-34.461538-74.279385-75.726769-73.836307-41.156923-0.334769-75.067077 32.689231-75.736615 73.846154v288.098461a25.038769 25.038769 0 0 1-25.206154 24.871385H227.761231a25.206154 25.206154 0 0 1-25.314462-24.871385v-288.098461a75.145846 75.145846 0 0 0-76.189538-73.846154 75.027692 75.027692 0 0 0-75.618462 73.846154z m202.555077 236.681846v11.825231c0 6.921846 5.572923 12.494769 12.494769 12.494769H876.012308c6.803692 0 12.386462-5.572923 12.386461-12.494769v-11.815385c-1.004308-66.816-55.886769-120.359385-122.692923-119.463385H375.886769c-66.816-0.787692-121.698462 52.647385-122.692923 119.453539zM765.715692 482.067692a176 176 0 0 1 123.027693 49.752616V414.365538c0.777846-60.790154 45.164308-112.206769 105.284923-121.570461l1.45723-135.630769c0-57.895385-75.736615-106.407385-165.523692-106.407385H311.975385c-89.796923 0-165.523692 48.512-165.523693 106.407385l-1.447384 135.187692a124.583385 124.583385 0 0 1 108.406154 122.013538v117.45477a176.265846 176.265846 0 0 1 123.145846-49.752616h389.159384z"
+                                      fill="#DBDBDB" p-id="44992"></path>
+                            </svg>
+                            <span id="m-commont-sofa">暂无评论，点击抢沙发</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 </div>
 
+
 <!--图片放大显示背景层-->
 <div class="imgViewDom" style="display: none">
     <img class="bgImg" src="" style="width: 980px;">
 </div>
-<div style="height: 10em"></div>
+
+<!--移动设备评论框-->
+<div th:if="${mobileDevice}" class="mobile-comment">
+    <div id="commentForm" class="ui form">
+        <!--默认存放文章作者的ID,评论默认发送给文章的作者-->
+        <input id="sendCommentTo" type="hidden" th:value="${article.getArticleUser()}">
+        <input id="articleId" type="hidden" th:value="${article.getArticleId()}">
+        <input id="pid" type="hidden" value="0">
+        <div class="comment">
+            <textarea id="underline-comment-input" rows="1" name="content" placeholder="写评论..."></textarea>
+        </div>
+    </div>
+    <div class="mobile-comment-icon" style="margin: 0">
+        <a href="#comment-list">
+            <svg t="1604308065819" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                 p-id="28533" width="24" height="24">
+                <path d="M511.999488 847.882863c-28.734592 0-56.729303-2.604314-83.969807-7.099698L231.232673 960.185602 231.232673 761.40735C128.618486 689.355337 62.772174 578.889433 62.772174 454.825836c0-217.07906 201.129864-393.058051 449.228338-393.058051 248.084146 0 449.228338 175.980014 449.228338 393.058051C961.227826 671.917176 760.083635 847.882863 511.999488 847.882863zM511.999488 117.91762c-217.086932 0-393.074156 150.851707-393.074156 336.907193 0 114.166179 66.421434 214.898395 167.761552 275.820929l-1.768346 130.234133 132.171551-79.455633c30.4487 6.497994 62.117231 10.308787 94.910422 10.308787 217.101258 0 393.073132-150.825101 393.073132-336.907193C905.073644 268.769326 729.10177 117.91762 511.999488 117.91762zM736.614169 510.976694c-31.011542 0-56.154182-25.128307-56.154182-56.150858 0-31.010271 25.14264-56.151881 56.154182-56.151881s56.154182 25.14161 56.154182 56.151881C792.768351 485.848387 767.624687 510.976694 736.614169 510.976694zM511.999488 510.976694c-31.010518 0-56.153158-25.128307-56.153158-56.150858 0-31.010271 25.14264-56.151881 56.153158-56.151881 31.011542 0 56.154182 25.14161 56.154182 56.151881C568.15367 485.848387 543.01103 510.976694 511.999488 510.976694zM287.385831 510.976694c-31.010518 0-56.153158-25.128307-56.153158-56.150858 0-31.010271 25.14264-56.151881 56.153158-56.151881s56.153158 25.14161 56.153158 56.151881C343.53899 485.848387 318.39635 510.976694 287.385831 510.976694z"
+                      p-id="28534"></path>
+            </svg>
+        </a>
+        <span th:text="${articleComments.size()}">0</span>
+    </div>
+    <div class="mobile-collect-icon">
+        <svg t="1604310198161" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+             p-id="38447" width="24" height="24">
+            <path d="M772.57728 1024a101.888 101.888 0 0 1-45.632-12.096l-214.528-111.36-215.872 111.168a93.888 93.888 0 0 1-102.912-8.064 106.24 106.24 0 0 1-38.464-101.376l44.16-237.824L30.04928 500.736a110.976 110.976 0 0 1-26.304-104.448l0.384-1.28c12.288-38.272 42.816-65.088 79.808-70.208l235.072-44.352L424.54528 57.856C440.41728 23.36 474.46528 0.896 512.41728 0c38.016 0 73.408 23.552 88.192 58.496l105.152 221.76 235.072 42.688c37.888 6.144 68.608 33.984 78.336 71.04a105.472 105.472 0 0 1-24.448 104.96l-0.64 0.64-168.64 164.864 42.624 238.336a104.256 104.256 0 0 1-38.08 100.48c-16.064 13.504-36.416 20.864-57.344 20.736h-0.128z m-260.16-207.36l225.28 116.928a46.848 46.848 0 0 0 19.456 5.632 31.872 31.872 0 0 0 20.864-7.36l1.024-0.832a42.816 42.816 0 0 0 16.32-41.344l-45.376-253.44 179.2-175.424a43.648 43.648 0 0 0 9.92-43.392l-0.384-1.536a37.376 37.376 0 0 0-30.72-27.776l-1.024-0.192-248-45.056L547.29728 107.52a38.912 38.912 0 0 0-34.944-22.72 40.768 40.768 0 0 0-35.648 24.064L365.85728 342.848l-249.344 47.104c-15.104 1.92-26.88 12.288-32.32 28.672a49.024 49.024 0 0 0 11.264 44.032L274.97728 636.16l-47.104 253.632a43.84 43.84 0 0 0 16.128 41.152 36.864 36.864 0 0 0 22.656 7.488 37.12 37.12 0 0 0 18.112-4.48l0.832-0.512 226.944-116.864h-0.128z"
+                  fill="#2c2c2c" p-id="38448"></path>
+        </svg>
+        <svg style="display: none" t="1604310256137" class="icon" viewBox="0 0 1024 1024" version="1.1"
+             xmlns="http://www.w3.org/2000/svg" p-id="39413" width="26" height="26">
+            <path d="M785.06666667 998.05866667c-10.92266667 0-23.66577778-3.64088889-34.58844445-9.10222222l-236.65777777-118.3288889-238.47822223 118.3288889c-23.66577778 12.74311111-54.61333333 10.92266667-76.45866667-5.46133334-21.84533333-16.384-34.58844445-45.51111111-29.1271111-72.81777778l49.152-254.86222222L31.40266667 481.05244445C11.37777778 461.02755555 4.096 430.08 11.37777778 404.59377778c9.10222222-27.30666667 30.94755555-47.33155555 60.07466667-50.97244445l260.32355555-47.33155555 116.50844445-236.65777778c12.74311111-25.48622222 38.22933333-41.87022222 65.536-41.87022222s54.61333333 16.384 65.536 41.87022222l116.50844444 236.65777778 260.32355556 45.51111111c27.30666667 3.64088889 50.97244445 23.66577778 58.25422222 50.97244444 9.10222222 27.30666667 1.82044445 56.43377778-18.20444445 76.45866667L808.73244445 655.81511111l47.33155555 254.86222222c5.46133333 29.12711111-7.28177778 56.43377778-29.12711111 72.81777778-10.92266667 9.10222222-25.48622222 14.56355555-41.87022222 14.56355556z"
+                  fill="#d81e06" p-id="39414"></path>
+        </svg>
+    </div>
+    <div class="mobile-like-icon">
+        <svg t="1604309057971" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+             p-id="34247" width="24" height="24">
+            <path d="M1023.217 498.8c0.379 4.711 0.03 9.555-1.245 14.378l-92.088 406.461a42.604 42.604 0 0 1-6.128 13.22c-9.862 19.697-24.858 37.11-44.8 49.792a125.164 125.164 0 0 1-67.636 19.543v-0.256l-591.503-0.251c-2.069 0.307-4.157 0.517-6.313 0.517-2.16 0-4.265-0.205-6.349-0.522l-157.337-0.067a42.598 42.598 0 0 1-6.774 0.59A42.614 42.614 0 0 1 0.43 959.59l0.39-511.61a42.619 42.619 0 0 1 42.623-42.614c1.756 0 3.482 0.138 5.187 0.348l141.43-0.328v-0.804c130.124-9.313 233.236-115.988 236.917-247.598-0.333-3.701-0.563-7.424-0.563-11.212 0-68.47 55.5-123.976 123.976-123.976 58.839 0 107.996 41.032 120.694 96.005l0.624-0.082a448.39 448.39 0 0 1 10.783 97.454 445.307 445.307 0 0 1-24.935 147.292l237.865 0.256c2.187 0 4.327 0.22 6.431 0.543 40.612 1.592 79.729 22.508 102.774 59.648a125.696 125.696 0 0 1 18.59 75.889M85.7 916.403l85.227 0.036 0.318-425.78-85.146 0.19-0.4 425.554z m846.996-448.967a41.073 41.073 0 0 0-37.166-19.37v-0.122h-0.102l-300.672-0.313a42.624 42.624 0 0 1-42.614-42.624c0-6.773 1.628-13.163 4.444-18.851l-0.456-0.374a361.283 361.283 0 0 0 36.434-102.687l0.533 0.015s5.668-23.014 5.59-67.148c-0.056-34.97-6.43-66.888-6.43-66.888h-0.323c0.031-0.614 0.103-1.224 0.103-1.854a39.854 39.854 0 0 0-79.713 0c0 0.922 0.081 1.828 0.138 2.735l-0.553 0.005s0.676 33.27-5.965 67.778c-2.821 14.638-6.784 28.288-10.394 39.102a13.563 13.563 0 0 1-0.204-0.103c-35.876 109.66-126.07 194.663-238.782 223.299l-0.41 436.434 555.367 0.225c1.879 0 3.712 0.164 5.524 0.41a39.557 39.557 0 0 0 16.047-5.853 39.624 39.624 0 0 0 15.36-18.232l0.112 0.062 88.663-391.337-0.343-0.103a40.98 40.98 0 0 0-4.188-34.201"
+                  p-id="34248"></path>
+        </svg>
+    </div>
+    <div class="mobile-forward-icon" style="margin: 0">
+        <svg t="1604314905332" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+             p-id="43973" width="24" height="24">
+            <path d="M191.744 716.885333c70.570667-61.44 162.645333-101.376 277.973333-109.781333l34.048-2.474667v204.330667l384.597334-293.418667c10.88-8.277333 10.922667-17.706667 0-26.026666l-384.597334-293.418667v191.786667l-29.354666 2.218666c-162.773333 12.330667-260.778667 91.264-310.954667 217.301334-24.064 60.373333-34.304 123.349333-35.797333 179.072 15.573333-21.76 36.693333-45.738667 64.085333-69.546667z m248.533333-42.88c-85.205333 11.946667-153.386667 44.202667-206.848 90.752a337.024 337.024 0 0 0-58.026666 65.109334c-8.746667 12.885333-13.952 22.570667-18.048 31.146666-35.157333 57.472-93.312 40.192-92.16-23.637333a248.234667 248.234667 0 0 1-0.554667-9.216c-3.413333-72.277333 6.101333-159.573333 39.850667-244.224 55.68-139.818667 164.650667-232.618667 335.786666-254.165333V195.157333c0-61.056 52.821333-87.04 101.12-50.133333l385.450667 294.016c44.288 33.792 44.117333 93.354667 0 126.976l-385.450667 294.016c-48.64 37.12-101.12 11.093333-101.12-50.133333v-135.893334z"
+                  p-id="43974" fill="#2c2c2c"></path>
+        </svg>
+    </div>
+</div>
+<!--点击评论框之后变大的评论框-->
+<div th:if="${mobileDevice}" id="commont-input-textarea" class="ui form" style="display:none">
+    <div class="comment">
+        <textarea id="commentInput" rows="1" name="content" placeholder="友善交流是构建和谐网络世界的起点"></textarea>
+    </div>
+    <div class="commont-input-strengthen">
+        <svg id="commont-input-strengthen" t="1604334625749" class="icon" viewBox="0 0 1024 1024" version="1.1"
+             xmlns="http://www.w3.org/2000/svg" p-id="46702" width="26" height="26">
+            <path d="M420.32 596.64c-22.4-22.24-58.72-22.24-81.12 0L137.12 798.72V621.76H64.96v221.92c0 63.52 51.84 115.36 115.36 115.36h221.6v-72.96H225.76L427.2 684.64c22.24-22.4 22.24-58.72 0-81.12l-6.88-6.88zM843.68 64.96H623.36v69.76h177.76L596.64 339.2c-22.24 22.4-22.24 58.72 0 81.12l6.88 6.88c22.4 22.24 58.72 22.24 81.12 0l202.24-202.24v175.36h72.16V180.32c0-63.36-52-115.36-115.36-115.36zM137.12 177.92c0-23.68 19.36-43.2 43.2-43.2h221.6V64.96H180.32C116.8 64.96 64.96 116.8 64.96 180.32v220h72.16v-222.4zM886.88 842.88c0 23.68-19.36 43.2-43.2 43.2H623.36v72.96h220.32c63.52 0 115.36-51.84 115.36-115.36V621.76h-72.16v221.12z"
+                  p-id="46703" fill="#8a8a8a"></path>
+        </svg>
+    </div>
+    <div class="comment-input-narrow">
+        <svg id="comment-input-narrow" t="1604337067244" class="icon" viewBox="0 0 1024 1024" version="1.1"
+             xmlns="http://www.w3.org/2000/svg" p-id="4944" width="26" height="26">
+            <path d="M352 717.248l-233.344 233.408a32 32 0 0 1-45.312-45.312L306.752 672H128a32 32 0 1 1 0-64h224a64 64 0 0 1 64 64V896a32 32 0 1 1-64 0v-178.752zM96 384a32 32 0 0 1-32-32V128a64 64 0 0 1 64-64h224a32 32 0 0 1 0 64H128v224a32 32 0 0 1-32 32z m832 256a32 32 0 0 1 32 32V896a64 64 0 0 1-64 64h-224a32 32 0 1 1 0-64H896v-224a32 32 0 0 1 32-32z m-256-333.248l233.344-233.408a32 32 0 0 1 45.312 45.312L717.248 352H896a32 32 0 1 1 0 64h-224a64 64 0 0 1-64-64V128a32 32 0 0 1 64 0v178.752z"
+                  p-id="4945" fill="#8a8a8a"></path>
+        </svg>
+    </div>
+    <div class="commont-input-publish">
+        <span id="commont-input-publish">发布</span>
+    </div>
+</div>
+<div th:unless="${mobileDevice}" style="height: 10em"></div>
+<div th:if="${mobileDevice}" style="height: 7.5em"></div>
 <!--底部footer-->
 <div th:replace="~{fragment/common :: footbar}"></div>
 
@@ -318,14 +471,7 @@
 
     }
 </script>
-<!--评论框的各种效果-->
-<script type="text/javascript">
-    let commentContent = ""; //输入的评论内容
-    $(document).ready(function () {
-        showModifyButton('.editArticle');
-    });
-
-    $("table").addClass('ui striped celled structured table');
+<script th:unless="${mobileDevice}">
     /**评论输入框被点击的时候变大为10行**/
     $('#commentInput').click(function () {
         $(this).animate({
@@ -340,6 +486,10 @@
             rows:'1'
         });
     });
+</script>
+<!--评论框的各种效果-->
+<script type="text/javascript">
+    let commentContent = ""; //输入的评论内容
     <!--控制评论输入的字数-->
     $(function () {
         $('#commentInput').on('keyup', function () {
@@ -356,7 +506,7 @@
         });
     });
     <!--评论功能 ajax请求-->
-    $('#publish-comment-btn').click(function () {
+    $('#publish-comment-btn,.commont-input-publish').click(function () {
         let userJSONStr = localStorage.getItem("user");
         if (userJSONStr != null&&userJSONStr!=="") {
             let sendUser=JSON.parse(userJSONStr);
@@ -389,6 +539,9 @@
                         }else{
                             showInfoMessage(response.message);
                         }
+                        $('#commont-input-textarea').hide(400);
+                        $('.mobile-comment').show(400);
+                        $('#commentInput').val("");
                     },
                     error: function () {
                         showErrorMessage('服务异常，请重试！');
@@ -409,24 +562,28 @@
         $('#pid').val(array[2]);
         $('#commentInput').attr("rows", "10");
         $('#commentBtn').show();
+        $('#commont-input-textarea').show(400);
     }
 
 
     function toggleChildComment(obj) {
-       let node=$(obj).parent().parent().next();
-       if(node.css('display')==='none'){
-           node.show();
-           $(obj).text('收起回复');
-       }else if(node.css('display')!=='none'){
-           node.hide();
-           $(obj).text('查看回复('+$(obj).attr('title')+')');
-       }
+        let node=$(obj).parent().parent().next();
+        if(node.css('display')==='none'){
+            node.show();
+            $(obj).text('收起回复');
+        }else if(node.css('display')!=='none'){
+            node.hide();
+            $(obj).text('查看回复('+$(obj).attr('title')+')');
+        }
     }
+
 </script>
 <script type="text/javascript">
     $("code").addClass("language-css");
     $("pre").addClass("line-numbers");
     $("pre").addClass("data-line");
+    //动态给表格添加优化CSS
+    $("table").addClass('ui striped celled structured table');
 
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
@@ -467,5 +624,74 @@
             $('.bgImg').attr("src",'');
         });
     });
+
+
+    //滑动一定距离后顶部Logo切换成作者的信息
+    $(document).ready(function () {
+        $(function () {
+            let h = $('.m-article-title-info').outerHeight(true);
+            $(window).bind('scroll', function () {
+                var len = $(this).scrollTop();
+                if (len >= h) {
+                    $('.m-container-large').hide(500);
+                    $('.m-title-author-info').show(500);
+                } else {
+                    $('.m-container-large').show(500);
+                    $('.m-title-author-info').hide(500);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        showModifyButton('.editArticle');
+        //回退当上一级页面
+        $('.m-return-btn').click(function () {
+            window.history.go(-1);
+        });
+
+        //实现点击底部评论输入框之后输入框变大，并且当没有评论时点击评论区指定区域踏出评论框的功能
+        let clickSelector = new Set(["underline-comment-input",
+            "commentInput", "comment", "m-commont-sofa",
+            "m-padded-tb-massive", "commont-input-publish",
+            "commont-input-strengthen", "comment-input-narrow","m-comment-font-btn"]);
+        clickoutSide(clickSelector,
+            function () {
+                $('#commont-input-textarea').show(400);
+                $('.mobile-comment').hide(400);
+                $('.scrollTop').hide();
+                $("#commentInput").focus();
+            },
+            function () {
+                $('#commont-input-textarea').hide(400);
+                $('.mobile-comment').show(400);
+                $('.scrollTop').show();
+            }
+        );
+
+        //监控移动设备端的输入文本框并设置发布按钮进入对应的状态
+        $("#commentInput").bind("input propertychange", function (event) {
+            let length = $('#commentInput').val().trim().length;
+            if (length > 0) {
+                $('.commont-input-publish span').css('color', '#e33e33');
+            } else {
+                $('.commont-input-publish span').css('color', '#bcbcbc');
+            }
+        });
+
+        //移动端评论区放大按钮
+        $('.commont-input-strengthen').click(function () {
+            $('#commont-input-textarea textarea').animate({height: "160px"});
+            $('.commont-input-strengthen').hide(400);
+            $('.comment-input-narrow').show(400);
+        });
+        //移动端评论区缩小(恢复)按钮
+        $('.comment-input-narrow').click(function () {
+            $('#commont-input-textarea textarea').animate({height: "80px"});
+            $('.commont-input-strengthen').show(400);
+            $('.comment-input-narrow').hide(400);
+        });
+    });
+
 </script>
 </html>

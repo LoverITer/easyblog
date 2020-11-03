@@ -468,3 +468,24 @@ function scrollTop(){
         console.log(e);
     }
 }
+
+/**
+ * 全局注册点击事件
+ * @param selector   Set选择器集合
+ * @param maintune   主调方法
+ * @param callback   回调方法
+ */
+function clickoutSide(selector, maintune, callback) {
+    // 全局注册点击事件
+    document.onclick = function (e) {
+        let call = selector.has(e.target.id) || selector.has(e.target.className);
+         console.log(call+"-"+e.target.id+"-"+e.target.className);
+        //若点击元素为目标元素则返回
+        if (call) {
+            maintune();
+        } else {
+            //否则执行回调函数
+            callback()
+        }
+    }
+}
