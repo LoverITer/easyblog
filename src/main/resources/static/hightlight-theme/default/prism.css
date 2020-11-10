@@ -170,16 +170,13 @@ span.token.number {
     color: #708;
 }
 
-.token.function{
-    color: #4078f2;
-}
 
 li .token.function {
     color: #c7254e;
 }
 
 
-.token.class-name{
+.token.class-name, .token.function {
     color: #00f;
 }
 

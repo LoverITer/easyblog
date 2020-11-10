@@ -4,7 +4,7 @@ body{
 	margin:0;
 	overflow: hidden;
 	font:600 16px/18px 'Open Sans',sans-serif;
-	background: url("../images/bg-01.jpg") no-repeat center;
+    background: url("../images/login/backgrounds/1.jpg") no-repeat center;
 	background-size: cover;
 }
 *,:after,:before{box-sizing:border-box}

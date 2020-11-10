@@ -56,7 +56,7 @@ svg {
 }
 #Polygon-2 {
   -webkit-animation-delay: .2s;
-          animation-delay: .2s; 
+    animation-delay: .2s;
 }
 #Polygon-3 {
   -webkit-animation-delay: .4s;

@@ -37,7 +37,9 @@ function showPageZoomWarning() {
     }
 }
 
-
+jQuery(document).ready(function () {
+    inputList($(".username"), $("#mails"));
+});
 /**
  * 邮箱补全
  */

@@ -125,7 +125,10 @@
     .top_pic { width: 100%; float: none; margin-bottom: 10px }
     .top_box { float: none; width: 100%; }
     .liucheng li, .jianzhan li:nth-child(1), .jianzhan li:nth-child(3) { width: 100%; }
-    .muban li section { height: auto }
+
+    .muban li section {
+        height: auto;
+    }
     .site_tj li { width: 50% }
     .about { padding: 20px }
     .ab_box p:last-child { width: 100%; clear: both; padding-top: 10px }

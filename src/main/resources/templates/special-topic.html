@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{index::index_head}"></div>
+<body>
+<div th:replace="~{index::index_header}"></div>
+<main>
+    <div class="lbox">
+        <div class="weizhi">
+            您现在的位置是：
+            <a th:href="@{/}">首页</a>
+            <span th:each="map:${featureAndUrlMap}">
+                &nbsp;>&nbsp;
+                <a th:href="${map.key}" th:text="${map.value}"></a>
+            </span>
+        </div>
+        <div class="zhuanti">
+            <a href="javascript:;"> <span>专题</span>
+                <img th:if="${imgUrl==null}"
+                     src="http://image.easyblog.top/16048181504076c0f2e8a-368f-4481-af00-928828e79004.png" alt="">
+                <img th:if="${imgUrl!=null}" th:src="${imgUrl}" alt="">
+                <section>
+                    <h2 th:each="map,mapStat:${featureAndUrlMap}" th:text="${map.value}" th:if="${mapStat.last}">
+                        三维模型——高质量3D模型库免费下载</h2>
+                    <p th:text="${description}">现在，三维模型已经用于各种不同的领域。</p>
+                </section>
+            </a>
+        </div>
+        <div class="blogs">
+            <!--专题最新文章-->
+            <ul th:if="${allArticles!=null and !#lists.isEmpty(allArticles)}">
+                <li class="blogs_list" th:each="article,articleStat:${allArticles}">
+                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank"><i>
+                        <img th:if="${article.getArticleFirstPicture()==null}"
+                             src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                             th:alt="${article.getArticleTopic()}">
+                        <img th:if="${article.getArticleFirstPicture()!=null}"
+                             th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}"></i>
+                        <h2 th:text="${article.getArticleTopic()}">无需电池！用3D打印塑料控制电子设备，还能监测用量和自动购物</h2>
+                    </a>
+                    <p th:text="${article.getArticleContent()}"></p>
+                    <div class="blogs_writer">[[${article.getAuthorName()}]]
+                        <span class="blogs_time"
+                              th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2020-10-18</span>
+                    </div>
+                    <div class="blogs_tags">
+                        <a th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}"
+                           target='_blank' th:text="${article.getArticleCategory()}"></a>
+                    </div>
+                    <span class="blogs_lm"><a
+                            th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}"
+                            target="_blank" th:text="${article.getArticleCategory()}">TAG</a></span>
+                </li>
+            </ul>
+            <div th:if="${allArticles!=null or #lists.isEmpty(allArticles)}" class="index-category-empty">
+                <span th:if="${ allArticles eq null or #lists.size(allArticles) eq 0}">
+                    没有任何文章
+                </span>
+            </div>
+        </div>
+        <div class="pagelist"></div>
+    </div>
+    <aside class="rbox">
+        <div class="ad">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Square_Ad_Index_1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-2311962880414013"
+                 data-ad-slot="9594736108"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        <div class="hot_news">
+            <p class="h_title">文章热榜</p>
+            <ul th:if="${hotArticles!=null && !#lists.isEmpty(hotArticles)}">
+                <li th:each="article,articleStat:${hotArticles}">
+                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                       th:title="${article.getArticleTopic()}" target="_blank">
+                        <i><img th:if="${article.getArticleFirstPicture()==null}"
+                                src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                th:alt="${article.getArticleTopic()}">
+                            <img th:if="${article.getArticleFirstPicture()!=null}"
+                                 th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}"></i>
+                        </i><em th:text="${articleStat.count}">1</em>
+                        <h2 th:text="${article.getArticleTopic()}">无需电池！用3D打印塑料控制电子设备，还能监测用量和自动购物</h2>
+                        <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2020-10-18</span>
+                    </a></li>
+            </ul>
+        </div>
+        <div class="hot_news" th:if="${#lists.size(hotArticles)<7}">
+            <p class="h_title">今日推荐</p>
+            <ul th:if="${recommendArticles!=null && !#lists.isEmpty(recommendArticles)}">
+                <li th:each="article,articleStat:${recommendArticles}">
+                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                       th:title="${article.getArticleTopic()}" target="_blank">
+                        <i><img th:if="${article.getArticleFirstPicture()==null}"
+                                src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                th:alt="${article.getArticleTopic()}">
+                            <img th:if="${article.getArticleFirstPicture()!=null}"
+                                 th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}"></i>
+                        </i><em th:text="${articleStat.count}">1</em>
+                        <h2 th:text="${article.getArticleTopic()}">无需电池！用3D打印塑料控制电子设备，还能监测用量和自动购物</h2>
+                        <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2020-10-18</span>
+                    </a></li>
+            </ul>
+        </div>
+    </aside>
+</main>
+<div th:replace="~{index::index-footer}"></div>
+</body>
+</html>

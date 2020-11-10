@@ -132,9 +132,9 @@ public class UserAccountController extends BaseController {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(false);
         String code = SendMessageUtils.getRandomCode(6);
-        redisUtil.set("code-" + userId, code, RedisUtils.DB_1);
+        redisUtil.set("code-" + userId, code, REDIS_DB);
         //60s有效
-        redisUtil.expire("code-" + userId, 60, RedisUtils.DB_1);
+        redisUtil.expire("code-" + userId, 60, REDIS_DB);
         String content = "您正在修改绑定的手机，验证码为：" + code + "，60s内有效！";
         SendMessageUtils.send("loveIT", "d41d8cd98f00b204e980", phone, content);
         ajaxResult.setSuccess(true);
@@ -149,9 +149,9 @@ public class UserAccountController extends BaseController {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后再操作！");
         if (Objects.nonNull(user)) {
-            if (code.equals(redisUtil.get("code-" + userId, RedisUtils.DB_1))) {
+            if (code.equals(redisUtil.get("code-" + userId, REDIS_DB))) {
                 ajaxResult.setSuccess(true);
-                redisUtil.delete(1, "code-" + userId);
+                redisUtil.delete(REDIS_DB, "code-" + userId);
             } else {
                 ajaxResult.setMessage("验证码输入错误！");
             }
@@ -182,7 +182,7 @@ public class UserAccountController extends BaseController {
         ajaxResult.setMessage("请登录后重试！");
         String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
         User user= UserUtils.getUserFromRedis(sessionId);
-        String realCode = (String) redisUtil.get("code-" + userId, RedisUtils.DB_1);
+        String realCode = (String) redisUtil.get("code-" + userId, REDIS_DB);
         if (Objects.nonNull(user)) {
             if (code.equals(realCode)) {
                 try {
@@ -230,10 +230,10 @@ public class UserAccountController extends BaseController {
         String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
         User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {
-            String var0 = (String) redisUtil.get("code-" + userId, RedisUtils.DB_1);
+            String var0 = (String) redisUtil.get("code-" + userId, REDIS_DB);
             if (Objects.nonNull(var0)) {
                 if (code.equals(var0)) {
-                    redisUtil.delete(RedisUtils.DB_1, "code-" + userId);
+                    redisUtil.delete(REDIS_DB, "code-" + userId);
                     ajaxResult.setSuccess(true);
                     ajaxResult.setMessage("OK");
                 } else {
@@ -243,7 +243,7 @@ public class UserAccountController extends BaseController {
                 ajaxResult.setMessage("验证码已超时，请重新获取");
             }
         } else {
-            redisUtil.delete(RedisUtils.DB_1, "code-" + userId);
+            redisUtil.delete(REDIS_DB, "code-" + userId);
         }
         return ajaxResult;
     }
@@ -290,9 +290,9 @@ public class UserAccountController extends BaseController {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(false);
         String code = SendMessageUtils.getRandomCode(6);
-        redisUtil.set("code-" + userId, code, RedisUtils.DB_1);
+        redisUtil.set("code-" + userId, code, REDIS_DB);
         //60s有效
-        redisUtil.expire("code-" + userId, 60, RedisUtils.DB_1);
+        redisUtil.expire("code-" + userId, 60, REDIS_DB);
         String content = "您正在修改已经绑定的邮箱，验证码为：" + code + "，60秒内有效！";
         Email e = new Email("验证码", email, content, null);
         emailUtil.send(e);

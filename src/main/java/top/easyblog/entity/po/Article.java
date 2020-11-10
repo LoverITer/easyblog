@@ -18,29 +18,29 @@ public class Article implements Serializable, Comparable<Article> {
     private static final long serialVersionUID = -1882730239589668817L;
 
     @Id
-    private Long articleId;
-    private Integer articleUser;
-    private String articleTopic;
-    private Date articlePublishTime;
-    private Integer articleClick;
-    private String articleCategory;
-    private String articleStatus;
-    private String articleTop;
-    private String articleType;
-    private String articleTags;
-    private String articleContent;
-    private Integer articleCommentNum;
-    private String articleAppreciate;
-    private String articleFirstPicture;
+    protected Long articleId;
+    protected Integer articleUser;
+    protected String articleTopic;
+    protected Date articlePublishTime;
+    protected Integer articleClick;
+    protected String articleCategory;
+    protected String articleStatus;
+    protected String articleTop;
+    protected String articleType;
+    protected String articleTags;
+    protected String articleContent;
+    protected Integer articleCommentNum;
+    protected String articleAppreciate;
+    protected String articleFirstPicture;
     /**
      * 文章分类ID
      **/
-    private Integer categoryId;
+    protected Integer categoryId;
     /**
      * 用户头像URL
      **/
-    private String userHeaderImageUrl;
-    private String authorName;
+    protected String userHeaderImageUrl;
+    protected String authorName;
 
 
     public Article() {

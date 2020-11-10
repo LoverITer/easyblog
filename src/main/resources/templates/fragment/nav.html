@@ -34,7 +34,18 @@
                 <div class="ui dropdown item">
                     <div class="text">
                         <a href="#"  th:href="@{/article/index/{uid}(uid=${visitor.getUserId()})}">
-                        <img class="ui medium circular image image-42x42" style="max-height: none !important;" th:src="@{${visitor.getUserHeaderImgUrl()}}"/></a>
+                            <img th:if="${visitor.getUserHeaderImgUrl()!=null}"
+                                 class="ui medium circular image image-42x42" style="max-height: none !important;"
+                                 th:src="@{${visitor.getUserHeaderImgUrl()}}"/>
+                            <div th:if="${visitor.getUserHeaderImgUrl()==null}" class="m-init-user-avatar">
+                                <svg t="1604420630232" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                     xmlns="http://www.w3.org/2000/svg" p-id="38499" width="38" height="38">
+                                    <path d="M512 0c113.322667 0 204.8 91.477333 204.8 204.8S625.322667 409.6 512 409.6 307.2 318.122667 307.2 204.8s91.477333-204.8 204.8-204.8z m0 969.386667a491.52 491.52 0 0 1-409.6-219.818667C104.448 613.717333 375.466667 539.306667 512 539.306667c135.850667 0 407.552 74.410667 409.6 210.261333a491.52 491.52 0 0 1-409.6 219.818667z"
+                                          fill="#bfbfbf" p-id="38500"></path>
+                                </svg>
+                            </div>
+                        </a>
+
                     </div>
                     <div class="menu m-menu" >
                         <a href="#" th:href="@{/manage/uc/follow-list}" class="item"><i class="bookmark icon"></i>我的关注</a>

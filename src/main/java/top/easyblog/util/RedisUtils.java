@@ -40,23 +40,23 @@ public class RedisUtils {
     @Autowired
     private ZSetOperations<String, Object> redisZSetOps;
 
-    /**Redis默认的16个数据库索引**/
-    public static final int DB_0 = 0;
-    public static final int DB_1 = 1;
-    public static final int DB_2 = 2;
-    public static final int DB_3 = 3;
-    public static final int DB_4 = 4;
-    public static final int DB_5 = 5;
-    public static final int DB_6 = 6;
-    public static final int DB_7 = 7;
-    public static final int DB_8 = 8;
-    public static final int DB_9 = 9;
-    public static final int DB_10 = 10;
-    public static final int DB_11 = 11;
-    public static final int DB_12 = 12;
-    public static final int DB_13 = 13;
-    public static final int DB_14 = 14;
-    public static final int DB_15 = 15;
+
+    public enum RedisDataBaseSelector {
+        /***Redis默认的16个数据库索引**/
+        DB_0(0), DB_1(1), DB_2(2), DB_3(3), DB_4(4), DB_5(5), DB_6(6), DB_7(7),
+        DB_8(8), DB_9(9), DB_10(10), DB_11(11), DB_12(12), DB_13(13), DB_14(14), DB_15(15);
+
+        private final int dbIndex;
+
+        RedisDataBaseSelector(int dbIndex) {
+            this.dbIndex = dbIndex;
+        }
+
+        public int getDbIndex() {
+            return dbIndex;
+        }
+
+    }
 
 
     /**
@@ -88,11 +88,11 @@ public class RedisUtils {
     /**
      * 向外暴露RedisTemplate
      *
-     * @param indexdb
+     * @param dbIndex
      * @return
      */
-    public RedisTemplate getRedisTemplate(int indexdb) {
-        setDbIndex(indexdb);
+    public RedisTemplate getRedisTemplate(RedisDataBaseSelector dbIndex) {
+        setDbIndex(dbIndex);
         return redisTemplate;
     }
 
@@ -101,14 +101,16 @@ public class RedisUtils {
      *
      * @param dbIndex
      */
-    public void setDbIndex(Integer dbIndex) {
-        if (dbIndex == null || dbIndex > MAX_DB_INDEX || dbIndex < MIN_DB_INDEX) {
-            dbIndex = 0;
+    public void setDbIndex(RedisDataBaseSelector dbIndex) {
+        if (dbIndex == null || dbIndex.getDbIndex() > MAX_DB_INDEX || dbIndex.getDbIndex() < MIN_DB_INDEX) {
+            dbIndex = RedisDataBaseSelector.DB_0;
         }
-        LettuceConnectionFactory jedisConnectionFactory = (LettuceConnectionFactory) redisTemplate.getConnectionFactory();
-        assert jedisConnectionFactory != null;
-        jedisConnectionFactory.setDatabase(dbIndex);
-        redisTemplate.setConnectionFactory(jedisConnectionFactory);
+        LettuceConnectionFactory connectionFactory = (LettuceConnectionFactory) redisTemplate.getConnectionFactory();
+        if (connectionFactory == null) {
+            throw new NullPointerException("Get Redis Connection failure!");
+        }
+        connectionFactory.setDatabase(dbIndex.getDbIndex());
+        redisTemplate.setConnectionFactory(connectionFactory);
     }
 
     /**
@@ -116,12 +118,12 @@ public class RedisUtils {
      *
      * @param key     键
      * @param time    时间(秒)
-     * @param indexdb 读写操作的库
+     * @param dbIndex 读写操作的库
      * @return
      */
-    public Boolean expire(String key, long time, int indexdb) {
+    public Boolean expire(String key, long time, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             if (time > 0) {
                 return redisTemplate.expire(key, time, TimeUnit.SECONDS);
             }
@@ -137,9 +139,9 @@ public class RedisUtils {
      * @param key 键 不能为null
      * @return 时间(秒) 返回0代表为永久有效
      */
-    public Long getExpire(String key, int indexdb) {
+    public Long getExpire(String key, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             return redisTemplate.getExpire(key, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -153,9 +155,9 @@ public class RedisUtils {
      * @param key 键
      * @return true 存在 false不存在
      */
-    public Boolean exists(String key, int indexdb) {
+    public Boolean exists(String key, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             return redisTemplate.hasKey(key);
         } catch (Exception e) {
             e.printStackTrace();
@@ -169,9 +171,9 @@ public class RedisUtils {
      * @param key 可以传一个值 或多个
      */
     @SuppressWarnings("unchecked")
-    public Boolean delete(int indexdb, String... key) {
+    public Boolean delete(RedisDataBaseSelector dbIndex, String... key) {
         if (key != null && key.length > 0) {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             if (key.length == 1) {
                 return redisTemplate.delete(key[0]);
             } else {
@@ -192,8 +194,8 @@ public class RedisUtils {
      * @param key 键
      * @return 值
      */
-    public Object get(String key, int indexdb) {
-        this.setDbIndex(indexdb);
+    public Object get(String key, RedisDataBaseSelector dbIndex) {
+        this.setDbIndex(dbIndex);
         return key == null ? null : redisValueOps.get(key);
     }
 
@@ -204,9 +206,9 @@ public class RedisUtils {
      * @param value 值
      * @return true成功 false失败
      */
-    public boolean set(String key, Object value, int indexdb) {
+    public boolean set(String key, Object value, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             redisValueOps.set(key, value);
             return true;
         } catch (Exception e) {
@@ -224,9 +226,9 @@ public class RedisUtils {
      * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期
      * @return true成功 false 失败
      */
-    public boolean set(String key, Object value, long time, int indexdb) {
+    public boolean set(String key, Object value, long time, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             if (time > 0) {
                 redisValueOps.set(key, value, time, TimeUnit.SECONDS);
             } else {
@@ -236,6 +238,16 @@ public class RedisUtils {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public Object getAndSet(String key, String value, RedisDataBaseSelector dbIndex) {
+        try {
+            this.setDbIndex(dbIndex);
+            return redisValueOps.getAndSet(key, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -276,8 +288,8 @@ public class RedisUtils {
      * @param item 项 不能为null
      * @return 值
      */
-    public Object hget(String key, String item, int indexdb) {
-        this.setDbIndex(indexdb);
+    public Object hget(String key, String item, RedisDataBaseSelector dbIndex) {
+        this.setDbIndex(dbIndex);
         return redisHashOps.get(key, item);
     }
 
@@ -287,8 +299,8 @@ public class RedisUtils {
      * @param key 键
      * @return 对应的多个键值
      */
-    public Map<String, Object> hmget(String key, int indexdb) {
-        this.setDbIndex(indexdb);
+    public Map<String, Object> hmget(String key, RedisDataBaseSelector dbIndex) {
+        this.setDbIndex(dbIndex);
         return redisHashOps.entries(key);
     }
 
@@ -299,9 +311,9 @@ public class RedisUtils {
      * @param map 对应多个键值
      * @return true 成功 false 失败
      */
-    public boolean hmset(String key, Map<String, Object> map, int indexdb) {
+    public boolean hmset(String key, Map<String, Object> map, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             redisHashOps.putAll(key, map);
             return true;
         } catch (Exception e) {
@@ -318,12 +330,12 @@ public class RedisUtils {
      * @param time 时间(秒)
      * @return true成功 false失败
      */
-    public boolean hmset(String key, Map<String, Object> map, long time, int indexdb) {
+    public boolean hmset(String key, Map<String, Object> map, long time, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             redisHashOps.putAll(key, map);
             if (time > 0) {
-                expire(key, time, indexdb);
+                expire(key, time, dbIndex);
             }
             return true;
         } catch (Exception e) {
@@ -340,9 +352,9 @@ public class RedisUtils {
      * @param value 值
      * @return true 成功 false失败
      */
-    public boolean hset(String key, String item, Object value, int indexdb) {
+    public boolean hset(String key, String item, Object value, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             redisHashOps.put(key, item, value);
             return true;
         } catch (Exception e) {
@@ -354,18 +366,18 @@ public class RedisUtils {
     /**
      * 向一张hash表中放入数据,如果不存在将创建
      *
-     * @param key   键
-     * @param item  项
-     * @param value 值
+     * @param h   键
+     * @param hk  项
+     * @param hv 值
      * @param time  时间(秒)  注意:如果已存在的hash表有时间,这里将会替换原有的时间
      * @return true 成功 false失败
      */
-    public boolean hset(String key, String item, Object value, long time, int indexdb) {
+    public boolean hset(String h, String hk, Object hv, long time, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
-            redisHashOps.put(key, item, value);
+            this.setDbIndex(dbIndex);
+            redisHashOps.put(h, hk, hv);
             if (time > 0) {
-                expire(key, time, indexdb);
+                expire(h, time, dbIndex);
             }
             return true;
         } catch (Exception e) {
@@ -380,9 +392,9 @@ public class RedisUtils {
      * @param key  键 不能为null
      * @param item 项 可以使多个 不能为null
      */
-    public void hdel(int indexdb, String key, Object... item) {
-        this.setDbIndex(indexdb);
-        redisHashOps.delete(key, item);
+    public Long hdel(RedisDataBaseSelector dbIndex, String key, Object... item) {
+        this.setDbIndex(dbIndex);
+        return redisHashOps.delete(key, item);
     }
 
     /**
@@ -392,8 +404,8 @@ public class RedisUtils {
      * @param item 项 不能为null
      * @return true 存在 false不存在
      */
-    public boolean hHasKey(String key, String item, int indexdb) {
-        this.setDbIndex(indexdb);
+    public boolean hHasKey(String key, String item, RedisDataBaseSelector dbIndex) {
+        this.setDbIndex(dbIndex);
         return redisHashOps.hasKey(key, item);
     }
 
@@ -405,8 +417,8 @@ public class RedisUtils {
      * @param delta 要增加几(大于0)
      * @return
      */
-    public double hincr(String key, String item, double delta, int indexdb) {
-        this.setDbIndex(indexdb);
+    public double hincr(String key, String item, double delta, RedisDataBaseSelector dbIndex) {
+        this.setDbIndex(dbIndex);
         return redisHashOps.increment(key, item, delta);
     }
 
@@ -418,117 +430,11 @@ public class RedisUtils {
      * @param by   要减少记(小于0)
      * @return
      */
-    public double hdecr(String key, String item, double by, int indexdb) {
-        this.setDbIndex(indexdb);
+    public double hdecr(String key, String item, double by, RedisDataBaseSelector dbIndex) {
+        this.setDbIndex(dbIndex);
         return redisHashOps.increment(key, item, -by);
     }
 
-    //============================set=============================
-
-    /**
-     * 根据key获取Set中的所有值
-     *
-     * @param key 键
-     * @return
-     */
-    public Set<Object> sGet(String key, int indexdb) {
-        try {
-            this.setDbIndex(indexdb);
-            return redisTemplate.opsForSet().members(key);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * 根据value从一个set中查询,是否存在
-     *
-     * @param key   键
-     * @param value 值
-     * @return true 存在 false不存在
-     */
-    public Boolean sHasKey(String key, Object value, int indexdb) {
-        try {
-            this.setDbIndex(indexdb);
-            return redisTemplate.opsForSet().isMember(key, value);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * 将数据放入set缓存
-     *
-     * @param key    键
-     * @param values 值 可以是多个
-     * @return 成功个数
-     */
-    public Long sSet(String key, int indexdb, Object... values) {
-        try {
-            this.setDbIndex(indexdb);
-            return redisTemplate.opsForSet().add(key, values);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0L;
-        }
-    }
-
-    /**
-     * 将set数据放入缓存
-     *
-     * @param key    键
-     * @param time   时间(秒)
-     * @param values 值 可以是多个
-     * @return 成功个数
-     */
-    public Long sSetAndTime(String key, long time, int indexdb, Object... values) {
-        try {
-            this.setDbIndex(indexdb);
-            Long count = redisTemplate.opsForSet().add(key, values);
-            if (time > 0) {
-                expire(key, time, indexdb);
-            }
-            return count;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0L;
-        }
-    }
-
-    /**
-     * 获取set缓存的长度
-     *
-     * @param key 键
-     * @return
-     */
-    public Long sGetSetSize(String key, int indexdb) {
-        try {
-            this.setDbIndex(indexdb);
-            return redisTemplate.opsForSet().size(key);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0L;
-        }
-    }
-
-    /**
-     * 移除值为value的
-     *
-     * @param key    键
-     * @param values 值 可以是多个
-     * @return 移除的个数
-     */
-    public Long setRemove(String key, int indexdb, Object... values) {
-        try {
-            this.setDbIndex(indexdb);
-            return redisTemplate.opsForSet().remove(key, values);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0L;
-        }
-    }
     //===============================list=================================
 
     /**
@@ -539,9 +445,9 @@ public class RedisUtils {
      * @param end   结束  0 到 -1代表所有值
      * @return
      */
-    public List<Object> lGet(String key, long start, long end, int indexdb) {
+    public List<Object> lGet(String key, long start, long end, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             return redisListOps.range(key, start, end);
         } catch (Exception e) {
             e.printStackTrace();
@@ -555,9 +461,9 @@ public class RedisUtils {
      * @param key 键
      * @return
      */
-    public Long lGetListSize(String key, int indexdb) {
+    public Long lGetListSize(String key, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             return redisListOps.size(key);
         } catch (Exception e) {
             e.printStackTrace();
@@ -572,9 +478,9 @@ public class RedisUtils {
      * @param index 索引  index>=0时， 0 表头，1 第二个元素，依次类推；index<0时，-1，表尾，-2倒数第二个元素，依次类推
      * @return
      */
-    public Object lGetIndex(String key, long index, int indexdb) {
+    public Object lGetIndex(String key, long index, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             return redisListOps.index(key, index);
         } catch (Exception e) {
             e.printStackTrace();
@@ -589,9 +495,9 @@ public class RedisUtils {
      * @param value 值
      * @return
      */
-    public boolean lSet(String key, Object value, int indexdb) {
+    public boolean lSet(String key, Object value, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             redisListOps.rightPush(key, value);
             return true;
         } catch (Exception e) {
@@ -608,11 +514,11 @@ public class RedisUtils {
      * @param time  时间(秒)
      * @return
      */
-    public boolean lSet(String key, Object value, long time, int indexdb) {
+    public boolean lSet(String key, Object value, long time, RedisDataBaseSelector dbIndex) {
         try {
             redisListOps.rightPush(key, value);
             if (time > 0) {
-                expire(key, time, indexdb);
+                expire(key, time, dbIndex);
             }
             return true;
         } catch (Exception e) {
@@ -628,9 +534,9 @@ public class RedisUtils {
      * @param value 值
      * @return
      */
-    public boolean lSet(String key, List<Object> value, int indexdb) {
+    public boolean lSet(String key, List<Object> value, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             redisListOps.rightPushAll(key, value);
             return true;
         } catch (Exception e) {
@@ -647,12 +553,12 @@ public class RedisUtils {
      * @param time  时间(秒)
      * @return
      */
-    public boolean lSet(String key, List<Object> value, long time, int indexdb) {
+    public boolean lSet(String key, List<Object> value, long time, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             redisListOps.rightPushAll(key, value);
             if (time > 0) {
-                expire(key, time, indexdb);
+                expire(key, time, dbIndex);
             }
             return true;
         } catch (Exception e) {
@@ -669,9 +575,9 @@ public class RedisUtils {
      * @param value 值
      * @return
      */
-    public boolean lUpdateIndex(String key, long index, Object value, int indexdb) {
+    public boolean lUpdateIndex(String key, long index, Object value, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             redisListOps.set(key, index, value);
             return true;
         } catch (Exception e) {
@@ -688,9 +594,9 @@ public class RedisUtils {
      * @param value 值
      * @return 移除的个数
      */
-    public Long lRemove(String key, long count, Object value, int indexdb) {
+    public Long lRemove(String key, long count, Object value, RedisDataBaseSelector dbIndex) {
         try {
-            this.setDbIndex(indexdb);
+            this.setDbIndex(dbIndex);
             return redisListOps.remove(key, count, value);
         } catch (Exception e) {
             e.printStackTrace();
@@ -699,9 +605,208 @@ public class RedisUtils {
     }
 
 
-   /* public static void main(String[] args) {
-        RedisUtils redisUtil = new RedisUtils();
-        redisUtil.set("user", "age:20", 1);
-    }*/
+    //============================set=============================
+
+    /**
+     * 根据key获取Set中的所有值
+     *
+     * @param key 键
+     * @return
+     */
+    public Set<Object> sGet(String key, RedisDataBaseSelector dbIndex) {
+        try {
+            this.setDbIndex(dbIndex);
+            return redisSetOps.members(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 根据value从一个set中查询,是否存在
+     *
+     * @param key   键
+     * @param value 值
+     * @return true 存在 false不存在
+     */
+    public Boolean sHasKey(String key, Object value, RedisDataBaseSelector dbIndex) {
+        try {
+            this.setDbIndex(dbIndex);
+            return redisSetOps.isMember(key, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 将数据放入set缓存
+     *
+     * @param key    键
+     * @param values 值 可以是多个
+     * @return 成功个数
+     */
+    public Long sSet(String key, RedisDataBaseSelector dbIndex, Object... values) {
+        try {
+            this.setDbIndex(dbIndex);
+            return redisSetOps.add(key, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+    /**
+     * 将set数据放入缓存
+     *
+     * @param key    键
+     * @param time   时间(秒)
+     * @param member 值 可以是多个
+     * @return 成功个数
+     */
+    public Long sadd(String key, long time, RedisDataBaseSelector dbIndex, Object... member) {
+        try {
+            this.setDbIndex(dbIndex);
+            Long count = redisSetOps.add(key, member);
+            if (time > 0) {
+                expire(key, time, dbIndex);
+            }
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+    /**
+     * 获取set中成员的总数
+     *
+     * @param key 键
+     * @return
+     */
+    public Long scard(String key, RedisDataBaseSelector dbIndex) {
+        try {
+            this.setDbIndex(dbIndex);
+            return redisSetOps.size(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+    /**
+     * 移除set中一个或多个
+     *
+     * @param key     键
+     * @param members 需要移除的一个或多个成员
+     * @return 移除的个数
+     */
+    public Long srem(RedisDataBaseSelector dbIndex, String key, Object... members) {
+        try {
+            this.setDbIndex(dbIndex);
+            return redisSetOps.remove(key, members);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+
+    //====================================ZSet=============================================
+
+    /**
+     * 向zset中添加一个成员
+     *
+     * @param key
+     * @param member
+     * @param score
+     * @param dbIndex
+     * @return
+     */
+    public Boolean zadd(String key, Object member, double score, RedisDataBaseSelector dbIndex) {
+        try {
+            this.setDbIndex(dbIndex);
+            return redisZSetOps.add(key, member, score);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 向zset中批量添加成员
+     *
+     * @param key
+     * @param set
+     * @param dbIndex
+     * @return
+     */
+    public Long zadd(String key, Set<ZSetOperations.TypedTuple<Object>> set, RedisDataBaseSelector dbIndex) {
+        try {
+            this.setDbIndex(dbIndex);
+            return redisZSetOps.add(key, set);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+    /**
+     * 给zset中一个成员的分数增加或减去score
+     *
+     * @param key
+     * @param member
+     * @param score
+     * @param dbIndex
+     * @return
+     */
+    public Double zincrby(String key, Object member, double score, RedisDataBaseSelector dbIndex) {
+        try {
+            this.setDbIndex(dbIndex);
+            return redisZSetOps.incrementScore(key, member, score);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0.0;
+        }
+    }
+
+    /**
+     * 获取一个zset中一个成员的分数
+     *
+     * @param key
+     * @param member
+     * @param dbIndex
+     * @return
+     */
+    public Double zscore(String key, Object member, RedisDataBaseSelector dbIndex) {
+        try {
+            this.setDbIndex(dbIndex);
+            return redisZSetOps.score(key, member);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0.0;
+        }
+    }
+
+    /**
+     * 获取得分数介于min 以及 max 其间的成员从高到低排序的排序集。
+     *
+     * @param key     键
+     * @param min     分数下界（包括）
+     * @param max     分数上界 （包括）
+     * @param dbIndex 数据库号
+     * @return
+     */
+    public Set<Object> zRevRangeByScore(String key, double min, double max, RedisDataBaseSelector dbIndex) {
+        try {
+            this.setDbIndex(dbIndex);
+            return redisZSetOps.reverseRangeByScore(key, min, max);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }

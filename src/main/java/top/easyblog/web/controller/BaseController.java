@@ -48,6 +48,10 @@ public abstract class BaseController {
     protected static final int MAX_USER_LOGIN_STATUS_KEEP_TIME=60 * 60 * 24 * 15;
     /**浏览器保存用户名，密码90天*/
     protected static final int REMEMBER_ME_TIME =60*60*24*90;
+    /**
+     * Redis数据库号
+     */
+    public static final RedisUtils.RedisDataBaseSelector REDIS_DB = RedisUtils.RedisDataBaseSelector.DB_1;
     @Autowired
     protected ICategoryService categoryService;
     @Autowired
@@ -72,6 +76,8 @@ public abstract class BaseController {
     protected RedisUtils redisUtil;
     @Autowired
     protected Executor executor;
+    @Autowired
+    protected HotWordService hotWordService;
 
 
     /**
@@ -81,11 +87,11 @@ public abstract class BaseController {
      * @return java.lang.String
      */
     String loginRedirectUrl(HttpServletRequest request) {
-        String ip = NetWorkUtils.getUserIp(request);
-        String refererUrl = (String) redisUtil.get("Referer-" + ip, RedisUtils.DB_1);
+        String ip = NetWorkUtils.getInternetIPAddress(request);
+        String refererUrl = (String) redisUtil.get("Referer-" + ip, REDIS_DB);
         if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
             //在每次取登录界面的时候都会在Redis中记录登录之前访问的页面Referer，登录成功后删除对应的Referer
-            redisUtil.delete(RedisUtils.DB_1, "Referer-" + ip);
+            redisUtil.delete(REDIS_DB, "Referer-" + ip);
             log.info("redirect to : {}", refererUrl);
             return "redirect:" + refererUrl;
         }

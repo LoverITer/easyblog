@@ -46,11 +46,47 @@ public class LoginController extends BaseController {
     private static final String PASSWORD_KEY="1a2b3c4d5e6f7g8h";
 
 
+    @GetMapping("/login.html")
+    public String login(HttpServletRequest request) {
+        //把用户登录前的地址存下来
+        String refererUrl = (String) redisUtil.get(REFERER_PREFIX + NetWorkUtils.getInternetIPAddress(request), REDIS_DB);
+        if (Objects.isNull(refererUrl)) {
+            String referUrl = request.getHeader(HttpHeaders.REFERER);
+            //服务器的根路径
+            String baseUrl = request.getScheme()
+                    + "://" + request.getServerName()
+                    + ":" + request.getServerPort()
+                    + request.getContextPath() + "/";
+            if (StringUtil.isNotEmpty(referUrl) &&
+                    !referUrl.contains("/login") &&
+                    !referUrl.contains("register") &&
+                    !referUrl.contains("loginPage") &&
+                    !referUrl.contains("change_password") &&
+                    !referUrl.contains("/article/index") &&
+                    !referUrl.equalsIgnoreCase(baseUrl)) {
+                //存到Redis中
+                WorkerThreadPoolExecutor.setThreadName("Save Referer URL To Redis");
+                executor.execute(() -> {
+                    String key = "Referer-" + NetWorkUtils.getInternetIPAddress(request);
+                    redisUtil.set(key, referUrl, REDIS_DB);
+                    redisUtil.expire(key, 30, REDIS_DB);
+                });
+            }
+        }
+        return "login_t";
+    }
+
+    @GetMapping("/register.html")
+    public String register(HttpServletRequest request) {
+        return "register";
+    }
+
+
 
     @GetMapping("/loginPage")
     public String toLoginPage(HttpServletRequest request) {
         //把用户登录前的地址存下来
-        String refererUrl = (String) redisUtil.get(REFERER_PREFIX+ NetWorkUtils.getUserIp(request), 1);
+        String refererUrl = (String) redisUtil.get(REFERER_PREFIX + NetWorkUtils.getInternetIPAddress(request), REDIS_DB);
         if (Objects.isNull(refererUrl)) {
             String referUrl = request.getHeader(HttpHeaders.REFERER);
             //服务器的根路径
@@ -68,9 +104,9 @@ public class LoginController extends BaseController {
                 //存到Redis中
                 WorkerThreadPoolExecutor.setThreadName("Save Referer URL To Redis");
                 executor.execute(()->{
-                    String key="Referer-" + NetWorkUtils.getUserIp(request);
-                    redisUtil.set(key, referUrl, RedisUtils.DB_1);
-                    redisUtil.expire(key,30,RedisUtils.DB_1);
+                    String key = "Referer-" + NetWorkUtils.getInternetIPAddress(request);
+                    redisUtil.set(key, referUrl, REDIS_DB);
+                    redisUtil.expire(key, 30, REDIS_DB);
                 });
             }
         }
@@ -102,21 +138,19 @@ public class LoginController extends BaseController {
      *
      * @param phone   手机号
      * @param option  操作：register表示注册 modify-pwd表示修改密码
-     * @param request
      */
     @ResponseBody
     @GetMapping(value = "/captcha-code2phone")
     public String sendCaptchaCode2Phone(@RequestParam("phone") String phone,
-                                        @RequestParam("option") String option,
-                                        HttpServletRequest request) {
+                                        @RequestParam("option") String option) {
 
         String code = SendMessageUtils.getRandomCode(6);
         if ("register".equals(option)) {
             String content = "您正在申请手机注册，验证码为：" + code + "，5分钟内有效！";
-            return sendMessage(phone, code, content, request);
+            return sendMessage(phone, code, content);
         } else if ("modify-pwd".equals(option)) {
             String content = "您正在通过手机找回密码，验证码为：" + code + "，5分钟内有效！";
-            return sendMessage(phone, code, content, request);
+            return sendMessage(phone, code, content);
         }
         return AJAX_ERROR;
 
@@ -128,23 +162,22 @@ public class LoginController extends BaseController {
      * @param phone   手机号
      * @param code    验证码
      * @param content 验证消息文本
-     * @param request request
      */
-    private String sendMessage(String phone, String code, String content, HttpServletRequest request) {
+    private String sendMessage(String phone, String code, String content) {
 
         try {
-            String captchaCode = (String) redisUtil.get("captcha-code-" + phone, 1);
+            String captchaCode = (String) redisUtil.get("captcha-code-" + phone, REDIS_DB);
             if (Objects.nonNull(captchaCode)) {
-                redisUtil.delete(1, "captcha-code-" + phone);
+                redisUtil.delete(REDIS_DB, "captcha-code-" + phone);
             }
             //短信验证码5分钟有效
-            redisUtil.set("captcha-code-" + phone, code, 5, 1);
+            redisUtil.set("captcha-code-" + phone, code, 5, REDIS_DB);
             log.info("向{}发送验证码:{}", phone, code);
             SendMessageUtils.send("loveIT", "d41d8cd98f00b204e980", phone, content);
             userPhoneLogService.saveSendCaptchaCode2User(phone, content);
         } catch (Exception e) {
             userPhoneLogService.saveSendCaptchaCode2User(phone, "短信发送异常！");
-            redisUtil.delete(1, "captcha-code-" + phone);
+            redisUtil.delete(REDIS_DB, "captcha-code-" + phone);
             log.error("短信发送异常" + e.getMessage());
             return AJAX_ERROR;
         }
@@ -182,17 +215,17 @@ public class LoginController extends BaseController {
      */
     private String sendEmail(String email, String content, String code) {
         try {
-            String captchaCode = (String) redisUtil.get("captcha-code-" + email, RedisUtils.DB_1);
+            String captchaCode = (String) redisUtil.get("captcha-code-" + email, REDIS_DB);
             if (Objects.nonNull(captchaCode)) {
-                redisUtil.delete(1, "captcha-code-" + email);
+                redisUtil.delete(REDIS_DB, "captcha-code-" + email);
             }
             log.info("向" + email + "发送验证码：" + code);
-            redisUtil.set("captcha-code-" + email, code, 60, RedisUtils.DB_1);
+            redisUtil.set("captcha-code-" + email, code, 60, REDIS_DB);
             Email e = new Email("验证码", email, content, null);
             emailUtil.send(e);
             userEmailLogService.saveSendCaptchaCode2User(email, content);
         } catch (Exception e) {
-            redisUtil.delete(RedisUtils.DB_1, "captcha-code-" + email);
+            redisUtil.delete(REDIS_DB, "captcha-code-" + email);
             userEmailLogService.saveSendCaptchaCode2User(email, "邮件发送异常！");
             log.error("邮件发送异常" + e.getMessage());
             return AJAX_ERROR;
@@ -216,8 +249,8 @@ public class LoginController extends BaseController {
                                   @RequestParam(value = "account", defaultValue = "") String account,
                                   @RequestParam(value = "code", defaultValue = "") String captchaCode,
                                   HttpServletRequest request) {
-        String captcha = (String) redisUtil.get("captcha-code-" + account, 1);
-        String ip = NetWorkUtils.getUserIp(request);
+        String captcha = (String) redisUtil.get("captcha-code-" + account, REDIS_DB);
+        String ip = NetWorkUtils.getInternetIPAddress(request);
         String ipInfo = NetWorkUtils.getLocation(ip);
         WebAjaxResult ajaxResult = new WebAjaxResult();
         if (userService.getUser(nickname) != null) {
@@ -355,7 +388,7 @@ public class LoginController extends BaseController {
                         HttpServletRequest request,
                         HttpServletResponse response) {
         User user = userService.checkUser(username, EncryptUtils.getInstance().SHA1(password, "user"));
-        String ip = NetWorkUtils.getUserIp(request);
+        String ip = NetWorkUtils.getInternetIPAddress(request);
         String location = NetWorkUtils.getLocation(ip);
         String sessionId=null;
         try {
@@ -367,13 +400,13 @@ public class LoginController extends BaseController {
                 HttpSession session = request.getSession(true);
                 sessionId= session.getId();
                 //防止重复登录
-                Boolean exists = redisUtil.exists(sessionId, RedisUtils.DB_1);
+                Boolean exists = redisUtil.exists(sessionId, REDIS_DB);
                 if (exists==null||!exists) {
                     //更新用户的
                     CookieUtils.updateCookie(request,response,JSESSIONID,sessionId,MAX_USER_LOGIN_STATUS_KEEP_TIME);
                     //会话信息，如果没有主动退出15天有效
-                    redisUtil.set(sessionId, JSONObject.toJSONString(user), RedisUtils.DB_1);
-                    redisUtil.expire(sessionId, MAX_USER_LOGIN_STATUS_KEEP_TIME, RedisUtils.DB_1);
+                    redisUtil.set(sessionId, JSONObject.toJSONString(user), REDIS_DB);
+                    redisUtil.expire(sessionId, MAX_USER_LOGIN_STATUS_KEEP_TIME, REDIS_DB);
                     // 记住我功能：保存用户名密码一个月
                     if ("on".equals(remember)) {
                         Object value = CookieUtils.getCookieValue(request, REMEMBER_ME_COOKIE);
@@ -398,7 +431,7 @@ public class LoginController extends BaseController {
             String finalSessionId = sessionId;
             executor.execute(() -> {
                 if (Objects.nonNull(user)) {
-                    redisUtil.delete(RedisUtils.DB_1, finalSessionId);
+                    redisUtil.delete(REDIS_DB, finalSessionId);
                     userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录失败"));
                 }
             });
@@ -422,9 +455,12 @@ public class LoginController extends BaseController {
         ajaxResult.setMessage(AJAX_ERROR);
         String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
         //退出前先删除本次登录的Cookie
-        CookieUtils.deleteCookie(request, response, JSESSIONID);
-        //删除Redis中保存的登录信息
-        Boolean ret = redisUtil.delete(RedisUtils.DB_1,sessionId);
+        boolean deleteCookieRes = CookieUtils.deleteCookie(request, response, JSESSIONID);
+        Boolean ret = false;
+        if (deleteCookieRes) {
+            //删除Redis中保存的登录信息
+            ret = redisUtil.delete(REDIS_DB, sessionId);
+        }
         if (ret != null && ret) {
             ajaxResult.setSuccess(true);
             ajaxResult.setMessage(AJAX_SUCCESS);
@@ -460,7 +496,7 @@ public class LoginController extends BaseController {
                                         @RequestParam(value = "code", defaultValue = "") String code) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setSuccess(false);
-        String captchaCode = (String) redisUtil.get("captcha-code-" + account, RedisUtils.DB_1);
+        String captchaCode = (String) redisUtil.get("captcha-code-" + account, REDIS_DB);
         if (!code.equalsIgnoreCase(captchaCode)) {
             ajaxResult.setMessage("验证码错误！");
         } else if (Objects.isNull(newPassword)) {
@@ -476,7 +512,7 @@ public class LoginController extends BaseController {
                 ajaxResult.setMessage("抱歉，服务异常，请重试！");
                 return ajaxResult;
             } finally {
-                redisUtil.delete(RedisUtils.DB_1, "captcha-code-" + account);
+                redisUtil.delete(REDIS_DB, "captcha-code-" + account);
             }
         }
         return ajaxResult;

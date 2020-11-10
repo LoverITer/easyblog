@@ -74,8 +74,13 @@
                                     <span class="m-outline-expander"></span>
                                     <i style="margin: 0 !important;" class="icon angle right" th:if="${#lists.size(contentList)>1}"></i>
                                     <!--一级标题-->
-                                    <span class="m-outline-label" data-ref="n5" style="max-width: 205px" th:if="${#lists.size(contentList)>1}" ><a th:href="'#'+${#strings.replace(contentList.get(0),'[、|.]','')}" th:text="${contentList.get(0)}"></a></span>
-                                    <span class="m-outline-label" data-ref="n5" style="max-width: 205px;margin-left: 20.1px" th:if="${#lists.size(contentList)==1}"><a th:href="'#'+${#strings.replace(contentList.get(0),'[、|.]','')}" th:text="${contentList.get(0)}"></a></span>
+                                    <span class="m-outline-label" data-ref="n5" style="max-width: 205px"
+                                          th:if="${#lists.size(contentList)>1}"><a th:href="'#'+${contentList.get(0)}"
+                                                                                   th:text="${contentList.get(0)}"></a></span>
+                                    <span class="m-outline-label" data-ref="n5"
+                                          style="max-width: 205px;margin-left: 20.1px"
+                                          th:if="${#lists.size(contentList)==1}"><a th:href="'#'+${contentList.get(0)}"
+                                                                                    th:text="${contentList.get(0)}"></a></span>
                                     <ul class="m-outline-children" style="display: none" th:each="content,contentStat:${contentList}" th:unless="${contentStat.first}">
                                         <li class="m-outline-item-wrapper m-outline-h5 m-outline-item-signle">
                                             <div class="m-outline-item">
@@ -141,12 +146,18 @@
                     <!--标题-->
                     <div class="ui left aligned basic segment" style="margin-bottom: 5px !important;padding: 0 0 0 0 !important;">
                         <h2 style="max-width: 100% !important;margin-bottom: 5px !important;" class="ui left aligned  m-article-title" th:text="${article.getArticleTopic()}"></h2>
-                        <a target="_blank" class="m-article-quick-edit-btn m-mobile-hide"  th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}" th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}">
-                            <button>修改文章</button></a>
-                        <a class="m-article-meum-show-btn m-mobile-hide" href="javascript:void 0">
-                            <button style="display: inline-block" id="show-btn">显示目录</button>
-                            <button style="display: none" id="hide-btn">隐藏目录</button>
-                        </a>
+
+                        <div class="m-mobile-hide m-article-tools-bar">
+                            <a target="_blank" class="m-article-quick-edit-btn"
+                               th:if="${visitor!=null and visitor.getUserId()==author.getUserId()}"
+                               th:href="@{/manage/blog/edit(articleId=${article.getArticleId()})}">
+                                <button>修改文章</button>
+                            </a>
+                            <a class="m-article-meum-show-btn" href="javascript:void 0">
+                                <button style="display: inline-block" id="show-btn">显示目录</button>
+                                <button style="display: none" id="hide-btn">隐藏目录</button>
+                            </a>
+                        </div>
                     </div>
                     <div class="ui horizontal link list">
                         <div class="item">
@@ -229,7 +240,8 @@
                                         <span style="color: #999999 !important;">还能输入<em id="num_txt">500</em>个字符</span>
                                     </div>
                                     <div class="m-inline-block  m-margin-bottom-small m-comment-publish_btn-location" style="position: absolute;top: 20px;right: 12px !important;">
-                                        <button id="publish-comment-btn" class="ui  button m-mobile-wide" style="background-color: #ca0c16 !important;color: #FFFFFF !important;">
+                                        <button id="publish-comment-btn" class="ui  button m-mobile-wide"
+                                                style="background-color: #ca0c16 !important;color: #FFFFFF !important;padding: .58571429em .8em;">
                                             <i class="edit icon"></i>
                                             发布评论
                                         </button>
@@ -292,7 +304,8 @@
                     </div>
 
 
-                    <div th:if="${articleComments==null||#lists.isEmpty(articleComments)}" class="m-comment-empty">
+                    <div th:if="${(articleComments==null||#lists.isEmpty(articleComments))&&mobileDevice}"
+                         class="m-comment-empty">
                         <div id="m-commont-sofa">
                             <svg id="m-commont-sofa" t="1604317457818" class="icon" viewBox="0 0 1142 1024"
                                  version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="44991" width="48" height="48">

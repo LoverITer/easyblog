@@ -1,228 +1,85 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<head>
-    <th:block th:replace="~{ fragment/common::common_head}" />
-    <title>[[${{query}}]] - EasyBlog搜索</title>
-    <style type="text/css">
-        a:hover {
-            color: #ca0c16 !important;
-        }
-    </style>
-</head>
+<div th:replace="~{index::index_head}"></div>
 <body>
-
-<!--导航-->
-<nav th:fragment="navbar" style="border: 0;height: 61px" class="ui inverted attached segment m-padded-tb-mini m-shadow-small m-navigationBar">
-    <!--用户信息-->
-    <div class="ui m-container">
-        <div class="ui inverted secondary stackable menu">
-            <a th:href="@{/}"><h2 class="ui teal header item" >EasyBlog</h2></a>
-            <div style="margin: 0 auto !important;float: right"></div>
-            <div class="right  m-mobile-hide menu " style="margin: 1em 0 auto 2em !important;background: #ec6149;border-radius: .28571429rem;padding: .7em 15px;color: #ccc;">
-                <a target="_blank" href="#"  th:href="@{/manage/blog/post}"
-                   style="color :#fff;font-size: 17px"><i class="paint brush icon" style="color: inherit !important;"></i>写博客</a>
+<div th:replace="~{index::index_header}"></div>
+<main>
+    <div class="lbox">
+        <div class="weizhi">您现在的位置是：<a th:href="@{/}" class="classlinkclass">首页</a> > 搜索结果</div>
+        <div class="blogs_search">
+            <div th:if="${articlePages!=null and #lists.size(articlePages.getList())>0}" class="xt_search">
+                系统搜索到以下文章符合<strong th:text="${query}">人</strong>的查询结果
             </div>
-
-            <!--我的头像-->
-            <div th:if="${visitor!=null}"  id="header-images"  class="right m-menu-padding m-mobile-hide menu" style="display: none ;margin-left: 1em !important;">
-                <div class="ui dropdown item">
-                    <div class="text">
-                        <a href="#"  th:href="@{/article/index/{uid}(uid=${visitor.getUserId()})}">
-                            <img class="ui medium circular image image-42x42" style="max-height: none !important;" th:src="@{${visitor.getUserHeaderImgUrl()}}"/></a>
-                    </div>
-                    <div class="menu m-menu" >
-                        <a href="#" th:href="@{/manage/uc/follow-list}" class="item"><i class="bookmark icon"></i>我的关注</a>
-                        <a href="#" th:href="@{/manage/uc/profile}" class="item"><i class="user icon"></i>个人中心</a>
-                        <a href="#" th:href="@{/manage/account/reset/password}" class="item"><i class="cogs icon"></i>账号设置</a>
-                        <div class="divider"></div>
-                        <a href="#" th:href="@{/article/index/{uid}(uid=${visitor.getUserId()})}" class="item"><i class="archive icon"></i>我的博客</a>
-                        <a href="#" th:href="@{/manage/blog/}" class="item"><i class="edit icon"></i>管理博客</a>
-                        <div class="divider"></div>
-                        <a href="#" th:href="@{/help}" class="item"><i class="basic question  circle icon"></i>帮助</a>
-                        <a id="logout" class="item"><i class="sign out icon"></i>退出</a>
-                    </div>
-                </div>
+            <div th:if="${articlePages==null or #lists.size(articlePages.getList())==0}" class="xt_search">
+                系统没有搜索到关于<strong th:text="${query}">人</strong>的文章
             </div>
-            <!--登录按钮-->
-            <div id="login-btn" class="right m-mobile-hide menu m-menu-padding" style="display: flex !important;margin-left: 1em !important">
-                <a href="#" target="_blank" th:href="@{/user/loginPage}" style="font-size: inherit;background: #fff;color: #ec6149!important;padding: .65em .8em;" class=" item m-mobile-hide">登录/注册</a>
-            </div>
+            <ul th:if="${articlePages!=null and #lists.size(articlePages.getList())>0}">
+                <li th:each="article,articleStat:${articlePages.getList()}">
+                    <h2><a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank">[[${articleStat.count}]].
+                        [[${article.getArticleTopic()}]]</a></h2>
+                    <p th:text="${#strings.abbreviate(article.getArticleContent(),200)}">一直到2009年
+                        厂里出政策鼓励升学,我脱产学习(与厂里签了协议),复读高四,10年第二次参加高考,很不幸,中了个2本,读了湖南工程学院,专业机械设计制造及其自动化</p>
+                    <span class="color_green">
+                        <a style="color: inherit"
+                           th:href="@{{baseUrl}/article/details/{id}(baseUrl=${baseUrl},id=${article.getArticleId()})}">[[${baseUrl}]]/article/details/[[${article.getArticleId()}]] - [[${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}]]</a>
+                    </span> - <a class="color_purple"
+                                 th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}"
+                                 target="_blank" th:text="${article.getArticleCategory()}">机械设计</a>
+                </li>
+            </ul>
+        </div>
+        <div class="pagelist" th:if="${articlePages.getTotal()>12}">
+            <a title="总数">&nbsp;<b th:text="${articlePages.getTotal()}">17</b></a>
+            <a th:if="${articlePages.isHasPreviousPage()}"
+               th:href="@{/search/details(query=${query},page=${articlePages.getPrePage()})}">上一页</a>&nbsp;
+            <a th:if="${!articlePages.isIsFirstPage()}" th:href="@{/search/details(query=${query},page=1)}">首页</a>
+            <th:block th:each="pageNo:${articlePages.getNavigatepageNums()}">
+                <b th:if="${pageNo==articlePages.getPageNum()}" th:text="${pageNo}">1</b>
+                <a th:unless="${pageNo==articlePages.getPageNum()}"
+                   th:href="@{/search/details(query=${query},page=${pageNo})}" th:text="${pageNo}">2</a>&nbsp;
+            </th:block>
+            <a th:if="${articlePages.isHasNextPage()}"
+               th:href="@{/search/details(query=${query},page=${articlePages.getNextPage()})}">下一页</a>&nbsp;
+            <a th:if="${!articlePages.isIsLastPage()}"
+               th:href="@{/search/details(query=${query},page=${articlePages.getPages()})}">尾页</a>
         </div>
     </div>
-    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
-        <i class="sidebar icon"></i>
-    </a>
-    <input id="userId" hidden="hidden" th:if="${visitor!=null}"
-           th:value="${visitor.getUserId()}">
-</nav>
-
-<!--搜索内容-->
-<div class="m-container-middle" style="margin: unset !important;">
-    <div class="ui container stackable">
-
-        <form name="search" th:action="@{/search/details}"  method="get">
-            <div class="ui large icon input" style="width: 100% !important;">
-                <input th:if="${query==null}" name="query" class="prompt" type="text" placeholder="Search....">
-                <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt" type="text"
-                       placeholder="Search....">
-                <input hidden th:if="${visitor!=null}" name="visitorUId" th:value="${visitor.getUserId()}">
-                <i onclick="document.forms['search'].submit()" class="red search link icon"></i>
-            </div>
-        </form>
-
-        <!--header-->
-        <div th:if="${articlePages!=null}" class="ui top attached segment m-box-shadow" style="border: none;border-bottom: #f1f2f3 3px solid;">
-            <div class="ui middle aligned two column grid">
-                <div class="column">
-                    <h3 class="ui teal header">搜索结果</h3>
-                </div>
-                <div class="right aligned column">
-                    共 <h2 class="ui orange header m-inline-block m-text-thin" th:text="${articlePages.getTotal()}">
-                    14 </h2>条结果
-                </div>
-            </div>
+    <aside class="rbox">
+        <!--广告位-->
+        <div class="ad">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Square_Ad_Index_1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-2311962880414013"
+                 data-ad-slot="9594736108"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
-
-        <div th:if="${articlePages!=null and #lists.size(articlePages.getList())>0}" class="ui  attached  segment m-box-shadow" style="padding: 0;border: none;">
-            <div th:each="article:${articlePages.getList()}"
-                 class="ui padded vertical segment m-padded-tb-large" style="border: none;border-bottom: #f1f2f3 3px solid;">
-                <div class="ui middle aligned mobile reversed stackable grid">
-                    <div class="eleven wide column">
-                        <h3 class="ui header">
-                            <a href="#" th:if="${visitor==null}" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank"
-                               class="m-black topic" th:text="${article.getArticleTopic()}">
-                                你真的理解什么是财富自由吗?
-                            </a>
-                            <a href="#" th:if="${visitor!=null}" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUID=${visitor.getUserId()})}" target="_blank"
-                               class="m-black topic" th:text="${article.getArticleTopic()}">
-                                你真的理解什么是财富自由吗?
-                            </a>
-                        </h3>
-                        <p class="m-column_article_desc" th:text="${#strings.abbreviate(article.getArticleContent(),200)}">
-                            正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
-                        <div class="ui grid">
-                            <div class="eleven wide column">
-                                <div class="ui mini horizontal link list">
-                                    <div class="item m-margin-left">
-                                        <img th:src="${article.getUserHeaderImageUrl()}"
-                                             class="ui avatar image">
-                                        <div class="content">
-                                            <a href="#" th:if="${article!=null}" th:href="@{/article/index/{id}(id=${article.getArticleUser()})}" class="m-comment-font-user" th:text="${article.getAuthorName()}"></a>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <i class="calendar icon"></i>
-                                        <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2017-10-01</span>
-                                    </div>
-                                    <div class="item">
-                                        <i class="eye icon"></i>
-                                        <span th:text="${article.getArticleClick()}">2342</span>
-                                    </div>
-                                    <div class="item">
-                                        <i class="comment alternate icon"></i>[[${article.getArticleCommentNum()}]]
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <a  href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin m-mobile-icon-show"
-                                th:text="${article.getArticleCategory()}" style="background: rgba(0,0,0,.3) !important;border-color: rgba(0,0,0,.1) !important;">认知升级</a>
-                            <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" alt="" class="ui rounded image">
-                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" alt="" class="ui rounded image">
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <!--热文-->
+        <div class="hot_news">
+            <p class="h_title">文章热榜</p>
+            <ul th:if="${hotArticles!=null && !#lists.isEmpty(hotArticles)}">
+                <li th:each="article,articleStat:${hotArticles}">
+                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                       th:title="${article.getArticleTopic()}" target="_blank">
+                        <i><img th:if="${article.getArticleFirstPicture()==null}"
+                                src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                th:alt="${article.getArticleTopic()}">
+                            <img th:if="${article.getArticleFirstPicture()!=null}"
+                                 th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}"></i>
+                        </i><em th:text="${articleStat.count}">1</em>
+                        <h2 th:text="${article.getArticleTopic()}">无需电池！用3D打印塑料控制电子设备，还能监测用量和自动购物</h2>
+                        <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2020-10-18</span>
+                    </a></li>
+            </ul>
         </div>
-
-        <div th:if="${articlePages!=null&&articlePages.getTotal()==0}" class="ui attached segment m-box-shadow" style="border: none;">
-            <div class="ui middle aligned two column grid">
-                <div style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
-                    抱歉!没有搜索到关于<span style="color: #b52a1d" th:text="${query}"></span>的任何信息
-                </div>
-            </div>
-        </div>
-        <!--总记录数小于20显示的页脚-->
-        <div th:if="${!#lists.isEmpty(articlePages.getTotal())&&#lists.size(articlePages.getTotal())<20}"
-             class="ui bottom attached segment m-box-shadow" style="border: none !important;padding: 0 0 !important;"></div>
-        <!--分页-->
-        <div th:if="${articlePages.getTotal()>=20}" class="ui bottom attached segment m-box-shadow" style="border-top: 1px solid #ccc">
-            <div class="ui middle aligned two column grid">
-                <div  style="margin: 5px auto;float: left !important;">
-                    <div class="ui buttons">
-                        <a th:href="@{/search/details(query=${query},page=${articlePages.getPrePage()})}">
-                            <button class="ui  button" style="background: white !important;font-weight: 100 !important;"><i class="step backward icon"></i>
-                            </button>
-                        </a>
-                        <a th:each="pageNo:${articlePages.getNavigatepageNums()}"
-                           th:href="@{/search/details(query=${query},page=${pageNo})}">
-                            <button class="ui button pages">
-                                [[${pageNo}]]
-                            </button>
-                        </a>
-                        <a th:href="@{/search/details(query=${query},page=${articlePages.getNextPage()})}">
-                            <button class="ui right button" style="background: white !important;font-weight: 100 !important;"> <i class="step forward icon"></i>
-                            </button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div style="height: 10em"></div>
-
-<!--底部footer-->
-<div th:replace="~{fragment/common :: footbar}"></div>
-
-<th:block th:replace="~{fragment/common :: common_js}" />
-
-<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
-<script>
-    $('.m-padded-tb-large:last').css('border',"none");
-    $(".topic").each(function () {
-        var str = $(this).text();
-        var key = $('#query').val();
-        var reg = new RegExp("(" + key + ")", "ig");
-        var replaceStr = str.replace(reg, "<span style='color:#c00;font-weight:bold'>" + key + "</span>");
-        $(this).html(replaceStr);
-    });
-
-
-    $('.menu.toggle').click(function () {
-        $('.m-item').toggleClass('m-mobile-hide');
-    });
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
-    });
-
-</script>
-
-<script type="text/javascript">
-    let userId=$('#userId').val();
-    $(document).ready(function () {
-        $(".m-container-middle").animate({
-            left:'284.8px',
-        });
-        showPageZoomWarning();
-        toggleStatus();
-        logOut();
-    });
-
-    function showCurrentPageNum() {
-        let obj = document.getElementsByClassName('pages');
-        let page = [[${articlePages.pageNum}]];
-        for (let i = 0; i < obj.length; i++) {
-            if (obj[i].textContent == page) {
-                $(obj[i]).css("cssText", "background:#ddd !important");
-            }
-        }
-    }
-
-</script>
+    </aside>
+</main>
+<div th:replace="~{index::index-footer}"></div>
 </body>
 </html>

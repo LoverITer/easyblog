@@ -9,7 +9,6 @@ import top.easyblog.global.enums.UserFreeze;
 import top.easyblog.global.enums.UserLock;
 import top.easyblog.global.enums.UserPower;
 import top.easyblog.mapper.UserMapper;
-import top.easyblog.util.DefaultImageDispatcherUtils;
 import top.easyblog.util.EncryptUtils;
 import top.easyblog.util.RegexUtils;
 import top.easyblog.web.service.IUserService;
@@ -106,9 +105,8 @@ public class UserServiceImpl implements IUserService {
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public int register(String nickname, String password, String account, String ipInfo) {
-        String headImageUrl = DefaultImageDispatcherUtils.defaultAvatar();
         try {
-            User user = new User(nickname, password, null, null, null, null, null, null, 0, 100000, headImageUrl, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
+            User user = new User(nickname, password, null, null, null, null, null, null, 0, 100000, null, null, ipInfo, null, UserLock.UNLOCK.getStatus(), UserFreeze.UNFREEZE.getStatus(), UserPower.USER.getLevel(), 0, 0);
             if (RegexUtils.isEmail(account)) {
                 user.setUserMail(account);
             } else if (RegexUtils.isMobile(account)) {
@@ -123,12 +121,10 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public int register(User user) {
-        String headImageUrl = DefaultImageDispatcherUtils.defaultAvatar();
         try {
             user.setUserScore(0);
             user.setUserRank(1000000);
             user.setUserDescription(null);
-            user.setUserHeaderImgUrl(headImageUrl);
             user.setUserLock(UserLock.UNLOCK.getStatus());
             user.setUserFreeze(UserFreeze.UNFREEZE.getStatus());
             user.setUserPower(2);
@@ -148,7 +144,6 @@ public class UserServiceImpl implements IUserService {
             user.setUserFreeze(0);
             user.setUserLock(0);
             user.setUserPower(3);
-            user.setUserHeaderImgUrl(DefaultImageDispatcherUtils.defaultAvatar());
             user.setUserPassword("");
             return userMapper.saveCoreInfo(user);
         }catch (Exception e){

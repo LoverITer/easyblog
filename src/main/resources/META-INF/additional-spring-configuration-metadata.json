@@ -49,5 +49,10 @@
       "name": "project.engineering-code",
       "type": "java.lang.String",
       "description": "Description for project.engineering-code."
+    },
+    {
+      "name": "host-ip",
+      "type": "java.lang.String",
+      "description": "Description for host-ip."
     }
   ] }

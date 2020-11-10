@@ -19,36 +19,9 @@ import java.util.Objects;
 @Slf4j
 public class UserUtils {
 
-    /**
-     * 从Cookie中获取登录用户的信息
-     *
-     * @param request
-     * @return
-     */
-    /*public static User getUserFromCookie(HttpServletRequest request) {
-        User user = null;
-        try {
-            Cookie[] cookies = request.getCookies();
-            if (Objects.nonNull(cookies)) {
-                for (Cookie cookie : cookies) {
-                    if ("USER-INFO".equalsIgnoreCase(cookie.getName())) {
-                        String userJsonStr = URLDecoder.decode(cookie.getValue(), String.valueOf(CharsetUtil.UTF_8));
-                        if (Objects.nonNull(userJsonStr)) {
-                            user = JSON.parseObject(userJsonStr, User.class);
-                            if(user!=null){
-                                user.setUserPassword(null);
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-        }
-        return user;
-    }
-*/
 
+    private static final RedisUtils.RedisDataBaseSelector REDIS_DB = RedisUtils.RedisDataBaseSelector.DB_1;
+    
     /**
      * 从Redis中查找指定Id的用户的登录信息
      *
@@ -57,7 +30,7 @@ public class UserUtils {
      */
     public static User getUserFromRedis(String sessionId) {
         //从Redis中查询出已经登录User的登录信息
-        String userJsonStr = (String) RedisUtils.getRedisUtils().get(sessionId, RedisUtils.DB_1);
+        String userJsonStr = (String) RedisUtils.getRedisUtils().get(sessionId, REDIS_DB);
         if (Objects.isNull(userJsonStr) || userJsonStr.length() == 0) {return null;}
         //将字符串放入redis后，redis会自动为我们添加转义字符，这会导致json格式被破坏，
         // 因此这里需要把从redis获取到的字符串先转义回来
@@ -90,10 +63,10 @@ public class UserUtils {
      */
     private static boolean updateLoggedUserInfoInRedis(User user) {
         try {
-            long expire = RedisUtils.getRedisUtils().getExpire("user-" + user.getUserId(), RedisUtils.DB_1) < 0 ? 60 * 60 * 24 * 15 : RedisUtils.getRedisUtils().getExpire("user-" + user.getUserId(), RedisUtils.DB_1);
-            RedisUtils.getRedisUtils().delete(RedisUtils.DB_1, "user-" + user.getUserId());
-            RedisUtils.getRedisUtils().hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), RedisUtils.DB_1);
-            RedisUtils.getRedisUtils().expire("user-" + user.getUserId(), expire, RedisUtils.DB_1);
+            long expire = RedisUtils.getRedisUtils().getExpire("user-" + user.getUserId(), REDIS_DB) < 0 ? 60 * 60 * 24 * 15 : RedisUtils.getRedisUtils().getExpire("user-" + user.getUserId(), REDIS_DB);
+            RedisUtils.getRedisUtils().delete(REDIS_DB, "user-" + user.getUserId());
+            RedisUtils.getRedisUtils().hset("user-" + user.getUserId(), "user", JSONObject.toJSONString(user), REDIS_DB);
+            RedisUtils.getRedisUtils().expire("user-" + user.getUserId(), expire, REDIS_DB);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

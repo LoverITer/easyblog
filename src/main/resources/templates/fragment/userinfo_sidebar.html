@@ -10,12 +10,23 @@
 <!--左边的卡片-->
 <div class="four wide column m-mobile-hide">
     <!--用户信息区域-->
-    <div class="ui segments user_info_sidebar menu-info-ctl" th:fragment="sidebar_userinfo" style="padding-right: 0 !important;background: #fff;">
+    <div th:if="${author!=null}" class="ui segments user_info_sidebar menu-info-ctl" th:fragment="sidebar_userinfo"
+         style="padding-right: 0 !important;background: #fff;">
         <div class="ui equal width center aligned padded grid">
             <div class="row" style="padding-bottom: 0 !important;">
                 <div class="four wide column" style="padding-right: 0 !important;">
-                    <a href="#" th:if="${author!=null}" th:href="@{/article/index/{id}(id=${author.getUserId()})}" class="m-black">
-                        <img class="ui top avatar aligned tiny image medium circular m-img-animate"  th:if="${author!=null}" th:src="@{${author.getUserHeaderImgUrl()}}"/>
+                    <a href="#" th:href="@{/article/index/{id}(id=${author.getUserId()})}" class="m-black">
+                        <img th:if="${author.getUserHeaderImgUrl()!=null}"
+                             class="ui top avatar aligned tiny image medium circular m-img-animate"
+                             th:src="@{${author.getUserHeaderImgUrl()}}"/>
+                        <div th:if="${author.getUserHeaderImgUrl()==null}" class="m-init-user-avatar"
+                             style="width: 55px;height: 55px">
+                            <svg t="1604420630232" style="margin: 9px" class="icon" viewBox="0 0 1024 1024"
+                                 version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="38499" width="38" height="38">
+                                <path d="M512 0c113.322667 0 204.8 91.477333 204.8 204.8S625.322667 409.6 512 409.6 307.2 318.122667 307.2 204.8s91.477333-204.8 204.8-204.8z m0 969.386667a491.52 491.52 0 0 1-409.6-219.818667C104.448 613.717333 375.466667 539.306667 512 539.306667c135.850667 0 407.552 74.410667 409.6 210.261333a491.52 491.52 0 0 1-409.6 219.818667z"
+                                      fill="#bfbfbf" p-id="38500"></path>
+                            </svg>
+                        </div>
                     </a>
                 </div>
                 <div class="twelve wide column grid" style="padding-left: 3px !important;">
@@ -31,7 +42,8 @@
                         <button class="ui left floated  mini red basic button">
                             <a href="#" style="color: red;font-size: 12px;">关注</a>
                         </button>-->
-                        <a href="#" th:if="${author!=null}" th:href="@{/article/home/{id}(id=${author.getUserId()})}" style="color: #3399ea;font-size: 12px !important;float: left">TA的个人主页&nbsp;></a>
+                        <a href="#" th:href="@{/article/home/{id}(id=${author.getUserId()})}"
+                           style="color: #3399ea;font-size: 12px !important;float: left">TA的个人主页&nbsp;></a>
                     </div>
                 </div>
             </div>
@@ -59,18 +71,22 @@
             <div class="ui divider user_info_sidebar_divider" style="margin-bottom: 5px !important;margin-top: 5px !important;border-top: none;background: #f5f6f7;"></div>
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column m-txt-align-left m-black">
-                    等级：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserLevel()==null?0:author.getUserLevel()}"></span></strong>
+                    等级：<strong><span class="m-margin-left"
+                                     th:text="${author.getUserLevel()==null?0:author.getUserLevel()}"></span></strong>
                 </div>
                 <div class="column m-txt-align-left m-black">
-                    访问：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserVisit()==null?0:author.getUserVisit()}"></span></strong>
+                    访问：<strong><span class="m-margin-left"
+                                     th:text="${author.getUserVisit()==null?0:author.getUserVisit()}"></span></strong>
                 </div>
             </div>
             <div class="row" style="padding-bottom: 5px !important;padding-top: 5px !important;">
                 <div class="column m-txt-align-left m-black">
-                    积分：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserScore()==null?0:author.getUserScore()}"></span></strong>
+                    积分：<strong><span class="m-margin-left"
+                                     th:text="${author.getUserScore()==null?0:author.getUserScore()}"></span></strong>
                 </div>
                 <div class="column m-txt-align-left m-black">
-                    排名：<strong><span class="m-margin-left" th:if="${author!=null}" th:text="${author.getUserRank()==null?0:author.getUserRank()}">7</span></strong>
+                    排名：<strong><span class="m-margin-left"
+                                     th:text="${author.getUserRank()==null?0:author.getUserRank()}">7</span></strong>
                 </div>
             </div>
         </div>

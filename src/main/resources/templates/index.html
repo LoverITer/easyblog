@@ -1,261 +1,279 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:fragment="index_head">
     <meta charset="utf-8">
     <title>EasyBlog — 让写博客更简单</title>
     <meta name="keywords" content="EasyBlog博客网站,个人博客,个人网站,开发技术">
-    <meta name="description" content="EasyBlog是一个优秀的IT原创文章分享及交流平台,包含系统运维,云计算,大数据分析,
-    Web开发入门,高可用架构,微服务,架构设计,Java,数据库,网络安全,人工智能,区块链,移动开发技术,服务器,考试认证等文章。">
+    <meta name="description"
+          content="EasyBlog是一个优秀的IT原创文章分享及交流平台,包含系统运维,云计算,大数据分析,Web开发入门,高可用架构,微服务,架构设计,Java,数据库,网络安全,人工智能,区块链,移动开发技术,服务器,考试认证等文章。">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
     <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
-    <link rel="stylesheet" href="../static/css/index.css" th:href="@{/static/css/index.css}">
-    <link rel="stylesheet" href="../static/css/index.ext.css" th:href="@{/static/css/index.ext.css}">
-    <script src="../static/js/jquery.min.js" th:href="@{/static/js/jquery.min.js}"></script>
-    <script src="../static/js/comm.js" th:href="@{/static/js/comm.js}"></script>
-    <script src="../static/js/spop.js" th:src="@{/static/js/spop.js}"></script>
-    <link rel="stylesheet" href="../static/css/spop.css" th:href="@{/static/css/spop.css}">
-    <script src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
-    <style>
-        #cnzz_stat_icon_1278953609 img{
-            display: inline-block !important;
-        }
-    </style>
-    <!--[endif]-->
-    <!--百度统计JS脚本-->
-    <script>
-        var _hmt = _hmt || [];
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?1d2b1074de8c4606d68aa61802a74c14";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-    </script>
-    <!--google Adsense-->
+    <link th:href="@{/static/css/base.min.css}" rel="stylesheet">
+    <link th:href="@{/static/css/m.min.css}" rel="stylesheet">
+    <link th:href="@{/static/css/swiper.min.css}" rel="stylesheet">
+    <script th:src="@{/static/js/jquery.min.js}"></script>
+    <script th:src="@{/static/js/comm.min.js}"></script>
+    <script th:src="@{/static/js/swiper.min.js}"></script>
+    <!--google AdSense-->
     <script data-ad-client="ca-pub-2311962880414013" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <body>
-
-<!--top begin-->
-<header id="header" class="slideDown header-navigation" th:fragment="index-nav">
-    <div class="navbox">
-        <h2 id="mnavh"><span class="navicon"></span></h2>
-        <div class="logo"><a href="/" style="color: #00B5AD"><h2>EasyBlog</h2></a></div>
-        <nav>
+<header th:fragment="index_header">
+    <!--top bar-->
+    <div class="top">
+        <div class="box">
+            <div class="welcome">欢迎您访问<a href="http://zhuanti.ip3q.com/" target="_blank">EasyBlog</a>
+                本站旨在为大家提供IT技术相关的教程和资讯，以及常用开发工具免费下载！
+            </div>
+            <div class="guanzhu"><i></i>
+                <ul class="weixin">
+                    <li><img th:src="@{/static/images/wechat.jpg}" alt="联系我：15709160159">联系我</li>
+                    <li><img th:src="@{/static/images/wechat.jpg}" alt="微信公众号">微信公众号</li>
+                </ul>
+            </div>
+            <!--guanzhu end-->
+            <div class="is-search">
+                <section><i></i></section>
+            </div>
+            <div class="search-page">
+                <div class="search_box">
+                    <div class="go-left"></div>
+                    <div class="search">
+                        <form th:action="@{/search/details}" method="get" name="searchform"
+                              id="searchform">
+                            <input name="query" id="keyboard" class="input_text" value="请输入关键字词"
+                                   style="color: rgb(153, 153, 153);"
+                                   onfocus="if(value=='请输入关键字词'){this.style.color='#000';value=''}"
+                                   onblur="if(value==''){this.style.color='#999';value='请输入关键字词'}" type="text">
+                            <input name="show" value="title" type="hidden">
+                            <input name="tempid" value="1" type="hidden">
+                            <select name="tbname">
+                                <option value="news">资讯</option>
+                                <option value="pics">下载</option>
+                            </select>
+                            <input name="Submit" class="input_submit" value="搜索" type="submit">
+                        </form>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="hot-search">
+                        <p>热门搜索/Hot Search</p>
+                        <ul class="search-paihang" th:if="${hotList!=null and !#lists.isEmpty(hotList)}">
+                            <!--热门搜索-->
+                            <li th:each="hotWord:${hotList}"><a th:href="@{/search/details(query=${hotWord})}"
+                                                                th:text="${hotWord}"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--search-page end-->
+        </div>
+    </div>
+    <!--top end-->
+    <nav>
+        <div class="box">
+            <div class="logo"><a th:href="@{/}">
+                <img src="http://zhuanti.ip3q.com/skin/html/images/logo.png" alt=""></a></div>
             <ul id="starlist">
                 <li><a href="/" title="首页" th:href="@{/}">首页</a></li>
-                <li class="menu"><a href="/cb" th:href="@{/cb}">计算机基础</a>
+                <li class="menu"><a th:href="@{/cb}">计算机基础</a>
                     <ul class="sub">
-                        <li><a href="/cb/algrothim" th:href="@{/cb/algorithm}">数据结构与算法</a></li>
-                        <li><a href="/cb/network" th:href="@{/cb/network}">计算机网络</a></li>
-                        <li><a href="/cb/os" th:href="@{/cb/os}">操作系统</a></li>
-                        <li><a href="/cb/dp" th:href="@{/cb/dp}">设计模式</a></li>
-                        <li><a href="/cb/se" th:href="@{/cb/se}">软件工程</a></li>
-                </ul><span></span></li>
-                <li><a href="/java"  th:href="@{/java}">Java</a></li>
-                <li class="menu"><a href="/framework" th:href="@{/framework}">架构/框架</a>
+                        <li><a th:href="@{/cb/algorithm}">数据结构与算法</a></li>
+                        <li><a th:href="@{/cb/network}">计算机网络</a></li>
+                        <li><a th:href="@{/cb/os}">操作系统</a></li>
+                        <li><a th:href="@{/cb/dp}">设计模式</a></li>
+                        <li><a th:href="@{/cb/se}">软件工程</a></li>
+                    </ul>
+                    <span></span></li>
+                <li><a th:href="@{/java}">Java</a></li>
+                <li class="menu"><a th:href="@{/framework}">架构/框架</a>
                     <ul class="sub">
-                        <li><a href="/spring" th:href="@{/framework/spring}">Spring</a></li>
-                        <li><a href="/springmvc" th:href="@{/framework/springmvc}">Spring MVC</a></li>
-                        <li><a href="/springboot" th:href="@{/framework/springboot}">Spring Boot</a></li>
-                        <li><a href="/mybatis" th:href="@{/framework/mybatis}">MyBatis</a></li>
-                        <li><a href="/redis" th:href="@{/framework/redis}">Redis</a></li>
-                        <li><a href="/docker" th:href="@{/framework/docker}">Docker</a></li>
-                        <li><a href="/nginx" th:href="@{/framework/nginx}">Nginx</a></li>
-                        <li><a href="/netty" th:href="@{/framework/netty}">Netty</a></li>
+                        <li><a th:href="@{/framework/spring}">Spring</a></li>
+                        <li><a th:href="@{/framework/springmvc}">Spring MVC</a></li>
+                        <li><a th:href="@{/framework/springboot}">Spring Boot</a></li>
+                        <li><a th:href="@{/framework/mybatis}">MyBatis</a></li>
+                        <li><a th:href="@{/framework/redis}">Redis</a></li>
+                        <li><a th:href="@{/framework/docker}">Docker</a></li>
+                        <li><a th:href="@{/framework/nginx}">Nginx</a></li>
+                        <li><a th:href="@{/framework/netty}">Netty</a></li>
                     </ul><span></span></li>
-                <li><a href="/db" th:href="@{/db}">数据库</a></li>
-                <li><a href="/bigdata" th:href="@{/bigdata}">云计算/大数据</a></li>
-                <li><a href="/others" th:href="@{/others}">其它</a></li>
-                <li><a href="#" th:if="${user==null}"  th:href="@{/article/home/667020}">关于我</a>
-                    <a href="#" th:if="${user!=null}"  th:href="@{/article/home/667020(visitorUId=${user.getUserId()})}">关于我</a></li>
+                <li><a th:href="@{/db}">数据库</a></li>
+                <li><a th:href="@{/bigdata}">云计算/大数据</a></li>
+                <li><a th:href="@{/others}">其它</a></li>
+                <li><a th:href="@{/article/home/667020}">关于我</a></li>
                 <li th:if="${user==null}"><a class="index_user_login login-btn" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
                 <li th:if="${user!=null}">
                     <div id="header-images" class="right m-item m-mobile-hide" style="margin-left: 1em !important;">
-                        <a href="#" class="index_user_header" th:href="@{/article/index/{uid}(uid=${user.getUserId()})}">
-                            <img style="max-height: 35px !important;max-width:35px !important;border-radius: 30px !important;" th:src="@{${user.getUserHeaderImgUrl()}}"/>
+                        <a style="position: absolute;bottom: -15px" class="index_user_header"
+                           th:href="@{/article/index/{uid}(uid=${user.getUserId()})}">
+                            <img th:if="${user.getUserHeaderImgUrl()!=null}"
+                                 style="max-height: 35px !important;max-width:35px !important;border-radius: 30px !important;"
+                                 th:src="@{${user.getUserHeaderImgUrl()}}"/>
+                            <div th:if="${user.getUserHeaderImgUrl()==null}"
+                                 style="width: 48px;height: 48px;background: #f4f5f6;border-radius: 30px;">
+                                <svg t="1604420630232" style="margin: 5px" class="icon" viewBox="0 0 1024 1024"
+                                     version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="38499" width="38"
+                                     height="38">
+                                    <path d="M512 0c113.322667 0 204.8 91.477333 204.8 204.8S625.322667 409.6 512 409.6 307.2 318.122667 307.2 204.8s91.477333-204.8 204.8-204.8z m0 969.386667a491.52 491.52 0 0 1-409.6-219.818667C104.448 613.717333 375.466667 539.306667 512 539.306667c135.850667 0 407.552 74.410667 409.6 210.261333a491.52 491.52 0 0 1-409.6 219.818667z"
+                                          fill="#bfbfbf" p-id="38500"></path>
+                                </svg>
+                            </div>
                         </a>
                     </div>
                 </li>
             </ul>
-        </nav>
-        <div class="searchico"></div>
-    </div>
+        </div>
+    </nav>
+    <h2 id="mnavh"><span class="navicon"></span></h2>
 </header>
-<div class="searchbox" th:fragment="index-search">
-    <div class="search">
-        <form action="#" th:action="@{/search/details}" method="get" target="_blank" name="searchform" id="searchform">
-            <input name="query" id="keyboard" class="input_text" value="请输入关键字词" style="color: rgb(153, 153, 153);"
-                   onfocus="if(value=='请输入关键字词'){this.style.color='#000';value=''}"
-                   onblur="if(value==''){this.style.color='#999';value='请输入关键字词'}" type="text">
-            <input class="input_submit"  type="submit">
-            <input hidden th:if="${user!=null}" name="visitorUId" th:value="${user.getUserId()}">
-        </form>
-    </div>
-    <div class="searchclose"></div>
-</div>
-<!--top end-->
-<article>
-
-    <div class="header">
-        <div class="header-left">
-            <!--banbox begin-->
-            <div class="banbox">
-                <div class="banner">
-                    <div id="banner" class="fader">
-                        <li class="slide" th:if="${articles!=null and #lists.size(articles)>0}" th:each="article:${articles}">
-                            <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank">
-                                <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
-                                <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}">
-                            </a>
-                            <span class="imginfo" th:text="${article.getArticleTopic()}">SpringBoot的自动配置原理</span>
-                        </li>
-                        <!--左右按钮-->
-                        <div class="fader_controls">
-                            <div class="page prev" data-target="prev"></div>
-                            <div class="page next" data-target="next"></div>
-                            <ul class="pager_list">
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--banbox end-->
-            <!--lbanner begin-->
-            <div class="banbox-right">
-                <div class="toppic">
-                    <div class="lbanner-block" th:each="article,articleStat:${specialRecommendArticles}" th:unless="${articleStat.last}">
-                        <a  th:href="@{/article/details/{id}(id=${article.getArticleId()})}"  target="_blank"><i>
-                            <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
-                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}">
-                        </i>
-                            <h2 th:text="${article.getArticleTopic()}"></h2>
+<main>
+    <div class="lbox">
+        <div class="banner">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" th:if="${articles!=null and #lists.size(articles)>0}"
+                         th:each="article:${articles}">
+                        <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank">
+                            <img th:if="${article.getArticleFirstPicture()==null}"
+                                 src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                 th:alt="${article.getArticleTopic()}">
+                            <img th:if="${article.getArticleFirstPicture()!=null}"
+                                 th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}">
+                            <section><h4 th:text="${article.getArticleTopic()}"></h4></section>
                         </a>
                     </div>
                 </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
             </div>
-            <!--lbanner end-->
+            <script>
+                //banner
+                var swiper = new Swiper('.swiper-container', {
+                    pagination: '.swiper-pagination',
+                    nextButton: '.swiper-button-next',
+                    prevButton: '.swiper-button-prev',
+                    paginationClickable: true,
+                    spaceBetween: 100,
+                    centeredSlides: true,
+                    autoplay: 8000,
+                    autoplayDisableOnInteraction: false,
+                });
+            </script>
         </div>
-        <div class="header-right">
-            <div style="height: inherit;">
-                <div class="lbanner-block" style="margin-left: 17px;height: 300px;" th:each="article,articleStat:${specialRecommendArticles}" th:if="${articleStat.last}">
-                    <a  href="https://t.lagou.com/VR24RmRESV6C1 " target="_blank"><i>
-                        <img style="transform: unset" th:src="@{/static/images/ads/netty.png}">
-                    </i>
-                    </a>
+        <!-- banner end-->
+        <div class="headline">
+            <ul>
+                <li th:each="article,articleStat:${specialRecommendArticles}" th:unless="${articleStat.last}">
+                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                       th:title="${article.getArticleTopic()}" target="_blank">
+                        <img th:if="${article.getArticleFirstPicture()==null}"
+                             src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                        <img th:if="${article.getArticleFirstPicture()!=null}"
+                             th:src="@{${article.getArticleFirstPicture()}}">
+                        <span>
+                  <h4 th:text="${article.getArticleTopic()}"></h4>
+                   </span></a>
+                </li>
+            </ul>
+        </div>
+        <!--headline end-->
+        <div class="clear"></div>
+        <div class="h_title">最新文章</div>
+        <div class="blogs">
+            <ul th:if="${newestArticlesPages!=null&&!#lists.isEmpty(newestArticlesPages.getList())}">
+                <div th:each="article,articleStat:${newestArticlesPages.getList()}">
+                    <li class="blogs_list">
+                        <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank"><i>
+                            <img th:if="${article.getArticleFirstPicture()==null}"
+                                 src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
+                                 th:alt="${article.getArticleTopic()}">
+                            <img th:if="${article.getArticleFirstPicture()!=null}"
+                                 th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}">
+                        </i>
+                            <h2 th:text="${article.getArticleTopic()}"></h2></a>
+                        <p th:text="${#strings.abbreviate(article.getArticleContent(),150)}">文章描述</p>
+                        <div class="blogs_writer">[[${article.getAuthorName()}]]
+                            <span class="blogs_time"
+                                  th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2020-10-18</span>
+                        </div>
+                        <div class="blogs_tags">
+                            <a th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}"
+                               target='_blank' th:text="${article.getArticleCategory()}"></a>
+                        </div>
+                        <span class="blogs_lm"><a
+                                th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}"
+                                target="_blank" th:text="${article.getArticleCategory()}">TAG</a></span>
+                    </li>
+
+                    <div th:if="${T(java.lang.Integer).parseInt(#numbers.formatDecimal(T(java.lang.Math).floor((T(java.lang.Math).random()*3+1)*(T(java.lang.Math).random()*3+1)),1,0))% 9==0 && !articleStat.last &&articleStat.count>=5}"
+                         class="zhuanti">
+                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-format="fluid"
+                             data-ad-layout-key="-ef+6k-30-ac+ty"
+                             data-ad-client="ca-pub-2311962880414013"
+                             data-ad-slot="1210965159"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
                 </div>
-            </div>
-        </div>
-
-    </div>
-
-
-    <!--lbox begin-->
-    <div class="lbox">
-        <div class="clearblank"></div>
-        <!--tab_box end-->
-        <div class="whitebg bloglist">
-            <h2 class="htitle">最新博文</h2>
-            <ul class="news">
-                <li  th:if="${newestArticlesPages!=null&&!#lists.isEmpty(newestArticlesPages.getList())}" th:each="article:${newestArticlesPages.getList()}">
-                    <h3 class="blogtitle">
-                        <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
-                    </h3>
-                    <span class="blogpic imgscale">
-                     <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
-                           th:title="${article.getArticleTopic()}" title="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
-                         <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
-                         <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}" th:alt="${article.getArticleTopic()}" alt="作为一个设计师,如果遭到质疑你是否能恪守自己的原则?">
-                     </a>
-                    </span>
-                    <p th:text="${#strings.abbreviate(article.getArticleContent(),150)}" class="blogtext">
-                    </p>
-                    <p class="bloginfo">
-                        <i class="avatar">
-                            <a href="#" th:href="@{/article/index/{userId}(userId=${article.getArticleUser()})}" target="_blank">
-                                <img src="#" th:src="@{${article.getUserHeaderImageUrl()}}" width="30px" height="30px">
-                            </a>
-                        </i>
-                        <span></span>
-                        <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2018-11-08</span>
-                        <span class="text">
-                          <svg style="vertical-align:-5px;fill: #666" t="1568705845189" class="icon eye" viewBox="0 0 1433 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16883" width="20" height="20"><path d="M720.69629629 932.6176963c-213.05768889 0-407.36918519-120.58848889-582.93448888-361.67534074-23.88337036-32.71571111-23.88337036-85.169 0-117.88471112C313.32711111 211.97079259 507.63860741 91.3823037 720.69629629 91.3823037s407.36918519 120.58848889 582.9344889 361.67534074c23.88337036 32.71571111 23.88337036 85.169 0 117.88471112C1128.06548147 812.02920741 933.75398519 932.6176963 720.69629629 932.6176963z m0-721.00740741C542.51734074 211.61028889 377.85727408 309.39691852 222.48017777 512 377.85727408 714.60308148 542.4272148 812.38971111 720.69629629 812.38971111c178.17895556 0 342.83902223-97.78662964 498.21611851-300.38971111C1063.53531852 309.39691852 898.96537777 211.61028889 720.69629629 211.61028889z m0 495.69259259a195.30288148 195.30288148 0 1 1 0-390.60576296 195.30288148 195.30288148 0 0 1 0 390.60576296zM720.69629629 602.12592592a90.12592592 90.12592592 0 1 0 0-180.25185184 90.12592592 90.12592592 0 0 0 0 180.25185184z" p-id="16884" fill=""></path></svg>
-                          <span style="margin-left: 0" th:text="${article.getArticleClick()}"></span>
-                        </span>
-                        <span>【<a href="/xd/" th:href="@{/category/details/{categoryId}/{userId}(categoryId=${article.getCategoryId()},userId=${article.getArticleUser()})}" target="_blank" th:text="${article.getArticleCategory()}">设计心得</a>】</span>
-                    </p>
-                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" class="viewmore">阅读全文</a>
-                </li>
-                <!--10条 1栏目名称 18最新 5标签id-->
             </ul>
         </div>
-        <!--bloglist end-->
-        <div id="END" style="text-align: center;letter-spacing: -1px;color: #bbb;display: none">———————————<span style="color: #888;display: inline-block;letter-spacing: 0;margin:0 20px;">我是有底线的</span>———————————</div>
     </div>
-    <div class="rbox" >
-        <div class="whitebg paihang" th:fragment="index-click">
-            <h2 class="htitle">点击排行</h2>
-            <section class="topnews imgscale" th:if="${famousSideBarTopArticle!=null}" th:each="topicArticle:${famousSideBarTopArticle}">
-                <a href="#" th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()})}">
-                    <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
-                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}" th:src="@{${topicArticle.getArticleFirstPicture()}}">
-                    <span th:text="${topicArticle.getArticleTopic()}"></span>
-                </a>
-            </section>
-            <ul>
-                <li th:if="${visitRankingArticles!=null&&#lists.size(visitRankingArticles)>0}" th:each="article:${visitRankingArticles}">
+    <aside class="rbox">
+        <div class="news_kx">
+            <h2>今日推荐</h2>
+            <ul th:if="${recommendArticles!=null && #lists.size(recommendArticles)>0}">
+                <li th:each="article:${recommendArticles}">
                     <i></i>
-                    <a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank" th:text="${article.getArticleTopic()}">十条设计原则教你学会如何设计网页布局!</a>
+                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                       th:title="${article.getArticleTopic()}" target="_blank"
+                       th:text="${article.getArticleTopic()}"></a>
+                    <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2020-10-18</span>
                 </li>
             </ul>
         </div>
-        <div class="whitebg tuijian">
-            <h2 class="htitle">今日推荐</h2>
-            <section class="topnews imgscale" th:if="${recommendTopic!=null}" th:each="topicArticle:${recommendTopic}">
-                <a href="/xd/23.html" th:href="@{/article/details/{id}(id=${topicArticle.getArticleId()})}">
-                    <img th:if="${topicArticle.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
-                    <img th:if="${topicArticle.getArticleFirstPicture()!=null}" th:src="@{${topicArticle.getArticleFirstPicture()}}">
-                    <span th:text="${topicArticle.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</span>
-                </a>
-            </section>
+        <div class="ad">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Square_Ad_Index_1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-2311962880414013"
+                 data-ad-slot="9594736108"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        <div class="hot_news">
+            <p class="h_title">文章热榜</p>
             <ul>
-                <li th:if="${recommend!=null}" th:each="article:${recommend}">
-                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" href="/web/html/14.html" th:title="${article.getArticleTopic()}" title="十条设计原则教你学会如何设计网页布局!" target="_blank">
+                <li th:each="article,articleStat:${famousSideBarTopArticle}">
+                    <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}"
+                       th:alt="${article.getArticleTopic()}" target="_blank">
                         <i>
-                            <img th:if="${article.getArticleFirstPicture()==null}" src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
-                            <img th:if="${article.getArticleFirstPicture()!=null}" th:src="@{${article.getArticleFirstPicture()}}">
-                        </i>
-                        <p th:text="${article.getArticleTopic()}"></p>
-                    </a>
-                </li>
+                            <img th:if="${article.getArticleFirstPicture()==null}"
+                                 src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture">
+                            <img th:if="${article.getArticleFirstPicture()!=null}"
+                                 th:src="@{${article.getArticleFirstPicture()}}">
+                        </i><em th:text="${articleStat.count}">1</em>
+                        <h2 th:text="${article.getArticleTopic()}">机械制造行业未来的前景</h2>
+                        <span th:text="${#dates.format(article.getArticlePublishTime(),'yyyy-MM-dd')}">2020-10-18</span>
+                    </a></li>
             </ul>
         </div>
-        <!-- <div class="ad whitebg imgscale">
-             <ul>
-                 <a href="http://www.yangqq.com/download/div/917.html" target="_blank"><img
-                         src="/skin/jxhx/images/ad.jpg"></a>
-             </ul>
-         </div>-->
-        <div class="whitebg wenzi" th:fragment="index-like">
-            <h2 class="htitle">猜你喜欢</h2>
-            <ul>
-                <li th:if="${likes!=null}" th:each="article:${likes}">
-                    <a target="_blank"  th:href="@{/article/details/{id}(id=${article.getArticleId()})}" href="/xd/23.html" th:text="${article.getArticleTopic()}">作为一个设计师,如果遭到质疑你是否能恪守自己的原则?</a>
-                </li>
-            </ul>
-        </div>
-        <!--<div class="ad whitebg imgscale">
-            <ul>
-                <a href="http://www.yangqq.com/download/div/917.html" target="_blank"><img
-                        src="/skin/jxhx/images/ad02.jpg"></a>
-            </ul>
-        </div>-->
-    </div>
-</article>
+    </aside>
+</main>
+<div class="clear"></div>
+
 <footer th:fragment="index-footer">
-    <div class="box">
+    <div class="ft-box">
         <div class="wxbox">
             <ul>
                 <li><img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}"><span>开发者微信</span></li>
@@ -264,169 +282,33 @@
         </div>
         <div class="endnav">
             <p><b>站点声明：</b></p>
-            <p>1、本站是个人博客网站，版权归EasyBlog开发者所有，个人可以使用，但是未经许可不得用于任何商业目的。</p>
+            <p>1、本站是个人网站，版权归EasyBlog开发者所有，个人可以使用，但是未经许可不得用于任何商业目的。</p>
             <p>2、所有文章未经原作者授权禁止转载、摘编、复制或建立镜像，如有违反，追究法律责任。</p>
             <p>3、评论区禁止发布有损国家形象和民族团结等非法言论，如有违反，追究法律责任。</p>
             <p>4、本站所展示的所有内容仅供网友学习和交流，请勿作他用。若因非法使用引起纠纷、损失等，一切后果由使用者承担。</p>
             <br/>
-            <p class="copyright" style="margin-top: 0 !important;font-size: 15px">Copyright © 2019-[[${#dates.format(new java.util.Date().getTime(),'yyyy')}]] <a
-                 style="font-size: 15px;color: inherit"   href="http://www.easyblog.top">www.easyblog.top</a> 版权所有.
-                <a href="http://beian.miit.gov.cn/publish/query/indexFirst.action" style="font-size: 15px;color: inherit"  target="_blank">陕ICP备-19025460号.</a>
-                <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278953609'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z_stat.php%3Fid%3D1278953609%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+            <p class="copyright" style="margin-top: 0 !important;font-size: 15px">
+                Copyright © 2019-[[${#dates.format(new java.util.Date().getTime(),'yyyy')}]]
+                <a style="font-size: 15px;color: inherit" href="http://www.easyblog.top">www.easyblog.top</a> 版权所有.
+                <a href="http://beian.miit.gov.cn/publish/query/indexFirst.action"
+                   style="font-size: 15px;color: inherit" target="_blank">备案号：陕ICP备-19025460号</a>
+                <span class="ft-sitemap"><a th:href="@{/sitemap.xml}" target="_blank">网站地图</a>
+                <a href="http://zhuanti.ip3q.com/tags/" target="_blank">标签合集</a>
+                <a href="https://www.cnzz.com/stat/website.php?web_id=1278953609" target="_blank">
+                    <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278953609'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z_stat.php%3Fid%3D1278953609%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+                    网站统计
+                </a></span>
             </p>
         </div>
     </div>
     <div class="scrollTop">
-        <svg id="top-default" t="1604286327823" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="22359" width="28" height="28"><path d="M588.8 98.133333c-29.866667-29.866667-55.466667-51.2-68.266667-51.2H507.733333c-17.066667 0-38.4 21.333333-68.266666 51.2L247.466667 320c-38.4 38.4-34.133333 106.666667 38.4 106.666667h460.8c72.533333 0 76.8-68.266667 38.4-106.666667l-196.266667-221.866667z m247.466667 558.933334v119.466666h34.133333c46.933333 0 72.533333-21.333333 72.533333-59.733333 0-38.4-21.333333-59.733333-68.266666-59.733333h-38.4z m0 183.466666v132.266667h-81.066667V597.333333h128c93.866667 0 140.8 38.4 140.8 119.466667 0 38.4-12.8 68.266667-42.666667 93.866667-29.866667 21.333333-64 34.133333-106.666666 34.133333h-38.4zM405.333333 780.8c0 38.4 8.533333 68.266667 25.6 89.6 17.066667 21.333333 42.666667 34.133333 72.533334 34.133333s55.466667-12.8 72.533333-34.133333c17.066667-21.333333 25.6-51.2 25.6-89.6 0-38.4-8.533333-68.266667-25.6-93.866667-17.066667-21.333333-42.666667-34.133333-72.533333-34.133333s-55.466667 12.8-72.533334 34.133333c-12.8 29.866667-25.6 59.733333-25.6 93.866667z m-81.066666 4.266667c0-59.733333 17.066667-106.666667 51.2-145.066667 34.133333-38.4 81.066667-55.466667 136.533333-55.466667 55.466667 0 98.133333 17.066667 128 55.466667 34.133333 34.133333 51.2 81.066667 51.2 136.533333 0 59.733333-17.066667 106.666667-51.2 140.8-34.133333 38.4-76.8 55.466667-132.266667 55.466667s-98.133333-17.066667-132.266666-51.2c-34.133333-34.133333-51.2-81.066667-51.2-136.533333z m-29.866667-128H187.733333v311.466666H106.666667v-311.466666H0v-64h294.4v64z" p-id="22360" fill="#8a8a8a"></path></svg>
+        <svg id="top-default" t="1604286327823" class="icon" viewBox="0 0 1024 1024" version="1.1"
+             xmlns="http://www.w3.org/2000/svg" p-id="22359" width="28" height="28">
+            <path d="M588.8 98.133333c-29.866667-29.866667-55.466667-51.2-68.266667-51.2H507.733333c-17.066667 0-38.4 21.333333-68.266666 51.2L247.466667 320c-38.4 38.4-34.133333 106.666667 38.4 106.666667h460.8c72.533333 0 76.8-68.266667 38.4-106.666667l-196.266667-221.866667z m247.466667 558.933334v119.466666h34.133333c46.933333 0 72.533333-21.333333 72.533333-59.733333 0-38.4-21.333333-59.733333-68.266666-59.733333h-38.4z m0 183.466666v132.266667h-81.066667V597.333333h128c93.866667 0 140.8 38.4 140.8 119.466667 0 38.4-12.8 68.266667-42.666667 93.866667-29.866667 21.333333-64 34.133333-106.666666 34.133333h-38.4zM405.333333 780.8c0 38.4 8.533333 68.266667 25.6 89.6 17.066667 21.333333 42.666667 34.133333 72.533334 34.133333s55.466667-12.8 72.533333-34.133333c17.066667-21.333333 25.6-51.2 25.6-89.6 0-38.4-8.533333-68.266667-25.6-93.866667-17.066667-21.333333-42.666667-34.133333-72.533333-34.133333s-55.466667 12.8-72.533334 34.133333c-12.8 29.866667-25.6 59.733333-25.6 93.866667z m-81.066666 4.266667c0-59.733333 17.066667-106.666667 51.2-145.066667 34.133333-38.4 81.066667-55.466667 136.533333-55.466667 55.466667 0 98.133333 17.066667 128 55.466667 34.133333 34.133333 51.2 81.066667 51.2 136.533333 0 59.733333-17.066667 106.666667-51.2 140.8-34.133333 38.4-76.8 55.466667-132.266667 55.466667s-98.133333-17.066667-132.266666-51.2c-34.133333-34.133333-51.2-81.066667-51.2-136.533333z m-29.866667-128H187.733333v311.466666H106.666667v-311.466666H0v-64h294.4v64z"
+                  p-id="22360" fill="#8a8a8a"></path>
+        </svg>
         <svg id="top-highlight" style="display: none" t="1604292029140" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="24680" width="28" height="28"><path d="M588.8 98.133333c-29.866667-29.866667-55.466667-51.2-68.266667-51.2H507.733333c-17.066667 0-38.4 21.333333-68.266666 51.2L247.466667 320c-38.4 38.4-34.133333 106.666667 38.4 106.666667h460.8c72.533333 0 76.8-68.266667 38.4-106.666667l-196.266667-221.866667z m247.466667 558.933334v119.466666h34.133333c46.933333 0 72.533333-21.333333 72.533333-59.733333 0-38.4-21.333333-59.733333-68.266666-59.733333h-38.4z m0 183.466666v132.266667h-81.066667V597.333333h128c93.866667 0 140.8 38.4 140.8 119.466667 0 38.4-12.8 68.266667-42.666667 93.866667-29.866667 21.333333-64 34.133333-106.666666 34.133333h-38.4zM405.333333 780.8c0 38.4 8.533333 68.266667 25.6 89.6 17.066667 21.333333 42.666667 34.133333 72.533334 34.133333s55.466667-12.8 72.533333-34.133333c17.066667-21.333333 25.6-51.2 25.6-89.6 0-38.4-8.533333-68.266667-25.6-93.866667-17.066667-21.333333-42.666667-34.133333-72.533333-34.133333s-55.466667 12.8-72.533334 34.133333c-12.8 29.866667-25.6 59.733333-25.6 93.866667z m-81.066666 4.266667c0-59.733333 17.066667-106.666667 51.2-145.066667 34.133333-38.4 81.066667-55.466667 136.533333-55.466667 55.466667 0 98.133333 17.066667 128 55.466667 34.133333 34.133333 51.2 81.066667 51.2 136.533333 0 59.733333-17.066667 106.666667-51.2 140.8-34.133333 38.4-76.8 55.466667-132.266667 55.466667s-98.133333-17.066667-132.266666-51.2c-34.133333-34.133333-51.2-81.066667-51.2-136.533333z m-29.866667-128H187.733333v311.466666H106.666667v-311.466666H0v-64h294.4v64z" p-id="24681" fill="#1296db"></path></svg>
     </div>
 </footer>
 </body>
-<script type="text/javascript" src="../static/js/easyblog.js" th:src="@{/static/js/easyblog.js}"></script>
-<script type="text/javascript" th:inline="javascript">
-    scrollTop();
-    $(document).ready(function () {
-        $('.scrollTop').mouseenter(function () {
-            $('#top-highlight').toggle();
-            $('#top-default').toggle();
-        });
-        $('.scrollTop').mouseleave(function () {
-            $('#top-highlight').toggle();
-            $('#top-default').toggle();
-        });
-    });
-
-        /*<![CDATA[*/
-    let user= /* [[${user}]]*/ null;
-    let MAX_PAGE_NO = /*[[${articlePagesSize}]]*/ 0;   //最大页码
-    let displayedSize= /*[[${displayedSize}]]*/ 0;  //已经显示的数量
-    let pageSize= /*[[${pageSize}]]*/ 0;   //分页大小
-    let pageNo = pageSize===0?5:(displayedSize/pageSize)+1;    //首页最新文章默认前20条数据（前4页），当滑到最后从第5页开始加载
-    /*]]>*/
-    $(document).ready(function () {
-        $('#END').hide();
-        showPageZoomWarning();
-        let range = 50;             //距下边界长度/单位px
-        let totalheight = 0;
-        $(window).scroll(function () {
-            let srollPos = $(window).scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)
-            totalheight = parseFloat($(window).height()) + parseFloat(srollPos);
-            if (($(document).height() - range) <= totalheight && pageNo <= MAX_PAGE_NO) {
-                if (loadList(pageNo)) {
-                    pageNo++;
-                }
-            }
-
-            if(pageNo>MAX_PAGE_NO){
-                $('#END').show();
-            }
-        });
-    });
-
-    //加载新的文章数据
-    function loadList(pageNo) {
-        let ret = false;
-        $.ajax({
-            url: "/article/asyncGetArticles",
-            method: "GET",
-            async: false,
-            data: {page: pageNo},
-            dataType: "json",
-            success: function (response) {
-                ret = response.success;
-                let userId=response.message;
-                for(var key in response.model) {
-                    dynamicAppendArticle(response.model[key], userId);
-                }
-            },
-            error: function () {
-                showErrorMessage("服务异常，请重试！");
-            }
-        });
-
-        return ret;
-    }
-
-    /**
-     * 动态生成文章信息
-     */
-    function dynamicAppendArticle(data, userId) {
-        var li = $('<li></li>');
-        //h3
-        var h3 = $('<h3 class="blogtitle"></h3>');
-        var h3_a = $('<a target="_blank"></a>');
-        $(h3_a).html(data.articleTopic);
-        $(h3).append(h3_a);
-        $(li).append(h3);
-        //span
-        var span = $('<span class="blogpic imgscale"></span>');
-        var span_a = $('<a></a>');
-        $(span_a).attr('title', data.articleTopic);
-        var span_a_img = $('<img/>');
-        $(span_a).append(span_a_img);
-        $(span).append(span_a);
-        $(li).append(span);
-        //p
-        var content_p = $('<p class="blogtext"></p>');
-        $(content_p).html(data.articleContent.substring(0, 150));
-        $(li).append(content_p);
-
-        //p
-        var blog_info_p = $('<p class="bloginfo"></p>');
-        $(li).append(blog_info_p);
-        var blog_info_p_li = $('<li class="avatar" style="min-height: unset !important;padding-bottom: 0!important;margin-bottom: 0px;"></li>');
-        var blog_info_p_li_a = $('<a href="#" target="_blank"></a>');
-        var blog_info_p_li_a_img = $('<img src="#" width="30px" height="30px">');
-        $(blog_info_p_li_a).attr('href', "/article/index/" + data.articleUser);
-        $(blog_info_p_li_a_img).attr('src', data.userHeaderImageUrl);
-        $(blog_info_p_li_a).append(blog_info_p_li_a_img);
-        $(blog_info_p_li).append(blog_info_p_li_a);
-        $(blog_info_p).append(blog_info_p_li);
-
-        var blog_info_p_span2 = $('<span></span>');
-        $(blog_info_p_span2).html(formatDate(data.articlePublishTime, false));
-        $(blog_info_p).append(blog_info_p_span2);
-
-        var blog_info_p_span3 = $('<span class="text"></span>');
-        var blog_info_p_span3_svg = $('<svg style="vertical-align:-5px;fill: #666" t="1568705845189" class="icon eye" viewBox="0 0 1433 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16883" width="20" height="20"><path d="M720.69629629 932.6176963c-213.05768889 0-407.36918519-120.58848889-582.93448888-361.67534074-23.88337036-32.71571111-23.88337036-85.169 0-117.88471112C313.32711111 211.97079259 507.63860741 91.3823037 720.69629629 91.3823037s407.36918519 120.58848889 582.9344889 361.67534074c23.88337036 32.71571111 23.88337036 85.169 0 117.88471112C1128.06548147 812.02920741 933.75398519 932.6176963 720.69629629 932.6176963z m0-721.00740741C542.51734074 211.61028889 377.85727408 309.39691852 222.48017777 512 377.85727408 714.60308148 542.4272148 812.38971111 720.69629629 812.38971111c178.17895556 0 342.83902223-97.78662964 498.21611851-300.38971111C1063.53531852 309.39691852 898.96537777 211.61028889 720.69629629 211.61028889z m0 495.69259259a195.30288148 195.30288148 0 1 1 0-390.60576296 195.30288148 195.30288148 0 0 1 0 390.60576296zM720.69629629 602.12592592a90.12592592 90.12592592 0 1 0 0-180.25185184 90.12592592 90.12592592 0 0 0 0 180.25185184z" p-id="16884" fill=""></path></svg>');
-        var blog_info_p_span3_span = $('<span style="margin-left: 0"></span>');
-        $(blog_info_p_span3_span).html(data.articleClick);
-        $(blog_info_p_span3).append(blog_info_p_span3_svg);
-        $(blog_info_p_span3).append(blog_info_p_span3_span);
-        $(blog_info_p).append(blog_info_p_span3);
-
-        var blog_info_p_span4 = $('<span></span>');
-        var blog_info_p_span4_a = $('<a target="_blank"></a>');
-        $(blog_info_p_span4).append(blog_info_p_span4_a);
-        $(blog_info_p).append(blog_info_p_span4);
-        $(blog_info_p_span4_a).html("【"+data.articleCategory+"】");
-        $(blog_info_p_span4_a).attr('href', "/category/details/" + data.categoryId + "/" + data.articleUser)
-
-        //a
-        var a = $('<a href="#" class="viewmore"></a>');
-        $(li).append(a);
-        $(a).html("阅读全文");
-        if (userId == null) {
-            $(h3_a).attr('href', "/article/details/" + data.articleId);
-            $(span_a).attr('href', "/article/details/" + data.articleId);
-            if (data.articleFirstPicture != null) {
-                $(span_a_img).attr('src', data.articleFirstPicture);
-            } else {
-                $(span_a_img).attr('src', "https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture");
-            }
-            $(a).attr('href', "/article/details/" + data.articleId);
-        } else {
-            $(h3_a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + userId);
-            $(span_a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + userId);
-            if (data.articleFirstPicture != null) {
-                $(span_a_img).attr('src', data.articleFirstPicture);
-            } else {
-                $(span_a_img).attr('src', "https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture");
-            }
-            $(a).attr('href', "/article/details/" + data.articleId + "?visitorUId=" + userId);
-        }
-        $(".news").append(li);
-    }
-
-</script>
 </html>
