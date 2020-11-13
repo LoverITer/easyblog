@@ -9,15 +9,17 @@ import top.easyblog.entity.dto.Address;
 import top.easyblog.entity.po.Article;
 import top.easyblog.entity.po.User;
 import top.easyblog.entity.po.UserPower;
-import top.easyblog.global.enums.HtmlTemplate;
 import top.easyblog.mapper.ArticleMapper;
 import top.easyblog.mapper.UserMapper;
 import top.easyblog.mapper.UserPowerMapper;
-import top.easyblog.util.HtmlTemplateUtils;
 import top.easyblog.util.NetWorkUtils;
+import top.easyblog.util.SensitiveWordUtils;
 import top.easyblog.web.oauth2.impl.GitHubAuthServiceImpl;
+import top.easyblog.web.service.impl.UserServiceImpl;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -39,7 +41,9 @@ public class EasyBlogApplicationTests {
     GitHubAuthServiceImpl gitHubAuthService;
 
     @Autowired
-    HtmlTemplateUtils htmlTemplateUtils;
+    UserServiceImpl userService;
+
+
 
     @Test
     public void testForArticleMapper(){
@@ -145,9 +149,31 @@ public class EasyBlogApplicationTests {
     public void testTemplateEngine(){
         HashMap<String, Object> params = new HashMap<>();
         params.put("title","hello,黄鑫");
-        System.out.println(new HtmlTemplateUtils().render(HtmlTemplate.TEST, params));
     }
 
+    @Test
+    public void testSensitiveWordFilter() {
+        SensitiveWordUtils sensitiveWordUtils = SensitiveWordUtils.getInstance();
+        String searchKey = "去你妹的";
+        int i = sensitiveWordUtils.CheckSensitiveWord(searchKey, 0, SensitiveWordUtils.MatchType.MIN_MATCH_TYPE);
+        if (i > 0) {
+            System.out.printf("这个人输入了非法字符--> %s,不知道他到底要查什么~ %d--> {}", searchKey, 667020);
+            System.out.println(sensitiveWordUtils.replaceSensitiveWord(searchKey, "*", SensitiveWordUtils.MatchType.MIN_MATCH_TYPE));
+        }
+    }
+
+
+    @Test
+    public void sensitiveWordTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        User user = new User();
+        user.setUserId(1313);
+        user.setUserPassword("你是个二笔");
+        user.setUserNickname("我是铁憨憨");
+        user.setUserScore(18);
+        user.setUserGender("男人婆");
+        System.out.println("过滤之前：");
+
+    }
 
 }
 

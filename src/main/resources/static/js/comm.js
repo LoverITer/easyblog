@@ -19,6 +19,15 @@ $(document).ready(function () {
         $('#top-default').toggle();
     });
 
+    //logo 打字动态效果
+    $(function () {
+        let textBox = $('.logo h1');
+        let index = 0;
+        let str = 'EasyBlog';
+        let len = str.length;
+        typeAnimate(textBox, index, str, len);
+    });
+
 
     //nav
     var obj=null;
@@ -27,36 +36,6 @@ $(document).ready(function () {
     for(i=1;i<As.length;i++){if(window.location.href.indexOf(As[i].href)>=0)
         obj=As[i];}
     obj.id='selected';
-
-    //nav
-    $("#mnavh").click(function(){
-        $("#starlist").toggle();
-        $("#mnavh").toggleClass("open");
-    });
-
-    //search
-    $(".searchico").click(function(){
-        $(".search").toggleClass("open");
-    });
-
-    //searchclose
-    $(".searchclose").click(function(){
-        $(".search").removeClass("open");
-    });
-
-    //banner
-    $('#banner').easyFader();
-
-    //nav menu
-    $(".menu").click(function(event) {
-        $(this).children('.sub').slideToggle();
-    });
-
-    //tab
-    $('.tab_buttons li').click(function(){
-        $(this).addClass('newscurrent').siblings().removeClass('newscurrent');
-        $('.newstab>div:eq('+$(this).index()+')').show().siblings().hide();
-    });
 
 
     ////////////////////////////////////////////////////
@@ -101,16 +80,22 @@ $(document).ready(function () {
         event.stopPropagation();
     });
 
-    //aside
-    var Sticky = new hcSticky('aside', {
-        stickTo: 'main',
-        innerTop: 0,
-        followScroll: false,
-        queries: {
-            480: {
-                disable: true,
-                stickTo: 'body'
-            }
-        }
-    });
 });
+
+//打字输入效果
+function typeAnimate(textBox, index, str, len) {
+    textBox.html(str.substr(0, index) + '<span class="animate">_</span>');
+    setTimeout(function () {
+        index++;
+        if (index === len + 1) {
+            $('.animate').addClass('on');
+            setTimeout(function () {
+                $('.animate').hide();
+            }, 3000);
+            return;
+        }
+        typeAnimate(textBox, index, str, len);
+    }, Math.random() * 600)
+}
+
+

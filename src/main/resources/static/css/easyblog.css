@@ -891,6 +891,11 @@ html {
     margin: 2px;
 }
 
+.m-mobile-logo-position {
+    float: left;
+    margin: 0 auto;
+}
+
 @media only screen and (min-width: 1200px) {
     .m-container-middle {
         max-width: 75em !important;

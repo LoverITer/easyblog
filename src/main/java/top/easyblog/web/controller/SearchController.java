@@ -13,6 +13,7 @@ import top.easyblog.entity.po.User;
 import top.easyblog.global.pagehelper.PageParam;
 import top.easyblog.global.pagehelper.PageSize;
 import top.easyblog.util.CookieUtils;
+import top.easyblog.util.SensitiveWordUtils;
 import top.easyblog.util.UserUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,9 +52,14 @@ public class SearchController extends BaseController{
         User visitor= UserUtils.getUserFromRedis(sessionId);
         model.addAttribute("visitor", visitor);
         model.addAttribute("query", query);
-        if (!StringUtils.isEmpty(query)) {
+        SensitiveWordUtils wordUtils = SensitiveWordUtils.getInstance();
+        //检测是否有敏感字
+        int index = wordUtils.CheckSensitiveWord(query, 0, SensitiveWordUtils.MatchType.MIN_MATCH_TYPE);
+        if (index == 0 && !StringUtils.isEmpty(query)) {
+            //如果有敏感字就不往热搜词排行榜总存放
             hotWordService.incrementScore(query);
         }
+        //重新获取一下热搜词排行前15的关键字
         List<String> hotList = hotWordService.getHotList(null);
         model.addAttribute("hotList", hotList);
         PageParam pageParam = new PageParam(pageNo, PageSize.DEFAULT_PAGE_SIZE);

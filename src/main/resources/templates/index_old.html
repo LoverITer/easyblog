@@ -389,7 +389,7 @@
     let MAX_PAGE_NO = /*[[${articlePagesSize}]]*/ 0;   //最大页码
     let displayedSize = /*[[${displayedSize}]]*/ 0;  //已经显示的数量
     let pageSize = /*[[${pageSize}]]*/ 0;   //分页大小
-    let pageNo = pageSize === 0 ? 5 : (displayedSize / pageSize) + 1;    //首页最新文章默认前20条数据（前4页），当滑到最后从第5页开始加载
+    let pageNo = pageSize == 0 ? 5 : (displayedSize / pageSize) + 1;    //首页最新文章默认前20条数据（前4页），当滑到最后从第5页开始加载
     /*]]>*/
     $(document).ready(function () {
         $('.read-more').click(function () {

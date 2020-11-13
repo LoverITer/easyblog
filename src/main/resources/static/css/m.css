@@ -5,6 +5,10 @@
  * Copyright 2019, design by yangqq
  */
 @media only screen and (min-width: 1200px) {
+    .logo h1 {
+        font-size: 2.4rem;
+        font-weight: 700;
+    }
 }
 
 @media only screen and (max-width: 1200px) {
@@ -14,6 +18,11 @@
 
     .logo {
         margin-right: 0
+    }
+
+    .logo h1 {
+        font-size: 2.4rem;
+        font-weight: 700;
     }
 
     #starlist li a {
@@ -71,6 +80,11 @@
         height: 230px;
     }
 
+    .logo h1 {
+        font-size: 2.4rem;
+        font-weight: 700;
+    }
+
     .index-category-empty {
         text-align: center;
         vertical-align: middle;
@@ -81,6 +95,7 @@
 
     .banner h4 {
         font-size: 15px;
+        line-height: 16px;
         margin: 20px 0 30px;
         overflow: hidden;
         white-space: nowrap;
@@ -187,6 +202,16 @@
         left: 10px;
     }
 
+    .logo h1 {
+        font-size: 1.9rem;
+        font-weight: 700;
+        width: 160px;
+        height: 60px;
+        position: relative;
+        top: -20px;
+        color: #fff;
+    }
+
     .topnav {
         position: fixed;
         top: 0;
@@ -234,7 +259,6 @@
         padding: 0;
         font-size: 15px;
     }
-
     #starlist ul.sub {
         background: none;
         width: 100%;
@@ -280,7 +304,7 @@
         color: #000 !important
     }
 
-    #mnavh.open:after {
+    #mnavh .open:after {
         position: fixed;
         width: 40%;
         height: 100%;
@@ -328,7 +352,12 @@
     }
 
     .logo img {
-        display: none
+        width: 100px;
+        height: 40px;
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 10px;
     }
 
     #starlist li:hover ul.sub:before {
@@ -425,9 +454,30 @@
     .rbox {
         width: 33%;
     }
+
+    .logo h1 {
+        font-size: 1.9rem;
+        font-weight: 700;
+        width: 160px;
+        height: 60px;
+        position: relative;
+        top: -20px;
+        color: #fff;
+    }
+
 }
 
 @media only screen and (max-width: 768px) {
+    .logo h1 {
+        font-size: 1.9rem;
+        font-weight: 700;
+        width: 160px;
+        height: 60px;
+        position: relative;
+        top: -20px;
+        color: #fff;
+    }
+
     .endnav p:last-child {
         text-align: center;
         margin-top: 20px;
@@ -492,6 +542,10 @@
 
     .pics ul li i {
         height: 110px
+    }
+
+    .m-mobile-hide {
+        display: none !important
     }
 }
 
@@ -598,6 +652,7 @@
 
     .banner h4 {
         font-size: 12px;
+        line-height: 16px;
         padding: 0 10px;
         margin: 10px 0 20px;
     }
@@ -754,7 +809,7 @@
 
     .cr_right {
         float: none;
-        text-align: center;
+        text-align: center
     }
 
     footer {
@@ -769,7 +824,6 @@
         font-size: 15px;
         margin-right: 24px;
     }
-
 
     .ad {
         border: none
@@ -823,9 +877,6 @@
 
     .wz_tuijian ul li span {
         left: 148px;
-    }
-
-    .wz_tuijian {
     }
 
     .pagelist {
@@ -1040,5 +1091,9 @@
         vertical-align: middle;
         position: relative;
         top: 120px;
+    }
+
+    .m-mobile-hide {
+        display: none !important
     }
 }

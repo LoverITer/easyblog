@@ -28,6 +28,7 @@ public class UserServiceImpl implements IUserService {
         this.userMapper = userMapper;
     }
 
+
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     @Override
     public User checkUser(String username, String password) {

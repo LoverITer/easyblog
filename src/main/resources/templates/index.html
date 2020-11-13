@@ -24,7 +24,7 @@
     <!--top bar-->
     <div class="top">
         <div class="box">
-            <div class="welcome">欢迎您访问<a href="http://zhuanti.ip3q.com/" target="_blank">EasyBlog</a>
+            <div class="welcome">欢迎您访问<a th:href="@{/}" target="_blank">EasyBlog</a>
                 本站旨在为大家提供IT技术相关的教程和资讯，以及常用开发工具免费下载！
             </div>
             <div class="guanzhu"><i></i>
@@ -73,8 +73,12 @@
     <!--top end-->
     <nav>
         <div class="box">
-            <div class="logo"><a th:href="@{/}">
-                <img src="http://zhuanti.ip3q.com/skin/html/images/logo.png" alt=""></a></div>
+            <div class="logo" style="width: 182px">
+                <a th:href="@{/}" title="EasyBlog-让写博客更简单">
+                    <!--<img th:src="@{/static/logo.png}" alt="EasyBlog-让写博客更简单">-->
+                    <h1>EasyBlog</h1>
+                </a>
+            </div>
             <ul id="starlist">
                 <li><a href="/" title="首页" th:href="@{/}">首页</a></li>
                 <li class="menu"><a th:href="@{/cb}">计算机基础</a>
@@ -184,7 +188,7 @@
         <div class="h_title">最新文章</div>
         <div class="blogs">
             <ul th:if="${newestArticlesPages!=null&&!#lists.isEmpty(newestArticlesPages.getList())}">
-                <div th:each="article,articleStat:${newestArticlesPages.getList()}">
+                <th:block th:each="article,articleStat:${newestArticlesPages.getList()}">
                     <li class="blogs_list">
                         <a th:href="@{/article/details/{id}(id=${article.getArticleId()})}" target="_blank"><i>
                             <img th:if="${article.getArticleFirstPicture()==null}"
@@ -217,15 +221,23 @@
                              data-ad-layout-key="-ef+6k-30-ac+ty"
                              data-ad-client="ca-pub-2311962880414013"
                              data-ad-slot="1210965159"></ins>
-                        <script>
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
                     </div>
-                </div>
+                </th:block>
             </ul>
         </div>
+        <div class="read-more"><a>加载更多</a></div>
+        <!--bloglist end-->
+        <div th:if="${mobileDevice==null or !mobileDevice}" id="END"
+             style="text-align: center;letter-spacing: -1px;color: #bbb;display: none;padding: 25px">———————————<span
+                style="color: #888;display: inline-block;letter-spacing: 0;margin:0 20px;">我是有底线的</span>———————————
+        </div>
+        <div th:if="${mobileDevice!=null and mobileDevice}" id="END"
+             style="text-align: center;letter-spacing: -1px;color: #bbb;display: none;padding: 15px">————<span
+                style="color: #888;display: inline-block;letter-spacing: 0;margin:0 20px;">我是有底线的</span>————
+        </div>
     </div>
-    <aside class="rbox">
+    <aside class="rbox m-mobile-hide">
         <div class="news_kx">
             <h2>今日推荐</h2>
             <ul th:if="${recommendArticles!=null && #lists.size(recommendArticles)>0}">
@@ -293,7 +305,7 @@
                 <a href="http://beian.miit.gov.cn/publish/query/indexFirst.action"
                    style="font-size: 15px;color: inherit" target="_blank">备案号：陕ICP备-19025460号</a>
                 <span class="ft-sitemap"><a th:href="@{/sitemap.xml}" target="_blank">网站地图</a>
-                <a href="http://zhuanti.ip3q.com/tags/" target="_blank">标签合集</a>
+                <a href="#" target="_blank">标签合集</a>
                 <a href="https://www.cnzz.com/stat/website.php?web_id=1278953609" target="_blank">
                     <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278953609'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z_stat.php%3Fid%3D1278953609%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
                     网站统计
@@ -311,4 +323,71 @@
     </div>
 </footer>
 </body>
+<script th:src="@{/static/js/easyblog.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //实现加载更多数据的功能
+    /*<![CDATA[*/
+    let MAX_PAGE_NO = /*[[${articlePagesSize}]]*/ 0;   //最大页码
+    let displayedSize = /*[[${displayedSize}]]*/ 0;  //已经显示的数量
+    let pageSize = /*[[${pageSize}]]*/ 0;   //分页大小
+    let pageNo = pageSize == 0 ? 5 : (displayedSize / pageSize) + 2;
+    /*]]>*/
+    $(function () {
+        //加载跟多文章数据
+        $('.read-more').click(function () {
+            if (loadMore(pageNo)) {
+                pageNo++;
+                console.log(pageNo);
+            }
+            if (pageNo > MAX_PAGE_NO) {
+                $('#END').show();
+                $('.read-more').hide();
+            }
+        });
+    });
+
+    //加载跟多文章
+    function loadMore(pageNo) {
+        let ret = false;
+        $.ajax({
+            url: "/article/asyncGetArticles",
+            method: "GET",
+            async: false,
+            data: {page: pageNo},
+            dataType: "json",
+            success: function (response) {
+                ret = response.success;
+                for (var key in response.model) {
+                    fillDataToHtml(response.model[key]);
+                }
+            },
+            error: function () {
+                showErrorMessage("服务异常，请重试！");
+            }
+        });
+        return ret;
+    }
+
+    function fillDataToHtml(article) {
+        let result = '<li class="blogs_list">\n' +
+            '<a href="/article/details/' + article.articleId + '" target="_blank"><i>';
+        if (article.articleFirstPicture == null) {
+            result += '<img src="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture" alt=' + article.articleTopic + ' />';
+        } else {
+            result += '<img src=' + article.articleFirstPicture + ' alt=' + article.articleTopic + '>\n';
+        }
+        result += ' </i>\n' + '<h2>' + article.articleTopic + '</h2></a>\n' +
+            '                        <p>' + article.articleContent.substring(0, 150) + '</p>\n' +
+            '                        <div class="blogs_writer">' + article.authorName + '\n' +
+            '                            <span class="blogs_time">' + formatDate(article.articlePublishTime, false) + '</span>\n' +
+            '                        </div>\n' +
+            '                        <div class="blogs_tags">\n' +
+            '                            <a href="/category/details/' + article.categoryId + '/' + article.articleUser + '" target="_blank">' + article.articleCategory + '</a>\n' +
+            '                        </div>\n' +
+            '                        <span class="blogs_lm"><a href="/category/details/' + article.categoryId + '/' + article.articleUser + '"  target="_blank">' + article.articleCategory + '</a></span>\n' +
+            '                    </li>';
+        $('.blogs ul').append(result);
+    }
+
+</script>
 </html>

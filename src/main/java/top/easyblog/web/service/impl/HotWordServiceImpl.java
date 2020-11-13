@@ -106,13 +106,12 @@ public class HotWordServiceImpl implements HotWordService {
         if (values == null) {
             return null;
         }
-        //key不为空的时候 推荐相关的最热前十名
+        //key不为空的时候 推荐相关的最热前十五名
         if (!StringUtils.isEmpty(searchKey)) {
             for (Object val : values) {
                 String value = String.valueOf(val);
                 if (value.toLowerCase().contains(searchKey.toLowerCase())) {
-                    if (result.size() > 9) {
-                        //只返回最热的前十名
+                    if (result.size() > 15) {
                         break;
                     }
                     Long time = Long.valueOf((String) redisUtils.get(value, REDIS_DB));
@@ -128,8 +127,7 @@ public class HotWordServiceImpl implements HotWordService {
         } else {
             for (Object val : values) {
                 String value = String.valueOf(val);
-                if (result.size() > 9) {
-                    //只返回最热的前十名
+                if (result.size() > 15) {
                     break;
                 }
                 Long time = Long.valueOf((String) redisUtils.get(value, REDIS_DB));

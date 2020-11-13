@@ -2,7 +2,6 @@ package top.easyblog.util;
 
 import top.easyblog.config.SensitiveWordInit;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -20,24 +19,38 @@ public class SensitiveWordUtils {
     /***敏感词过滤器：利用DFA算法  进行敏感词过滤*/
     private Map sensitiveWordMap = null;
 
-    /***最小匹配规则*/
-    public static int minMatchType = 1;
+    /**
+     * 匹配规则
+     */
+    public enum MatchType {
+        /***最小匹配规则*/
+        MIN_MATCH_TYPE(1),
+        /***最大匹配规则*/
+        MAX_MATCH_TYPE(2);
 
-    /***最大匹配规则*/
-    public static int maxMatchType = 2;
+        private int matchType;
+
+        MatchType(int matchType) {
+            this.matchType = matchType;
+        }
+
+        public int getMatchType() {
+            return matchType;
+        }
+    }
 
     /***单例对象*/
     private static SensitiveWordUtils instance = null;
 
     /***构造函数，初始化敏感词库*/
-    private SensitiveWordUtils() throws IOException {
+    private SensitiveWordUtils() {
         sensitiveWordMap = new SensitiveWordInit().init();
     }
 
     /**
      * 获取单例
      **/
-    public static SensitiveWordUtils getInstance() throws IOException {
+    public static SensitiveWordUtils getInstance() {
         if (null == instance) {
             synchronized (SensitiveWordUtils.class) {
                 if (null == instance) {
@@ -48,9 +61,15 @@ public class SensitiveWordUtils {
         return instance;
     }
 
-    /***获取文字中的敏感词*/
-    public Set<String> getSensitiveWord(String txt, int matchType) {
-        Set<String> sensitiveWordList = new HashSet<String>();
+    /**
+     * 获取文字中的敏感词
+     *
+     * @param txt       原始文本
+     * @param matchType 匹配规则
+     * @return
+     */
+    public Set<String> getSensitiveWord(String txt, MatchType matchType) {
+        Set<String> sensitiveWordList = new HashSet<>();
         for (int i = 0; i < txt.length(); i++) {
             // 判断是否包含敏感字符
             int length = CheckSensitiveWord(txt, i, matchType);
@@ -72,8 +91,7 @@ public class SensitiveWordUtils {
      * @param replaceChar
      * @return
      */
-    public String replaceSensitiveWord(String txt, int matchType,
-                                       String replaceChar) {
+    public String replaceSensitiveWord(String txt, String replaceChar, MatchType matchType) {
         String resultTxt = txt;
         // 获取所有的敏感词
         Set<String> set = getSensitiveWord(txt, matchType);
@@ -112,7 +130,7 @@ public class SensitiveWordUtils {
      * @param matchType
      * @return
      */
-    public int CheckSensitiveWord(String txt, int beginIndex, int matchType) {
+    public int CheckSensitiveWord(String txt, int beginIndex, MatchType matchType) {
         // 敏感词结束标识位：用于敏感词只有1位的情况
         boolean flag = false;
         // 匹配标识数默认为0
@@ -131,7 +149,7 @@ public class SensitiveWordUtils {
                     // 结束标志位为true
                     flag = true;
                     // 最小规则，直接返回,最大规则还需继续查找
-                    if (SensitiveWordUtils.minMatchType == matchType) {
+                    if (MatchType.MIN_MATCH_TYPE == matchType) {
                         break;
                     }
                 }
@@ -142,13 +160,13 @@ public class SensitiveWordUtils {
             }
         }
 
-        if (SensitiveWordUtils.maxMatchType == matchType) {
+        if (MatchType.MAX_MATCH_TYPE == matchType) {
             if (matchFlag < 2 || !flag) {
                 //长度必须大于等于1，为词
                 matchFlag = 0;
             }
         }
-        if (SensitiveWordUtils.minMatchType == matchType) {
+        if (MatchType.MIN_MATCH_TYPE == matchType) {
             if (matchFlag < 2 && !flag) {
                 //长度必须大于等于1，为词
                 matchFlag = 0;

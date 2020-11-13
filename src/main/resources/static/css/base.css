@@ -689,7 +689,7 @@ main {
 
 /*blogs*/
 .blogs {
-    margin-bottom: 30px;
+    margin-bottom: 0;
 }
 
 .blogs_list {
@@ -812,6 +812,25 @@ main {
 
 .blogs_list:hover img {
     transform: scale(1.1);
+}
+
+.read-more {
+    width: 100%;
+    height: 44px;
+    background: #f1f1f1;
+    margin: 15px 0;
+    cursor: pointer;
+}
+
+.read-more a {
+    line-height: 44px;
+    text-align: center;
+    display: block;
+}
+
+.read-more a:hover {
+    background: #16499d;
+    color: #ffffff;
 }
 
 /*zhuanti*/

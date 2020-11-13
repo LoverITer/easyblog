@@ -16,7 +16,7 @@ public class ServiceLog extends AbstractLogBody {
 
     @Override
     public String toString() {
-        return "调用服务方法：" + classMethod + '\'' +
+        return "调用Service方法：" + classMethod + '\'' +
                 ", 入参：" + Arrays.toString(args);
     }
 

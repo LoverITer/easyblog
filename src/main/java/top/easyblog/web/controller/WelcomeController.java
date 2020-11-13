@@ -45,6 +45,12 @@ public class WelcomeController extends BaseController {
             String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
             User user = UserUtils.getUserFromRedis(sessionId);
             model.addAttribute("user", user);
+            //检查用户的访问设备
+            if (isMobileDevice(request)) {
+                model.addAttribute("mobileDevice", true);
+            } else {
+                model.addAttribute("mobileDevice", false);
+            }
             //查询最近1个月内的文章，不足10篇，查询历史的20篇
             PageInfo<Article> newestArticlesPages = articleService.getAllUserNewestArticlesPage(new PageParam(1,
                     PageSize.DEFAULT_PAGE_SIZE));
@@ -56,6 +62,7 @@ public class WelcomeController extends BaseController {
             model.addAttribute("articlePagesSize", (int) Math.ceil((double) articlePages.getTotal() / PageSize.MIN_PAGE_SIZE.getPageSize()));
             //已经显示的文章数量
             model.addAttribute("displayedSize", displayedSize);
+            //每次点击“阅读更多”后加载5篇文章
             model.addAttribute("pageSize", PageSize.MIN_PAGE_SIZE.getPageSize());
             //查询访问量最高的18篇最近的文章用于首页大图、访问排行、特别推荐的显示
             List<List<?>> topVisitArticles = getTopArticle(18, new int[]{5, 10, 3});
@@ -77,56 +84,6 @@ public class WelcomeController extends BaseController {
             log.error(e.getMessage());
         }
         return "index";
-    }
-
-
-    /**
-     * 查询几个模块共享的文章和信息
-     *
-     * @param model      Model
-     * @param request    HTTP请求对象
-     * @param categories 分类模糊查询关键字
-     */
-    private void getSharedArticle(Model model, HttpServletRequest request, String[] categories) {
-        //从Redis中尝试获取用户的登录信息
-        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
-        User user = UserUtils.getUserFromRedis(sessionId);
-        model.addAttribute("user", user);
-        //给用用户推荐猜你喜欢的文章
-        List<Article> likes = articleService.getYouMayAlsoLikeArticles();
-        model.addAttribute("likes", likes);
-        //点击排行前8的文章
-        List<List<?>> top10Articles = getTopArticle(TOP_EIGHT_ARTICLE, new int[]{1, 7});
-        if (top10Articles != null) {
-            model.addAttribute("famousSideBarTopArticle", top10Articles.get(0));
-            model.addAttribute("visitRankingArticles", top10Articles.get(1));
-        }
-        model.addAttribute("top10Articles", top10Articles);
-        //推荐的文章，默认不需要排序
-        List<Article> allArticles = articleService.getArticleByCategoryFuzzy(categories, false, -1);
-        model.addAttribute("allArticles", allArticles);
-
-        List<Article> sortedArticles = new ArrayList<>(allArticles);
-        //排序后截取前DEFAULT_RECOMMEND_ARTICLE_SIZE篇文章
-        Objects.requireNonNull(sortedArticles).sort((o1, o2) -> {
-            if (o1 == null || o2 == null) {
-                throw new IllegalArgumentException("Argument can not be null");
-            }
-            //按照点击量递减排序
-            if (o1.getArticleClick().equals(o2.getArticleClick())) {
-                return 0;
-            } else if (o1.getArticleClick() > o2.getArticleClick()) {
-                return -1;
-            } else {
-                return 1;
-            }
-        });
-        //获取排序后的前10篇文章
-        if (sortedArticles != null && allArticles.size() > DEFAULT_RECOMMEND_ARTICLE_SIZE) {
-            model.addAttribute("recommendArticles", sortedArticles.subList(0, DEFAULT_RECOMMEND_ARTICLE_SIZE));
-        } else {
-            model.addAttribute("recommendArticles", sortedArticles);
-        }
     }
 
 
@@ -233,6 +190,12 @@ public class WelcomeController extends BaseController {
         String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
         User user = UserUtils.getUserFromRedis(sessionId);
         model.addAttribute("user", user);
+        //检查用户的访问设备
+        if (isMobileDevice(request)) {
+            model.addAttribute("mobileDevice", true);
+        } else {
+            model.addAttribute("mobileDevice", false);
+        }
         Map<String, String> map = matchFeatureArticleAndUrl(request);
         model.addAttribute("featureAndUrlMap", map);
         //以最后一个作为当前访问的专题的key

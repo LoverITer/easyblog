@@ -12,7 +12,8 @@
 <!--导航-->
 <div th:replace="~{ fragment/nav :: navbar}"></div>
 <i th:if="${mobileDevice}" class="m-return-btn">
-    <svg t="1604249675997" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    <svg id="m-return-btn" t="1604249675997" class="icon" viewBox="0 0 1024 1024" version="1.1"
+         xmlns="http://www.w3.org/2000/svg"
          p-id="1746" width="24" height="24">
         <path d="M353.638 512.46l351.386-351.385a30.72 30.72 0 0 0-43.469-43.315L288.461 490.752a30.72 30.72 0 0 0 0 43.418l373.094 373.094a30.72 30.72 0 0 0 43.469-43.418z"
               fill="#2c2c2c" p-id="1747"></path>
@@ -113,8 +114,10 @@
                     </div>
                     <div class="ui horizontal link list" style="width: 100%">
                         <div class="m-author-avatar">
-                            <img th:src="${author.getUserHeaderImgUrl()}" class="m-author-avatar-img"
-                                 th:alt="${author.getUserNickname()}">
+                            <a th:href="@{/article/index/{id}(id=${author.getUserId()})}">
+                                <img th:src="${author.getUserHeaderImgUrl()}" class="m-author-avatar-img"
+                                     th:alt="${author.getUserNickname()}">
+                            </a>
                         </div>
                         <div class="m-author-info">
                             <div class="m-author-info-name" th:text="${author.getUserNickname()}"></div>
@@ -503,8 +506,10 @@
 <!--评论框的各种效果-->
 <script type="text/javascript">
     let commentContent = ""; //输入的评论内容
-    <!--控制评论输入的字数-->
+
     $(function () {
+
+        <!--控制评论输入的字数-->
         $('#commentInput').on('keyup', function () {
             commentContent = $('#commentInput').val();
             let txtval = commentContent.length;
@@ -517,54 +522,56 @@
                 $('#commentInput').val(commentContent.substring(0, 500));
             }
         });
-    });
-    <!--评论功能 ajax请求-->
-    $('#publish-comment-btn,.commont-input-publish').click(function () {
-        let userJSONStr = localStorage.getItem("user");
-        if (userJSONStr != null&&userJSONStr!=="") {
-            let sendUser=JSON.parse(userJSONStr);
-            if(sendUser==null){
-                showInfoMessage('您还未登录，请登录后再发表评论！');
-                return;
-            }
-            if (commentContent == null || commentContent === '') {
-                showInfoMessage("写点东西再发布吧！");
-            } else {
-                let sendCommentTo = $('#sendCommentTo').val();
-                let articleId = $('#articleId').val();
-                let pid = $('#pid').val();
-                $.ajax({
-                    url: "/comment/publish",
-                    method: "POST",
-                    sync: "false",
-                    contentType: "application/json;charset=UTF-8",
-                    data: JSON.stringify({
-                        commentContent: commentContent,
-                        commentSend: sendUser.userId,
-                        commentReceived: sendCommentTo,
-                        articleId: articleId,
-                        pid: pid
-                    }),
-                    dataType: "json",
-                    success: function (response) {
-                        if (response.success) {
-                            window.location.reload();
-                        }else{
-                            showInfoMessage(response.message);
+
+        <!--评论功能 ajax请求-->
+        $('#publish-comment-btn,.commont-input-publish').click(function () {
+            let userJSONStr = localStorage.getItem("user");
+            if (userJSONStr != null && userJSONStr !== "") {
+                let sendUser = JSON.parse(userJSONStr);
+                if (sendUser == null) {
+                    showInfoMessage('您还未登录，请登录后再发表评论！');
+                    return;
+                }
+                if (commentContent == null || commentContent === '') {
+                    showInfoMessage("写点东西再发布吧！");
+                } else {
+                    let sendCommentTo = $('#sendCommentTo').val();
+                    let articleId = $('#articleId').val();
+                    let pid = $('#pid').val();
+                    $.ajax({
+                        url: "/comment/publish",
+                        method: "POST",
+                        sync: "false",
+                        contentType: "application/json;charset=UTF-8",
+                        data: JSON.stringify({
+                            commentContent: commentContent,
+                            commentSend: sendUser.userId,
+                            commentReceived: sendCommentTo,
+                            articleId: articleId,
+                            pid: pid
+                        }),
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.success) {
+                                window.location.reload();
+                            } else {
+                                showInfoMessage(response.message);
+                            }
+                            $('#commont-input-textarea').hide(400);
+                            $('.mobile-comment').show(400);
+                            $('#commentInput').val("");
+                        },
+                        error: function () {
+                            showErrorMessage('服务异常，请重试！');
                         }
-                        $('#commont-input-textarea').hide(400);
-                        $('.mobile-comment').show(400);
-                        $('#commentInput').val("");
-                    },
-                    error: function () {
-                        showErrorMessage('服务异常，请重试！');
-                    }
-                })
+                    })
+                }
+            } else {
+                showInfoMessage('您还未登录，请登录后再发表评论！');
             }
-        } else {
-            showInfoMessage('您还未登录，请登录后再发表评论！');
-        }
+        });
     });
+
 
     <!--点击 回复 按钮后评论回复栏中的对应显示变化-->
     function changeInfo(obj) {
@@ -591,76 +598,40 @@
     }
 
 </script>
-<script type="text/javascript">
-    $("code").addClass("language-css");
-    $("pre").addClass("line-numbers");
-    $("pre").addClass("data-line");
-    //动态给表格添加优化CSS
-    $("table").addClass('ui striped celled structured table');
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+        showModifyButton('.editArticle');
+        //回退当上一级页面
+        $('#m-return-btn').click(function () {
+            let url = [[${#httpServletRequest.getHeader("Referer")}]];
+            if (url.indexOf("www.easyblog.top") != -1 || url.indexOf("127.0.0.1") != -1 || url.indexOf(".vip") != -1) {
+                location.href = [[${#httpServletRequest.getHeader("Referer")}]];
+            }
+        });
 
-    $('.menu.toggle').click(function () {
-        $('.m-item').toggleClass('m-mobile-hide');
-    });
-
-    $('#payButton').popup({
-        popup: $('.payQR.popup'),
-        on: 'click',
-        position: 'bottom center'
-    });
-
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
-    });
-
-    $('.toc.button').popup({
-        popup: $('.toc-container.popup'),
-        on: 'click',
-        position: 'left center'
-    });
-
-    $('.wechat').popup({
-        popup: $('.wechat-qr'),
-        position: 'left center'
-    });
-</script>
-<script>
-    //文章图片点击放大缩小效果
-    $(document).ready(function(){
+        //文章图片点击放大缩小效果
         $('.typo img').addClass('img_zoom');
-        $(".img_zoom").bind("click", function(){
-            $('.bgImg').attr("src",$(this)[0].src);
+        $(".img_zoom").bind("click", function () {
+            $('.bgImg').attr("src", $(this)[0].src);
             $('.imgViewDom').show();
         });
 
-        $('.bgImg').bind("click", function(){
+        $('.bgImg').bind("click", function () {
             $('.imgViewDom').hide();
-            $('.bgImg').attr("src",'');
+            $('.bgImg').attr("src", '');
         });
-    });
 
-
-    //滑动一定距离后顶部Logo切换成作者的信息
-    $(document).ready(function () {
-        $(function () {
-            let h = $('.m-article-title-info').outerHeight(true);
-            $(window).bind('scroll', function () {
-                var len = $(this).scrollTop();
-                if (len >= h) {
-                    $('.m-container-large').hide(500);
-                    $('.m-title-author-info').show(500);
-                } else {
-                    $('.m-container-large').show(500);
-                    $('.m-title-author-info').hide(500);
-                }
-            });
-        });
-    });
-
-    $(document).ready(function () {
-        showModifyButton('.editArticle');
-        //回退当上一级页面
-        $('.m-return-btn').click(function () {
-            window.history.go(-1);
+        //滑动一定距离后顶部Logo切换成作者的信息
+        let h = $('.m-article-title-info').outerHeight(true);
+        $(window).bind('scroll', function () {
+            var len = $(this).scrollTop();
+            if (len >= h) {
+                $('.m-container-large').hide(500);
+                $('.m-title-author-info').show(500);
+            } else {
+                $('.m-container-large').show(500);
+                $('.m-title-author-info').hide(500);
+            }
         });
 
         //实现点击底部评论输入框之后输入框变大，并且当没有评论时点击评论区指定区域踏出评论框的功能
@@ -703,6 +674,38 @@
             $('#commont-input-textarea textarea').animate({height: "80px"});
             $('.commont-input-strengthen').show(400);
             $('.comment-input-narrow').hide(400);
+        });
+
+
+        $("code").addClass("language-css");
+        $("pre").addClass("line-numbers");
+        $("pre").addClass("data-line");
+        //动态给表格添加优化CSS
+        $("table").addClass('ui striped celled structured table');
+
+        $('.menu.toggle').click(function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        });
+
+        $('#payButton').popup({
+            popup: $('.payQR.popup'),
+            on: 'click',
+            position: 'bottom center'
+        });
+
+        $('.ui.dropdown').dropdown({
+            on: 'hover'
+        });
+
+        $('.toc.button').popup({
+            popup: $('.toc-container.popup'),
+            on: 'click',
+            position: 'left center'
+        });
+
+        $('.wechat').popup({
+            popup: $('.wechat-qr'),
+            position: 'left center'
         });
     });
 

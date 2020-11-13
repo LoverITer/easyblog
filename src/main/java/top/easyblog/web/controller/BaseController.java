@@ -80,13 +80,19 @@ public abstract class BaseController {
     protected HotWordService hotWordService;
 
 
+    protected boolean isMobileDevice(HttpServletRequest request) {
+        //检查用户的访问设备
+        String userAgent = request.getHeader("User-Agent");
+        return userAgent.contains("Android") || userAgent.contains("iPhone");
+    }
+
     /**
      * 跳转到用户登录前的页面
      *
      * @param request HttpServletRequest
      * @return java.lang.String
      */
-    String loginRedirectUrl(HttpServletRequest request) {
+    protected String loginRedirectUrl(HttpServletRequest request) {
         String ip = NetWorkUtils.getInternetIPAddress(request);
         String refererUrl = (String) redisUtil.get("Referer-" + ip, REDIS_DB);
         if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {

@@ -10,16 +10,22 @@
     <!--用户信息-->
     <div class="ui m-container-large">
         <div class="ui inverted secondary stackable menu">
-            <a href="#" th:href="@{/}">
-                <h2 th:if="${mobileDevice==null || !mobileDevice}" class="ui teal header item m-header" style="font-size: 1.9em">EasyBlog</h2>
-                <h2 th:if="${mobileDevice!=null && mobileDevice}" class="ui teal header item m-header" style="font-size: 1.9em;color: #222 !important;">EasyBlog</h2>
+            <a th:href="@{/}">
+                <h2 th:if="${mobileDevice==null || !mobileDevice}" class="ui teal header item m-header"
+                    style="font-size: 2.3em !important;color: #fff !important;padding: 16px">EasyBlog</h2>
+                <h2 th:if="${mobileDevice!=null && mobileDevice}" class="ui teal header item m-header"
+                    style="font-size: 1.9em !important;color: #222 !important;">EasyBlog</h2>
             </a>
             <!--搜索框--->
             <div class="right  item m-mobile-hide">
                 <form name="search" class="m-full-line" th:action="@{/search/details}" target="_blank" method="get" >
                     <div class="ui icon inverted search input m-margin-tb-tiny m-full-line">
-                        <input th:if="${query==null}" name="query" class="prompt" onfocus={$(this).animate({width:'500px'});} onblur={$(this).animate({width:'203px'});} type="text" placeholder="Search....">
-                        <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt" onfocus={$(this).animate({width:'500px'});} onblur={$(this).animate({width:'203px'});} type="text" placeholder="Search....">
+                        <input th:if="${query==null}" name="query" class="prompt"
+                               onfocus={$(this).animate({width:'500px'});} onblur={$(this).animate({width:'203px'});}
+                               type="text" placeholder="请输入关键词">
+                        <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt"
+                               onfocus={$(this).animate({width:'500px'});} onblur={$(this).animate({width:'203px'});}
+                               type="text" placeholder="请输入关键词">
                         <input hidden th:if="${visitor!=null}" name="visitorUId" th:value="${visitor.getUserId()}">
                         <i onclick="document.forms['search'].submit()" class="search link icon"></i>
                     </div>

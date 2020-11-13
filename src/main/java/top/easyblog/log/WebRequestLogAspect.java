@@ -19,21 +19,31 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @Aspect
 @Component
-public class WebPublicRequestLogAspect {
+public class WebRequestLogAspect {
 
+
+    @Pointcut(value = "execution(* top.easyblog.web.controller.admin.*.*(..))")
+    public void controllerAdmin() {
+    }
 
     @Pointcut(value = "execution(* top.easyblog.web.controller.*.*(..))")
-    public void log() { }
+    public void controller() {
+
+    }
+
+    @Pointcut(value = "controller() || controllerAdmin()")
+    public void log() {
+
+    }
 
 
-    @Before( value="log()")
+    @Before(value = "log()")
     public void doBefore(JoinPoint joinPoint) {
+        String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        assert attributes != null;
         HttpServletRequest request = attributes.getRequest();
         String ip = NetWorkUtils.getInternetIPAddress(request);
         String url = request.getRequestURL().toString();
-        String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
         log.info(new RequestLog(url, ip + " " + NetWorkUtils.getLocation(ip), classMethod, joinPoint.getArgs()).toString());
     }
 
@@ -48,6 +58,5 @@ public class WebPublicRequestLogAspect {
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
         log.error(classMethod + " 执行过程发生异常:" + throwable.getMessage());
     }
-
 
 }

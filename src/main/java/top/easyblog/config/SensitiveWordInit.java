@@ -32,7 +32,7 @@ public class SensitiveWordInit {
      * @return
      * @throws IOException
      */
-    public Map init() throws IOException {
+    public Map init() {
         // 读取敏感词库 ,存入Set中
         Set<String> wordSet = readSensitiveWordFile();
         // 将敏感词库加入到HashMap中//确定有穷自动机DFA
@@ -45,12 +45,13 @@ public class SensitiveWordInit {
      * @return
      * @throws IOException
      */
-    private Set<String> readSensitiveWordFile() throws IOException {
+    private Set<String> readSensitiveWordFile() {
         Set<String> wordSet = null;
         ClassPathResource classPathResource = new ClassPathResource("sensitive-word.txt");
-        InputStream inputStream = classPathResource.getInputStream();
+        InputStream inputStream = null;
         //敏感词库
         try {
+            inputStream = classPathResource.getInputStream();
             // 读取文件输入流
             InputStreamReader read = new InputStreamReader(inputStream, ENCODING);
             // 文件是否是文件 和 是否存在
@@ -110,4 +111,5 @@ public class SensitiveWordInit {
         }
         return wordMap;
     }
+
 }

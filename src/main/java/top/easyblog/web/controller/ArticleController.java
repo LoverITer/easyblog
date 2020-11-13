@@ -64,6 +64,12 @@ public class ArticleController extends BaseController {
         String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
         User visitor= UserUtils.getUserFromRedis(sessionId);
         model.addAttribute("visitor", visitor);
+        //检查用户的访问设备
+        if (isMobileDevice(request)) {
+            model.addAttribute("mobileDevice", true);
+        } else {
+            model.addAttribute("mobileDevice", false);
+        }
         try {
             getArticleUserInfo(model, userId, articleType + "");
             User author = userService.getUser(userId);
@@ -94,6 +100,12 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/home/{userId}")
     public String homePage(@PathVariable("userId") int userId,HttpServletRequest request ,Model model, @RequestParam(required = false) Integer visitorUId) {
         try {
+            //检查用户的访问设备
+            if (isMobileDevice(request)) {
+                model.addAttribute("mobileDevice", true);
+            } else {
+                model.addAttribute("mobileDevice", false);
+            }
             User author = userService.getUser(userId);
             author.setUserPassword(null);
             List<Article> articles = articleService.getUserArticles(userId, ArticleType.Unlimited.getArticleType());
@@ -154,14 +166,14 @@ public class ArticleController extends BaseController {
                 return PAGE404;
             }
             //检查用户的访问设备
-            String userAgent = request.getHeader("User-Agent");
-            if(userAgent.contains("Android") || userAgent.contains("iPhone")){
+            if (isMobileDevice(request)) {
                 model.addAttribute("mobileDevice",true);
                 String dayInfo= CalendarUtils.getDateDistanceInfo(article.getArticlePublishTime());
                 model.addAttribute("dayInfo",dayInfo);
             }else{
                 model.addAttribute("mobileDevice",false);
             }
+
             //文章目录列表
             List<List<String>> tableContentLists = articleService.parseArticleContentList(article.getArticleContent());
             model.addAttribute("tableContentLists", tableContentLists);
@@ -209,7 +221,6 @@ public class ArticleController extends BaseController {
         }
     }
 
-
     /**
      * 首页异步请求文章
      *
@@ -226,8 +237,8 @@ public class ArticleController extends BaseController {
             String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
             User user= UserUtils.getUserFromRedis(sessionId);
             PageParam pageParam = new PageParam(pageNo, PageSize.MIN_PAGE_SIZE);
-            PageInfo<Article> articlePages = articleService.getUserAllPage(pageParam);
-            List<Article> articles = articlePages.getList();
+            PageInfo<Article> newestArticlesPages = articleService.getUserAllPage(pageParam);
+            List<Article> articles = newestArticlesPages.getList();
             result.setSuccess(true);
             for(int i=0;i<articles.size();i++){
                 result.setModel(i+"",articles.get(i));

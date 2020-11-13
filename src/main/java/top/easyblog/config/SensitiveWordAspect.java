@@ -1,7 +1,11 @@
 package top.easyblog.config;
 
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.Aspect;
+import top.easyblog.util.SensitiveWordUtils;
+
 /**
- * 敏感词过滤器：过滤铭感词汇，主要包括：
+ * 敏感词过滤器：对标注@SensitiveFilter的类或方法进行敏感词过滤
  * 1. 涉政文字：涉及政人物、政治事件、宗教、反动分裂，以及恐怖主义等违规文本
  * 2. 色情文字：识别淫秽、污秽、色诱、文爱等涉黄内容，支持重度色情、轻度色情分级
  * 3. 辱骂文本：识别各类场景中含有污辱、谩骂、诋毁等辱骂内容
@@ -13,6 +17,12 @@ package top.easyblog.config;
  * @modified ：
  * @since ：2020/11/10 13:39
  */
-public class SensitiveWordFilter {
+@Slf4j
+@Aspect
+public class SensitiveWordAspect {
+
+    private SensitiveWordUtils sensitiveWordUtils = SensitiveWordUtils.getInstance();
+
+
 
 }
