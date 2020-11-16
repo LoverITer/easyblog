@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,111 +45,101 @@ public class LoginController extends BaseController {
 
     /***AES ECB加密的key*/
     private static final String PASSWORD_KEY="1a2b3c4d5e6f7g8h";
+    /**
+     * SHA1 秘钥
+     **/
+    private static final String SHA1_SECRET_KEY = "user";
+    /**
+     * 验证码key的前缀，验证码的key由 CAPTCHA_CODE_PREFIX+用户账号构成
+     * 发送验证码之后会将其缓存到Redis中，
+     */
+    private static final String CAPTCHA_CODE_KEY_PREFIX = "captcha-code-";
+    /**
+     * 验证码有效的期限，60*5(秒，即5分钟)
+     */
+    private static final Integer CAPTCHA_CODE_KEEP_ALIVE = 60 * 5;
 
 
-
-    @GetMapping("/loginPage")
-    public String toLoginPage(HttpServletRequest request) {
-        //把用户登录前的地址存下来
-        String refererUrl = (String) redisUtil.get(REFERER_PREFIX+ NetWorkUtils.getUserIp(request), 1);
+    @GetMapping("/login.html")
+    public String login(HttpServletRequest request) {
+        //把用户登录前的地址存下来,方便用户登录成功之后直接跳转到登录前的页面
+        String refererKey = REFERER_PREFIX + NetWorkUtils.getInternetIPAddress(request);
+        String refererUrl = (String) redisUtil.get(refererKey, REDIS_DB);
         if (Objects.isNull(refererUrl)) {
             String referUrl = request.getHeader(HttpHeaders.REFERER);
             //服务器的根路径
-            String baseUrl = request.getScheme()
-                    + "://" + request.getServerName()
-                    + ":" + request.getServerPort()
-                    + request.getContextPath() + "/";
+            StringBuilder baseUrl = new StringBuilder();
+            baseUrl.append(request.getScheme()).append("://")
+                    .append(request.getServerName()).append(":")
+                    .append(request.getServerPort())
+                    .append(request.getContextPath()).append("/");
             if (StringUtil.isNotEmpty(referUrl) &&
-                    !referUrl.contains("/login") &&
-                    !referUrl.contains("register") &&
-                    !referUrl.contains("loginPage") &&
-                    !referUrl.contains("change_password") &&
-                    !referUrl.contains("/article/index") &&
-                    !referUrl.equalsIgnoreCase(baseUrl)) {
+                    !referUrl.contains("/login.html") &&
+                    !referUrl.contains("/registration.html") &&
+                    !referUrl.contains("/reset.html") &&
+                    !referUrl.contains("/register-success") &&
+                    !referUrl.equalsIgnoreCase(baseUrl.toString())) {
                 //存到Redis中
                 WorkerThreadPoolExecutor.setThreadName("Save Referer URL To Redis");
-                executor.execute(()->{
-                    String key="Referer-" + NetWorkUtils.getUserIp(request);
-                    redisUtil.set(key, referUrl, RedisUtils.DB_1);
-                    redisUtil.expire(key,30,RedisUtils.DB_1);
-                });
+                executor.execute(() -> redisUtil.set(refererKey, referUrl, 30 * 30, REDIS_DB));
             }
         }
         return "login";
     }
 
-    /**
-     * 访问注册成功页面
-     *
-     * @return
-     */
-    @GetMapping("/register-success")
-    public String toRegisterSuccessPage() {
-        return "register_success";
-    }
-
-    /**
-     * 访问修改密码页面
-     *
-     * @return
-     */
-    @GetMapping("/change_password")
-    public String toChangePassword() {
-        return "change_password";
-    }
 
     /**
      * 发送登注册、找回密码的验证码到用户手机
      *
      * @param phone   手机号
      * @param option  操作：register表示注册 modify-pwd表示修改密码
-     * @param request
      */
     @ResponseBody
-    @GetMapping(value = "/captcha-code2phone")
-    public String sendCaptchaCode2Phone(@RequestParam("phone") String phone,
-                                        @RequestParam("option") String option,
-                                        HttpServletRequest request) {
-
+    @GetMapping(value = "/phoneCaptchaCode")
+    public WebAjaxResult sendCaptchaCode2Phone(@RequestParam("phone") String phone,
+                                               @RequestParam(value = "option", defaultValue = "register") String option) {
+        WebAjaxResult webAjaxResult = new WebAjaxResult();
+        webAjaxResult.setMessage("不支持的操作");
         String code = SendMessageUtils.getRandomCode(6);
         if ("register".equals(option)) {
-            String content = "您正在申请手机注册，验证码为：" + code + "，5分钟内有效！";
-            return sendMessage(phone, code, content, request);
+            String content = String.format("【EasyBlog】您正在通过手机注册，验证码为：%s，%d分钟内有效，如非本人操作请忽略。", code, (CAPTCHA_CODE_KEEP_ALIVE / 60));
+            webAjaxResult.setSuccess(true);
+            webAjaxResult.setMessage(sendSms(phone, code, content));
         } else if ("modify-pwd".equals(option)) {
-            String content = "您正在通过手机找回密码，验证码为：" + code + "，5分钟内有效！";
-            return sendMessage(phone, code, content, request);
+            String content = String.format("【EasyBlog】您正在通过手机找回密码，验证码为：%s，%d分钟内有效，如非本人操作请忽略。", code, (CAPTCHA_CODE_KEEP_ALIVE / 60));
+            webAjaxResult.setSuccess(true);
+            webAjaxResult.setMessage(sendSms(phone, code, content));
         }
-        return AJAX_ERROR;
-
+        return webAjaxResult;
     }
 
     /**
-     * 发送消息到手机
+     * 发送验证码消息到手机
      *
      * @param phone   手机号
      * @param code    验证码
      * @param content 验证消息文本
-     * @param request request
      */
-    private String sendMessage(String phone, String code, String content, HttpServletRequest request) {
-
+    private String sendSms(String phone, String code, String content) {
+        Integer send = 0;
         try {
-            String captchaCode = (String) redisUtil.get("captcha-code-" + phone, 1);
-            if (Objects.nonNull(captchaCode)) {
-                redisUtil.delete(1, "captcha-code-" + phone);
-            }
             //短信验证码5分钟有效
-            redisUtil.set("captcha-code-" + phone, code, 5, 1);
+            redisUtil.set(CAPTCHA_CODE_KEY_PREFIX + phone, code, CAPTCHA_CODE_KEEP_ALIVE, REDIS_DB);
             log.info("向{}发送验证码:{}", phone, code);
-            SendMessageUtils.send("loveIT", "d41d8cd98f00b204e980", phone, content);
-            userPhoneLogService.saveSendCaptchaCode2User(phone, content);
+            send = SendMessageUtils.send("loveIT", "d41d8cd98f00b204e980", phone, content);
+            if (send == 1) {
+                log.info("向{}发送验证码成功", phone);
+                userPhoneLogService.saveSendCaptchaCode2User(phone, content);
+                return "验证码已发送到您的手机，请注意查收！";
+            } else {
+                throw new RuntimeException(SendMessageUtils.getMessage(send));
+            }
         } catch (Exception e) {
             userPhoneLogService.saveSendCaptchaCode2User(phone, "短信发送异常！");
-            redisUtil.delete(1, "captcha-code-" + phone);
-            log.error("短信发送异常" + e.getMessage());
-            return AJAX_ERROR;
+            redisUtil.delete(REDIS_DB, CAPTCHA_CODE_KEY_PREFIX + phone);
+            log.error("向{}发送验证码异常:{}", phone, e.getMessage());
+            return "服务异常，请重试！";
         }
-        return AJAX_SUCCESS;
     }
 
     /**
@@ -158,18 +149,22 @@ public class LoginController extends BaseController {
      * @param option 操作：register表示注册 modify-pwd表示修改密码
      */
     @ResponseBody
-    @GetMapping(value = "/captcha-code2mail")
-    public String sendCaptchaCode2Email(@RequestParam("email") String email,
-                                        @RequestParam("option") String option) {
+    @GetMapping(value = "/mailCaptchaCode")
+    public WebAjaxResult sendCaptchaCode2Email(@RequestParam("email") String email,
+                                               @RequestParam(value = "option", defaultValue = "register") String option) {
+        WebAjaxResult webAjaxResult = new WebAjaxResult();
+        webAjaxResult.setMessage("不支持的操作");
         String code = SendMessageUtils.getRandomCode(6);
         if ("register".equals(option)) {
-            String content = "您正在申请邮箱注册，验证码为：" + code + "，60秒内有效！";
-            return sendEmail(email, content, code);
+            String content = String.format("【EasyBlog】您正在通过邮箱注册，验证码为：%s，%d分钟内有效，如非本人操作请忽略。", code, (CAPTCHA_CODE_KEEP_ALIVE / 60));
+            webAjaxResult.setSuccess(true);
+            webAjaxResult.setMessage(sendEmail(email, content, code));
         } else if ("modify-pwd".equals(option)) {
-            String content = "您正在通过邮箱找回密码，验证码为：" + code + "，60秒内有效！";
-            return sendEmail(email, content, code);
+            String content = String.format("【EasyBlog】您正在通过邮箱找回密码，验证码为：%s，%d分钟内有效，如非本人操作请忽略。", code, (CAPTCHA_CODE_KEEP_ALIVE / 60));
+            webAjaxResult.setSuccess(true);
+            webAjaxResult.setMessage(sendEmail(email, content, code));
         }
-        return AJAX_SUCCESS;
+        return webAjaxResult;
     }
 
     /**
@@ -181,163 +176,23 @@ public class LoginController extends BaseController {
      * @return
      */
     private String sendEmail(String email, String content, String code) {
+        boolean send = false;
         try {
-            String captchaCode = (String) redisUtil.get("captcha-code-" + email, RedisUtils.DB_1);
-            if (Objects.nonNull(captchaCode)) {
-                redisUtil.delete(1, "captcha-code-" + email);
-            }
             log.info("向" + email + "发送验证码：" + code);
-            redisUtil.set("captcha-code-" + email, code, 60, RedisUtils.DB_1);
+            redisUtil.set(CAPTCHA_CODE_KEY_PREFIX + email, code, CAPTCHA_CODE_KEEP_ALIVE, REDIS_DB);
             Email e = new Email("验证码", email, content, null);
-            emailUtil.send(e);
+            send = emailUtil.send(e);
             userEmailLogService.saveSendCaptchaCode2User(email, content);
         } catch (Exception e) {
-            redisUtil.delete(RedisUtils.DB_1, "captcha-code-" + email);
+            redisUtil.delete(REDIS_DB, CAPTCHA_CODE_KEY_PREFIX + email);
             userEmailLogService.saveSendCaptchaCode2User(email, "邮件发送异常！");
             log.error("邮件发送异常" + e.getMessage());
-            return AJAX_ERROR;
+            return "服务异常，请重试！";
         }
-        return AJAX_SUCCESS;
+        log.info("向" + email + "发送验证码成功");
+        return send ? "验证码已发送到您的邮箱，请注意查收！" : "请检查邮箱是否正确，并重试！";
     }
 
-    /**
-     * 用户注册逻辑
-     *
-     * @param nickname    昵称
-     * @param password    密码
-     * @param account     用户账号
-     * @param captchaCode 输入的验证码
-     * @param request
-     */
-    @ResponseBody
-    @RequestMapping(value = "/register")
-    public WebAjaxResult register(@RequestParam(value = "nickname", defaultValue = "") String nickname,
-                                  @RequestParam(value = "pwd", defaultValue = "") String password,
-                                  @RequestParam(value = "account", defaultValue = "") String account,
-                                  @RequestParam(value = "code", defaultValue = "") String captchaCode,
-                                  HttpServletRequest request) {
-        String captcha = (String) redisUtil.get("captcha-code-" + account, 1);
-        String ip = NetWorkUtils.getUserIp(request);
-        String ipInfo = NetWorkUtils.getLocation(ip);
-        WebAjaxResult ajaxResult = new WebAjaxResult();
-        if (userService.getUser(nickname) != null) {
-            ajaxResult.setMessage("昵称已存在!");
-        } else if (userService.getUser(account) != null) {
-            ajaxResult.setMessage("此邮箱/手机号已经注册了!");
-        } else if (Objects.isNull(captcha) || !captcha.equals(captchaCode)) {
-            ajaxResult.setMessage("验证码不正确或验证码已过期!");
-        } else {
-            try {
-                User user = new User();
-                user.setUserNickname(nickname);
-                user.setUserPassword(EncryptUtils.getInstance().SHA1(password, "user"));
-                if (RegexUtils.isEmail(account)) {
-                    user.setUserMail(account);
-                } else if (RegexUtils.isPhone(account)) {
-                    user.setUserPhone(account);
-                }
-                user.setUserRegisterIp(ip + " " + ipInfo);
-                int var0 = userService.register(user);
-                if (var0 > 0) {
-                    UserAccount userAccount = new UserAccount();
-                    userAccount.setAccountUser(user.getUserId());
-                    int var1 = userAccountService.createAccount(userAccount);
-                    if (var1 > 0) {
-                        ajaxResult.setSuccess(true);
-                        ajaxResult.setMessage("注册成功!");
-                        log.info("用户：{}注册成功,{}", account, new Date());
-                    } else {
-                        log.info("用户：{}注册失败,{}", account, new Date());
-                    }
-                }
-            } catch (Exception e) {
-                log.error(e.getMessage());
-                ajaxResult.setMessage("服务异常，请重试！");
-            }
-        }
-        return ajaxResult;
-    }
-
-    /**
-     * 检查用户的昵称是否存在,以及是否合法
-     *
-     * @param nickname 昵称
-     */
-    @ResponseBody
-    @GetMapping(value = "/checkNickname")
-    public WebAjaxResult checkUserNickname(@RequestParam(value = "nickname", defaultValue = "") String nickname) {
-        WebAjaxResult ajaxResult = new WebAjaxResult();
-        ajaxResult.setSuccess(true);
-        if (!"".equals(nickname)) {
-            User user = userService.getUser(nickname);
-            if (user != null) {
-                ajaxResult.setSuccess(false);
-            }
-        }
-        return ajaxResult;
-    }
-
-    /**
-     * 检查输入的邮箱不存在
-     *
-     * @param email
-     * @return
-     */
-    @ResponseBody
-    @GetMapping(value = "/checkEmailNotExist")
-    public WebAjaxResult checkUserEmailNotExist(@RequestParam(value = "email", defaultValue = "") String email) {
-        WebAjaxResult ajaxResult = new WebAjaxResult();
-        if (!"".equals(email)) {
-            if (Objects.isNull(userService.getUser(email))) {
-                ajaxResult.setSuccess(true);
-            }
-        }
-        return ajaxResult;
-    }
-
-
-    /**
-     * 检查输入的邮箱存在
-     *
-     * @param email
-     * @return
-     */
-    @ResponseBody
-    @GetMapping(value = "/checkEmailExist")
-    public WebAjaxResult checkUserEmailExist(@RequestParam(value = "email", defaultValue = "") String email) {
-        WebAjaxResult ajaxResult = new WebAjaxResult();
-        if (!"".equals(email)) {
-            if (!Objects.isNull(userService.getUser(email))) {
-                ajaxResult.setSuccess(true);
-            }
-        }
-        return ajaxResult;
-    }
-
-    @ResponseBody
-    @GetMapping(value = "/checkPhone")
-    public WebAjaxResult checkUserPhone(@RequestParam(value = "phone", defaultValue = "") String phone) {
-        WebAjaxResult ajaxResult = new WebAjaxResult();
-        if (!"".equals(phone)) {
-            User user = userService.getUser(phone);
-            if (user == null) {
-                ajaxResult.setSuccess(true);
-            }
-        }
-        return ajaxResult;
-    }
-
-    /**
-     * 检查用户的密码是否合法
-     *
-     * @param password 密码
-     * @return
-     */
-    @ResponseBody
-    @GetMapping(value = "/checkPassword")
-    public WebAjaxResult checkPassword(@RequestParam("password") String password) {
-        return userService.isPasswordLegal(password);
-    }
 
     /**
      * 用户登录逻辑
@@ -354,26 +209,17 @@ public class LoginController extends BaseController {
                         RedirectAttributes redirectAttributes,
                         HttpServletRequest request,
                         HttpServletResponse response) {
-        User user = userService.checkUser(username, EncryptUtils.getInstance().SHA1(password, "user"));
-        String ip = NetWorkUtils.getUserIp(request);
+        User user = userService.checkUser(username, EncryptUtils.getInstance().SHA1(password, SHA1_SECRET_KEY));
+        String ip = NetWorkUtils.getInternetIPAddress(request);
         String location = NetWorkUtils.getLocation(ip);
         String sessionId=null;
         try {
             if (user != null) {
                 user.setUserPassword(null);
-                //登录的逻辑：服务器端会产生一个sessionId，客户端保存这个sessionId到本地，并将session为key，User的信息为val，存入Redis中
-                //之后涉及到访问页面的时候首先客户单带着sessionId去Redis中检查，如果有对应的sessionId，那么继续。否则重定向到登录页面
-                //request.getSeesion()执行之后会给客户端设置一个名为JSESSIONID的Cookie，这里面保存了第一次和服务器会话的sessionId
-                HttpSession session = request.getSession(true);
-                sessionId= session.getId();
                 //防止重复登录
-                Boolean exists = redisUtil.exists(sessionId, RedisUtils.DB_1);
-                if (exists==null||!exists) {
-                    //更新用户的
-                    CookieUtils.updateCookie(request,response,JSESSIONID,sessionId,MAX_USER_LOGIN_STATUS_KEEP_TIME);
-                    //会话信息，如果没有主动退出15天有效
-                    redisUtil.set(sessionId, JSONObject.toJSONString(user), RedisUtils.DB_1);
-                    redisUtil.expire(sessionId, MAX_USER_LOGIN_STATUS_KEEP_TIME, RedisUtils.DB_1);
+                Boolean exists = redisUtil.exists(String.valueOf(user.getUserId()), REDIS_DB);
+                if (exists == null || !exists) {
+                    sessionId = doLogin(request, response, user);
                     // 记住我功能：保存用户名密码一个月
                     if ("on".equals(remember)) {
                         Object value = CookieUtils.getCookieValue(request, REMEMBER_ME_COOKIE);
@@ -385,11 +231,17 @@ public class LoginController extends BaseController {
                     executor.execute(() -> userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录成功")));
                     return loginRedirectUrl(request);
                 } else {
-                    redirectAttributes.addFlashAttribute("error", "您已经登录，请不要重复登录！");
-                    return loginRedirectUrl(request);
+                    String localSessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+                    if (localSessionId == null) {
+                        redirectAttributes.addFlashAttribute("error", "您的账号已经在别处登录！");
+                    } else {
+                        redirectAttributes.addFlashAttribute("error", "您已经登录，请不要重复登录！");
+                    }
+
+                    return LOGIN_PAGE;
                 }
             } else {
-                redirectAttributes.addFlashAttribute("error", "登录失败！用户名和密码不匹配！");
+                redirectAttributes.addFlashAttribute("error", "用户名和密码不匹配！");
                 return LOGIN_PAGE;
             }
         } catch (Exception e) {
@@ -398,16 +250,41 @@ public class LoginController extends BaseController {
             String finalSessionId = sessionId;
             executor.execute(() -> {
                 if (Objects.nonNull(user)) {
-                    redisUtil.delete(RedisUtils.DB_1, finalSessionId);
+                    redisUtil.delete(REDIS_DB, finalSessionId);
+                    redisUtil.delete(REDIS_DB, String.valueOf(user.getUserId()));
+                    CookieUtils.deleteCookie(request, response, JSESSIONID);
                     userSigninLogService.saveSigninLog(new UserSigninLog(user.getUserId(), ip, location, "登录失败"));
                 }
             });
             redirectAttributes.addFlashAttribute("error", "服务异常，请重试！");
-            log.error(e.getMessage());
             return LOGIN_PAGE;
         }
     }
 
+    /**
+     * 用户登录，生成一个会话Id，以会话id为key，用户信息为value，存放到Redis，同时将以用户id为key，用户登录时间戳为value
+     * 这个键用户检查用户是否登录，如果Redis中存在对应用户的id，那就不能让用户重复登录
+     *
+     * @param request
+     * @param response
+     * @param user
+     * @return 会话id
+     */
+    private String doLogin(HttpServletRequest request, HttpServletResponse response, User user) {
+        //登录的逻辑：服务器端会产生一个sessionId，客户端保存这个sessionId到本地，并将session为key，User的信息为val，存入Redis中
+        //之后访问页面的时候首先客户端带着sessionId去Redis中检查，如果有对应的sessionId，那么继续。否则重定向到登录页面
+        //request.getSession()执行之后会给客户端设置一个名为JSESSIONID的Cookie，这里面保存了第一次和服务器会话的sessionId
+        HttpSession session = request.getSession(true);
+        String sessionId = session.getId();
+        String userLoggedKey = String.format("%d-%s", user.getUserId(), sessionId);
+        //更新用户的
+        CookieUtils.updateCookie(request, response, JSESSIONID, userLoggedKey, MAX_USER_LOGIN_STATUS_KEEP_TIME);
+        //会话信息，如果没有主动退出60天有效
+        redisUtil.set(userLoggedKey, JSONObject.toJSONString(user), MAX_USER_LOGIN_STATUS_KEEP_TIME, REDIS_DB);
+        //用户登录的时候同时将用户的id放入Redis，防止用户重复登录
+        redisUtil.set(String.valueOf(user.getUserId()), System.currentTimeMillis(), MAX_USER_LOGIN_STATUS_KEEP_TIME, REDIS_DB);
+        return sessionId;
+    }
 
     /**
      * 退出操作
@@ -419,22 +296,123 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/logout")
     public WebAjaxResult logout(HttpServletRequest request, HttpServletResponse response) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
-        ajaxResult.setMessage(AJAX_ERROR);
         String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
-        //退出前先删除本次登录的Cookie
-        CookieUtils.deleteCookie(request, response, JSESSIONID);
-        //删除Redis中保存的登录信息
-        Boolean ret = redisUtil.delete(RedisUtils.DB_1,sessionId);
-        if (ret != null && ret) {
-            ajaxResult.setSuccess(true);
-            ajaxResult.setMessage(AJAX_SUCCESS);
+        User user = UserUtils.getUserFromRedis(sessionId);
+        if (user != null) {
+            //删除Redis中保存的登录信息以及用户登录标志
+            boolean ret = redisUtil.delete(REDIS_DB, sessionId) &&
+                    redisUtil.delete(REDIS_DB, String.valueOf(user.getUserId()));
+            //退出前先删除本次登录的Cookie
+            boolean deleteCookieRes = CookieUtils.deleteCookie(request, response, JSESSIONID);
+            ajaxResult.setSuccess(ret && deleteCookieRes);
         }
         return ajaxResult;
     }
 
+
+    /**
+     * 用户注册逻辑
+     *
+     * @param password    密码
+     * @param account     用户账号
+     * @param captchaCode 输入的验证码
+     * @param request
+     */
+    @ResponseBody
+    @RequestMapping(value = "/register")
+    public WebAjaxResult register(@RequestParam(value = "username", defaultValue = "") String account,
+                                  @RequestParam(value = "password", defaultValue = "") String password,
+                                  @RequestParam(value = "captchaCode", defaultValue = "") String captchaCode,
+                                  HttpServletRequest request) {
+        String nickname = "用户_" + System.currentTimeMillis();
+        String captcha = (String) redisUtil.get(CAPTCHA_CODE_KEY_PREFIX + account, REDIS_DB);
+        String ip = NetWorkUtils.getInternetIPAddress(request);
+        String ipInfo = NetWorkUtils.getLocation(ip);
+        WebAjaxResult ajaxResult = new WebAjaxResult();
+        if (userService.getUser(account) != null) {
+            ajaxResult.setMessage("此邮箱/手机号已经注册了！");
+        } else if (StringUtils.isEmpty(captcha)) {
+            ajaxResult.setMessage("验证码已过期，请重新获取！");
+        } else if (StringUtils.isEmpty(captchaCode)) {
+            ajaxResult.setMessage("请输入验证码！");
+        } else if (!captcha.equals(captchaCode)) {
+            ajaxResult.setMessage("输入的验证码有误！");
+        } else {
+            try {
+                User user = new User();
+                user.setUserNickname(nickname);
+                user.setUserPassword(EncryptUtils.getInstance().SHA1(password, SHA1_SECRET_KEY));
+                if (RegexUtils.isEmail(account)) {
+                    user.setUserMail(account);
+                } else if (RegexUtils.isPhone(account)) {
+                    user.setUserPhone(account);
+                }
+                user.setUserRegisterIp(String.format("%s %s", ip, ipInfo));
+                int var0 = userService.register(user);
+                if (var0 > 0) {
+                    UserAccount userAccount = new UserAccount();
+                    userAccount.setAccountUser(user.getUserId());
+                    int var1 = userAccountService.createAccount(userAccount);
+                    if (var1 > 0) {
+                        ajaxResult.setSuccess(true);
+                        ajaxResult.setMessage("注册成功!");
+                        log.info("用户：{} 注册成功,{}", account, new Date());
+                    } else {
+                        log.info("用户：{} 注册失败,{}", account, new Date());
+                    }
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                ajaxResult.setMessage("服务异常，请重试！");
+            }
+        }
+        return ajaxResult;
+    }
+
+
+    /**
+     * 找回密码
+     */
+    @ResponseBody
+    @RequestMapping("/resetPassword")
+    public WebAjaxResult resetPassword(@RequestParam("username") String account,
+                                       @RequestParam("password") String newPassword,
+                                       @RequestParam(value = "captchaCode", defaultValue = "") String code,
+                                       HttpServletRequest request) {
+        WebAjaxResult ajaxResult = new WebAjaxResult();
+        ajaxResult.setSuccess(false);
+        String captchaCode = (String) redisUtil.get(CAPTCHA_CODE_KEY_PREFIX + account, REDIS_DB);
+        String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
+        User user = UserUtils.getUserFromRedis(sessionId);
+        if (StringUtils.isEmpty(account)) {
+            ajaxResult.setMessage("请填写您的账号！");
+        } else if (StringUtils.isEmpty(captchaCode)) {
+            ajaxResult.setMessage("验证码已过期，请重新获取！");
+        } else if (!code.equals(captchaCode)) {
+            ajaxResult.setMessage("验证码错误！");
+        } else if (StringUtils.isEmpty(newPassword)) {
+            ajaxResult.setMessage("请填写新密码！");
+        } else if (user != null && newPassword.equals(user.getUserPassword())) {
+            ajaxResult.setMessage("新密码不能和旧密码一致！");
+        } else {
+            try {
+                int ret = userService.updateUserInfo(account, EncryptUtils.getInstance().SHA1(newPassword, SHA1_SECRET_KEY));
+                if (ret > 0) {
+                    ajaxResult.setSuccess(true);
+                    ajaxResult.setMessage("密码修改成功，即将跳转到登录页面...");
+                }
+            } catch (Exception e) {
+                ajaxResult.setMessage("服务异常，请重试！");
+            } finally {
+                redisUtil.delete(REDIS_DB, CAPTCHA_CODE_KEY_PREFIX + account);
+            }
+        }
+        return ajaxResult;
+    }
+
+
     /**
      * 检查用户的登录状态
-     *
      */
     @ResponseBody
     @RequestMapping(value = "/checkUserStatus")
@@ -442,45 +420,14 @@ public class LoginController extends BaseController {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage(UNLOGIN.getStatus() + "");
         String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
-        User user= UserUtils.getUserFromRedis(sessionId);
-        if (user!=null) {
+        User user = UserUtils.getUserFromRedis(sessionId);
+        if (user != null) {
             ajaxResult.setMessage(JSON.toJSONString(user));
             ajaxResult.setSuccess(true);
         }
         return ajaxResult;
     }
 
-    /**
-     * 找回密码
-     */
-    @ResponseBody
-    @RequestMapping("/modifyPwd")
-    public WebAjaxResult modifyPassword(@RequestParam("account") String account,
-                                        @RequestParam("newPassword") String newPassword,
-                                        @RequestParam(value = "code", defaultValue = "") String code) {
-        WebAjaxResult ajaxResult = new WebAjaxResult();
-        ajaxResult.setSuccess(false);
-        String captchaCode = (String) redisUtil.get("captcha-code-" + account, RedisUtils.DB_1);
-        if (!code.equalsIgnoreCase(captchaCode)) {
-            ajaxResult.setMessage("验证码错误！");
-        } else if (Objects.isNull(newPassword)) {
-            ajaxResult.setMessage("请填写新密码！");
-        } else if (Objects.isNull(account)) {
-            ajaxResult.setMessage("请填写您的账号！");
-        } else {
-            try {
-                executor.execute(() -> userService.updateUserInfo(account, EncryptUtils.getInstance().SHA1(newPassword, "user")));
-                ajaxResult.setSuccess(true);
-                ajaxResult.setMessage("密码修改成功，正在跳转到登录页面...");
-            } catch (Exception e) {
-                ajaxResult.setMessage("抱歉，服务异常，请重试！");
-                return ajaxResult;
-            } finally {
-                redisUtil.delete(RedisUtils.DB_1, "captcha-code-" + account);
-            }
-        }
-        return ajaxResult;
-    }
 
     /**
      * 修改关于我的描述的内容

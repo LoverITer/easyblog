@@ -6,17 +6,26 @@
 </head>
 <body>
 <!--公共的头部导航栏-->
-<nav th:fragment="navbar" class="ui inverted attached segment m-padded-tb-mini m-shadow-small m-header">
+<nav th:fragment="navbar" class="ui inverted attached segment m-padded-tb-mini m-shadow-small m-navigationBar">
     <!--用户信息-->
     <div class="ui m-container-large">
         <div class="ui inverted secondary stackable menu">
-            <a href="#" th:href="@{/}"><h2 class="ui teal header item" style="font-size: 1.9em">EasyBlog</h2></a>
+            <a th:href="@{/}">
+                <h2 th:if="${mobileDevice==null || !mobileDevice}" class="ui teal header item m-header"
+                    style="font-size: 2.3em !important;color: #fff !important;padding: 16px">EasyBlog</h2>
+                <h2 th:if="${mobileDevice!=null && mobileDevice}" class="ui teal header item m-header"
+                    style="font-size: 1.9em !important;color: #222 !important;">EasyBlog</h2>
+            </a>
             <!--搜索框--->
             <div class="right  item m-mobile-hide">
                 <form name="search" class="m-full-line" th:action="@{/search/details}" target="_blank" method="get" >
                     <div class="ui icon inverted search input m-margin-tb-tiny m-full-line">
-                        <input th:if="${query==null}" name="query" class="prompt" onfocus={$(this).animate({width:'500px'});} onblur={$(this).animate({width:'203px'});} type="text" placeholder="Search....">
-                        <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt" onfocus={$(this).animate({width:'500px'});} onblur={$(this).animate({width:'203px'});} type="text" placeholder="Search....">
+                        <input th:if="${query==null}" name="query" class="prompt"
+                               onfocus={$(this).animate({width:'500px'});} onblur={$(this).animate({width:'203px'});}
+                               type="text" placeholder="请输入关键词">
+                        <input th:if="${query!=null}" id="query" th:value="${query}" name="query" class="prompt"
+                               onfocus={$(this).animate({width:'500px'});} onblur={$(this).animate({width:'203px'});}
+                               type="text" placeholder="请输入关键词">
                         <input hidden th:if="${visitor!=null}" name="visitorUId" th:value="${visitor.getUserId()}">
                         <i onclick="document.forms['search'].submit()" class="search link icon"></i>
                     </div>
@@ -31,7 +40,18 @@
                 <div class="ui dropdown item">
                     <div class="text">
                         <a href="#"  th:href="@{/article/index/{uid}(uid=${visitor.getUserId()})}">
-                        <img class="ui medium circular image image-42x42" style="max-height: none !important;" th:src="@{${visitor.getUserHeaderImgUrl()}}"/></a>
+                            <img th:if="${visitor.getUserHeaderImgUrl()!=null}"
+                                 class="ui medium circular image image-42x42" style="max-height: none !important;"
+                                 th:src="@{${visitor.getUserHeaderImgUrl()}}"/>
+                            <div th:if="${visitor.getUserHeaderImgUrl()==null}" class="m-init-user-avatar">
+                                <svg t="1604420630232" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                     xmlns="http://www.w3.org/2000/svg" p-id="38499" width="38" height="38">
+                                    <path d="M512 0c113.322667 0 204.8 91.477333 204.8 204.8S625.322667 409.6 512 409.6 307.2 318.122667 307.2 204.8s91.477333-204.8 204.8-204.8z m0 969.386667a491.52 491.52 0 0 1-409.6-219.818667C104.448 613.717333 375.466667 539.306667 512 539.306667c135.850667 0 407.552 74.410667 409.6 210.261333a491.52 491.52 0 0 1-409.6 219.818667z"
+                                          fill="#bfbfbf" p-id="38500"></path>
+                                </svg>
+                            </div>
+                        </a>
+
                     </div>
                     <div class="menu m-menu" >
                         <a href="#" th:href="@{/manage/uc/follow-list}" class="item"><i class="bookmark icon"></i>我的关注</a>
@@ -48,11 +68,13 @@
             </div>
              <!--登录按钮-->
             <div id="login-btn" class="right m-mobile-hide menu m-menu-padding" style="display: flex !important;margin-left: 1em !important">
-                <a href="#" target="_blank" th:href="@{/user/loginPage}" style="font-size: inherit;background: #fff;color: #ec6149!important;padding: .65em .8em;" class=" item m-mobile-hide">登录/注册</a>
+                <a href="#" target="_blank" th:href="@{/user/login.html}"
+                   style="font-size: inherit;background: #fff;color: #ec6149!important;padding: .65em .8em;"
+                   class=" item m-mobile-hide">登录/注册</a>
             </div>
         </div>
     </div>
-    <a href="#"  class="ui menu toggle black icon button m-right-top m-mobile-show" style="margin: 0 0 !important;">
+    <a href="#"  class="ui menu toggle black icon button m-right-top " style="margin: 0 0 !important;display: none">
         <i class="sidebar icon"></i>
     </a>
 </nav>

@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
+    private BaseController baseController;
+
     public LoginInterceptor() {
 
     }
@@ -30,7 +32,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         log.info("Request from：{}", request.getRequestURL());
         //从Cookie中拿出sessionId去Redis中检查，如果有相关信息，那就说明用户登录过了，否者没有登录过，不允许访问后条管理界面，重定向到登录页面
         String sessionId = CookieUtils.getCookieValue(request, BaseController.JSESSIONID);
-        Boolean exists = RedisUtils.getRedisUtils().exists(sessionId, RedisUtils.DB_1);
+        Boolean exists = RedisUtils.getRedisUtils().exists(sessionId, BaseController.REDIS_DB);
         //用户进行后台（改个人信息、发布/修改/删除博客、分类、编辑评论....）操作的时候必须是处于登录状态
         String url = request.getRequestURL().toString();
         if (url.contains("/manage") && !exists) {

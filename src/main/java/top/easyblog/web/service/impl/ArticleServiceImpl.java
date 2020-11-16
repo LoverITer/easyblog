@@ -19,10 +19,7 @@ import top.easyblog.util.MarkdownUtils;
 import top.easyblog.web.exception.IllegalPageParameterException;
 import top.easyblog.web.service.IArticleService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author huangxin
@@ -150,22 +147,7 @@ public class ArticleServiceImpl implements IArticleService {
                     articles = articleMapper.getAllUserHistoryNewestArticles(20);
                 }
                 if (articles != null) {
-                    articles.forEach(article -> {
-                        try {
-                            Integer userId = article.getArticleUser();
-                            User user = userMapper.getByPrimaryKey((long) userId);
-                            if (user != null) {
-                                article.setUserHeaderImageUrl(user.getUserHeaderImgUrl());
-                            }
-                            Category category = categoryMapper.getCategoryByUserIdAndName(userId, article.getArticleCategory());
-                            if (category != null) {
-                                article.setCategoryId(category.getCategoryId());
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                    });
+                    articles = getArticleAuthorAndCategory(articles);
                     //把MarkDown文本转换为普通文本
                     parseMarkdowns2Text(articles);
                     pageInfo = new PageInfo<>(articles);
@@ -429,6 +411,7 @@ public class ArticleServiceImpl implements IArticleService {
                 try {
                     PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
                     List<Article> articles = articleMapper.getUsersArticleByQueryString("%"+query + "%");
+                    articles = getArticleAuthorAndCategory(articles);
                     pageInfo = new PageInfo<>(parseMarkdowns2Text(articles));
                 } catch (Exception e) {
                     throw new RuntimeException(e.getCause());
@@ -446,16 +429,53 @@ public class ArticleServiceImpl implements IArticleService {
         if (Objects.nonNull(keys) && keys.length > 0) {
             List<Article> articles = articleMapper.getArticleByCategoryNameFuzzy(keys,order,limit);
             parseMarkdowns2Text(articles);
-            if(articles!=null){
-                articles.stream().parallel().forEach(article -> {
-                    Category category = categoryMapper.getCategoryByUserIdAndName(article.getArticleUser(), article.getArticleCategory());
-                    article.setCategoryId(Objects.requireNonNull(category).getCategoryId());
-                });
-            }
-            return articles;
+            return getArticleAuthorAndCategory(articles);
         } else {
             throw new IllegalArgumentException("illegal args for 'keys':" + Arrays.toString(keys));
         }
+    }
+
+
+    /**
+     * 查询文章的作者和分类ID
+     */
+    private List<Article> getArticleAuthorAndCategory(List<Article> articles) {
+        if (articles != null) {
+            //缓存查询到的用户
+            Map<Integer, User> userCache = new HashMap<>(16);
+            Map<String, Category> categoryCache = new HashMap<>(16);
+            articles.parallelStream().forEach(article -> {
+                //查询文章的分类
+                final int articleAuthorId = article.getArticleUser();
+                final String articleCategory = article.getArticleCategory();
+                final String categoryKey = articleAuthorId + ":" + articleCategory;
+                Category category = categoryCache.compute(categoryKey, (k, v) -> {
+                    Category c;
+                    if (v == null) {
+                        c = categoryMapper.getCategoryByUserIdAndName(articleAuthorId, articleCategory);
+                        categoryCache.put(categoryKey, c);
+                        return c;
+                    }
+                    c = categoryCache.get(articleAuthorId + ":" + articleCategory);
+                    return c;
+                });
+                article.setCategoryId(Objects.requireNonNull(category).getCategoryId());
+
+                User user = userCache.compute(articleAuthorId, (k, v) -> {
+                    User u;
+                    if (v == null) {
+                        u = userMapper.getByPrimaryKey((long) articleAuthorId);
+                        userCache.put(articleAuthorId, u);
+                        return u;
+                    }
+                    u = userCache.get(articleAuthorId);
+                    return u;
+                });
+                article.setAuthorName(Objects.requireNonNull(user).getUserNickname());
+                article.setUserHeaderImageUrl(Objects.requireNonNull(user).getUserHeaderImgUrl());
+            });
+        }
+        return articles;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)

@@ -1,27 +1,24 @@
 package top.easyblog.web.oauth2.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 import top.easyblog.config.autoconfig.oauth.GitHubProperties;
 import top.easyblog.mapper.OauthMapper;
+import top.easyblog.util.NetWorkUtils;
 import top.easyblog.web.oauth2.IAuthService;
 import top.easyblog.web.oauth2.bean.GitHubUser;
 import top.easyblog.web.oauth2.bean.Oauth;
 import top.easyblog.web.oauth2.enums.ThirdPartAppType;
 import top.easyblog.web.service.IOauthService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ：huangxin
@@ -53,19 +50,11 @@ public class GitHubAuthServiceImpl implements IAuthService<GitHubUser>, IOauthSe
                 "&code=" + code +
                 "&grant_type=authorization_code";
         log.info("getAccessToke url : {}", url);
-        HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.add("accept", "application/json");
-        HttpEntity<String> requestEntity = new HttpEntity<>(requestHeaders);
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
-        //响应内容
-        String responseStr = response.getBody();
-        log.info("responseStr={}", responseStr);
-
-        //JSON解析响应的内容
-        JSONObject object = JSON.parseObject(responseStr);
-        String accessToken = object.getString("access_token");
-        log.info("accessToken={}", accessToken);
+        //发送GET请求获取token的json串
+        String responseStr = NetWorkUtils.doGet(url);
+        log.info("responseStr:{}", responseStr);
+        String accessToken = NetWorkUtils.getMap(responseStr).get("access_token");
+        log.info("accessToken:{}", accessToken);
         return accessToken;
     }
 
@@ -83,27 +72,24 @@ public class GitHubAuthServiceImpl implements IAuthService<GitHubUser>, IOauthSe
     public String getAuthorizationUrl() {
         return gitHubProperties.getAuthorizeUrl() +
                 "?client_id=" + gitHubProperties.getClientId() +
+                "&state=STATE" +
                 "&redirect_uri=" + gitHubProperties.getRedirectUrl();
     }
 
     @Override
     public GitHubUser getUserInfo(String accessToken) {
+        log.info("Request user info from GitHub");
         String userInfoUrl = gitHubProperties.getUserInfoUrl();
-        log.info("getUserInfo url:{}", userInfoUrl);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("accept", "application/json");
+        Map<String, String> headers = new HashMap<>(16);
+        //json数据
+        headers.put("accept", "application/json");
         // AccessToken放在请求头中
-        headers.add("Authorization", "token " + accessToken);
-        // 构建请求实体
-        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-        RestTemplate restTemplate = new RestTemplate();
-        // get请求方式
-        ResponseEntity<String> response = restTemplate.exchange(userInfoUrl, HttpMethod.GET, requestEntity, String.class);
-        String userInfo = response.getBody();
+        headers.put("Authorization", "token " + accessToken);
+        log.info("getUserInfo url:{}", userInfoUrl);
+        String userInfo = NetWorkUtils.doGet(userInfoUrl, headers);
         GitHubUser gitHubUser = JSON.parseObject(userInfo, GitHubUser.class);
         assert gitHubUser != null;
-        log.info("gitHubUser info={}", gitHubUser.toString());
+        log.info("Get GitHub User info:{}", gitHubUser.toString());
         return gitHubUser;
     }
 

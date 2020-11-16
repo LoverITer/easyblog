@@ -23,7 +23,7 @@ public class RequestLog extends AbstractLogBody{
     public String toString() {
         return "请求：" + url + '\'' +
                 ", 客户端IP地址:'" + ipInfo + '\'' +
-                ", 调用了方法:'" + classMethod + '\'' +
+                ", 调用了Controller层方法:'" + classMethod + '\'' +
                 ", 入参:" + Arrays.toString(args);
     }
 

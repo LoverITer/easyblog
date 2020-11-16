@@ -18,7 +18,7 @@
 
 <div class="m-content-container" style="max-width: 60em!important;">
     <div class="ui message m-padded-tb-huge" style="padding-top: 20px !important;background-color: #FFFFFF !important;">
-        <div style="padding-bottom: 20px !important;"><a href="#" th:href="@{/manage/blog/(userId=${user.getUserId()})}" style="color: #3399ea !important;font-size: 14px !important;"><i class="chevron blue left icon"></i> 管理博文</a></div>
+        <div style="padding-bottom: 20px !important;"><a href="#" th:href="@{/manage/blog/}" style="color: #3399ea !important;font-size: 14px !important;"><i class="chevron blue left icon"></i> 管理博文</a></div>
         <div class="ui container" style="background-color: #f5f6f7 !important;">
             <div style="padding: 10px 10px !important;">
                 <div style="margin: 16px auto 8px auto !important;font-size: 18px !important;color: #474747 !important;word-break: break-all;" th:text="${article.getArticleTopic()}">SpringMVC</div>
@@ -26,8 +26,8 @@
             </div>
         </div>
         </div>
-        <span th:if="${article!=null}"><i class="green check icon"></i><a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()},visitorUId=${user.getUserId()})}" style="color: #3399ea !important;font-size: 14px !important;">文章发布成功&nbsp;查看文章<i class="chevron blue right icon"></i></a></span>
-        <span><a href="#" th:href="@{/manage/blog/post/(userId=${user.getUserId()})}" style="color: #3399ea !important;font-size: 14px !important;margin-left: 30px !important;">再写一篇<i class="chevron blue right icon"></i></a></span>
+        <span th:if="${article!=null}"><i class="green check icon"></i><a href="#" th:href="@{/article/details/{id}(id=${article.getArticleId()})}" style="color: #3399ea !important;font-size: 14px !important;">文章发布成功&nbsp;查看文章<i class="chevron blue right icon"></i></a></span>
+        <span><a href="#" th:href="@{/manage/blog/post/}" style="color: #3399ea !important;font-size: 14px !important;margin-left: 30px !important;">再写一篇<i class="chevron blue right icon"></i></a></span>
         <span><a href="#" onclick="showUploadModal()" style="color: #3399ea !important;font-size: 14px !important;margin-left: 30px !important;" title="增加文章入口图片不仅仅会更美观些，还可以让访客能更快速的了解你的文章要义">为文章配首图<i class="chevron blue right icon"></i></a></span>
 </div>
 </div>
@@ -98,14 +98,13 @@
     $('.article-upload-image-ok').click(function () {
         let userId=$('#userId').val();
         let articleId = "[[${article.getArticleId()}]]";
-        console.log("userId:"+userId+",articleId:"+articleId);
         if (articleId != "" && articleId > 0) {
             //获取图片的base64串
             let imgByte64Str = $('#pre-look')[0].src;
             if (imgByte64Str != null && imgByte64Str != "" ) {
                 _loading(2);
                 $.ajax({
-                    url: "/manage/blog/upload_article_img/"+userId,
+                    url: "/manage/blog/upload_article_img",
                     method: "POST",
                     sync: false,
                     data: {imgByte64Str: imgByte64Str, articleId: articleId},

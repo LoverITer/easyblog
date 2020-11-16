@@ -71,6 +71,9 @@ public class CookieUtils {
                     return true;
                 }
             }
+        } else {
+            setCookie(request, response, cookieName, newCookieValue, expire, true);
+            return true;
         }
         return false;
     }
@@ -179,7 +182,7 @@ public class CookieUtils {
     /**
      * 删除Cookie带cookie域名
      */
-    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) {
+    public static boolean deleteCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) {
         Cookie[] cookies = request.getCookies();
         if (Objects.nonNull(cookies)) {
             for (Cookie cookie : cookies) {
@@ -190,10 +193,11 @@ public class CookieUtils {
                     cookie.setMaxAge(0);
                     cookie.setPath("/");
                     response.addCookie(cookie);
-                    break;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     /**

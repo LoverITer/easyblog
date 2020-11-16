@@ -36,8 +36,16 @@
                     <h3 class="m-margin-top m-margin-bottom m-margin-left" style="font-weight: bold !important;font-size: 20px !important;color: #3d3d3d !important;">个人资料</h3>
                 </div>
                 <div class="three wide column">
-                    <img id="header-image" class="ui medium circular image image-122x122" th:src="@{${user.getUserHeaderImgUrl()}}"
-                         src="http://hbimg.b0.upaiyun.com/1f20743f57decb129f4563314eafca4f83f7a18d105ac-xpHDBI_fw658">
+                    <img id="header-image" th:if="${user.getUserHeaderImgUrl()!=null}"
+                         class="ui medium circular image image-122x122" th:src="@{${user.getUserHeaderImgUrl()}}">
+                    <div th:if="${user.getUserHeaderImgUrl()==null}" class="m-init-user-avatar"
+                         style="width: 112px;height: 112px;border-radius: 100%">
+                        <svg t="1604420630232" style="margin: 9px" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg" p-id="38499" width="94" height="94">
+                            <path d="M512 0c113.322667 0 204.8 91.477333 204.8 204.8S625.322667 409.6 512 409.6 307.2 318.122667 307.2 204.8s91.477333-204.8 204.8-204.8z m0 969.386667a491.52 491.52 0 0 1-409.6-219.818667C104.448 613.717333 375.466667 539.306667 512 539.306667c135.850667 0 407.552 74.410667 409.6 210.261333a491.52 491.52 0 0 1-409.6 219.818667z"
+                                  fill="#bfbfbf" p-id="38500"></path>
+                        </svg>
+                    </div>
                     <div class="up-img-cover"  id="up-img-touch" >
                     <a href="javascript: void(0)" style="color: #3399ea !important;font-size: 14px !important;display: block !important;margin-left: 2.4em !important;" class="m-margin-top">修改头像</a></div>
                 </div>
@@ -373,14 +381,12 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="right aligned row" style="padding-bottom: 5px !important;">
                     <div class="right aligned sixteen wide column" style="padding-top: 0.5em !important;">
                         <button type="button" id="cancel-btn" class="ui  floated button">取消</button>
                         <button type="submit" class="ui  floated submit button  red">确定</button>
                     </div>
                 </div>
-
                 <div class="row" style="padding-bottom: 10px !important;"></div>
             </div>
         </form>
@@ -459,7 +465,6 @@
 <script src="js/distpicker.main.js" th:src="@{/static/js/distpicker.main.js}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        let userId=$('#userId').val();
         showPageZoomWarning();
         toggleStatus();
         logOut();
@@ -511,7 +516,7 @@
                             "z-index": 11000,
                             "left": 50 + "%",
                             "margin-left": -(modal_width / 2) + "px",
-                            "top": o.top - 140 + "px"
+                            "top": o.top - 100 + "px"
                         });
                         $(modal_id).fadeTo(200, 1);
                         e.preventDefault()

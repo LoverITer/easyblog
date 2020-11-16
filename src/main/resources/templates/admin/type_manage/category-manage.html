@@ -117,9 +117,6 @@
             <div class="ui bottom attached segment " th:if="${categoriesPage.getTotal()==0}"
                  style="margin: 0 auto !important;">
                 <div style="padding: 8em 29rem 12em 29rem!important;">
-                    <div style="padding-bottom: 1em !important;padding-left: 1.8em !important;color: grey !important;font-size: 14px !important;">
-                        您没有还任何分类
-                    </div>
                     <a th:href="@{/manage/category/add(userId=${user.getUserId()})}" target style="color: #FFFFFF !important;">
                         <button class="red fluid ui button">新建分类</button>
                     </a>

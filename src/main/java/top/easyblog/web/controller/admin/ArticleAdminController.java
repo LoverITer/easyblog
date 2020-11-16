@@ -354,8 +354,8 @@ public class ArticleAdminController extends BaseController {
                 updateArticle(articleId, "3");
                 log.debug(request.getLocalAddr()+"@"+LocalDateTime.now()+" move article: ["+articleId+"] status to 3");
                 executor.execute(() -> {
-                    String content = NetWorkUtils.getUserIp(request) + " " +
-                            NetWorkUtils.getLocation(NetWorkUtils.getUserIp(request)) + " 执行方法【deleteArticle】删除了文章 " +
+                    String content = NetWorkUtils.getInternetIPAddress(request) + " " +
+                            NetWorkUtils.getLocation(NetWorkUtils.getInternetIPAddress(request)) + " 执行方法【deleteArticle】删除了文章 " +
                             articleId;
                     Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
                     emailUtil.send(e);
@@ -375,8 +375,8 @@ public class ArticleAdminController extends BaseController {
                                      HttpServletRequest request) {
         String updateStatus = deleteArticle2Dash(articleId);
         executor.execute(() -> {
-            String content = NetWorkUtils.getUserIp(request) + " " +
-                    NetWorkUtils.getLocation(NetWorkUtils.getUserIp(request)) + " 执行方法【deleteDraftArticle】删除了文章 " +
+            String content = NetWorkUtils.getInternetIPAddress(request) + " " +
+                    NetWorkUtils.getLocation(NetWorkUtils.getInternetIPAddress(request)) + " 执行方法【deleteDraftArticle】删除了文章 " +
                     articleId;
             Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
             emailUtil.send(e);
@@ -438,8 +438,8 @@ public class ArticleAdminController extends BaseController {
         try {
             articleService.deleteByPK(articleId);
             executor.execute(() -> {
-                String content = NetWorkUtils.getUserIp(request) + " " +
-                        NetWorkUtils.getLocation(NetWorkUtils.getUserIp(request)) + " 执行方法【deleteComplete】删除了文章 " +
+                String content = NetWorkUtils.getInternetIPAddress(request) + " " +
+                        NetWorkUtils.getLocation(NetWorkUtils.getInternetIPAddress(request)) + " 执行方法【deleteComplete】删除了文章 " +
                         articleId;
                 Email e = new Email("异常删除警告", "huangxin981230@163.com", content, null);
                 emailUtil.send(e);
@@ -525,16 +525,12 @@ public class ArticleAdminController extends BaseController {
     }
 
     @ResponseBody
-    @PostMapping(value = "/upload_article_img/{userId}")
-    public WebAjaxResult editArticleFirstImg(@PathVariable(value = "userId") Integer userId,
-                                             @RequestParam long articleId,
+    @PostMapping(value = "/upload_article_img")
+    public WebAjaxResult editArticleFirstImg(@RequestParam long articleId,
                                              @RequestParam String imgByte64Str,
                                              HttpServletRequest request) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
         ajaxResult.setMessage("请登录后在操作！");
-        if (Objects.isNull(userId)) {
-            return ajaxResult;
-        }
         String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
         User user= UserUtils.getUserFromRedis(sessionId);
         if (Objects.nonNull(user)) {

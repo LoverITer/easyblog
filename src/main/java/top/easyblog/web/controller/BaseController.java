@@ -30,24 +30,40 @@ import java.util.concurrent.Executor;
 @Component
 public abstract class BaseController {
 
-    /***ajax异步请求成功标志*/
-    protected static final String AJAX_SUCCESS = "OK";
-    /***ajax异步请求失败标志*/
-    protected static final String AJAX_ERROR = "FATAL";
-    /***登录页面*/
-    protected static final String LOGIN_PAGE = "redirect:/user/loginPage";
-    /*** 404页面路径*/
+    /**
+     * 登录页面
+     */
+    protected static final String LOGIN_PAGE = "redirect:/user/login.html";
+    /**
+     * 404页面路径
+     */
     protected static final String PAGE404 = "redirect:/error/404";
-    /***错误页面*/
+    /**
+     * 错误页面
+     */
     protected static final String ERROR_PAGE = "redirect:/error/error";
-    /***用户登录标记*/
+    /**
+     * 用户登录标记
+     */
     public static final String JSESSIONID = "JSESSIONID";
-    /***用户信息标记*/
+    /**
+     * 用户信息标记
+     */
     protected static final String REMEMBER_ME_COOKIE = "REMEMBER-ME-COOKIE";
-    /**用户登录信息最大保存时间（免登陆最大时间）*/
-    protected static final int MAX_USER_LOGIN_STATUS_KEEP_TIME=60 * 60 * 24 * 15;
-    /**浏览器保存用户名，密码90天*/
+
+    /**
+     * 用户登录信息最大保存时间（免登陆最大时间）:60天
+     */
+    protected static final int MAX_USER_LOGIN_STATUS_KEEP_TIME = 60 * 60 * 24 * 60;
+
+    /**
+     * 浏览器保存用户名，密码90天
+     */
     protected static final int REMEMBER_ME_TIME =60*60*24*90;
+    /**
+     * Redis数据库号
+     */
+    public static final RedisUtils.RedisDataBaseSelector REDIS_DB = RedisUtils.RedisDataBaseSelector.DB_1;
     @Autowired
     protected ICategoryService categoryService;
     @Autowired
@@ -72,7 +88,15 @@ public abstract class BaseController {
     protected RedisUtils redisUtil;
     @Autowired
     protected Executor executor;
+    @Autowired
+    protected HotWordService hotWordService;
 
+
+    protected boolean isMobileDevice(HttpServletRequest request) {
+        //检查用户的访问设备
+        String userAgent = request.getHeader("User-Agent");
+        return userAgent.contains("Android") || userAgent.contains("iPhone");
+    }
 
     /**
      * 跳转到用户登录前的页面
@@ -80,12 +104,12 @@ public abstract class BaseController {
      * @param request HttpServletRequest
      * @return java.lang.String
      */
-    String loginRedirectUrl(HttpServletRequest request) {
-        String ip = NetWorkUtils.getUserIp(request);
-        String refererUrl = (String) redisUtil.get("Referer-" + ip, RedisUtils.DB_1);
+    protected String loginRedirectUrl(HttpServletRequest request) {
+        String ip = NetWorkUtils.getInternetIPAddress(request);
+        String refererUrl = (String) redisUtil.get("Referer-" + ip, REDIS_DB);
         if (Objects.nonNull(refererUrl) && !"".equals(refererUrl)) {
             //在每次取登录界面的时候都会在Redis中记录登录之前访问的页面Referer，登录成功后删除对应的Referer
-            redisUtil.delete(RedisUtils.DB_1, "Referer-" + ip);
+            redisUtil.delete(REDIS_DB, "Referer-" + ip);
             log.info("redirect to : {}", refererUrl);
             return "redirect:" + refererUrl;
         }

@@ -17,7 +17,7 @@ public enum PageSize {
     /**
      * 默认的页面大小
      */
-    DEFAULT_PAGE_SIZE(10),
+    DEFAULT_PAGE_SIZE(15),
 
     /**
      * 最大的页面大小

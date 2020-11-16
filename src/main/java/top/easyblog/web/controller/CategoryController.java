@@ -46,6 +46,12 @@ public class CategoryController extends BaseController{
                                       @PathVariable(value = "categoryId") int categoryId,
                                       @PathVariable("userId") int userId,
                                       @RequestParam(value = "page", defaultValue = "1") int pageNo) {
+        //检查用户的访问设备
+        if (isMobileDevice(request)) {
+            model.addAttribute("mobileDevice", true);
+        } else {
+            model.addAttribute("mobileDevice", false);
+        }
         getArticleUserInfo(model, userId, ArticleType.Original.getArticleType());
         //分类的信息
         Category category = categoryService.getCategory(categoryId);
@@ -58,7 +64,7 @@ public class CategoryController extends BaseController{
         model.addAttribute("care", "false");
         List<CategoryCare> categoryCare = categoryCareService.getCategoryCare(categoryId);
         if (Objects.nonNull(categoryCare)) {
-            categoryCare.forEach(ele -> {
+            categoryCare.parallelStream().forEach(ele -> {
                 if (userId == ele.getCategoryCareUserId()) {
                     model.addAttribute("care", "true");
                 }

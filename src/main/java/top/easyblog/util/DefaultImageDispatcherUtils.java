@@ -12,10 +12,6 @@ import java.util.Random;
  */
 public class DefaultImageDispatcherUtils {
 
-    /**
-     * 用户默认头像路径
-     */
-    public static final String DEFAULT_AVATAR = "/static/images/header.jpg";
 
     public static final String DEFAULT_CATEGORY_IMG = "/static/images/category-default-pic/";
 
@@ -23,14 +19,6 @@ public class DefaultImageDispatcherUtils {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultImageDispatcherUtils.class);
 
-    /**
-     * 获得用户默认的头像
-     *
-     * @return 图片的默认地址
-     */
-    public static String defaultAvatar() {
-        return DEFAULT_AVATAR;
-    }
 
     /***
      * 获得默认的分类头像

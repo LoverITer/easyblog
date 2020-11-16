@@ -21,8 +21,17 @@
                        author是文章的作者
                        visitor是访问者
                     -->
-                    <img th:src="${author.getUserHeaderImgUrl()}" style="border-radius: 5px"  src="https://img-blog.csdnimg.cn/20190927151132530.png"
+                    <img th:if="${author.getUserHeaderImgUrl()!=null}" th:src="${author.getUserHeaderImgUrl()}"
+                         style="border-radius: 5px" src="https://img-blog.csdnimg.cn/20190927151132530.png"
                          class="ui fluid top aligned  medium circular image image-100x100" alt="">
+                    <div th:if="${author.getUserHeaderImgUrl()==null}" class="m-init-user-avatar"
+                         style="width: 100px;height: 100px;border-radius: 5px;">
+                        <svg t="1604420630232" style="margin: 3px" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg" p-id="38499" width="95" height="95">
+                            <path d="M512 0c113.322667 0 204.8 91.477333 204.8 204.8S625.322667 409.6 512 409.6 307.2 318.122667 307.2 204.8s91.477333-204.8 204.8-204.8z m0 969.386667a491.52 491.52 0 0 1-409.6-219.818667C104.448 613.717333 375.466667 539.306667 512 539.306667c135.850667 0 407.552 74.410667 409.6 210.261333a491.52 491.52 0 0 1-409.6 219.818667z"
+                                  fill="#bfbfbf" p-id="38500"></path>
+                        </svg>
+                    </div>
                 </div>
                 <div class="thirteen wide column m-mobile-pading">
                     <div class="row">
@@ -142,12 +151,13 @@
             </div>
 
             <!--文章条数>0并且小于等于25-->
-            <div th:if="${!#lists.isEmpty(articles) and #lists.size(articles) lt 15}" class="ui bottom attached segment" style="border-top: none !important;padding: 1px !important;">
+            <div th:if="${!#lists.isEmpty(articles) and #lists.size(articles) lt 15}" class="ui bottom attached segment"
+                 style="border: none !important;padding: 1px !important;">
             </div>
 
 
             <div th:if="${#lists.isEmpty(articles)}" class="ui bottom attached segment"
-                 style="border-top: none !important;">
+                 style="border: none !important;">
                 <div class="ui middle aligned two column grid">
                     <div style="color: grey;margin: 10em auto !important;float: left !important;font-size: 16px">
                         没有任何文章

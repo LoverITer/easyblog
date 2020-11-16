@@ -67,13 +67,13 @@ public class SendMessageUtils {
     }
 
     /**
-     * -1  没有该用户账户
-     * -2 接口密钥不正确 [查看密钥]不是账户登陆密码
+     * -1     没有该用户账户
+     * -2     接口密钥不正确 [查看密钥]不是账户登陆密码
      * -21    MD5接口密钥加密不正确
-     * -3 短信数量不足
+     * -3     短信数量不足
      * -11    该用户被禁用
      * -14    短信内容出现非法字符
-     * -4 手机号格式不正确
+     * -4     手机号格式不正确
      * -41    手机号码为空
      * -42    短信内容为空
      * -51    短信签名格式不正确接口签名格式为：【签名内容】
@@ -119,7 +119,7 @@ public class SendMessageUtils {
      */
     public static String getRandomCode(Integer code) {
         Random random = new Random();
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < code; i++) {
             result.append(random.nextInt(10));
         }

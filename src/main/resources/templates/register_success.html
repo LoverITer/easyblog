@@ -19,7 +19,7 @@
         <div class="ui contianer">
             <h2>注册成功</h2>
             <p>恭喜您注册成功，页面将于<strong><span id="time" style="font-size: 22px"></span></strong>秒后跳转到登录页面。
-                <a href="#" th:href="@{/user/loginPage}" style="font-size: 16px">
+                <a href="#" th:href="@{/user/login.html}" style="font-size: 16px">
                     <button class="ui button tiny blue" >立即登录</button>
                 </a>
             </p>
@@ -50,7 +50,7 @@
             t--;
         } else {
             //跳转到登录页面
-            window.location.href = "/user/loginPage";
+            window.location.href = "/user/login.html";
         }
         setTimeout("timer()", 1000);
     }

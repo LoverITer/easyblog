@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.*;
-import top.easyblog.config.redis.ObjectRedisTemplate;
+import top.easyblog.config.redis.StringObjectRedisTemplate;
 
 /**
  * @author ：huangxin
@@ -16,8 +16,8 @@ import top.easyblog.config.redis.ObjectRedisTemplate;
 public class RedisAutoConfiguration extends org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration {
 
     @Bean(name = "redisTemplate")
-    public ObjectRedisTemplate objectRedisTemplate(LettuceConnectionFactory factory) {
-        ObjectRedisTemplate objectRedisTemplate = new ObjectRedisTemplate();
+    public StringObjectRedisTemplate objectRedisTemplate(LettuceConnectionFactory factory) {
+        StringObjectRedisTemplate objectRedisTemplate = new StringObjectRedisTemplate();
         factory.setShareNativeConnection(false);
         objectRedisTemplate.setConnectionFactory(factory);
         return objectRedisTemplate;

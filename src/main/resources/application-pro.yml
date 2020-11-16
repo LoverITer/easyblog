@@ -62,8 +62,8 @@ spring:
 #第三方认证
 oauth:
   github:
-    client-id: 2357d5a950e31f627374 #client-id
-    client-secret: 4218dc574e0a2414f0719fc18e616305358aa7be #client-secet
+    client-id: 955ec43544041d4eaf81 #client-id
+    client-secret: 38934b2291b357a895f3b147ea1d23b26e3bacf3 #client-secet
     redirectUrl: https://www.easyblog.top/oauth/github/callback #redierctUrl
 logging:
   level:
