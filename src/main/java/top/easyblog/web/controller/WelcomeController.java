@@ -368,11 +368,4 @@ public class WelcomeController extends BaseController {
         return "special-topic";
     }
 
-
-    @GetMapping(value = "/help")
-    public String help() {
-        return "help";
-    }
-
-
 }

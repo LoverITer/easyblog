@@ -3,6 +3,7 @@ package top.easyblog.web.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import top.easyblog.config.web.WebAjaxResult;
 import top.easyblog.entity.po.User;
 import top.easyblog.global.enums.UserFreeze;
@@ -71,15 +72,56 @@ public class UserServiceImpl implements IUserService {
     }
 
 
+    /**
+     * 密码要求：
+     * <p>
+     * 1.长度超过8位
+     * 2.包括大小写字母.数字.其它符号,以上四种至少三种
+     *
+     * @param password 用户密码
+     * @return
+     */
     @Override
     public WebAjaxResult isPasswordLegal(String password) {
         WebAjaxResult ajaxResult = new WebAjaxResult();
-        ajaxResult.setSuccess(true);
-        if (password.length() < 11 || password.length() > 20) {
-            ajaxResult.setSuccess(false);
-            ajaxResult.setMessage("密码长度必须介于11-20个字符");
+        if (StringUtils.isEmpty(password) || password.length() < 8) {
+            ajaxResult.setMessage("密码长度必须大于8位");
         }
+        if (verifyPasswordComplexity(password) < 3) {
+            ajaxResult.setMessage("密码至少应该包含大小写字母、数字、其他符号中的三种");
+        }
+        ajaxResult.setSuccess(true);
         return ajaxResult;
+    }
+
+
+    /**
+     * 检查密码的复杂度
+     * <p>
+     * 包括大小写字母.数字.其它符号,以上四种至少三种
+     *
+     * @param password
+     * @return
+     */
+    private Integer verifyPasswordComplexity(String password) {
+        int count = 0;
+        //检查是否有大写字母
+        if (password.length() - password.replaceAll("[A-Z]", "").length() > 0) {
+            count++;
+        }
+        //检查是否有小写字母
+        if (password.length() - password.replaceAll("[a-z]", "").length() > 0) {
+            count++;
+        }
+        //检查是否有数字
+        if (password.length() - password.replaceAll("[0-9]", "").length() > 0) {
+            count++;
+        }
+        //检查是否有其它符号
+        if (password.replaceAll("[0-9,A-Z,a-z]", "").length() > 0) {
+            count++;
+        }
+        return count;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)

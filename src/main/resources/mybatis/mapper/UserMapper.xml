@@ -102,53 +102,53 @@
     <update id="updateUserSelective">
         update user
         <set>
-            <if test="userNickname!=null">
-                user_nickname=#{userNickname},
+            <if test="user.userNickname!=null">
+                user_nickname=#{user.userNickname},
             </if>
-            <if test="userPassword != null">
-                user_password=#{userPassword},
+            <if test="user.userPassword != null">
+                user_password=#{user.userPassword},
             </if>
-            <if test="userGender!=null">
-                user_gender=#{userGender},
+            <if test="user.userGender!=null">
+                user_gender=#{user.userGender},
             </if>
-            <if test="userAddress">
-                user_address=#{userAddress},
+            <if test="user.userAddress">
+                user_address=#{user.userAddress},
             </if>
-            <if test="userScore!=null">
-                user_score=#{userScore},
+            <if test="user.userScore!=null">
+                user_score=#{user.userScore},
             </if>
-            <if test="userRank!=null">
-                user_rank=#{userRank},
+            <if test="user.userRank!=null">
+                user_rank=#{user.userRank},
             </if>
-            <if test="userHeaderImgUrl!=null">
-                user_headerImg_url=#{userHeaderImgUrl},
+            <if test="user.userHeaderImgUrl!=null">
+                user_headerImg_url=#{user.userHeaderImgUrl},
             </if>
-            <if test="userDescription!=null">
-                user_description=#{userDescription},
+            <if test="user.userDescription!=null">
+                user_description=#{user.userDescription},
             </if>
-            <if test="userLastUpdateTime!=null">
-                user_last_update_time=#{userLastUpdateTime},
+            <if test="user.userLastUpdateTime!=null">
+                user_last_update_time=#{user.userLastUpdateTime},
             </if>
-            <if test="userFreeze!=null">
-                user_lock=#{userLock},
+            <if test="user.userFreeze!=null">
+                user_lock=#{user.userLock},
             </if>
-            <if test="userFreeze!=null">
-                user_freeze=#{userFreeze},
+            <if test="user.userFreeze!=null">
+                user_freeze=#{user.userFreeze},
             </if>
-            <if test="userPower!=null">
-                user_power=#{userPower},
+            <if test="user.userPower!=null">
+                user_power=#{user.userPower},
             </if>
-            <if test="userLevel != null">
-                user_level=#{userLevel},
+            <if test="user.userLevel != null">
+                user_level=#{user.userLevel},
             </if>
-            <if test="userVisit != null">
-                user_visit=#{userVisit},
+            <if test="user.userVisit != null">
+                user_visit=#{user.userVisit},
             </if>
-            <if test="userPrefession!=null">
-                user_prefession=#{userPrefession},
+            <if test="user.userPrefession!=null">
+                user_prefession=#{user.userPrefession},
             </if>
-            <if test="userJobPosition!=null">
-                user_job_position=#{userJobPosition},
+            <if test="user.userJobPosition!=null">
+                user_job_position=#{user.userJobPosition},
             </if>
             <if test="user.userHobby!=null">
                 user_hobby=#{user.userHobby,jdbcType=VARCHAR},
@@ -159,11 +159,11 @@
         </set>
         where
         <choose>
-            <when test="userMail != null and userMail != ''">
-                user_mail=#{userMail}
+            <when test="user.userMail != null and user.userMail != ''">
+                user_mail=#{user.userMail}
             </when>
-            <when test="userPhone != null and userPhone != ''">
-                user_phone=#{userPhone}
+            <when test="user.userPhone != null and user.userPhone != ''">
+                user_phone=#{user.userPhone}
             </when>
             <when test="1==1">1=1</when>
         </choose>

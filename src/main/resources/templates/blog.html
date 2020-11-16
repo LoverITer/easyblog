@@ -97,9 +97,19 @@
                         </li>
                     </div>
                 </div>
-                <h4 class="ui horizontal divider header m-margin-top-large menu-info-ctl">联系开发者</h4>
-                <div class="ui centered card menu-info-ctl" style="width: 11em">
-                    <img src="../static/images/wechat.jpg" th:src="@{/static/images/wechat.jpg}" alt="我的微信" class="ui rounded image">
+            <!--google ads-->
+            <div id="sidebar-ads" class="ui segments user_info_sidebar">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- vertical-ads -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-2311962880414013"
+                     data-ad-slot="9018330655"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
                 </div>
             </div>
 
@@ -223,6 +233,21 @@
                             </ul>
                         </div>
                     </div>
+                </div>
+                <!--ads--->
+                <div style="margin-top: 1em !important;border:1px solid white !important;box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05);padding: 0"
+                     id="comment-container" class="ui attached segment">
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                    <!-- horizontal-ads -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-2311962880414013"
+                         data-ad-slot="4401262941"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
                 </div>
                 <!--留言信息-->
                 <div style="margin-top: 1em !important;border:1px solid white !important;box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05)" id="comment-container" class="ui attached segment">
@@ -411,11 +436,11 @@
 <script src="../static/hightlight-theme/okaida/prism.js" th:src="@{/static/hightlight-theme/default/prism.js}"></script>
 <script type="text/javascript">
     let menuStatus=0;  //目录控制变量为1 表示目录显示，0表示目录没有显示
-    $(document).ready(function () {
+    $(function () {
 
+        //=================显示或隐藏目录============================================
         let htmlHeight = window.innerHeight+ 'px';
         $('#menu').css('height',htmlHeight);
-        //显示或隐藏目录
         $('.m-article-meum-show-btn').click(function () {
             if(menuStatus===0){
                 //按钮点击之前，菜单是隐藏的
@@ -423,6 +448,8 @@
                 $('.menu-info-ctl').hide(100);
                 $('#show-btn').hide();
                 $('#hide-btn').show();
+                //隐藏广告
+                $('#sidebar-ads').hide();
                 menuStatus=1;
             }else if(menuStatus===1){
                 //按钮点击之前，菜单是显示的
@@ -430,13 +457,13 @@
                 $('.menu-info-ctl').show(500);
                 $('#show-btn').show();
                 $('#hide-btn').hide();
+                //显示广告
+                $('#sidebar-ads').show();
                 menuStatus=0;
             }
         });
-    });
 
-    //实现目录中子标题的隐藏与显示
-    $(document).ready(function () {
+        //========================实现目录中子标题的隐藏与显示=======================
         $('.m-outline-item i').click(function () {
             $(this).siblings('ul').toggle();
             $(this).toggleClass("right");
@@ -445,47 +472,61 @@
 
         $('#main-menu').click(function () {
             $('.m-outline-children').toggle();
-        })
-    });
-
-
-    $(document).ready(function(){
-        //给文章的个标题段添加id
-        //id用于目录的跳转
-      $("#content :header").each(function(){
-          $(this).attr('id',this.innerText);
-      });
-      //TOC标签生成的目录修改href属性的值
-      $(".toc li a").each(function(){
-          $(this).attr('href','#'+this.innerText);
-      });
-      sendAsk();
-      window.addEventListener("scroll",function () {
-          sendAsk();
-      })
-    });
-
-    //可视区目录高亮显示
-    function sendAsk(){
-        let headers= $('#content :header');
-        let tocs=$('#menu a');
-        //swHeight=滚动的高度+窗体的高度；当h的offset高度<=swHeight,那么说明当前h显示在可视区域了
-        let swHeight=$(window).height();
-        $.each(headers, function (index, item) {
-            mTop=item.getBoundingClientRect().top;
-            let key='#'+this.innerText;
-            if(mTop<=swHeight){
-                $.each(tocs,function () {
-                    if($(this).attr('href')==key){
-                        $(this).css('color','#4183C4');
-                    }else{
-                        $(this).css('color','');
-                    }
-                })
-            }
         });
 
-    }
+
+        //==============给文章的个标题段添加id=====================================
+        //id用于目录的跳转
+        $("#content :header").each(function () {
+            $(this).attr('id', this.innerText);
+        });
+        //TOC标签生成的目录修改href属性的值
+        $(".toc li a").each(function () {
+            $(this).attr('href', '#' + this.innerText);
+        });
+        sendAsk();
+        window.addEventListener("scroll", function () {
+            sendAsk();
+        });
+
+        //可视区目录高亮显示
+        function sendAsk() {
+            let headers = $('#content :header');
+            let tocs = $('#menu a');
+            //swHeight=滚动的高度+窗体的高度；当h的offset高度<=swHeight,那么说明当前h显示在可视区域了
+            let swHeight = $(window).height();
+            $.each(headers, function (index, item) {
+                mTop = item.getBoundingClientRect().top;
+                let key = '#' + this.innerText;
+                if (mTop <= swHeight) {
+                    $.each(tocs, function () {
+                        if ($(this).attr('href') == key) {
+                            $(this).css('color', '#4183C4');
+                        } else {
+                            $(this).css('color', '');
+                        }
+                    })
+                }
+            });
+        }
+
+        //===================实现广告侧边栏上滑到顶后位置固定的效果====================
+        //获取要定位元素距离浏览器顶部的距离
+        let adsH = $('#sidebar-ads').offset().top;
+        let navHigh = $('nav').outerHeight(true);
+        //滚动条事件
+        $(window).scroll(function () {
+            //获取滚动条的滑动距离
+            let scroH = $(this).scrollTop();
+            //滚动条的滑动距离大于等于定位元素距离浏览器顶部的距离，就固定，反之就不固定
+            if (scroH >= adsH) {
+                $('#sidebar-ads').css({"position": "fixed", "top": navHigh - 13});
+            } else {
+                $('#sidebar-ads').css({"position": "static"});
+            }
+        });
+    });
+
 </script>
 <script th:unless="${mobileDevice}">
     /**评论输入框被点击的时候变大为10行**/
@@ -506,9 +547,7 @@
 <!--评论框的各种效果-->
 <script type="text/javascript">
     let commentContent = ""; //输入的评论内容
-
     $(function () {
-
         <!--控制评论输入的字数-->
         $('#commentInput').on('keyup', function () {
             commentContent = $('#commentInput').val();
@@ -541,7 +580,7 @@
                     $.ajax({
                         url: "/comment/publish",
                         method: "POST",
-                        sync: "false",
+                        sync: true,
                         contentType: "application/json;charset=UTF-8",
                         data: JSON.stringify({
                             commentContent: commentContent,

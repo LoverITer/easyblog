@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import top.easyblog.config.ApplicationContextHolder;
-import top.easyblog.config.redis.ObjectRedisTemplate;
+import top.easyblog.config.redis.StringObjectRedisTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtils {
 
     @Autowired
-    private ObjectRedisTemplate redisTemplate;
+    private StringObjectRedisTemplate redisTemplate;
     @Autowired
     private ValueOperations<String, Object> redisValueOps;
     @Autowired
@@ -101,7 +101,7 @@ public class RedisUtils {
      *
      * @param dbIndex
      */
-    public void setDbIndex(RedisDataBaseSelector dbIndex) {
+    private void setDbIndex(RedisDataBaseSelector dbIndex) {
         if (dbIndex == null || dbIndex.getDbIndex() > MAX_DB_INDEX || dbIndex.getDbIndex() < MIN_DB_INDEX) {
             dbIndex = RedisDataBaseSelector.DB_0;
         }
@@ -114,7 +114,7 @@ public class RedisUtils {
     }
 
     /**
-     * 指定缓存失效时间
+     * 指定缓存失效时间，单位s
      *
      * @param key     键
      * @param time    时间(秒)

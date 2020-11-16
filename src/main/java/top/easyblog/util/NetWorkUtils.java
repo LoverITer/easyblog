@@ -386,10 +386,6 @@ public final class NetWorkUtils {
         return map;
     }
 
-    public static void main(String[] args) throws Exception {
-        //System.out.println(NetWorkUtils.doGet("https://www.easyblog.top"));
-        String s = NetWorkUtils.doGet("http://zhuanti.ip3q.com/");
-    }
 
 }
 

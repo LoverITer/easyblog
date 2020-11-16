@@ -71,6 +71,9 @@ public class CookieUtils {
                     return true;
                 }
             }
+        } else {
+            setCookie(request, response, cookieName, newCookieValue, expire, true);
+            return true;
         }
         return false;
     }

@@ -1,25 +1,23 @@
 package top.easyblog.config.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.servlet.config.annotation.*;
-import top.easyblog.util.RedisUtils;
 import top.easyblog.web.LoginInterceptor;
 
 import javax.servlet.MultipartConfigElement;
 
 /**
+ * 自定义Web MVC配置
  * @author huangxin
  */
 @EnableWebMvc
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class WebMvcConfigurerImpl implements WebMvcConfigurer {
 
-    @Autowired
-    private RedisUtils redisUtil;
+
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {
@@ -34,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        final InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
+        InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
         registration.addPathPatterns("/**");
         /**
          * 排除拦截classpath:/static下的所有静态资源
@@ -62,11 +60,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-
+        //注册页面
+        registry.addViewController("/user/registration.html").setViewName("registration");
+        //找回密码
+        registry.addViewController("/user/reset.html").setViewName("reset-password");
+        //注册成功
+        registry.addViewController("/user/register-success").setViewName("registration-success");
+        //帮助
+        registry.addViewController("/help").setViewName("help");
     }
 
-    @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {
 
-    }
 }

@@ -29,7 +29,7 @@ public class HotWordServiceImpl implements HotWordService {
     /**
      * 将用户搜索数据放到Redis的zset，这个是Zset的key
      */
-    private static final String HOT_WORD_KEY = "hot_word";
+    public static final String HOT_WORD_KEY = "hot_word";
 
     /**
      * 新增一条该userid用户在搜索栏的历史记录

@@ -53,7 +53,7 @@ public interface UserMapper extends BaseMapper<User> {
      * @param user
      * @return
      */
-    int updateUserSelective(User user);
+    int updateUserSelective(@Param("user") User user);
 
     /**
      *

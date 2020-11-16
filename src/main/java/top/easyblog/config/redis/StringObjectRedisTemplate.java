@@ -10,17 +10,17 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 /**
  * @author Huanxin
  */
-public class ObjectRedisTemplate extends RedisTemplate<java.lang.String, java.lang.Object> {
+public class StringObjectRedisTemplate extends RedisTemplate<String, Object> {
 
 
-    public ObjectRedisTemplate() {
+    public StringObjectRedisTemplate() {
         this.setKeySerializer(new StringRedisSerializer());
+        this.setValueSerializer(new FastJsonRedisSerializer<>(Object.class));
         this.setHashKeySerializer(new StringRedisSerializer());
         this.setHashValueSerializer(new FastJsonRedisSerializer<>(Object.class));
-        this.setValueSerializer(new FastJsonRedisSerializer<>(Object.class));
     }
 
-    public ObjectRedisTemplate(RedisConnectionFactory connectionFactory) {
+    public StringObjectRedisTemplate(RedisConnectionFactory connectionFactory) {
         this();
         this.setConnectionFactory(connectionFactory);
         this.afterPropertiesSet();

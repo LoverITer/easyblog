@@ -50,7 +50,7 @@ public class SearchController extends BaseController{
         model.addAttribute("baseUrl", baseUrl);
         String sessionId = CookieUtils.getCookieValue(request, JSESSIONID);
         User visitor= UserUtils.getUserFromRedis(sessionId);
-        model.addAttribute("visitor", visitor);
+        model.addAttribute("user", visitor);
         model.addAttribute("query", query);
         SensitiveWordUtils wordUtils = SensitiveWordUtils.getInstance();
         //检测是否有敏感字

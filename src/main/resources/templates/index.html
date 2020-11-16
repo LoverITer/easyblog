@@ -106,7 +106,8 @@
                 <li><a th:href="@{/bigdata}">云计算/大数据</a></li>
                 <li><a th:href="@{/others}">其它</a></li>
                 <li><a th:href="@{/article/home/667020}">关于我</a></li>
-                <li th:if="${user==null}"><a class="index_user_login login-btn" href="#" th:href="@{/user/loginPage}">登录/注册</a></li>
+                <li th:if="${user==null}"><a class="index_user_login login-btn" href="#" th:href="@{/user/login.html}">登录/注册</a>
+                </li>
                 <li th:if="${user!=null}">
                     <div id="header-images" class="right m-item m-mobile-hide" style="margin-left: 1em !important;">
                         <a style="position: absolute;bottom: -15px" class="index_user_header"

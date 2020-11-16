@@ -177,10 +177,4 @@ public class CalendarUtils {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2020, Calendar.SEPTEMBER, 26, 19, 52, 36);
-        System.out.println(getDateDistanceInfo(calendar.getTime()));
-
-    }
 }

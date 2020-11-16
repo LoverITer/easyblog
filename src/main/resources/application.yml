@@ -1,11 +1,11 @@
 project:
-  version: 1.1.1_20201029
+  version: 1.2.2_20201116
   name: EasyBlog
   engineering-code: Blue planet
 #公用环境
 spring:
   profiles:
-    active: dev
+    active: pro
   thymeleaf:
    enabled: true
    #默认是classpath:/templates/

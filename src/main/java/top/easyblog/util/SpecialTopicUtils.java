@@ -63,8 +63,4 @@ public class SpecialTopicUtils {
         return SPECIAL_TOPIC_IMG_CACHE.get(key);
     }
 
-    public static void main(String[] args) {
-        System.out.println(getSpecialTopicDescriptionOf("java"));
-    }
-
 }

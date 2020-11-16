@@ -107,7 +107,7 @@ button {
     cursor: pointer;
     width: 300px;
     height: 44px;
-    margin-top: 16px;
+    margin-top: 10px;
     padding: 0;
     background: #ef4300;
     -moz-border-radius: 6px;
@@ -163,20 +163,20 @@ button:active {
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
     border-radius: 8px;
+    background: rgb(208, 57, 63);
 }
 
 .error span {
     display: inline-block;
-    margin-left: 2px;
+    margin-left: 8px;
     font-size: 40px;
     font-weight: 700;
-    line-height: 40px;
+    line-height: 30px;
     text-shadow: 0 1px 2px rgba(0, 0, 0, .1);
     -o-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
-
 }
 
 .connect {
@@ -200,6 +200,28 @@ button:active {
 
 .connect a:hover {
     transform: scale(1.3)
+}
+
+.register-success-container {
+    position: relative;
+    width: 350px;
+    height: 240px;
+    margin: 15px auto 0 auto;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.2) none repeat scroll !important;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 27px;
+}
+
+.register-success-container div {
+    position: relative;
+    top: 30%;
+}
+
+#username {
+    color: #ef4300;
+    font-size: inherit;
 }
 
 

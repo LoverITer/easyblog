@@ -90,8 +90,10 @@ public interface IUserService {
     int deleteUserByPK(int userId);
 
     /**
-     * 判断用户密码是否合法
+     * 密码要求：
      *
+     * 1.长度超过8位
+     * 2.包括大小写字母.数字.其它符号,以上四种至少三种
      * @param password   用户密码
      * @return
      */
