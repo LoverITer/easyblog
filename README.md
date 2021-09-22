@@ -9,7 +9,7 @@ EasyBlog博客网站
 
 1、说明
 ------------
-> EasyBlog是一个简单的个人博客系统。系统使用SpringBoot+MyBatis+Redis搭建，网站线上地址：https://www.easyblog.top/
+> EasyBlog是一个简单的个人技术博客系统。系统基于SpringBoot+MyBatis+Redis搭建，网站线上地址：https://www.easyblog.top/
 > 
 >如果该项目对您有帮助，您可以点一下右上角的"star" 支持一下 谢谢!  
 > 
