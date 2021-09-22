@@ -7,13 +7,13 @@ EasyBlog博客网站
 ![](https://camo.githubusercontent.com/b74f0c55895a3e31913261c2933ce1233f69fefb/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f626c6f672d2545352538442539412545352541452541322d6f72616e67652e7376673f7374796c653d666c61742d737175617265)
  
 
-1、项目简介
+📚 1、项目简介
 ------------
-> EasyBlog是一个小而美的个人技术博客系统。系统基于SpringBoot+MyBatis+Redis搭建，网站线上地址：https://www.easyblog.top/
-> 
->如果该项目对您有帮助，您可以点一下右上角的"star" 支持一下 谢谢!  
-> 
->或者可以"follow"一下,该项目会一直持续更新,不断添加新功能和优化 
+EasyBlog是一个小而美的个人技术博客系统。系统基于SpringBoot+MyBatis+Redis搭建，网站线上地址：https://www.easyblog.top/
+
+如果该项目对您有帮助，您可以点一下右上角的"star" 支持一下 谢谢!  
+
+或者可以"follow"一下,该项目会一直持续更新,不断添加新功能和优化 
  
  
 2、组织结构 
