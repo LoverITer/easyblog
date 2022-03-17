@@ -1,5 +1,5 @@
 #开发环境
-host-ip: 192.168.131.128 #虚拟机ip
+host-ip: 47.99.161.205 #虚拟机ip
 server:
   port: 8005
 
@@ -56,7 +56,8 @@ spring:
       additional-paths: src/main/java
   redis:
     host: ${host-ip}
-    port: 6379
+    port: 63790
+    password: 5Ce1wjvX2pHQ6ftAD5bX
     database: 0
     timeout: 10000
     #springBoot 2.x建议配置lettuce作为Redis客户端  Spring1.x配置jedis
