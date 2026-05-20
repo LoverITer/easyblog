@@ -9,8 +9,7 @@ EasyBlog博客网站
 
 📚 1、项目简介
 ------------
-EasyBlog是一个小而美的个人技术博客系统。系统基于SpringBoot+MyBatis+Redis搭建，网站线上地址：https://www.easyblog.top/
-
+EasyBlog是一个小而美的个人技术博客系统。系统基于SpringBoot+MyBatis+Redis搭建，网站线上地址：https://blog.xinxinnote.tech
 如果该项目对您有帮助，您可以点一下右上角的"star" 支持一下 谢谢!  
 
 或者可以"follow"一下,该项目会一直持续更新,不断添加新功能和优化 
